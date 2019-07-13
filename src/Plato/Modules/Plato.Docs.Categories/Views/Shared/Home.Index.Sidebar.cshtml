@@ -1,5 +1,5 @@
-﻿@using Plato.Entities.ViewModels
-@model Plato.Entities.ViewModels.EntityIndexViewModel<Doc>
+﻿@using Plato.Internal.Data.Abstractions
+@model CategoryIndexViewModel
 
 <div class="my-2">
     <input type="search" class="form-control" 
@@ -14,7 +14,13 @@
     options = new EntityTreeOptions()
     {
         EditMenuViewName = "DocTreeMenu",
-        IndexOptions = Model.Options,
+        IndexOptions = new EntityIndexOptions()
+        {
+            FeatureId = Model.EntityIndexOptions.FeatureId,
+            CategoryId = Model.EntityIndexOptions.CategoryId,
+            Sort = Plato.Entities.ViewModels.SortBy.SortOrder,
+            Order = OrderBy.Asc
+        },
         RouteValues = new RouteValueDictionary()
         {
             ["area"] = "Plato.Docs",

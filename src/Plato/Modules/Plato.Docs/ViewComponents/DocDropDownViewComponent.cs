@@ -88,13 +88,6 @@ namespace Plato.Docs.ViewComponents
             options.Sort = SortBy.SortOrder;
             options.Order = OrderBy.Asc;
 
-            //var indexOptions = new EntityIndexOptions()
-            //{
-            //    FeatureId = feature.Id,
-            //    Sort = SortBy.SortOrder,
-            //    Order = OrderBy.Asc
-            //};
-
             // Get results
             return await _entityService
                 .ConfigureQuery(async q =>

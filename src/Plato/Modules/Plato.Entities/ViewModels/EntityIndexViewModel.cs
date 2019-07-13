@@ -38,7 +38,7 @@ namespace Plato.Entities.ViewModels
         public FilterBy Filter { get; set; } = FilterBy.All;
 
         [DataMember(Name = "sort")]
-        public SortBy Sort { get; set; } = SortBy.Latest;
+        public SortBy Sort { get; set; } = SortBy.LastReply;
 
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
@@ -100,8 +100,7 @@ namespace Plato.Entities.ViewModels
 
     public enum SortBy
     {
-        Auto,
-        Latest,
+        LastReply,
         Popular,
         Rank,
         Replies,
@@ -113,7 +112,6 @@ namespace Plato.Entities.ViewModels
         SortOrder,
         Created,
         Modified,
-        LastReply,
         IsPinned
     }
 

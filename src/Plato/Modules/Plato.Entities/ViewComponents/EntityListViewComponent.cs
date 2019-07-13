@@ -62,12 +62,21 @@ namespace Plato.Entities.ViewComponents
             }
         };
 
-        private readonly IList<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        private readonly ICollection<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
-                Text = "Last Reply",
+                Text = "Latest",
                 Value = SortBy.LastReply
+            },
+            new SortColumn()
+            {
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
             },
             new SortColumn()
             {
@@ -88,6 +97,16 @@ namespace Plato.Entities.ViewComponents
             {
                 Text = "Reactions",
                 Value =  SortBy.Reactions
+            },
+            new SortColumn()
+            {
+                Text = "Follows",
+                Value =  SortBy.Follows
+            },
+            new SortColumn()
+            {
+                Text = "Stars",
+                Value =  SortBy.Stars
             },
             new SortColumn()
             {

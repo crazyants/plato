@@ -130,7 +130,7 @@ namespace Plato.Search.Controllers
         {
 
             // Set default sort column if auto is specified
-            if (options.Sort == SortBy.Auto)
+            if (options.Sort == SortBy.LastReply)
             {
                 // Get search settings
                 var searchSettings = await _searchSettingsStore.GetAsync();

@@ -43,7 +43,7 @@ namespace Plato.Search.Controllers
             int page = 1,
             int size = 10,
             string keywords = "",
-            SortBy sort = SortBy.Auto,
+            SortBy sort = SortBy.LastReply,
             OrderBy order = OrderBy.Desc)
         {
 
@@ -51,7 +51,7 @@ namespace Plato.Search.Controllers
             var searchSettings = await _searchSettingsStore.GetAsync();
 
             // Set default sort column if auto is specified
-            if (sort == SortBy.Auto)
+            if (sort == SortBy.LastReply)
             {
                 // Get search settings
                 if (searchSettings != null)

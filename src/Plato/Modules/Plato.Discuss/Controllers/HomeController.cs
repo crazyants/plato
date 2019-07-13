@@ -109,7 +109,7 @@ namespace Plato.Discuss.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest 
+        // Index 
         // -----------------
 
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
@@ -181,32 +181,7 @@ namespace Plato.Discuss.Controllers
             return View((LayoutViewModel) await _entityViewProvider.ProvideIndexAsync(new Topic(), this));
 
         }
-
-        // -----------------
-        // Popular
-        // -----------------
-
-        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
-        {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityIndexOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            opts.Sort = SortBy.Replies;
-            opts.Order = OrderBy.Desc;
-
-            return Index(opts, pager);
-        }
-
+        
         // -----------------
         // New Entity
         // -----------------
@@ -1370,7 +1345,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -2241,7 +2216,7 @@ namespace Plato.Discuss.Controllers
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Ensure pinned appear first
-            if (options.Sort == SortBy.Latest)
+            if (options.Sort == SortBy.LastReply)
             {
                 options.AddSortColumn(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }

@@ -158,13 +158,7 @@ namespace Plato.Docs.Controllers
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Ensure we have a default sort column
-            if (options.Sort == SortBy.Auto)
-            {
-                options.Sort = SortBy.LastReply;
-            }
-
+            
             // Return updated model
             return new EntityIndexViewModel<Doc>()
             {

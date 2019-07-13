@@ -207,13 +207,7 @@ namespace Plato.Questions.Labels.Controllers
 
             // Get questions feature
             options.FeatureId = await GetFeatureIdAsync();
-
-            // Ensure results are sorted
-            if (options.Sort  == SortBy.Auto)
-            {
-                options.Sort = SortBy.LastReply;
-            }
-
+            
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 

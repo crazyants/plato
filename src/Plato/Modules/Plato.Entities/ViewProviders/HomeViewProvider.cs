@@ -23,12 +23,12 @@ namespace Plato.Entities.ViewProviders
                 {
                     Options = new EntityIndexOptions()
                     {
-                        Sort = SortBy.Latest
+                        Sort = SortBy.LastReply
                     },
                     Pager = new PagerOptions()
                     {
                         Page = 1,
-                        Size = 5,
+                        Size = 10,
                         Enabled = false
                     }
                 },
@@ -41,7 +41,7 @@ namespace Plato.Entities.ViewProviders
                     Pager = new PagerOptions()
                     {
                         Page = 1,
-                        Size = 5,
+                        Size = 10,
                         Enabled = false
                     }
                 }

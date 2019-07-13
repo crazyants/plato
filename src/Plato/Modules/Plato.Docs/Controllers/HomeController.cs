@@ -109,7 +109,7 @@ namespace Plato.Docs.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest 
+        // Index 
         // -----------------
 
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
@@ -181,32 +181,7 @@ namespace Plato.Docs.Controllers
             return View((LayoutViewModel) await _docViewProvider.ProvideIndexAsync(new Doc(), this));
 
         }
-
-        // -----------------
-        // Popular
-        // -----------------
-
-        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
-        {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityIndexOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            opts.Sort = SortBy.Replies;
-            opts.Order = OrderBy.Desc;
-
-            return Index(opts, pager);
-        }
-
+        
         // -----------------
         // New Entity
         // -----------------
@@ -2592,15 +2567,15 @@ namespace Plato.Docs.Controllers
                 options.FeatureId = feature.Id;
             }
 
+            // Ensure pinned entities appear first
+            if (options.Sort == SortBy.LastReply)
+            {
+                options.AddSortColumn(SortBy.IsPinned.ToString(), OrderBy.Desc);
+            }
+
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
-            // Ensure pinned entities appear first
-            if (options.Sort == SortBy.Auto)
-            {
-                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
-            }
-        
             // Return updated model
             return new EntityIndexViewModel<Doc>()
             {

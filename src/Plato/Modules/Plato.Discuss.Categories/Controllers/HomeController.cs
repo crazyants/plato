@@ -225,7 +225,7 @@ namespace Plato.Discuss.Categories.Controllers
             }
 
             // Ensure pinned entities appear first
-            if (options.Sort == SortBy.Auto)
+            if (options.Sort == SortBy.LastReply)
             {
                 options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }

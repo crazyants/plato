@@ -66,13 +66,22 @@ namespace Plato.Issues.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
+                Text = "Latest",
                 Value = SortBy.LastReply
             },
             new SortColumn()
             {
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
+            },
+            new SortColumn()
+            {
                 Text = "Replies",
-                Value = SortBy.Replies
+                Value =  SortBy.Replies
             },
             new SortColumn()
             {
@@ -82,22 +91,22 @@ namespace Plato.Issues.ViewComponents
             new SortColumn()
             {
                 Text = "Participants",
-                Value = SortBy.Participants
+                Value =  SortBy.Participants
             },
             new SortColumn()
             {
                 Text = "Reactions",
-                Value = SortBy.Reactions
+                Value =  SortBy.Reactions
             },
             new SortColumn()
             {
                 Text = "Follows",
-                Value = SortBy.Follows
+                Value =  SortBy.Follows
             },
             new SortColumn()
             {
                 Text = "Stars",
-                Value = SortBy.Stars
+                Value =  SortBy.Stars
             },
             new SortColumn()
             {

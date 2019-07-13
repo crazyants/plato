@@ -62,15 +62,15 @@ namespace Plato.Docs.Categories.ViewProviders
             }
             
             // channel filter options
-            var channelViewOpts = new CategoryIndexOptions
+            var categoryIndexOptions = new CategoryIndexOptions
             {
                 CategoryId = existingCategory?.Id ?? 0,
                 FeatureId = feature.Id
             };
             
-            var indexViewModel = new CategoryIndexViewModel()
+            var categoryIndexViewModel = new CategoryIndexViewModel()
             {
-                Options = channelViewOpts,
+                Options = categoryIndexOptions,
                 EntityIndexOptions = viewModel?.Options,
                 Pager = viewModel?.Pager
             };
@@ -78,9 +78,9 @@ namespace Plato.Docs.Categories.ViewProviders
             return Views(
                 View<CategoryBase>("Home.Index.Header", model => existingCategory).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => existingCategory).Zone("tools").Order(1),
-                View<CategoryIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<CategoryIndexViewModel>("Doc.Categories.Index.Sidebar", model => indexViewModel).Zone("sidebar").Order(int.MinValue + 10),
-                View<EntityIndexViewModel<Doc>>("Home.Index.Sidebar", model => viewModel).Zone("sidebar")
+                View<CategoryIndexViewModel>("Home.Index.Content", model => categoryIndexViewModel).Zone("content").Order(1),
+                View<CategoryIndexViewModel>("Doc.Categories.Index.Sidebar", model => categoryIndexViewModel).Zone("sidebar").Order(int.MinValue + 10),
+                View<CategoryIndexViewModel>("Home.Index.Sidebar", model => categoryIndexViewModel).Zone("sidebar")
             );
 
         }

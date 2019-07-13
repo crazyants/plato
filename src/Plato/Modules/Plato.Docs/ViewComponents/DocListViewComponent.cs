@@ -65,12 +65,21 @@ namespace Plato.Docs.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
+                Text = "Latest",
                 Value = SortBy.LastReply
             },
             new SortColumn()
             {
-                Text = "Replies",
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
+            },
+            new SortColumn()
+            {
+                Text = "Comments",
                 Value =  SortBy.Replies
             },
             new SortColumn()
@@ -191,8 +200,6 @@ namespace Plato.Docs.ViewComponents
                     {
                         q.HideDeleted.True();
                     }
-
-
 
                 })
                 .GetResultsAsync(options, pager);

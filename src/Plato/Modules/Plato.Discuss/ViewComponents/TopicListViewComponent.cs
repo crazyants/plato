@@ -66,7 +66,7 @@ namespace Plato.Discuss.ViewComponents
             new SortColumn()
             {
                 Text = "Latest",
-                Value = SortBy.Latest
+                Value = SortBy.LastReply
             },
             new SortColumn()
             {
@@ -116,11 +116,6 @@ namespace Plato.Discuss.ViewComponents
             {
                 Text = "Modified",
                 Value = SortBy.Modified
-            },
-            new SortColumn()
-            {
-                Text = "Last Reply",
-                Value = SortBy.LastReply
             }
         };
 

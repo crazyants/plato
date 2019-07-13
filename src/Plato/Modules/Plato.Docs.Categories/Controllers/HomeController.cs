@@ -55,6 +55,10 @@ namespace Plato.Docs.Categories.Controllers
             S = stringLocalizer;
         }
 
+        // -----------------
+        // Index 
+        // -----------------
+
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
         {
 
@@ -116,8 +120,8 @@ namespace Plato.Docs.Categories.Controllers
                 ["area"] = "Plato.Docs.Categories",
                 ["controller"] = "Home",
                 ["action"] = "Index",
-                ["opts.id"] = category != null ? category.Id.ToString() : "",
-                ["opts.alias"] = category != null ? category.Alias.ToString() : ""
+                ["opts.id"] = category != null ? category.Id.ToString() : string.Empty,
+                ["opts.alias"] = category != null ? category.Alias.ToString() : string.Empty
             });
 
             // Build page title
@@ -187,6 +191,8 @@ namespace Plato.Docs.Categories.Controllers
 
         }
 
+        // ---------------
+
         async Task<EntityIndexViewModel<Doc>> GetIndexViewModelAsync(Category category, EntityIndexOptions options, PagerOptions pager)
         {
             
@@ -197,7 +203,6 @@ namespace Plato.Docs.Categories.Controllers
             if (feature != null)
             {
                 options.FeatureId = feature.Id;
-
             }
             
             // Include child categories
@@ -223,7 +228,7 @@ namespace Plato.Docs.Categories.Controllers
             }
 
             // Ensure pinned entities appear first
-            if (options.Sort == SortBy.Auto)
+            if (options.Sort == SortBy.LastReply)
             {
                 options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }

@@ -7,7 +7,6 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Entities.ViewModels;
 using Plato.Entities.Services;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.ViewComponents
@@ -67,12 +66,21 @@ namespace Plato.Questions.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
+                Text = "Latest",
                 Value = SortBy.LastReply
             },
             new SortColumn()
             {
-                Text = "Replies",
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
+            },
+            new SortColumn()
+            {
+                Text = "Answers",
                 Value =  SortBy.Replies
             },
             new SortColumn()

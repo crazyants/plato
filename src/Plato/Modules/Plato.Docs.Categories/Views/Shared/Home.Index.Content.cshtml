@@ -2,15 +2,13 @@
 
 @await DisplayAsync(new View("DocCategoryList", new
 {
-    options = @Model.Options
+    options = Model.Options
 }))
 
-@if (Model.Options.CategoryId != 0)
+@await DisplayAsync(new View("DocList", new
 {
-    @await DisplayAsync(new View("DocList", new
-    {
-        options = @Model.EntityIndexOptions,
-        pager = @Model.Pager
-    }))
-}
+    options = Model.EntityIndexOptions,
+    pager = Model.Pager
+}))
+
 

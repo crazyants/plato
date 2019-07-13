@@ -84,13 +84,6 @@ namespace Plato.Docs.ViewComponents
                 options.FeatureId = feature.Id;
 
             }
-
-            // Set default sort order
-            options.Sort = SortBy.SortOrder;
-            options.Order = OrderBy.Asc;
-
-            // Ensure we only display entities from the current category 
-            options.CategoryIds = null;
             
             // Get results
             return await _entityService

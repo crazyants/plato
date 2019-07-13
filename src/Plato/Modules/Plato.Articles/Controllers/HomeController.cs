@@ -2241,7 +2241,7 @@ namespace Plato.Articles.Controllers
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
 
             // Ensure pinned appear first
-            if (options.Sort == SortBy.Latest)
+            if (options.Sort == SortBy.LastReply)
             {
                 options.AddSortColumn(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }

@@ -56,18 +56,8 @@ namespace Plato.Entities.Services
             {
                 pager = new PagerOptions();
             }
-
-            //// Ensure we have a sort column is non is specified
-            //if (options.Sort == SortBy.Auto)
-            //{
-            //    options.Sort = SortBy.LastReply;
-            //}
-
-            if (options.Sort == SortBy.Latest)
-            {
-                options.AddSortColumn(SortBy.LastReply.ToString(), options.Order);
-            }
-
+            
+            // Special edge case for popular entities
             if (options.Sort == SortBy.Popular)
             {
                 options.AddSortColumn(SortBy.Participants.ToString(), options.Order);
@@ -75,13 +65,11 @@ namespace Plato.Entities.Services
                 options.AddSortColumn(SortBy.Views.ToString(), options.Order);
                 options.AddSortColumn(SortBy.LastReply.ToString(), options.Order);
             }
-
-            // Sort by our primary column
-            if (options.Sort != SortBy.Latest && options.Sort != SortBy.Popular)
+            else
             {
                 options.AddSortColumn(options.Sort.ToString(), options.Order);
             }
-            
+
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             

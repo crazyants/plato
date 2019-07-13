@@ -41,13 +41,7 @@
 <div class="list-body">
     
     <div>
-
         <ol class="list-inline float-right text-muted text-right">
-            <li class="list-inline-item">
-                <a class="align-top" asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-                    <date utc="@Model.Entity.LastReplyDate"></date>
-                </a>
-            </li>
             @if (Model.Tags != null)
             {
                 var sb = new System.Text.StringBuilder();
@@ -116,7 +110,17 @@
     </div>
     <div>
         
-        @if (details?.LatestUsers != null)
+        @if (Model.Entity.LastReplyDate != null)
+        {
+            <div class="float-right">
+                <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss">
+                    <date utc="@Model.Entity.LastReplyDate"></date>
+                </a>
+            </div>
+        }
+
+
+        @*@if (details?.LatestUsers != null)
         {
             <div class="avatar-group float-right">
                 @foreach (var user in details.LatestUsers)
@@ -129,13 +133,12 @@
                     </a>
                 }
             </div>
-        }
+        }*@
         
         @if (Model.Entity.CreatedUserId > 0)
         {
             <span>
-                @T["Asked by"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>,
             </span>
         }
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
