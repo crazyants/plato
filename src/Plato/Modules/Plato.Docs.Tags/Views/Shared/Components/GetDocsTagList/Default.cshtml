@@ -1,0 +1,28 @@
+﻿@model TagIndexViewModel<Tag>
+
+@if (Model.Results?.Data != null)
+{
+    var offset = Model.Pager.RowOffset;
+    var selectedOffset = Model.Pager.Offset;
+    @foreach (var tag in Model.Results.Data)
+     {
+         var css = offset == selectedOffset
+             ? "infinite-scroll-item infinite-scroll-item-active"
+             : "infinite-scroll-item";
+         <div class="float-left list-group-item list-group-item-action p-0 col-lg-4 col-md-6 col-sm-12 p-0">
+             <div class="@css" data-infinite-scroll-offset="@offset" data-infinite-scroll-highlight="@offset">
+                 @await DisplayAsync(new View("DocsTagListItem", new
+                 {
+                     model = new TagListItemViewModel<Tag>()
+                     {
+                         Tag = tag,
+                         EnableEdit = Model.Options.EnableEdit
+                     }
+                 }))
+             </div>
+         </div>
+         {
+             offset++;
+         }
+     }
+}

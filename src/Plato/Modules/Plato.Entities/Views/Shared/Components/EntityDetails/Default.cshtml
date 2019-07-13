@@ -3,6 +3,9 @@
     var viewText = Model.Entity.TotalViews == 1
         ? "view"
         : "views";
+    var repliesText = Model.Entity.TotalReplies == 1
+        ? "reply"
+        : "replies";
     var urls = await Model.Entity.GetEntityUrlsAsync();
     var linkText = urls.AnchorUrls.Count == 1
         ? "link"
@@ -56,7 +59,7 @@
                 </li>
             }
             <li class="list-group-item">
-                @Model.Entity.TotalViews @T[viewText]
+                @Model.Entity.TotalViews.ToPrettyInt() @T[viewText], @Model.Entity.TotalReplies.ToPrettyInt() @repliesText
             </li>
         </ul>
     </card-body>

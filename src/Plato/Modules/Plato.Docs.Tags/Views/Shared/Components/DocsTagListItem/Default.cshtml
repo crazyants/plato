@@ -1,0 +1,79 @@
+﻿@model TagListItemViewModel<Tag>
+@if (Model.EnableEdit)
+{
+    <a asp-route-area="Plato.Docs.Tags" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Tag.Id" class="list-group-item-action d-block p-3">
+        <span class="float-right">
+            @if (Model.Tag.TotalFollows > 0)
+            {
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
+                    @Model.Tag.TotalFollows.ToPrettyInt()
+                </span>
+            }
+            @if (Model.Tag.TotalEntities > 0)
+            {
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Public Occurrences"]">
+                    @Model.Tag.TotalEntities.ToPrettyInt()
+                </span>
+            }
+        </span>
+        <span class="btn btn-sm label font-weight-bold">
+            @Model.Tag.Name
+        </span>
+        <span class="d-block mt-2">
+            @if (!String.IsNullOrEmpty(Model.Tag.Description))
+            {
+                @Model.Tag.Description
+            }
+            else
+            {
+                @T["No description provided."]
+            }
+        </span>
+        <span class="text-muted d-block mt-2 pb-0">
+            @if (Model.Tag.LastSeenDate != null)
+            {
+                @T["Last seen: "]
+                <date utc="@Model.Tag.LastSeenDate" />
+            }
+        </span>
+    </a>
+}
+else
+{
+    <a asp-route-area="Plato.Docs.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@Model.Tag.Id" asp-route-opts.alias="@Model.Tag.Alias" class="list-group-item-action d-block p-3">
+        <span class="float-right">
+            @if (Model.Tag.TotalFollows > 0)
+            {
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
+                    @Model.Tag.TotalFollows.ToPrettyInt()
+                </span>
+            }
+            @if (Model.Tag.TotalEntities > 0)
+            {
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Public Occurrences"]">
+                    @Model.Tag.TotalEntities.ToPrettyInt()
+                </span>
+            }
+        </span>
+        <span class="btn btn-sm label font-weight-bold">
+            @Model.Tag.Name
+        </span>
+        <span class="d-block mt-2">
+            @if (!String.IsNullOrEmpty(Model.Tag.Description))
+            {
+                @Model.Tag.Description
+            }
+            else
+            {
+                @T["No description provided."]
+            }
+        </span>
+        <span class="text-muted d-block mt-2 pb-0">
+            @if (Model.Tag.LastSeenDate != null)
+            {
+                @T["Last seen: "]
+                <date utc="@Model.Tag.LastSeenDate" />
+            }
+        </span>
+    </a>
+}
