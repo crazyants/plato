@@ -45,22 +45,29 @@
                     <div class="min-w-200 max-h-250 overflow-auto">
                         @foreach (var option in Model.SortColumns)
                         {
-                            var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                            if (option.Text == "-")
                             {
-                                ["opts.sort"] = option.Value
-                            };
-                            if (Model.Options.Order != OrderBy.Desc)
-                            {
-                                if (!routeValues.ContainsKey("opts.order"))
-                                {
-                                    routeValues.Add("opts.order", Model.Options.Order);
-                                }
+                                <div class="dropdown-divider"></div>
                             }
-                            var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
-                            <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
-                                <i class="@iconCss"></i>
-                                @T[option.Text]
-                            </a>
+                            else
+                            {
+                                var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                                {
+                                    ["opts.sort"] = option.Value
+                                };
+                                if (Model.Options.Order != OrderBy.Desc)
+                                {
+                                    if (!routeValues.ContainsKey("opts.order"))
+                                    {
+                                        routeValues.Add("opts.order", Model.Options.Order);
+                                    }
+                                }
+                                var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                                <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                                    <i class="@iconCss"></i>
+                                    @T[option.Text]
+                                </a>
+                            }
                         }
                         <div class="dropdown-divider"></div>
                         @foreach (var option in Model.SortOrder)

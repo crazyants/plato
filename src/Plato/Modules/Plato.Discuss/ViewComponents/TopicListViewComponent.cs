@@ -65,8 +65,17 @@ namespace Plato.Discuss.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
-                Value = SortBy.LastReply
+                Text = "Latest",
+                Value = SortBy.Latest
+            },
+            new SortColumn()
+            {
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
             },
             new SortColumn()
             {
@@ -107,6 +116,11 @@ namespace Plato.Discuss.ViewComponents
             {
                 Text = "Modified",
                 Value = SortBy.Modified
+            },
+            new SortColumn()
+            {
+                Text = "Last Reply",
+                Value = SortBy.LastReply
             }
         };
 
@@ -124,10 +138,9 @@ namespace Plato.Discuss.ViewComponents
             },
         };
 
-      
-        private readonly IEntityService<Topic> _entityService;
         private readonly IAuthorizationService _authorizationService;
-
+        private readonly IEntityService<Topic> _entityService;
+     
         public TopicListViewComponent(
             IEntityService<Topic> entityService,
             IAuthorizationService authorizationService)

@@ -1,27 +1,27 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
-
-namespace Plato.Search.ViewComponents
+namespace Plato.Entities.ViewComponents
 {
     public class GetEntityListViewComponent : ViewComponent
     {
-        
+
+        private readonly IAuthorizationService _authorizationService;
         private readonly IEntityService<Entity> _entityService;
-        //private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
-
-        //private SearchSettings _searchSettings;
-
+ 
         public GetEntityListViewComponent(
-            IEntityService<Entity> entityService)
+            IEntityService<Entity> entityService,
+            IAuthorizationService authorizationService)
         {
             _entityService = entityService;
-            //_searchSettingsStore = searchSettingsStore;
+            _authorizationService = authorizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -53,6 +53,38 @@ namespace Plato.Search.ViewComponents
 
             // Get results
             var results = await _entityService
+                .ConfigureQuery(async q =>
+                {
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateEntities))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenEntities))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewSpamEntities))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewDeletedEntities))
+                    {
+                        q.HideDeleted.True();
+                    }
+
+                })
                 .GetResultsAsync(options, pager);
 
             // Set total on pager

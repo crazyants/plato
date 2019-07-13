@@ -24,6 +24,7 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Search.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
@@ -110,6 +111,9 @@ namespace Plato.Entities
        
             // Migrations
             services.AddSingleton<IMigrationProvider, Migrations>();
+            
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

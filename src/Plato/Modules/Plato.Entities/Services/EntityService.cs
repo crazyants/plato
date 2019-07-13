@@ -57,31 +57,31 @@ namespace Plato.Entities.Services
                 pager = new PagerOptions();
             }
 
-         
-            // Ensure we have a sort column is non is specified
-            if (options.Sort == SortBy.Auto)
-            {
-                options.Sort = SortBy.LastReply;
-            }
-            
-            // Our list of columns to sort by
-            var sortColumns = new Dictionary<string, OrderBy>();
+            //// Ensure we have a sort column is non is specified
+            //if (options.Sort == SortBy.Auto)
+            //{
+            //    options.Sort = SortBy.LastReply;
+            //}
 
-            // Allow for additional sort columns
-            if (options.SortColumns != null)
+            if (options.Sort == SortBy.Latest)
             {
-                foreach (var column in options.SortColumns)
-                {
-                    if (!sortColumns.ContainsKey(column.Key))
-                    {
-                        sortColumns.Add(column.Key, column.Value);
-                    }
-                }
+                options.AddSortColumn(SortBy.LastReply.ToString(), options.Order);
+            }
+
+            if (options.Sort == SortBy.Popular)
+            {
+                options.AddSortColumn(SortBy.Participants.ToString(), options.Order);
+                options.AddSortColumn(SortBy.Replies.ToString(), options.Order);
+                options.AddSortColumn(SortBy.Views.ToString(), options.Order);
+                options.AddSortColumn(SortBy.LastReply.ToString(), options.Order);
             }
 
             // Sort by our primary column
-            sortColumns.Add(options.Sort.ToString(), options.Order);
-  
+            if (options.Sort != SortBy.Latest && options.Sort != SortBy.Popular)
+            {
+                options.AddSortColumn(options.Sort.ToString(), options.Order);
+            }
+            
             // Get authenticated user 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             
@@ -185,7 +185,7 @@ namespace Plato.Entities.Services
                     _configureParams?.Invoke(q);
                     
                 })
-                .OrderBy(sortColumns)
+                .OrderBy(options.SortColumns)
                 .ToList();
 
         }

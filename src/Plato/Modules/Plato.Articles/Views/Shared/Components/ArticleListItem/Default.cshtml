@@ -27,8 +27,6 @@
 <div class="list-body">
     
     <div>
-        
-        
         <ol class="list-inline float-right text-muted">
             @if (Model.Tags != null)
             {
@@ -69,8 +67,7 @@
                 </li>
             }
         </ol>
-
-
+        
         <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
         @if (Model.Entity.IsPinned)
         {
@@ -101,7 +98,6 @@
     </div>
     <div>
 
-
         @if (details?.LatestUsers != null)
         {
 
@@ -120,44 +116,60 @@
         }
 
 
+        <ul class="list-inline">
 
-        @if (Model.Entity.CreatedUserId > 0)
-        {
-            <span>
-                @T["By"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-            </span>
-        }
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-        @if (Model.Category != null)
-        {
-            <span>@T["in"]</span>
-            <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
-                @Model.Category.Name
-            </a>
-        }
-        @if (Model.Entity.IsPrivate)
-        {
-            if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+            @if (Model.Category != null)
             {
-                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you are the article author"]">@T["Private"]</span>
+                <li class="list-inline-item">
+                    @T["In"]
+                    <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
+                        @Model.Category.Name
+                    </a>
+                </li>
             }
-            else
+
+            @if (Model.Entity.LastReplyId > 0)
             {
-                <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you have permission to view private articles"]">@T["Private"]</span>
+                <li class="list-inline-item">
+                    <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
+                        <date utc="@Model.Entity.LastReplyDate"></date>
+                    </a>
+                </li>
             }
-        }
-        @if (Model.Entity.IsHidden)
-        {
-            <span class="badge badge-primary" data-toggle="tooltip" title="@T["This article is hidden and only visible as you have permission to view hidden articles"]">@T["Hidden"]</span>
-        }
-        @if (Model.Entity.IsSpam)
-        {
-            <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
-        }
-        @if (Model.Entity.IsDeleted)
-        {
-            <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible as you have permission to view deleted articles"]">@T["Deleted"]</span>
-        }
-    </div>
+
+            @if (Model.Entity.IsPrivate)
+            {
+                <li class="list-inline-item">
+                    @if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you are the article author"]">@T["Private"]</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning" data-toggle="tooltip" title="@T["This article is private and only visible as you have permission to view private articles"]">@T["Private"]</span>
+                    }
+                </li>
+            }
+
+
+            @if (Model.Entity.IsHidden)
+            {
+                <li class="list-inline-item">
+                    <span class="badge badge-primary" data-toggle="tooltip" title="@T["This article is hidden and only visible as you have permission to view hidden articles"]">@T["Hidden"]</span>
+                </li>
+            }
+            @if (Model.Entity.IsSpam)
+            {
+                <li class="list-inline-item">
+                    <span class="badge badge-info" data-toggle="tooltip" title="@T["This article has been flagged as SPAM and is only visible as you have permission to view articles flagged as SPAM"]">@T["SPAM"]</span>
+                </li>
+            }
+            @if (Model.Entity.IsDeleted)
+            {
+                <li class="list-inline-item">
+                    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This article has been deleted and is only visible as you have permission to view deleted articles"]">@T["Deleted"]</span>
+                </li>
+            }
+        </ul>
+</div>
 </div>

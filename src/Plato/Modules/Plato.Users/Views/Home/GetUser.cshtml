@@ -11,33 +11,28 @@
             </a>
         </div>
         <div class="list-body">
-            
-            <div class="float-right">
-                
+   
+            <h6 class="d-inline-block m-0 p-0 float-right">
                 @if (Model.IsVerified)
                 {
                     <i title="@T["Verified Member"]" class="is-verified d-inline-block" data-provide="tooltip"></i>
                 }
-
                 @if (Model.IsStaff)
                 {
                     <i title="@T["Staff Member"]" class="is-staff d-inline-block" data-provide="tooltip"></i>
                 }
-
                 @if (Model.IsSpam)
                 {
                     <i title="@T["Flagged As SPAM"]" class="is-spam d-inline-block" data-provide="tooltip"></i>
                 }
-
                 @if (Model.IsBanned)
                 {
                     <i title="@T["Banned"]" class="is-banned d-inline-block" data-provide="tooltip"></i>
                 }
-                
-            </div>
-
+            </h6>
+                   
             <h6 class="d-inline-block m-0 p-0 text-truncate">@Model.DisplayName</h6>
-        
+
             @if (!String.IsNullOrEmpty(Model.Biography))
             {
                 <div>@Model.Biography.TrimToAround(150)</div>

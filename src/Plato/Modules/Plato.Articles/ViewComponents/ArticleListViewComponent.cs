@@ -66,8 +66,17 @@ namespace Plato.Articles.ViewComponents
         {
             new SortColumn()
             {
-                Text = "Last Reply",
-                Value = SortBy.LastReply
+                Text = "Latest",
+                Value = SortBy.Latest
+            },
+            new SortColumn()
+            {
+                Text = "Popular",
+                Value = SortBy.Popular
+            },
+            new SortColumn()
+            {
+                Text = "-" // represents menu divider
             },
             new SortColumn()
             {
@@ -108,6 +117,11 @@ namespace Plato.Articles.ViewComponents
             {
                 Text = "Modified",
                 Value = SortBy.Modified
+            },
+            new SortColumn()
+            {
+                Text = "Last Reply",
+                Value = SortBy.LastReply
             }
         };
 

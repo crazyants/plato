@@ -13,6 +13,7 @@ using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Layout;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Titles;
@@ -188,7 +189,7 @@ namespace Plato.Articles.Categories.Controllers
             });
             
             // Return view
-            return View(await _viewProvider.ProvideIndexAsync(category, this));
+            return View((LayoutViewModel) await _viewProvider.ProvideIndexAsync(category, this));
 
         }
 
@@ -224,11 +225,11 @@ namespace Plato.Articles.Categories.Controllers
 
             // Set pager call back Url
             pager.Url = _contextFacade.GetRouteUrl(pager.Route(RouteData));
-
-            // Ensure pinned entities appear first
-            if (options.Sort == SortBy.Auto)
+            
+            // Ensure pinned appear first
+            if (options.Sort == SortBy.Latest)
             {
-                options.SortColumns.Add(SortBy.IsPinned.ToString(), OrderBy.Desc);
+                options.AddSortColumn(SortBy.IsPinned.ToString(), OrderBy.Desc);
             }
 
             // Return updated model

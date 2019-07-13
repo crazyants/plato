@@ -23,8 +23,7 @@ namespace Plato.Entities.ViewProviders
                 {
                     Options = new EntityIndexOptions()
                     {
-                        Sort = SortBy.LastReply,
-                        Order = OrderBy.Desc
+                        Sort = SortBy.Latest
                     },
                     Pager = new PagerOptions()
                     {
@@ -37,11 +36,7 @@ namespace Plato.Entities.ViewProviders
                 {
                     Options = new EntityIndexOptions()
                     {
-                        SortColumns = new Dictionary<string, OrderBy>()
-                        {
-                            {SortBy.Views.ToString(), OrderBy.Desc},
-                            {SortBy.Replies.ToString(), OrderBy.Desc}
-                        }
+                        Sort = SortBy.Popular
                     },
                     Pager = new PagerOptions()
                     {

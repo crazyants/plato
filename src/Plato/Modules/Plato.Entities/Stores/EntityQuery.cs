@@ -901,12 +901,13 @@ namespace Plato.Entities.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in GetSafeSortColumns())
+            var sortColumns = GetSafeSortColumns();
+            foreach (var sortColumn in sortColumns)
             {
                 sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
-                if (i < _query.SortColumns.Count - 1)
+                if (i < sortColumns.Count - 1)
                     sb.Append(", ");
                 i += 1;
             }
@@ -919,12 +920,10 @@ namespace Plato.Entities.Stores
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
-                if (String.IsNullOrEmpty(columnName))
+                if (!string.IsNullOrEmpty(columnName))
                 {
-                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                    output.Add(columnName, sortColumn.Value);
                 }
-                output.Add(columnName, sortColumn.Value);
-
             }
 
             return output;
@@ -997,13 +996,13 @@ namespace Plato.Entities.Stores
                 case "createddate":
                     return "e.CreatedDate";
                 case "modified":
-                    return "e.ModifiedDate";
+                    return "IsNull(e.ModifiedDate, e.CreatedDate)";
                 case "modifieddate":
-                    return "e.ModifiedDate";
+                    return "IsNull(e.ModifiedDate, e.CreatedDate)";
                 case "lastreply":
-                    return "e.LastReplyDate";
+                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
                 case "lastreplydate":
-                    return "e.LastReplyDate";
+                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
                 case "rank":
                     return "[Rank]";
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Plato.Internal.Data.Abstractions;
@@ -37,7 +38,7 @@ namespace Plato.Entities.ViewModels
         public FilterBy Filter { get; set; } = FilterBy.All;
 
         [DataMember(Name = "sort")]
-        public SortBy Sort { get; set; } = SortBy.Auto;
+        public SortBy Sort { get; set; } = SortBy.Latest;
 
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
@@ -61,10 +62,14 @@ namespace Plato.Entities.ViewModels
         private IDictionary<string, OrderBy> _sortColumns;
 
         [JsonIgnore]
-        public IDictionary<string, OrderBy> SortColumns
+        public IDictionary<string, OrderBy> SortColumns => _sortColumns ?? (_sortColumns = new Dictionary<string, OrderBy>());
+
+        public void AddSortColumn(string name, OrderBy order)
         {
-            get => _sortColumns ?? (_sortColumns = new Dictionary<string, OrderBy>());
-            set => _sortColumns = value;
+            if (!SortColumns.ContainsKey(name))
+            {
+                SortColumns.Add(name, order);
+            }
         }
 
     }
@@ -95,30 +100,32 @@ namespace Plato.Entities.ViewModels
 
     public enum SortBy
     {
-        Auto = 0,
-        Rank = 1,
-        LastReply = 2,
-        Replies = 3,
-        Views = 4,
-        Participants = 5,
-        Reactions = 6,
-        Follows = 7,
-        Stars = 8,
-        SortOrder = 9,
-        Created = 10,
-        Modified = 11,
-        IsPinned = 12
+        Auto,
+        Latest,
+        Popular,
+        Rank,
+        Replies,
+        Views,
+        Participants,
+        Reactions,
+        Follows,
+        Stars,
+        SortOrder,
+        Created,
+        Modified,
+        LastReply,
+        IsPinned
     }
 
     public enum FilterBy
     {
-        All = 0,
-        Started = 1,
-        Participated = 2,
-        Following = 3,
-        Starred = 4,
-        Unanswered = 5,
-        NoReplies = 6
+        All,
+        Started,
+        Participated,
+        Following,
+        Starred,
+        Unanswered,
+        NoReplies
     }
 
 }

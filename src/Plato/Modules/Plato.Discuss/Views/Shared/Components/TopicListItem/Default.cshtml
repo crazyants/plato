@@ -5,17 +5,21 @@
 
 <div class="list-left">
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
+        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url"/>
     </a>
 </div>
 <div class="list-body">
     
     <ol class="list-inline text-muted float-right text-right">
-        <li class="list-inline-item">
-            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
-                <date utc="@Model.Entity.LastReplyDate"></date>
-            </a>
-        </li>
+        @if (Model.Entity.LastReplyDate != null)
+        {
+            <li class="list-inline-item">
+                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
+                    <date utc="@Model.Entity.LastReplyDate"></date>
+                </a>
+            </li>
+        }
+     
         @if (Model.Tags != null)
         {
             var sb = new System.Text.StringBuilder();
@@ -56,7 +60,7 @@
         }
     </ol>
    
-    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold @Model.Entity.CreatedBy.Css.StaffCss">@Model.Entity.Title</a>
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
     @if (Model.Entity.IsPinned)
     {
         <span title="@T["This topic is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
@@ -98,17 +102,11 @@
                 }
             </div>
         }
-        @if (Model.Entity.CreatedUserId > 0)
-        {
-            <span>
-                @T["By"]
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-            </span>
-        }
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+      
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" class="@Model.Entity.CreatedBy?.Css.StaffCss"/>
         @if (@Model.Category != null)
         {
-            <span>@T["in"]</span>
+            <span>@T["In"]</span>
             <a asp-route-area="Plato.Discuss.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias">
                 @Model.Category.Name
             </a>

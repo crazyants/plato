@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.ViewComponents
 {
@@ -112,13 +114,16 @@ namespace Plato.Entities.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-        
+
+        private readonly IAuthorizationService _authorizationService;
         private readonly IEntityService<Entity> _entityService;
     
         public EntityListViewComponent(
-            IEntityService<Entity> entityService)
+            IEntityService<Entity> entityService,
+            IAuthorizationService authorizationService)
         {
             _entityService = entityService;
+            _authorizationService = authorizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -166,12 +171,37 @@ namespace Plato.Entities.ViewComponents
 
             // Build results
             var results = await _entityService
-                .ConfigureQuery(q =>
+                .ConfigureQuery(async q =>
                 {
-                    q.HideSpam.True();
-                    q.HideHidden.True();
-                    q.HideDeleted.True();
-                    q.HidePrivate.True();
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateEntities))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenEntities))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewSpamEntities))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewDeletedEntities))
+                    {
+                        q.HideDeleted.True();
+                    }
+
                 })
                 .GetResultsAsync(options, pager);
 

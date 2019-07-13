@@ -27,10 +27,6 @@
             </li>
         }
     </ol>
-    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId">
-        <date utc="@Model.Entity.LastReplyDate"></date>
-    </a>
-
 </div>
 
 <a asp-route-area="@Model.Entity.ModuleId" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">
@@ -42,13 +38,43 @@
         <i class="fal fa-thumbtack"></i>
     </span>
 }
-
 <div class="text-muted">
     @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.Options.Search))
 </div>
 <div>
-    @T["By"] <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
+    @if (Model.Entity.LastReplyDate != null)
+    {
+        <div class="float-right">
+            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss">
+                <date utc="@Model.Entity.LastReplyDate"></date>
+            </a>
+        </div>
+    }
+    @T["By"] <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>,
     <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+    @if (Model.Entity.IsPrivate)
+    {
+        if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+        {
+            <span class="badge badge-warning" data-toggle="tooltip" title="@T["This contribution is private and only visible as you are the author"]">@T["Private"]</span>
+        }
+        else
+        {
+            <span class="badge badge-warning" data-toggle="tooltip" title="@T["This contribution is private and only visible as you have permission to view private contributions"]">@T["Private"]</span>
+        }
+    }
+    @if (Model.Entity.IsHidden)
+    {
+        <span class="badge badge-primary" data-toggle="tooltip" title="@T["This contribution is hidden and only visible as you have permission to view hidden contributions"]">@T["Hidden"]</span>
+    }
+    @if (Model.Entity.IsSpam)
+    {
+        <span class="badge badge-info" data-toggle="tooltip" title="@T["This contribution has been flagged as SPAM and is only visible as you have permission to view contributions flagged as SPAM"]">@T["SPAM"]</span>
+    }
+    @if (Model.Entity.IsDeleted)
+    {
+        <span class="badge badge-danger" data-toggle="tooltip" title="@T["This contribution has been deleted and is only visible as you have permission to view deleted contributions"]">@T["Deleted"]</span>
+    }
 </div>
 
 

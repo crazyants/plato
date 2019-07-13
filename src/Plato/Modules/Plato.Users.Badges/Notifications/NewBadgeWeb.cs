@@ -84,7 +84,7 @@ namespace Plato.Users.Badges.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = S["New Badge"].Value,
+                Title = context.Model.Title,
                 Message = $"{S["You've earned the"].Value} '{context.Model.Title}' {S["badge"].Value}",
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
