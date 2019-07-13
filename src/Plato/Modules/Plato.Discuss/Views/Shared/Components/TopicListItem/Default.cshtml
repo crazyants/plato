@@ -96,13 +96,10 @@
                     var replies = user.TotalReplies == 1
                         ? "reply"
                         : "replies";
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias">
-                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/>
-                    </a>
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
                 }
             </div>
         }
-      
         <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" class="@Model.Entity.CreatedBy?.Css.StaffCss"/>
         @if (@Model.Category != null)
         {

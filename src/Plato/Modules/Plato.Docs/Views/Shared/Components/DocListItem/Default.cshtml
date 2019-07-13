@@ -53,19 +53,33 @@
     @Model.Entity.Abstract
 </div>
 <div>
-    @if (details?.LatestUsers != null)
-    {
-        <div class="avatar-group float-right">
-            @foreach (var user in details.LatestUsers)
-            {
-                var replies = user.TotalReplies == 1
-                    ? "comment"
-                    : "comments";
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" /></a>
-            }
-        </div>
-    }
-    
+
+    <ul class="list-inline float-right">
+        @if (Model.Entity.LastReplyDate != null)
+        {
+            <li class="list-inline-item">
+                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
+                    <date utc="@Model.Entity.LastReplyDate"></date>
+                </a>
+            </li>
+        }
+        @if (details?.LatestUsers != null)
+        {
+            <li class="list-inline-item">
+                <div class="avatar-group">
+                    @foreach (var user in details.LatestUsers)
+                    {
+                        var replies = user.TotalReplies == 1
+                            ? "comment"
+                            : "comments";
+                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
+                    }
+                </div>
+            </li>
+        }
+
+    </ul>
+
     <ul class="list-inline">
         @if (@Model.Category != null)
         {
@@ -76,12 +90,16 @@
                 </a>
             </li>
         }
-        @if (Model.Entity.LastReplyId > 0)
+        @if (Model.Entity.ModifiedDate != null)
         {
             <li class="list-inline-item">
-                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy.Css.StaffCss">
-                    <date utc="@Model.Entity.LastReplyDate"></date>
-                </a>
+                <date utc="@Model.Entity.ModifiedDate"/>
+            </li>
+        }
+        else
+        {
+            <li class="list-inline-item">
+                <date utc="@Model.Entity.CreatedDate"/>
             </li>
         }
         @if (Model.Tags != null)
