@@ -21,7 +21,7 @@ namespace Plato.Docs.Navigation
             }
 
             builder
-                .Add(T["Docs"], 2, users => users
+                .Add(T["Docs"], 2, docs => docs
                     .IconCss("fal fa-book-open")
                     .Add(T["Overview"], int.MinValue, home => home
                         .Action("Index", "Admin", "Plato.Docs")

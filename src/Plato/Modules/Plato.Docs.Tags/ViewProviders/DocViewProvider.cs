@@ -56,36 +56,11 @@ namespace Plato.Docs.Tags.ViewProviders
 
         #region "Implementation"
         
-        public override async Task<IViewProviderResult> BuildIndexAsync(Doc article, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Doc article, IViewProviderContext context)
         {
-
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-
-            // Get tags
-            var tags = await _tagStore.QueryAsync()
-                .Take(1, 20)
-                .Select<TagQueryParams>(q =>
-                {
-                    q.FeatureId.Equals(feature.Id);
-                })
-                .OrderBy("TotalEntities", OrderBy.Desc)
-                .ToList();
-
-            return Views(
-                View<TagsViewModel<Tag>>("Doc.Tags.Index.Sidebar", model =>
-                {
-                    model.Tags = tags?.Data;
-                    return model;
-                }).Zone("sidebar").Order(4)
-            );
-
+            return Task.FromResult(default(IViewProviderResult));
         }
-
-
+        
         public override Task<IViewProviderResult> BuildDisplayAsync(Doc article, IViewProviderContext context)
         {
             return Task.FromResult(Views(
