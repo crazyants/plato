@@ -8,7 +8,7 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public interface IAggregatedFeatureEntitiesStore : IQueryableStore<AggregatedCount<string>>
+    public interface IAggregatedFeatureEntitiesStore : IQueryableStore<AggregatedResult<string>>
     {
 
     }
@@ -28,13 +28,13 @@ namespace Plato.Entities.Stores
         }
 
 
-        public IQuery<AggregatedCount<string>> QueryAsync()
+        public IQuery<AggregatedResult<string>> QueryAsync()
         {
-            var query = new AggregatedEntityQuery<AggregatedCount<string>>(this);
-            return _dbQuery.ConfigureQuery<AggregatedCount<string>>(query); ;
+            var query = new AggregatedEntityQuery<AggregatedResult<string>>(this);
+            return _dbQuery.ConfigureQuery<AggregatedResult<string>>(query); ;
         }
 
-        public async Task<IPagedResults<AggregatedCount<string>>> SelectAsync(IDbDataParameter[] dbParams)
+        public async Task<IPagedResults<AggregatedResult<string>>> SelectAsync(IDbDataParameter[] dbParams)
         {
             return await _aggregatedFeatureEntitiesRepository.SelectAsync(dbParams);
         }

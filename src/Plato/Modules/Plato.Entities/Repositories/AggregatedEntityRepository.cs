@@ -109,86 +109,86 @@ namespace Plato.Entities.Repositories
 
         }
         
-        // ----------------
-        // Grouped by feature
-        // ----------------
+        //// ----------------
+        //// Grouped by feature
+        //// ----------------
 
-        public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync()
-        {
+        //public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync()
+        //{
 
-            // Sql query
-            const string sql = @"
-                SELECT 
-                    f.ModuleId AS [Aggregate] ,
-                    COUNT(e.Id) AS Count
-                FROM 
-                    {prefix}_Entities e
-                INNER JOIN {prefix}_ShellFeatures f ON f.Id = e.FeatureId               
-                GROUP BY 
-                    f.ModuleId
-            ";
+        //    // Sql query
+        //    const string sql = @"
+        //        SELECT 
+        //            f.ModuleId AS [Aggregate] ,
+        //            COUNT(e.Id) AS Count
+        //        FROM 
+        //            {prefix}_Entities e
+        //        INNER JOIN {prefix}_ShellFeatures f ON f.Id = e.FeatureId               
+        //        GROUP BY 
+        //            f.ModuleId
+        //    ";
 
-            // Sql replacements
-            var replacements = new Dictionary<string, string>();
+        //    // Sql replacements
+        //    var replacements = new Dictionary<string, string>();
 
-            // Execute and return results
-            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
-            {
-                var output = new AggregatedResult<string>();
-                while (await reader.ReadAsync())
-                {
-                    var aggregatedCount = new AggregatedCount<string>();
-                    aggregatedCount.PopulateModel(reader);
-                    output.Data.Add(aggregatedCount);
-                }
-                return output;
-            });
+        //    // Execute and return results
+        //    return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+        //    {
+        //        var output = new AggregatedResult<string>();
+        //        while (await reader.ReadAsync())
+        //        {
+        //            var aggregatedCount = new AggregatedCount<string>();
+        //            aggregatedCount.PopulateModel(reader);
+        //            output.Data.Add(aggregatedCount);
+        //        }
+        //        return output;
+        //    });
 
 
 
-        }
+        //}
 
-        public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId)
-        {
+        //public async Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId)
+        //{
 
-            if (userId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(userId));
-            }
+        //    if (userId <= 0)
+        //    {
+        //        throw new ArgumentOutOfRangeException(nameof(userId));
+        //    }
 
-            // Sql query
-            const string sql = @"
-                SELECT 
-                    f.ModuleId AS [Aggregate],
-                    COUNT(e.Id) AS Count
-                FROM 
-                    {prefix}_Entities e INNER JOIN {prefix}_ShellFeatures f ON f.Id = e.FeatureId               
-                WHERE
-                    (e.CreatedUserId = {userId})
-                GROUP BY 
-                    f.ModuleId
-            ";
+        //    // Sql query
+        //    const string sql = @"
+        //        SELECT 
+        //            f.ModuleId AS [Aggregate],
+        //            COUNT(e.Id) AS Count
+        //        FROM 
+        //            {prefix}_Entities e INNER JOIN {prefix}_ShellFeatures f ON f.Id = e.FeatureId               
+        //        WHERE
+        //            (e.CreatedUserId = {userId})
+        //        GROUP BY 
+        //            f.ModuleId
+        //    ";
 
-            // Sql replacements
-            var replacements = new Dictionary<string, string>()
-            {
-                ["{userId}"] = userId.ToString()
-            };
+        //    // Sql replacements
+        //    var replacements = new Dictionary<string, string>()
+        //    {
+        //        ["{userId}"] = userId.ToString()
+        //    };
 
-            // Execute and return results
-            return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
-            {
-                var output = new AggregatedResult<string>();
-                while (await reader.ReadAsync())
-                {
-                    var aggregatedCount = new AggregatedCount<string>();
-                    aggregatedCount.PopulateModel(reader);
-                    output.Data.Add(aggregatedCount);
-                }
-                return output;
-            });
+        //    // Execute and return results
+        //    return await _dbHelper.ExecuteReaderAsync(sql, replacements, async reader =>
+        //    {
+        //        var output = new AggregatedResult<string>();
+        //        while (await reader.ReadAsync())
+        //        {
+        //            var aggregatedCount = new AggregatedCount<string>();
+        //            aggregatedCount.PopulateModel(reader);
+        //            output.Data.Add(aggregatedCount);
+        //        }
+        //        return output;
+        //    });
             
-        }
+        //}
         
     }
 

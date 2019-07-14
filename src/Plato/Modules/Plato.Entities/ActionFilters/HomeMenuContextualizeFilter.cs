@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Services;
 using Plato.Internal.Layout;
 using Plato.Internal.Layout.ActionFilters;
+using Plato.Internal.Models.Metrics;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.ActionFilters
 {
@@ -13,12 +18,18 @@ namespace Plato.Entities.ActionFilters
     public class HomeMenuContextualizeFilter : IModularActionFilter
     {
 
+        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
+        private readonly IAuthorizationService _authorizationService;
 
         public HomeMenuContextualizeFilter(
-            IAggregatedEntityRepository aggregatedEntityRepository)
+            IAggregatedEntityRepository aggregatedEntityRepository, 
+            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IAuthorizationService authorizationService)
         {
             _aggregatedEntityRepository = aggregatedEntityRepository;
+            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _authorizationService = authorizationService;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -72,11 +83,46 @@ namespace Plato.Entities.ActionFilters
             {
                 return;
             }
-
+            
+         
+            
             // We are on the homepage, register metrics on context
             context.HttpContext.Items[typeof(FeatureEntityMetrics)] = new FeatureEntityMetrics()
             {
-                AggregatedResults = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync()
+                AggregatedResults = await _aggregatedFeatureEntitiesService
+                    .ConfigureQuery(async q =>
+                    {
+
+                        // Hide private?
+                        if (!await _authorizationService.AuthorizeAsync(context.HttpContext.User,
+                            Permissions.ViewPrivateEntities))
+                        {
+                            q.HidePrivate.True();
+                        }
+
+                        // Hide hidden?
+                        if (!await _authorizationService.AuthorizeAsync(context.HttpContext.User,
+                            Permissions.ViewHiddenEntities))
+                        {
+                            q.HideHidden.True();
+                        }
+
+                        // Hide spam?
+                        if (!await _authorizationService.AuthorizeAsync(context.HttpContext.User,
+                            Permissions.ViewSpamEntities))
+                        {
+                            q.HideSpam.True();
+                        }
+
+                        // Hide deleted?
+                        if (!await _authorizationService.AuthorizeAsync(context.HttpContext.User,
+                            Permissions.ViewDeletedEntities))
+                        {
+                            q.HideDeleted.True();
+                        }
+
+                    })
+                    .GetResultsAsync(null)
             };
 
         }

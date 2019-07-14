@@ -10,7 +10,7 @@ using Plato.Internal.Repositories;
 namespace Plato.Entities.Repositories
 {
 
-    public interface IAggregatedFeatureEntitiesRepository : IQueryableRepository<AggregatedCount<string>>
+    public interface IAggregatedFeatureEntitiesRepository : IQueryableRepository<AggregatedResult<string>>
     {
 
     }
@@ -26,21 +26,23 @@ namespace Plato.Entities.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IPagedResults<AggregatedCount<string>>> SelectAsync(IDbDataParameter[] dbParams)
+        public async Task<IPagedResults<AggregatedResult<string>>> SelectAsync(IDbDataParameter[] dbParams)
         {
 
-            IPagedResults<AggregatedCount<string>> results = null;
+            IPagedResults<AggregatedResult<string>> results = null;
             using (var context = _dbContext)
             {
 
-                results = await context.ExecuteReaderAsync<IPagedResults<AggregatedCount<string>>>(
+                results = await context.ExecuteReaderAsync<IPagedResults<AggregatedResult<string>>>(
                     CommandType.StoredProcedure,
                     "SelectEntityUsersPaged",
                     async reader =>
                     {
+
+
                         if ((reader != null) && (reader.HasRows))
                         {
-                            var output = new PagedResults<AggregatedCount<string>>();
+                            var output = new AggregatedResult<string>();
                             while (await reader.ReadAsync())
                             {
                                 var aggregatedCount = new AggregatedCount<string>();
@@ -48,13 +50,19 @@ namespace Plato.Entities.Repositories
                                 output.Data.Add(aggregatedCount);
                             }
 
+                            var pagedResults = new PagedResults<AggregatedResult<string>>
+                            {
+                                Data = new List<AggregatedResult<string>>() {output}
+                            };
+
                             if (await reader.NextResultAsync())
                             {
                                 await reader.ReadAsync();
-                                output.PopulateTotal(reader);
+                                pagedResults.PopulateTotal(reader);
                             }
 
-                            return output;
+                            return pagedResults;
+
                         }
 
                         return null;
@@ -64,7 +72,7 @@ namespace Plato.Entities.Repositories
             }
 
             return results;
-            
+
         }
 
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
@@ -43,62 +44,52 @@ namespace Plato.Entities.ViewProviders
                 return await BuildIndexAsync(profile, context);
             }
             
-            //var featureEntityMetrics = new FeatureEntityMetrics()
-            //{
-            //    Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
-            //};
-            
             var indexOptions = new EntityIndexOptions()
             {
                 CreatedByUserId = user.Id
             };
 
 
-            var metrics = await _aggregatedFeatureEntitiesService
-                .ConfigureQuery(async q =>
-                {
 
-                    // Hide private?
-                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                        Permissions.ViewPrivateEntities))
-                    {
-                        q.HidePrivate.True();
-                    }
 
-                    // Hide hidden?
-                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                        Permissions.ViewHiddenEntities))
-                    {
-                        q.HideHidden.True();
-                    }
-
-                    // Hide spam?
-                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                        Permissions.ViewSpamEntities))
-                    {
-                        q.HideSpam.True();
-                    }
-
-                    // Hide deleted?
-                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                        Permissions.ViewDeletedEntities))
-                    {
-                        q.HideDeleted.True();
-                    }
-                    
-                })
-                .GetResultsAsync(indexOptions);
-            
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                AggregatedResults = new AggregatedResult<string>()
-                {
-                    Data = metrics?.Data
-                }
+                AggregatedResults = await _aggregatedFeatureEntitiesService
+                    .ConfigureQuery(async q =>
+                    {
+
+                        // Hide private?
+                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                            Permissions.ViewPrivateEntities))
+                        {
+                            q.HidePrivate.True();
+                        }
+
+                        // Hide hidden?
+                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                            Permissions.ViewHiddenEntities))
+                        {
+                            q.HideHidden.True();
+                        }
+
+                        // Hide spam?
+                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                            Permissions.ViewSpamEntities))
+                        {
+                            q.HideSpam.True();
+                        }
+
+                        // Hide deleted?
+                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                            Permissions.ViewDeletedEntities))
+                        {
+                            q.HideDeleted.True();
+                        }
+
+                    })
+                    .GetResultsAsync(indexOptions)
             };
-
-
-
+            
             var viewModel = new UserDisplayViewModel<Entity>()
             {
                 User = user,

@@ -16,9 +16,9 @@ namespace Plato.Entities.Repositories
             DateTimeOffset end,
             int featureId);
 
-        Task<AggregatedResult<string>> SelectGroupedByFeatureAsync();
+        //Task<AggregatedResult<string>> SelectGroupedByFeatureAsync();
 
-        Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId);
+        //Task<AggregatedResult<string>> SelectGroupedByFeatureAsync(int userId);
 
 
     }

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Articles.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -14,15 +17,19 @@ namespace Plato.Articles.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
+        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IAggregatedEntityRepository aggregatedEntityRepository)
+            IAggregatedEntityRepository aggregatedEntityRepository,
+            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService)
         {
             _platoUserStore = platoUserStore;
             _aggregatedEntityRepository = aggregatedEntityRepository;
+            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
         }
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
@@ -44,7 +51,17 @@ namespace Plato.Articles.ViewProviders
 
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                AggregatedResults = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
+                AggregatedResults = await _aggregatedFeatureEntitiesService
+                    .ConfigureQuery(q =>
+                    {
+                        q.CreatedUserId.Equals(user.Id);
+                        q.HideSpam.True();
+                        q.HideHidden.True();
+                        q.HideDeleted.True();
+                        q.HidePrivate.True();
+
+                    })
+                    .GetResultsAsync()
             };
 
             // Build view model

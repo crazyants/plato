@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Metrics;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -14,7 +16,7 @@ namespace Plato.Entities.Services
     public interface IAggregatedFeatureEntitiesService
     {
 
-        Task<IPagedResults<AggregatedCount<string>>> GetResultsAsync(EntityIndexOptions options);
+        Task<AggregatedResult<string>> GetResultsAsync(EntityIndexOptions options = null);
 
         IAggregatedFeatureEntitiesService ConfigureDb(Action<IQueryOptions> configure);
 
@@ -27,12 +29,16 @@ namespace Plato.Entities.Services
         private Action<QueryOptions> _configureDb = null;
         private Action<AggregatedEntityQueryParams> _configureParams = null;
 
+
         private readonly IAggregatedFeatureEntitiesStore _aggregatedFeatureEntitiesStore;
+        private readonly IContextFacade _contextFacade;
 
         public AggregatedFeatureEntitiesService(
-            IAggregatedFeatureEntitiesStore aggregatedFeatureEntitiesStore)
+            IAggregatedFeatureEntitiesStore aggregatedFeatureEntitiesStore,
+            IContextFacade contextFacade)
         {
             _aggregatedFeatureEntitiesStore = aggregatedFeatureEntitiesStore;
+            _contextFacade = contextFacade;
 
             // Default options delegate
             _configureDb = options => options.SearchType = SearchTypes.Tsql;
@@ -51,15 +57,33 @@ namespace Plato.Entities.Services
             return this;
         }
 
-        public async Task<IPagedResults<AggregatedCount<string>>> GetResultsAsync(EntityIndexOptions options)
+        public async Task<AggregatedResult<string>> GetResultsAsync(EntityIndexOptions options = null)
         {
-      
+
+            if (options == null)
+            {
+                options = new EntityIndexOptions();
+            }
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             // Return tailored results
-            return await _aggregatedFeatureEntitiesStore.QueryAsync()
+            var results = await _aggregatedFeatureEntitiesStore.QueryAsync()
                 .Configure(_configureDb)
                 .Select<AggregatedEntityQueryParams>(q =>
                 {
+
+                    // ----------------
+                    // Required for role based security checks
+                    // ----------------
+
+                    if (user != null)
+                    {
+                        q.UserId.Equals(user.Id);
+                    }
                     
+
                     // ----------------
                     // Basic parameters
                     // ----------------
@@ -113,6 +137,7 @@ namespace Plato.Entities.Services
                 .OrderBy(options.SortColumns)
                 .ToList();
 
+            return results?.Data.First();
 
         }
 
