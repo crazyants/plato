@@ -1,0 +1,17 @@
+﻿@model EditLabelViewModel
+
+@if (Model.IsNewLabel)
+{
+    <h4>@T["Add Label"]</h4>
+    <span class="text-muted">@T["Add a new label."]</span>
+}
+else
+{
+    <h4>@T["Edit Label"]</h4>
+    <span class="text-muted">@T["Edit an existing label."]</span>
+}
+
+<hr />
+
+
+

@@ -1,0 +1,18 @@
+Name: Plato Docs Labels
+Description: Adds the ability to label docs.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Docs
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Labels",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Docs",
+		Version: "1.0.0"
+	}
+]

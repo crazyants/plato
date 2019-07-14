@@ -50,11 +50,11 @@
             </a>
         </div>
     }
-    @T["By"] <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>,
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>,
     <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
     @if (Model.Entity.IsPrivate)
     {
-        if (Model.Entity.CreatedUserId == base.CurrentUser.Id)
+        if (Model.Entity.CreatedUserId == base.CurrentUser?.Id)
         {
             <span class="badge badge-warning" data-toggle="tooltip" title="@T["This contribution is private and only visible as you are the author"]">@T["Private"]</span>
         }

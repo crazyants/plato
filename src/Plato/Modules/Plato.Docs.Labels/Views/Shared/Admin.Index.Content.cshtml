@@ -1,0 +1,7 @@
+﻿@model LabelIndexViewModel<Plato.Docs.Labels.Models.Label>
+
+@await DisplayAsync(new View("DocsLabelList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))

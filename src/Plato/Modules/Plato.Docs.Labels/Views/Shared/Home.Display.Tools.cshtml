@@ -1,0 +1,12 @@
+﻿@model Label
+
+<form class="form-inline ml-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+    <div class="position-relative min-w-250">
+        <div class="search-input-group">
+            <input class="form-control" name="opts.search" type="search" placeholder="@T["Search labels..."]" aria-label="Search" autofocus />
+            <button class="btn btn-primary" type="submit">
+                <i class="fal fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>
