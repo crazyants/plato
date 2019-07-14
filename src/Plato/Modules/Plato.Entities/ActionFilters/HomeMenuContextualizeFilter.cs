@@ -76,7 +76,7 @@ namespace Plato.Entities.ActionFilters
             // We are on the homepage, register metrics on context
             context.HttpContext.Items[typeof(FeatureEntityMetrics)] = new FeatureEntityMetrics()
             {
-                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync()
+                AggregatedResults = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync()
             };
 
         }

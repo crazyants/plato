@@ -1,28 +1,34 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Services;
+using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.ViewProviders
 {
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
-
-        private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
-
-        //private readonly IFeatureEntityMetricsStore _featureEntityMetricsStore;
+        
+        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         
         public ProfileViewProvider(
-            IPlatoUserStore<User> platoUserStore,
-            IAggregatedEntityRepository aggregatedEntityRepository)
+            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IAuthorizationService authorizationService,
+            IPlatoUserStore<User> platoUserStore)
         {
+            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _authorizationService = authorizationService;
             _platoUserStore = platoUserStore;
-            _aggregatedEntityRepository = aggregatedEntityRepository;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Profile profile, IViewProviderContext context)
@@ -37,21 +43,69 @@ namespace Plato.Entities.ViewProviders
                 return await BuildIndexAsync(profile, context);
             }
             
+            //var featureEntityMetrics = new FeatureEntityMetrics()
+            //{
+            //    Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
+            //};
+            
+            var indexOptions = new EntityIndexOptions()
+            {
+                CreatedByUserId = user.Id
+            };
+
+
+            var metrics = await _aggregatedFeatureEntitiesService
+                .ConfigureQuery(async q =>
+                {
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        Permissions.ViewPrivateEntities))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        Permissions.ViewHiddenEntities))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        Permissions.ViewSpamEntities))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        Permissions.ViewDeletedEntities))
+                    {
+                        q.HideDeleted.True();
+                    }
+                    
+                })
+                .GetResultsAsync(indexOptions);
+            
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
+                AggregatedResults = new AggregatedResult<string>()
+                {
+                    Data = metrics?.Data
+                }
             };
-            
+
+
+
             var viewModel = new UserDisplayViewModel<Entity>()
             {
                 User = user,
                 Metrics = featureEntityMetrics,
                 IndexViewModel = new EntityIndexViewModel<Entity>()
                 {
-                    Options = new EntityIndexOptions()
-                    {
-                        CreatedByUserId = user.Id
-                    },
+                    Options = indexOptions,
                     Pager = new PagerOptions()
                     {
                         Page = 1,

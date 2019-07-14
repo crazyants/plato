@@ -60,6 +60,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityUsersRepository, EntityUsersRepository>();
             services.AddScoped<IAggregatedEntityRepository, AggregatedEntityRepository>();
             services.AddScoped<IAggregatedEntityReplyRepository, AggregatedEntityReplyRepository>();
+            services.AddScoped<IAggregatedFeatureEntitiesRepository, AggregatedFeatureEntitiesRepository>();
 
             // Stores
             services.AddScoped<IEntityStore<Entity>, EntityStore<Entity>>();
@@ -68,6 +69,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityReplyDataStore<IEntityReplyData>, EntityReplyDataStore>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore<EntityReply>>();
             services.AddScoped<IEntityUsersStore, EntityUsersStore>();
+            services.AddScoped<IAggregatedFeatureEntitiesStore, AggregatedFeatureEntitiesStore>();
 
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
@@ -75,11 +77,15 @@ namespace Plato.Entities
 
             // Services
             services.AddScoped<IEntityService<Entity>, EntityService<Entity>>();
+            services.AddScoped<IAggregatedFeatureEntitiesService, AggregatedFeatureEntitiesService>();
 
             // Entity subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityAliasSubscriber>();
             services.AddScoped<IBrokerSubscriber, ParseEntityUrlsSubscriber>();
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
+
+
+            
 
             // Full text index providers
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();

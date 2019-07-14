@@ -13,14 +13,11 @@ namespace Plato.Entities.Repositories
     {
 
         private readonly IDbHelper _dbHelper;
-        private readonly IDbContext _dbContext;
 
-        public AggregatedEntityRepository(
-            IDbHelper dbHelper,
-            IDbContext dbContext)
+
+        public AggregatedEntityRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
-            _dbContext = dbContext;
         }
         
         // ----------------
@@ -192,49 +189,7 @@ namespace Plato.Entities.Repositories
             });
             
         }
-
-        public async Task<IPagedResults<AggregatedCount<string>>> SelectAsync(IDbDataParameter[] dbParams)
-        {
-         
-                IPagedResults<AggregatedCount<string>> results = null;
-                using (var context = _dbContext)
-                {
-
-                    results = await context.ExecuteReaderAsync<IPagedResults<AggregatedCount<string>>> (
-                        CommandType.StoredProcedure,
-                        "SelectEntityUsersPaged",
-                        async reader =>
-                        {
-                            if ((reader != null) && (reader.HasRows))
-                            {
-                                var output = new PagedResults<AggregatedCount<string>>();
-                                while (await reader.ReadAsync())
-                                {
-                                    var aggregatedCount = new AggregatedCount<string>();
-                                    aggregatedCount.PopulateModel(reader);
-                                    output.Data.Add(aggregatedCount);
-                                }
-
-                                if (await reader.NextResultAsync())
-                                {
-                                    await reader.ReadAsync();
-                                    output.PopulateTotal(reader);
-                                }
-
-                                return output;
-                            }
-
-                            return null;
-                        },
-                        dbParams);
-
-                }
-
-                return results;
-
-         
-
-        }
+        
     }
 
 }

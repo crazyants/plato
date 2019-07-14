@@ -372,7 +372,8 @@ namespace Plato.Entities.Stores
             
         private readonly string _entitiesTableName;
         private readonly string _entityRepliesTableName;
-        
+        private readonly string _shellFeaturesTableName;
+
         private readonly AggregatedEntityQuery<TModel> _query;
 
         public AggregatedEntityQueryBuilder(AggregatedEntityQuery<TModel> query)
@@ -380,6 +381,7 @@ namespace Plato.Entities.Stores
             _query = query;
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
+            _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
         }
 
         #endregion
@@ -390,8 +392,7 @@ namespace Plato.Entities.Stores
         {
 
             var whereClause = BuildWhere();
-            var orderBy = BuildOrderBy();
-
+      
             var sb = new StringBuilder();
 
             sb.Append("DECLARE @MaxRank int;")
@@ -405,11 +406,8 @@ namespace Plato.Entities.Stores
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
-            sb.Append(" ORDER BY ")
-                .Append(!string.IsNullOrEmpty(orderBy)
-                    ? orderBy
-                    : "Id ASC");
-            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
+            sb.Append("  GROUP BY f.ModuleId");
+ 
             return sb.ToString();
         }
 
@@ -452,7 +450,11 @@ namespace Plato.Entities.Stores
         {
 
             var sb = new StringBuilder();
-            sb.Append(_entitiesTableName).Append(" e ");
+            sb.Append(_entitiesTableName)
+                .Append(" e INNER JOIN ")
+                .Append(_shellFeaturesTableName)
+                .Append(" f ON f.Id = e.FeatureId ");
+
 
             // -----------------
             // Apply any table query adapters
@@ -760,122 +762,7 @@ namespace Plato.Entities.Stores
                 ? _query.Options.TablePrefix + tableName
                 : tableName;
         }
-
-        private string BuildOrderBy()
-        {
-            if (_query.SortColumns.Count == 0) return null;
-            var sb = new StringBuilder();
-            var i = 0;
-            var sortColumns = GetSafeSortColumns();
-            foreach (var sortColumn in sortColumns)
-            {
-                sb.Append(sortColumn.Key);
-                if (sortColumn.Value != OrderBy.Asc)
-                    sb.Append(" DESC");
-                if (i < sortColumns.Count - 1)
-                    sb.Append(", ");
-                i += 1;
-            }
-            return sb.ToString();
-        }
-
-        IDictionary<string, OrderBy> GetSafeSortColumns()
-        {
-            var output = new Dictionary<string, OrderBy>();
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                var columnName = GetSortColumn(sortColumn.Key);
-                if (!string.IsNullOrEmpty(columnName))
-                {
-                    output.Add(columnName, sortColumn.Value);
-                }
-            }
-
-            return output;
-        }
-
-        string GetSortColumn(string columnName)
-        {
-
-            if (String.IsNullOrEmpty(columnName))
-            {
-                return string.Empty;
-            }
-
-            switch (columnName.ToLowerInvariant())
-            {
-                case "id":
-                    return "e.Id";
-                case "title":
-                    return "e.Title";
-                case "message":
-                    return "e.[Message]";
-                case "replies":
-                    return "e.TotalReplies";
-                case "totalreplies":
-                    return "e.TotalReplies";
-                case "participants":
-                    return "e.TotalParticipants";
-                case "totalparticipants":
-                    return "e.TotalParticipants";
-                case "views":
-                    return "e.TotalViews";
-                case "totalviews":
-                    return "e.TotalViews";
-                case "follows":
-                    return "e.TotalFollows";
-                case "totalfollows":
-                    return "e.TotalFollows";
-                case "stars":
-                    return "e.TotalStars";
-                case "totalstars":
-                    return "e.TotalStars";
-                case "reactions":
-                    return "e.TotalReactions";
-                case "totalreactions":
-                    return "e.TotalReactions";
-                case "answers":
-                    return "e.TotalAnswers";
-                case "totalanswers":
-                    return "e.TotalAnswers";
-                case "pinned":
-                    return "e.IsPinned";
-                case "ispinned":
-                    return "e.IsPinned";
-                case "deleted":
-                    return "e.IsDeleted";
-                case "isdeleted":
-                    return "e.IsDeleted";
-                case "private":
-                    return "e.IsPrivate";
-                case "isprivate":
-                    return "e.IsPrivate";
-                case "spam":
-                    return "e.IsSpam";
-                case "isspam":
-                    return "e.IsSpam";
-                case "sortorder":
-                    return "e.SortOrder";
-                case "created":
-                    return "e.CreatedDate";
-                case "createddate":
-                    return "e.CreatedDate";
-                case "modified":
-                    return "IsNull(e.ModifiedDate, e.CreatedDate)";
-                case "modifieddate":
-                    return "IsNull(e.ModifiedDate, e.CreatedDate)";
-                case "lastreply":
-                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
-                case "lastreplydate":
-                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
-                case "rank":
-                    return "[Rank]";
-            }
-
-            return string.Empty;
-
-        }
-
+        
         // -- Search
 
         string BuildFederatedResults()
@@ -923,12 +810,7 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-
-        bool HasKeywords()
-        {
-            return !string.IsNullOrEmpty(GetKeywords());
-        }
-
+        
         string GetKeywords()
         {
 

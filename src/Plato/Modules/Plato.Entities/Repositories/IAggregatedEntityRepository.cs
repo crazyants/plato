@@ -7,9 +7,7 @@ using Plato.Internal.Repositories.Metrics;
 namespace Plato.Entities.Repositories
 {
 
-    public interface IAggregatedEntityRepository :
-        IQueryableRepository<AggregatedCount<string>>,
-        IAggregatedRepository
+    public interface IAggregatedEntityRepository : IAggregatedRepository
     {
 
         Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(

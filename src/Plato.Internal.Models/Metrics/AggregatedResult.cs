@@ -11,6 +11,11 @@ namespace Plato.Internal.Models.Metrics
         public int Total()
         {
 
+            if (Data == null)
+            {
+                return 0;
+            }
+
             var output = 0;
             foreach (var item in Data)
             {

@@ -46,7 +46,7 @@ namespace Plato.Discuss.ViewProviders
 
             var featureEntityMetrics = new FeatureEntityMetrics()
             {
-                Metrics = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
+                AggregatedResults = await _aggregatedEntityRepository.SelectGroupedByFeatureAsync(user.Id)
             };
             
             var userDisplayViewModel = new UserDisplayViewModel<Topic>()

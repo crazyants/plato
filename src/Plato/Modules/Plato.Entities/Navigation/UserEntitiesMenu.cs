@@ -31,7 +31,7 @@ namespace Plato.Entities.Navigation
                 builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
                     FeatureEntityMetrics;
 
-            var total = model?.Metrics?.Total() ?? 0;
+            var total = model?.AggregatedResults?.Total() ?? 0;
 
             // Get route values
             var context = builder.ActionContext;

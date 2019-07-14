@@ -5,7 +5,7 @@ namespace Plato.Entities.Models
 
     public class FeatureEntityMetrics
     {
-        public AggregatedResult<string> Metrics { get; set; }
+        public AggregatedResult<string> AggregatedResults { get; set; }
 
     }
 

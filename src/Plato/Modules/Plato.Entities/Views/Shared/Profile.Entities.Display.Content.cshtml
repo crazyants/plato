@@ -1,6 +1,6 @@
 ﻿@model UserDisplayViewModel<Entity>
 @{
-    var total = Model.Metrics.Metrics.Total();
+    var total = Model.Metrics?.AggregatedResults?.Total();
     var text = total == 1
         ? T["contribution"].Value
         : T["contributions"].Value;
@@ -8,7 +8,7 @@
     var tooltip = T["Show all {0}"].Value.Replace("{0}", $"{total} {text}");
 }
 
-@if (Model.Metrics.Metrics.Total() > 0)
+@if (total > 0)
 {
     <card class="card card-body-flush">
         <card-title>
