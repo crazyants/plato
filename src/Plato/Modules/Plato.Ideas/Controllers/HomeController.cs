@@ -1160,6 +1160,23 @@ namespace Plato.Ideas.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Idea Hidden Successfully"]);
+                
+                if (result.Response.IsHidden)
+                {
+                    // Do we have permission to view hidden entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewHiddenIdeas))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Ideas",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {
@@ -1382,6 +1399,23 @@ namespace Plato.Ideas.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Idea Marked as SPAM"]);
+
+                if (result.Response.IsSpam)
+                {
+                    // Do we have permission to view spam entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewSpamIdeas))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Ideas",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {

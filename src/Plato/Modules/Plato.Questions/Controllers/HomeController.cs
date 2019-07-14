@@ -1157,6 +1157,23 @@ namespace Plato.Questions.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Question Hidden Successfully"]);
+                
+                if (result.Response.IsHidden)
+                {
+                    // Do we have permission to view hidden entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewHiddenQuestions))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Questions",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {
@@ -1379,6 +1396,23 @@ namespace Plato.Questions.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Question Marked as SPAM"]);
+
+                if (result.Response.IsSpam)
+                {
+                    // Do we have permission to view spam entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewSpamQuestions))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Questions",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {

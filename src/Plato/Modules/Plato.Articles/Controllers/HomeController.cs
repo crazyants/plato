@@ -1179,6 +1179,23 @@ namespace Plato.Articles.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Article Hidden Successfully"]);
+                
+                if (result.Response.IsHidden)
+                {
+                    // Do we have permission to view hidden entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewHiddenArticles))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Articles",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+                
             }
             else
             {
@@ -1401,6 +1418,23 @@ namespace Plato.Articles.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Article Marked as SPAM"]);
+
+                if (result.Response.IsSpam)
+                {
+                    // Do we have permission to view spam entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewSpamArticles))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Articles",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+                
             }
             else
             {
