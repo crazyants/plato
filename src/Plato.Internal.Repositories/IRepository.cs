@@ -4,16 +4,28 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Repositories
 {
-    
-    public interface IRepository<TModel> where TModel : class
+
+    /// <summary>
+    /// Represents a repository that supports an IPagedResults.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    public interface IQueryableRepository<TModel> where TModel : class
+    {
+        Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams);
+
+    }
+
+    /// <summary>
+    /// Represents a repository that supports creating, deleting & querying data.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    public interface IRepository<TModel> : IQueryableRepository<TModel> where TModel : class
     {
 
         Task<TModel> InsertUpdateAsync(TModel model);
 
         Task<TModel> SelectByIdAsync(int id);
-
-        Task<IPagedResults<TModel>> SelectAsync(IDbDataParameter[] dbParams);
-
+        
         Task<bool> DeleteAsync(int id);
 
     }

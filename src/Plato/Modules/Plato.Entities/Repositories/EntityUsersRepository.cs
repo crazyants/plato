@@ -3,21 +3,21 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Repositories
 {
     
-    public interface IEntityUsersRepository
+    public interface IEntityUsersRepository : IQueryableRepository<EntityUser>
     {
-        Task<IPagedResults<EntityUser>> SelectAsync(IDbDataParameter[] dbParams);
     }
 
     public class EntityUsersRepository : IEntityUsersRepository
     {
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityUsersRepository> _logger;
         
+        private readonly ILogger<EntityUsersRepository> _logger;
+        private readonly IDbContext _dbContext;
+
         public EntityUsersRepository(
             IDbContext dbContext,
             ILogger<EntityUsersRepository> logger)

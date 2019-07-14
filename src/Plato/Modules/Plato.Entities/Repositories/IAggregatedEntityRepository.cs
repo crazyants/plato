@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Metrics;
+using Plato.Internal.Repositories;
 using Plato.Internal.Repositories.Metrics;
 
 namespace Plato.Entities.Repositories
 {
 
-    public interface IAggregatedEntityRepository : IAggregatedRepository
+    public interface IAggregatedEntityRepository :
+        IQueryableRepository<AggregatedCount<string>>,
+        IAggregatedRepository
     {
 
         Task<AggregatedResult<DateTimeOffset>> SelectGroupedByDateAsync(
