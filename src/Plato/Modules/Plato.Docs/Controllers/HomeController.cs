@@ -1228,7 +1228,7 @@ namespace Plato.Docs.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1339,7 +1339,7 @@ namespace Plato.Docs.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1450,7 +1450,7 @@ namespace Plato.Docs.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1603,6 +1603,23 @@ namespace Plato.Docs.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Doc Deleted Successfully"]);
+                
+                if (result.Response.IsDeleted)
+                {
+                    // Do we have permission to view deleted entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewDeletedDocs))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Docs",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {

@@ -1498,13 +1498,31 @@ namespace Plato.Discuss.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Topic Deleted Successfully"]);
+
+                if (result.Response.IsDeleted)
+                {
+                    // Do we have permission to view deleted entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewDeletedTopics))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Discuss",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {
                 _alerter.Danger(T["Could not delete the topic"]);
             }
-
-            // Redirect back to entity
+            
+    
+            // Else redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["area"] = "Plato.Discuss",

@@ -74,7 +74,7 @@ namespace Plato.Ideas.Navigation
                                 : Permissions.EditAnyIdea)
                             .LocalNav()
                         )
-                            .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
+                        .Add(entity.IsPinned ? T["Unpin"] : T["Pin"], 1, edit => edit
                             .Action(entity.IsPinned ? "Unpin" : "Pin", "Home", "Plato.Ideas",
                                 new RouteValueDictionary()
                                 {
@@ -142,6 +142,14 @@ namespace Plato.Ideas.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Attributes(!entity.IsDeleted
+                                    ? new Dictionary<string, object>()
+                                    {
+                                        ["data-provide"] = "confirm",
+                                        ["data-confirm-message"] =
+                                            "Are you sure you want to delete this idea?\n\nClick OK to confirm..."
+                                    }
+                                    : new Dictionary<string, object>())
                                 .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Ideas",
                                     new RouteValueDictionary()
                                     {

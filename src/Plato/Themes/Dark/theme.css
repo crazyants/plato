@@ -127,7 +127,7 @@
 
 .label {
     background: #242424;
-    color: #fff;
+    color: #2387b7;
 }
 
 .label-outline {
@@ -135,7 +135,6 @@
 }
 
 a.btn.label {
-    color: #2387b7;
     background: #242424;
 }
 

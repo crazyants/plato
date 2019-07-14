@@ -1521,6 +1521,23 @@ namespace Plato.Articles.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Article Deleted Successfully"]);
+
+                if (result.Response.IsDeleted)
+                {
+                    // Do we have permission to view deleted entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewDeletedArticles))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Articles",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+             
             }
             else
             {

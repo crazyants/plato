@@ -142,6 +142,14 @@ namespace Plato.Questions.Navigation
                             .DividerCss("dropdown-divider").LocalNav()
                         )
                         .Add(entity.IsDeleted ? T["Restore"] : T["Delete"], int.MaxValue, edit => edit
+                                .Attributes(!entity.IsDeleted
+                                    ? new Dictionary<string, object>()
+                                    {
+                                        ["data-provide"] = "confirm",
+                                        ["data-confirm-message"] =
+                                            "Are you sure you want to delete this question?\n\nClick OK to confirm..."
+                                    }
+                                    : new Dictionary<string, object>())
                                 .Action(entity.IsDeleted ? "Restore" : "Delete", "Home", "Plato.Questions",
                                     new RouteValueDictionary()
                                     {

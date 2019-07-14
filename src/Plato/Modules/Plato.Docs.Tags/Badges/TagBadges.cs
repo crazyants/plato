@@ -17,7 +17,7 @@ namespace Plato.Docs.Tags.Badges
         
         public static readonly Badge Bronze =
             new Badge("DocsTagBadgesBronze",
-                "Article Tagger",
+                "Doc Tagger",
                 "Added {threshold} doc tags",
                 "fal fa-tag",
                 BadgeLevel.Bronze,
@@ -26,7 +26,7 @@ namespace Plato.Docs.Tags.Badges
 
         public static readonly Badge Silver =
             new Badge("DocsTagBadgesSilver",
-                "Article Tag Artist",
+                "Doc Tag Artist",
                 "Added {threshold} doc tags",
                 "fal fa-tag",
                 BadgeLevel.Silver,
@@ -35,7 +35,7 @@ namespace Plato.Docs.Tags.Badges
 
         public static readonly Badge Gold =
             new Badge("DocsArticlesTagBadgesGold",
-                "Article Taxonomist",
+                "Doc Taxonomist",
                 "Added {threshold} doc tags",
                 "fal fa-tag",
                 BadgeLevel.Gold,

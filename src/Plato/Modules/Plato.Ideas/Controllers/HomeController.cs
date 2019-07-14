@@ -112,7 +112,7 @@ namespace Plato.Ideas.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest
+        // Index
         // -----------------
 
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
@@ -183,31 +183,6 @@ namespace Plato.Ideas.Controllers
             // Return view
             return View((LayoutViewModel) await _entityViewProvider.ProvideIndexAsync(new Idea(), this));
 
-        }
-
-        // -----------------
-        // Popular
-        // -----------------
-
-        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
-        {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityIndexOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            opts.Sort = SortBy.Replies;
-            opts.Order = OrderBy.Desc;
-
-            return Index(opts, pager);
         }
 
         // -----------------
@@ -874,7 +849,6 @@ namespace Plato.Ideas.Controllers
 
         }
         
-
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Report))]
         public async Task<IActionResult> ReportPost(ReportEntityViewModel model)
         {
@@ -1153,7 +1127,7 @@ namespace Plato.Ideas.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1264,7 +1238,7 @@ namespace Plato.Ideas.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1375,7 +1349,7 @@ namespace Plato.Ideas.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1528,6 +1502,22 @@ namespace Plato.Ideas.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Idea Deleted Successfully"]);
+
+                if (result.Response.IsDeleted)
+                {
+                    // Do we have permission to view deleted entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewDeletedIdeas))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Ideas",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
             }
             else
             {

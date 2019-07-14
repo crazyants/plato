@@ -110,7 +110,7 @@ namespace Plato.Questions.Controllers
         #region "Actions"
 
         // -----------------
-        // Latest
+        // Index
         // -----------------
 
         public async Task<IActionResult> Index(EntityIndexOptions opts, PagerOptions pager)
@@ -181,31 +181,6 @@ namespace Plato.Questions.Controllers
             // Return view
             return View((LayoutViewModel) await _entityViewProvider.ProvideIndexAsync(new Question(), this));
 
-        }
-
-        // -----------------
-        // Popular
-        // -----------------
-
-        public Task<IActionResult> Popular(EntityIndexOptions opts, PagerOptions pager)
-        {
-
-            // Default options
-            if (opts == null)
-            {
-                opts = new EntityIndexOptions();
-            }
-
-            // Default pager
-            if (pager == null)
-            {
-                pager = new PagerOptions();
-            }
-
-            opts.Sort = SortBy.Replies;
-            opts.Order = OrderBy.Desc;
-
-            return Index(opts, pager);
         }
 
         // -----------------
@@ -1149,7 +1124,7 @@ namespace Plato.Questions.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1260,7 +1235,7 @@ namespace Plato.Questions.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1371,7 +1346,7 @@ namespace Plato.Questions.Controllers
         {
 
             // Ensure we have a valid id
-            var ok = int.TryParse(id, out int entityId);
+            var ok = int.TryParse(id, out var entityId);
             if (!ok)
             {
                 return NotFound();
@@ -1524,6 +1499,23 @@ namespace Plato.Questions.Controllers
             if (result.Succeeded)
             {
                 _alerter.Success(T["Question Deleted Successfully"]);
+                
+                if (result.Response.IsDeleted)
+                {
+                    // Do we have permission to view deleted entities
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        entity.CategoryId, Permissions.ViewDeletedQuestions))
+                    {
+                        // Redirect to index
+                        return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+                        {
+                            ["area"] = "Plato.Questions",
+                            ["controller"] = "Home",
+                            ["action"] = "Index"
+                        }));
+                    }
+                }
+
             }
             else
             {
