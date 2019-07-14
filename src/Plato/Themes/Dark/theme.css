@@ -126,7 +126,7 @@
 /* ------------------- */
 
 .label {
-    background: rgba(40,40,40, 0.70);
+    background: #242424;
     color: #fff;
 }
 
@@ -136,7 +136,7 @@
 
 a.btn.label {
     color: #2387b7;
-    background: rgba(40,40,40, 0.50);
+    background: #242424;
 }
 
 a.label:hover,

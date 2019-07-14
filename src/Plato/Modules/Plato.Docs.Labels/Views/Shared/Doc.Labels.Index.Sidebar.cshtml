@@ -19,7 +19,7 @@
                         <span class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
                         </span>
-                        <span data-toggle="tooltip" title="@T["Public Articles"]" class="badge badge-info float-right">
+                        <span data-toggle="tooltip" title="@T["Public Docs"]" class="badge badge-info float-right">
                             @label.TotalEntities.ToPrettyInt()
                         </span>
                     </a>
@@ -29,7 +29,7 @@
         else
         {
             <div class="text-center p-3 text-muted">
-                @T["Labels can be helpful to identify the type of article."]
+                @T["Labels can be helpful to identify the type of doc."]
                 <br /><br />
                 <a asp-route-area="Plato.Docs.Labels" asp-route-controller="Admin" asp-route-action="Index" class="btn btn-secondary">
                     @T["Manage Labels"]

@@ -15,7 +15,7 @@
         {
             foreach (var tag in Model.Tags)
             {
-                var tooltip = $"{T["Show all articles tagged"].Value} '{tag.Name}...'";
+                var tooltip = $"{T["Show all docs tagged"].Value} '{tag.Name}...'";
                 <a title="@tooltip" asp-route-area="Plato.Docs.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.tagId="@tag.TagId" asp-route-opts.alias="@tag.Alias" class="btn btn-sm label">
                     @tag.Name 
                 </a>

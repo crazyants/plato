@@ -15,19 +15,19 @@ namespace Plato.Docs.Labels.ViewProviders
 
     public class LabelViewProvider : BaseViewProvider<Label>
     {
-
+        
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IActionContextAccessor _actionContextAccessor;
 
         public LabelViewProvider(
+            IActionContextAccessor actionContextAccessor,
             ILabelStore<Label> labelStore,
-            IFeatureFacade featureFacade,
-            IActionContextAccessor actionContextAccessor)
+            IFeatureFacade featureFacade)
         {
-            _labelStore = labelStore;
-            _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
+            _featureFacade = featureFacade;
+            _labelStore = labelStore;
         }
         
         public override Task<IViewProviderResult> BuildIndexAsync(Label label, IViewProviderContext context)
@@ -78,7 +78,7 @@ namespace Plato.Docs.Labels.ViewProviders
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
                 View<EntityIndexViewModel<Doc>>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel<Label>>("Article.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel<Label>>("Doc.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
                     model.Labels = labels?.Data;

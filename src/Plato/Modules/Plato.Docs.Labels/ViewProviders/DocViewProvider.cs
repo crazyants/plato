@@ -60,26 +60,9 @@ namespace Plato.Docs.Labels.ViewProviders
             T = stringLocalize;
         }
         
-        public override async Task<IViewProviderResult> BuildIndexAsync(Doc viewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Doc viewModel, IViewProviderContext updater)
         {
-            
-            // Get top labels
-            var labels = await _labelStore.QueryAsync()
-                .Take(1, 5)
-                .Select<LabelQueryParams>(async q =>
-                {
-                    q.FeatureId.Equals(await GetFeatureIdAsync());
-                })
-                .OrderBy("TotalEntities", OrderBy.Desc)
-                .ToList();
-
-            return Views(View<LabelsViewModel<Label>>("Doc.Labels.Index.Sidebar", model =>
-                {
-                    model.Labels = labels?.Data;
-                    return model;
-                }).Zone("sidebar").Order(2)
-            );
-            
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Doc viewModel, IViewProviderContext updater)
