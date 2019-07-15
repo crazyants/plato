@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
@@ -116,8 +117,9 @@ namespace Plato.Search.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-        
-        
+
+
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityService<Entity> _entityService;
@@ -127,11 +129,13 @@ namespace Plato.Search.ViewComponents
         public SearchListViewComponent(
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
             IAuthorizationService authorizationService,
-            IEntityService<Entity> entityService)
+            IEntityService<Entity> entityService,
+            IFeatureEntityCountService featureEntityCountService)
         {
             _authorizationService = authorizationService;
             _searchSettingsStore = searchSettingsStore;
             _entityService = entityService;
+            _featureEntityCountService = featureEntityCountService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -152,8 +156,14 @@ namespace Plato.Search.ViewComponents
             // Get search settings
             _searchSettings = await _searchSettingsStore.GetAsync();
 
-            // Get view model
-            var model = await GetIndexViewModel(options, pager);
+            // Get results
+            var model = await GetIndexViewModelAsync(options, pager);
+
+            // Get metrics (results per feature)
+            var metrics = await GetFeatureEntityMetricsAsync(options);
+
+            // Add metrics to context for use later within navigation builders
+            ViewContext.HttpContext.Items[typeof(FeatureEntityCounts)] = metrics;
 
             // If full text is enabled add rank to sort options
             if (options.Sort == SortBy.Rank)
@@ -175,9 +185,7 @@ namespace Plato.Search.ViewComponents
 
         }
         
-        async Task<EntityIndexViewModel<Entity>> GetIndexViewModel(
-            EntityIndexOptions options,
-            PagerOptions pager)
+        async Task<EntityIndexViewModel<Entity>> GetIndexViewModelAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
             // Build results
@@ -237,7 +245,59 @@ namespace Plato.Search.ViewComponents
                 Filters = _defaultFilters
             };
         }
-    
+        
+
+        async Task<FeatureEntityCounts> GetFeatureEntityMetricsAsync(EntityIndexOptions options)
+        {
+
+            return new FeatureEntityCounts()
+            {
+                Features = await _featureEntityCountService
+                    .ConfigureDb(o =>
+                    {
+                        if (_searchSettings != null)
+                        {
+                            o.SearchType = _searchSettings.SearchType;
+                        }
+                    })
+                    .ConfigureQuery(async q =>
+                    {
+
+                        // Hide hidden?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.SearchHidden))
+                        {
+                            q.HideHidden.True();
+                        }
+
+                        // Hide spam?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.SearchSpam))
+                        {
+                            q.HideSpam.True();
+                        }
+
+                        // Hide deleted?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.SearchDeleted))
+                        {
+                            q.HideDeleted.True();
+                        }
+
+                        // Hide private?
+                        if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                            Permissions.SearchPrivate))
+                        {
+                            q.HidePrivate.True();
+                        }
+
+
+                    })
+                    .GetResultsAsync(options)
+            };
+            
+        }
+        
     }
     
 }

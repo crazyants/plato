@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Plato.Docs.Models;
 using Plato.Entities.Models;
-using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -17,15 +14,15 @@ namespace Plato.Docs.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService)
+            IFeatureEntityCountService featureEntityCountService)
         {
             _platoUserStore = platoUserStore;
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
         }
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
@@ -44,9 +41,9 @@ namespace Plato.Docs.ViewProviders
             }
 
             // Build feature entities model
-            var featureEntityMetrics = new FeatureEntityMetrics()
+            var featureEntityMetrics = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(q =>
                     {
                         q.CreatedUserId.Equals(user.Id);
@@ -64,7 +61,7 @@ namespace Plato.Docs.ViewProviders
             {
                 User = user,
                 IndexViewModel = indexViewModel,
-                Metrics = featureEntityMetrics
+                Counts = featureEntityMetrics
             };
 
             return Views(

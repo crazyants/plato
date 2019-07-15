@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Search.Navigation
@@ -33,8 +35,17 @@ namespace Plato.Search.Navigation
                 return;
             }
 
+            // Get metrics from context
+            var model =
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityCounts)] as
+                    FeatureEntityCounts;
+            
+            // Get feature metrics
+            var total = model?.Total() ?? 0;
+
             builder
                 .Add(T["All"], 0, f => f
+                        .Badge(total > 0 ? total.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
                         .Action("Index", "Home", "Plato.Search", new RouteValueDictionary()
                         {
                             ["opts.featureId"] = null,

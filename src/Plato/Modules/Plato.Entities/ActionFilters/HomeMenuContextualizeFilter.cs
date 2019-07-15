@@ -18,17 +18,19 @@ namespace Plato.Entities.ActionFilters
     public class HomeMenuContextualizeFilter : IModularActionFilter
     {
 
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+
+
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IAuthorizationService _authorizationService;
 
         public HomeMenuContextualizeFilter(
             IAggregatedEntityRepository aggregatedEntityRepository, 
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IFeatureEntityCountService featureEntityCountService,
             IAuthorizationService authorizationService)
         {
             _aggregatedEntityRepository = aggregatedEntityRepository;
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
             _authorizationService = authorizationService;
         }
 
@@ -84,12 +86,10 @@ namespace Plato.Entities.ActionFilters
                 return;
             }
             
-         
-            
             // We are on the homepage, register metrics on context
-            context.HttpContext.Items[typeof(FeatureEntityMetrics)] = new FeatureEntityMetrics()
+            context.HttpContext.Items[typeof(FeatureEntityCounts)] = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(async q =>
                     {
 

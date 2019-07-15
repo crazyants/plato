@@ -9,7 +9,7 @@ namespace Plato.Entities.ViewModels
 
         public EntityIndexViewModel<Entity> Popular { get; set; }
 
-        public FeatureEntityMetrics Metrics { get; set; }
+        public FeatureEntityCounts Counts { get; set; }
 
     }
 

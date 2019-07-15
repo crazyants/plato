@@ -14,7 +14,7 @@ namespace Plato.Entities.ViewModels
     {
         public User User { get; set; }
 
-        public FeatureEntityMetrics Metrics { get; set; } = new FeatureEntityMetrics();
+        public FeatureEntityCounts Counts { get; set; } = new FeatureEntityCounts();
 
     }
 }

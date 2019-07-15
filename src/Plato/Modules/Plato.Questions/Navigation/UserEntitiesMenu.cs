@@ -29,14 +29,14 @@ namespace Plato.Questions.Navigation
             
             // Get metrics from context
             var model =
-                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
-                    FeatureEntityMetrics;
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityCounts)] as
+                    FeatureEntityCounts;
 
             // Current area name
             var areaName = "Plato.Questions";
 
             // Get feature metrics
-            var metric = model?.AggregatedResults?.Data.FirstOrDefault(m => m.Aggregate.Equals(areaName, StringComparison.OrdinalIgnoreCase));
+            var metric = model?.Features?.FirstOrDefault(m => m.ModuleId.Equals(areaName, StringComparison.OrdinalIgnoreCase));
 
             // Get route values
             var context = builder.ActionContext;

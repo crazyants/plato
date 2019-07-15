@@ -1,13 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Plato.Entities.Models;
-using Plato.Entities.Repositories;
 using Plato.Entities.Services;
-using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -15,19 +11,20 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.ViewProviders
 {
+
     public class ProfileViewProvider : BaseViewProvider<Profile>
     {
         
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
         
         public ProfileViewProvider(
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IFeatureEntityCountService featureEntityCountService,
             IAuthorizationService authorizationService,
             IPlatoUserStore<User> platoUserStore)
         {
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
             _authorizationService = authorizationService;
             _platoUserStore = platoUserStore;
         }
@@ -48,13 +45,11 @@ namespace Plato.Entities.ViewProviders
             {
                 CreatedByUserId = user.Id
             };
+            
 
-
-
-
-            var featureEntityMetrics = new FeatureEntityMetrics()
+            var featureEntityMetrics = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(async q =>
                     {
 
@@ -93,7 +88,7 @@ namespace Plato.Entities.ViewProviders
             var viewModel = new UserDisplayViewModel<Entity>()
             {
                 User = user,
-                Metrics = featureEntityMetrics,
+                Counts = featureEntityMetrics,
                 IndexViewModel = new EntityIndexViewModel<Entity>()
                 {
                     Options = indexOptions,

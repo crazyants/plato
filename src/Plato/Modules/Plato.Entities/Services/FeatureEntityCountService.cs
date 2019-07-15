@@ -1,43 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Metrics;
-using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Entities.Services
 {
 
-    public interface IAggregatedFeatureEntitiesService
-    {
-
-        Task<AggregatedResult<string>> GetResultsAsync(EntityIndexOptions options = null);
-
-        IAggregatedFeatureEntitiesService ConfigureDb(Action<IQueryOptions> configure);
-
-        IAggregatedFeatureEntitiesService ConfigureQuery(Action<AggregatedEntityQueryParams> configure);
-    }
-
-    public class AggregatedFeatureEntitiesService : IAggregatedFeatureEntitiesService
+    public class FeatureEntityCountService : IFeatureEntityCountService
     {
 
         private Action<QueryOptions> _configureDb = null;
-        private Action<AggregatedEntityQueryParams> _configureParams = null;
-
-
-        private readonly IAggregatedFeatureEntitiesStore _aggregatedFeatureEntitiesStore;
+        private Action<FeatureEntityCountQueryParams> _configureParams = null;
+        
+        private readonly IFeatureEntityCountStore _featureEntityCountStore;
         private readonly IContextFacade _contextFacade;
 
-        public AggregatedFeatureEntitiesService(
-            IAggregatedFeatureEntitiesStore aggregatedFeatureEntitiesStore,
+        public FeatureEntityCountService(
+            IFeatureEntityCountStore featureEntityCountStore,
             IContextFacade contextFacade)
         {
-            _aggregatedFeatureEntitiesStore = aggregatedFeatureEntitiesStore;
+            _featureEntityCountStore = featureEntityCountStore;
             _contextFacade = contextFacade;
 
             // Default options delegate
@@ -45,19 +31,19 @@ namespace Plato.Entities.Services
 
         }
 
-        public IAggregatedFeatureEntitiesService ConfigureDb(Action<IQueryOptions> configure)
+        public IFeatureEntityCountService ConfigureDb(Action<IQueryOptions> configure)
         {
             _configureDb = configure;
             return this;
         }
         
-        public IAggregatedFeatureEntitiesService ConfigureQuery(Action<AggregatedEntityQueryParams> configure)
+        public IFeatureEntityCountService ConfigureQuery(Action<FeatureEntityCountQueryParams> configure)
         {
             _configureParams = configure;
             return this;
         }
 
-        public async Task<AggregatedResult<string>> GetResultsAsync(EntityIndexOptions options = null)
+        public async Task<IEnumerable<FeatureEntityCount>> GetResultsAsync(EntityIndexOptions options = null)
         {
 
             if (options == null)
@@ -69,9 +55,9 @@ namespace Plato.Entities.Services
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Return tailored results
-            var results = await _aggregatedFeatureEntitiesStore.QueryAsync()
+            var results = await _featureEntityCountStore.QueryAsync()
                 .Configure(_configureDb)
-                .Select<AggregatedEntityQueryParams>(q =>
+                .Select<FeatureEntityCountQueryParams>(q =>
                 {
 
                     // ----------------
@@ -137,7 +123,7 @@ namespace Plato.Entities.Services
                 .OrderBy(options.SortColumns)
                 .ToList();
 
-            return results?.Data.First();
+            return results?.Data;
 
         }
 

@@ -153,11 +153,11 @@ namespace Plato.Entities.Stores
 
         public IQuery<TEntity> QueryAsync()
         {
-            return _dbQuery.ConfigureQuery<TEntity>(new EntityQuery<TEntity>(this)
+            return _dbQuery.ConfigureQuery(new EntityQuery<TEntity>(this)
             {
                 FederatedQueryManager = _federatedQueryManager,
                 QueryAdapterManager = _queryAdapterManager
-            }); ;
+            });
         }
 
         public async Task<IPagedResults<TEntity>> SelectAsync(IDbDataParameter[] dbParams)

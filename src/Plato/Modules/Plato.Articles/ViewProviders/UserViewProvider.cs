@@ -17,7 +17,7 @@ namespace Plato.Articles.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IFeatureEntityCountService _featureEntityCountService;
 
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -25,11 +25,11 @@ namespace Plato.Articles.ViewProviders
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
             IAggregatedEntityRepository aggregatedEntityRepository,
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService)
+            IFeatureEntityCountService featureEntityCountService)
         {
             _platoUserStore = platoUserStore;
             _aggregatedEntityRepository = aggregatedEntityRepository;
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
         }
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserIndex userIndex, IViewProviderContext context)
@@ -49,9 +49,9 @@ namespace Plato.Articles.ViewProviders
                 throw new Exception($"A view model of type {typeof(EntityIndexViewModel<Article>).ToString()} has not been registered on the HttpContext!");
             }
 
-            var featureEntityMetrics = new FeatureEntityMetrics()
+            var featureEntityMetrics = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(q =>
                     {
                         q.CreatedUserId.Equals(user.Id);
@@ -69,7 +69,7 @@ namespace Plato.Articles.ViewProviders
             {
                 User = user,
                 IndexViewModel = indexViewModel,
-                Metrics = featureEntityMetrics
+                Counts = featureEntityMetrics
             };
 
             // Build view

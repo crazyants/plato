@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
-using Plato.Entities.Repositories;
 using Plato.Entities.Services;
-using Plato.Entities.Stores;
 using Plato.Questions.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Metrics;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -18,14 +14,14 @@ namespace Plato.Questions.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserIndex>
     {
 
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IFeatureEntityCountService featureEntityCountService,
             IPlatoUserStore<User> platoUserStore)
         {
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
             _platoUserStore = platoUserStore;
         }
         
@@ -48,9 +44,9 @@ namespace Plato.Questions.ViewProviders
             }
 
             // Build feature entities model
-            var featureEntityMetrics = new FeatureEntityMetrics()
+            var featureEntityMetrics = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(q =>
                     {
                         q.CreatedUserId.Equals(user.Id);
@@ -68,7 +64,7 @@ namespace Plato.Questions.ViewProviders
             {
                 User = user,
                 IndexViewModel = indexViewModel,
-                Metrics = featureEntityMetrics
+                Counts = featureEntityMetrics
             };
             
             // Build view

@@ -18,7 +18,7 @@ namespace Plato.Entities.ViewProviders
     public class UserViewProvider : BaseViewProvider<EntityUserIndex>
     {
 
-        private readonly IAggregatedFeatureEntitiesService _aggregatedFeatureEntitiesService;
+        private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -27,12 +27,12 @@ namespace Plato.Entities.ViewProviders
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
             IAggregatedEntityRepository aggregatedEntityRepository,
-            IAggregatedFeatureEntitiesService aggregatedFeatureEntitiesService,
+            IFeatureEntityCountService featureEntityCountService,
             IAuthorizationService authorizationService)
         {
             _platoUserStore = platoUserStore;
             _aggregatedEntityRepository = aggregatedEntityRepository;
-            _aggregatedFeatureEntitiesService = aggregatedFeatureEntitiesService;
+            _featureEntityCountService = featureEntityCountService;
             _authorizationService = authorizationService;
         }
         
@@ -54,39 +54,45 @@ namespace Plato.Entities.ViewProviders
 
 
 
-            var featureEntityMetrics = new FeatureEntityMetrics()
+            var featureEntityMetrics = new FeatureEntityCounts()
             {
-                AggregatedResults = await _aggregatedFeatureEntitiesService
+                Features = await _featureEntityCountService
                     .ConfigureQuery(async q =>
                     {
 
-                        // Hide private?
-                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                            Permissions.ViewPrivateEntities))
-                        {
-                            q.HidePrivate.True();
-                        }
+                        q.CreatedUserId.Equals(user.Id);
+                        q.HideSpam.True();
+                        q.HideHidden.True();
+                        q.HideDeleted.True();
+                        q.HidePrivate.True();
 
-                        // Hide hidden?
-                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                            Permissions.ViewHiddenEntities))
-                        {
-                            q.HideHidden.True();
-                        }
+                        //// Hide private?
+                        //if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        //    Permissions.ViewPrivateEntities))
+                        //{
+                        //    q.HidePrivate.True();
+                        //}
 
-                        // Hide spam?
-                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                            Permissions.ViewSpamEntities))
-                        {
-                            q.HideSpam.True();
-                        }
+                        //// Hide hidden?
+                        //if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        //    Permissions.ViewHiddenEntities))
+                        //{
+                        //    q.HideHidden.True();
+                        //}
 
-                        // Hide deleted?
-                        if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                            Permissions.ViewDeletedEntities))
-                        {
-                            q.HideDeleted.True();
-                        }
+                        //// Hide spam?
+                        //if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        //    Permissions.ViewSpamEntities))
+                        //{
+                        //    q.HideSpam.True();
+                        //}
+
+                        //// Hide deleted?
+                        //if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
+                        //    Permissions.ViewDeletedEntities))
+                        //{
+                        //    q.HideDeleted.True();
+                        //}
 
                     })
                     .GetResultsAsync()
@@ -96,7 +102,7 @@ namespace Plato.Entities.ViewProviders
             {
                 User = user,
                 IndexViewModel = indexViewModel,
-                Metrics = featureEntityMetrics
+                Counts = featureEntityMetrics
             };
             
             return Views(

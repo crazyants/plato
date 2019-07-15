@@ -29,8 +29,8 @@ namespace Plato.Articles.Navigation
             // Get metrics from context, these are registered via the
             // HomeMenuContextualize action filter within Plato.Entities
             var model =
-                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
-                    FeatureEntityMetrics;
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityCounts)] as
+                    FeatureEntityCounts;
 
             builder
                 .Add(T["Articles"], 3, discuss => discuss

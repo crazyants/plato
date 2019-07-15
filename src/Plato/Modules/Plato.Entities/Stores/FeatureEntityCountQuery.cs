@@ -11,22 +11,22 @@ using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
 namespace Plato.Entities.Stores
 {
-    #region "AggregatedEntityQuery"
+    #region "FeatureEntityCountQuery"
 
-    public class AggregatedEntityQuery<TModel> : DefaultQuery<TModel> where TModel : class
+    public class FeatureEntityCountQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
         public IFederatedQueryManager<TModel> FederatedQueryManager { get; set; }
 
         public IQueryAdapterManager<TModel> QueryAdapterManager { get; set; }
 
-        public AggregatedEntityQueryParams Params { get; set; }
+        public FeatureEntityCountQueryParams Params { get; set; }
 
         private readonly IQueryableStore<TModel> _store;
 
-        public AggregatedEntityQueryBuilder<TModel> Builder { get; private set; }
+        public FeatureEntityCountQueryBuilder<TModel> Builder { get; private set; }
 
-        public AggregatedEntityQuery(IQueryableStore<TModel> store)
+        public FeatureEntityCountQuery(IQueryableStore<TModel> store)
         {
             _store = store;
         }
@@ -35,14 +35,14 @@ namespace Plato.Entities.Stores
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (AggregatedEntityQueryParams)Convert.ChangeType(defaultParams, typeof(AggregatedEntityQueryParams));
+            Params = (FeatureEntityCountQueryParams)Convert.ChangeType(defaultParams, typeof(FeatureEntityCountQueryParams));
             return this;
         }
 
         public override async Task<IPagedResults<TModel>> ToList()
         {
 
-            Builder = new AggregatedEntityQueryBuilder<TModel>(this);
+            Builder = new FeatureEntityCountQueryBuilder<TModel>(this);
             var populateSql = Builder.BuildSqlPopulate();
             var countSql = Builder.BuildSqlCount();
             var keywords = Params?.Keywords.Value.ToEmptyIfNull() ?? string.Empty;
@@ -61,9 +61,9 @@ namespace Plato.Entities.Stores
 
     #endregion
 
-    #region "AggregatedEntityQueryParams"
+    #region "FeatureEntityCountQueryParams"
 
-    public class AggregatedEntityQueryParams
+    public class FeatureEntityCountQueryParams
     {
 
         private WhereInt _id;
@@ -309,9 +309,9 @@ namespace Plato.Entities.Stores
 
     #endregion
 
-    #region "AggregatedEntityQueryBuilder"
+    #region "FeatureEntityCountQueryBuilder"
 
-    public class AggregatedEntityQueryBuilder<TModel> : IQueryBuilder where TModel : class
+    public class FeatureEntityCountQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
 
         /*
@@ -374,9 +374,9 @@ namespace Plato.Entities.Stores
         private readonly string _entityRepliesTableName;
         private readonly string _shellFeaturesTableName;
 
-        private readonly AggregatedEntityQuery<TModel> _query;
+        private readonly FeatureEntityCountQuery<TModel> _query;
 
-        public AggregatedEntityQueryBuilder(AggregatedEntityQuery<TModel> query)
+        public FeatureEntityCountQueryBuilder(FeatureEntityCountQuery<TModel> query)
         {
             _query = query;
             _entitiesTableName = GetTableNameWithPrefix("Entities");
@@ -440,7 +440,7 @@ namespace Plato.Entities.Stores
         string BuildSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("  f.ModuleId AS [Aggregate], COUNT(e.Id) AS Count");
+            sb.Append("  f.ModuleId AS ModuleId, COUNT(e.Id) AS [Count]");
 
             return sb.ToString();
 
@@ -454,8 +454,7 @@ namespace Plato.Entities.Stores
                 .Append(" e INNER JOIN ")
                 .Append(_shellFeaturesTableName)
                 .Append(" f ON f.Id = e.FeatureId ");
-
-
+            
             // -----------------
             // Apply any table query adapters
             // -----------------

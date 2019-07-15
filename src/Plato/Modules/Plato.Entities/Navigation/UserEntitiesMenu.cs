@@ -28,10 +28,10 @@ namespace Plato.Entities.Navigation
 
             // Get metrics from context
             var model =
-                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
-                    FeatureEntityMetrics;
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityCounts)] as
+                    FeatureEntityCounts;
 
-            var total = model?.AggregatedResults?.Total() ?? 0;
+            var total = model?.Total() ?? 0;
 
             // Get route values
             var context = builder.ActionContext;

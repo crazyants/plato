@@ -1,6 +1,6 @@
 ﻿@model UserDisplayViewModel<Entity>
 @{
-    var total = Model.Metrics?.AggregatedResults?.Total();
+    var total = Model.Counts?.Total();
     var text = total == 1
         ? T["contribution"].Value
         : T["contributions"].Value;

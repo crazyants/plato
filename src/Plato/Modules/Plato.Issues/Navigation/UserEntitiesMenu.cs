@@ -29,14 +29,14 @@ namespace Plato.Issues.Navigation
 
             // Get metrics from context
             var model =
-                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityMetrics)] as
-                    FeatureEntityMetrics;
+                builder.ActionContext.HttpContext.Items[typeof(FeatureEntityCounts)] as
+                    FeatureEntityCounts;
 
             // Current area name
             var areaName = "Plato.Issues";
 
             // Get feature metrics
-            var metric = model?.AggregatedResults?.Data?.FirstOrDefault(m => m.Aggregate.Equals(areaName, StringComparison.OrdinalIgnoreCase));
+            var metric = model?.Features?.FirstOrDefault(m => m.ModuleId.Equals(areaName, StringComparison.OrdinalIgnoreCase));
 
             // Get route values
             var context = builder.ActionContext;
@@ -56,14 +56,15 @@ namespace Plato.Issues.Navigation
             }
 
             builder.Add(T["Issues"], 7, articles => articles
-                .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty, "badge badge-primary float-right")
-                .Action("Index", "User", "Plato.Issues", new RouteValueDictionary()
-                {
-                    ["opts.createdByUserId"] = id?.ToString(),
-                    ["opts.alias"] = alias?.ToString()
-                })
-                //.Permission(Permissions.ManageRoles)
-                .LocalNav(), new List<string>() { css }
+                    .Badge(metric != null ? metric.Count.ToPrettyInt() : string.Empty,
+                        "badge badge-primary float-right")
+                    .Action("Index", "User", "Plato.Issues", new RouteValueDictionary()
+                    {
+                        ["opts.createdByUserId"] = id?.ToString(),
+                        ["opts.alias"] = alias?.ToString()
+                    })
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav(), new List<string>() {css}
             );
         }
     }
