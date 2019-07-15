@@ -2,21 +2,23 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Categories.Stores;
 using Plato.Categories.Models;
+using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Categories.ViewComponents
 {
 
     public class CategoryDropDownViewComponent : ViewComponent
     {
-        private readonly ICategoryStore<CategoryBase> _channelStore;
+     
+        private readonly ICategoryService<CategoryBase> _categoryService;
 
-
-        public CategoryDropDownViewComponent(ICategoryStore<CategoryBase> channelStore)
+        public CategoryDropDownViewComponent(
+            ICategoryService<CategoryBase> categoryService)
         {
-            _channelStore = channelStore;
+            _categoryService = categoryService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(CategoryDropDownViewModel model)
@@ -39,15 +41,27 @@ namespace Plato.Categories.ViewComponents
 
         private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(CategoryDropDownViewModel model)
         {
-            var channels = await _channelStore.GetByFeatureIdAsync(model.Options.FeatureId);
-            var selections = channels?.Select(c => new Selection<CategoryBase>
+           
+            // Get categories
+            var categories = await _categoryService.GetResultsAsync(
+                model.Options, new PagerOptions()
+                {
+                    Page = 1,
+                    Size = int.MaxValue
+                });
+
+            // Indicate selections
+            var selections = categories?.Data?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = model.SelectedCategories.Any(v => v == c.Id),
                     Value = c
                 })
                 .ToList();
+
             return selections;
+
         }
+
     }
     
 }

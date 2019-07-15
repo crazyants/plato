@@ -1,13 +1,21 @@
-﻿@model EntityIndexViewModel<Entity>
+﻿@using Plato.Internal.Data.Abstractions
+@using Plato.Search.Models
+@model EntityIndexViewModel<Entity>
+@{
+    var searchOptions = GetOptions<SearchOptions>();
+}
 
 <ul class="list-inline">
+    @if (searchOptions.SearchType != SearchTypes.Tsql)
+    {
+        <li class="list-inline-item align-middle">
+            <a href="#" data-toggle="modal" data-target="#searchHelp" class="d-inline-block">
+                @T["Search Help"]
+            </a>
+        </li>
+    }
     <li class="list-inline-item align-middle">
-        <a href="#" data-toggle="modal" data-target="#searchHelp" class="d-inline-block">
-            @T["Help"]
-        </a>
-    </li>
-    <li class="list-inline-item align-middle">
-    
+
         @if (!String.IsNullOrEmpty(Model.Options.Search))
         {
             <form class="form-inline ml-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">

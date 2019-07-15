@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Options;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.ViewModels;
@@ -120,22 +121,21 @@ namespace Plato.Search.ViewComponents
 
 
         private readonly IFeatureEntityCountService _featureEntityCountService;
-        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityService<Entity> _entityService;
-
-        private SearchSettings _searchSettings;
+        private readonly SearchOptions _searchOptions;
 
         public SearchListViewComponent(
-            ISearchSettingsStore<SearchSettings> searchSettingsStore,
+            IOptions<SearchOptions> searchOptions,
             IAuthorizationService authorizationService,
             IEntityService<Entity> entityService,
             IFeatureEntityCountService featureEntityCountService)
         {
             _authorizationService = authorizationService;
-            _searchSettingsStore = searchSettingsStore;
             _entityService = entityService;
             _featureEntityCountService = featureEntityCountService;
+            _searchOptions = searchOptions.Value;
+
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -152,10 +152,7 @@ namespace Plato.Search.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            // Get search settings
-            _searchSettings = await _searchSettingsStore.GetAsync();
-
+            
             // Get results
             var model = await GetIndexViewModelAsync(options, pager);
 
@@ -192,9 +189,9 @@ namespace Plato.Search.ViewComponents
             var results = await _entityService
                 .ConfigureDb(o =>
                 {
-                    if (_searchSettings != null)
+                    if (_searchOptions != null)
                     {
-                        o.SearchType = _searchSettings.SearchType;
+                        o.SearchType = _searchOptions.SearchType;
                     }
                 })
                 .ConfigureQuery(async q =>
@@ -255,9 +252,9 @@ namespace Plato.Search.ViewComponents
                 Features = await _featureEntityCountService
                     .ConfigureDb(o =>
                     {
-                        if (_searchSettings != null)
+                        if (_searchOptions != null)
                         {
-                            o.SearchType = _searchSettings.SearchType;
+                            o.SearchType = _searchOptions.SearchType;
                         }
                     })
                     .ConfigureQuery(async q =>

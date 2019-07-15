@@ -1,5 +1,5 @@
 Name: Plato Entities Categories Roles
-Description: Adds the ability to restrict access to categories by role within global search results.
+Description: Adds core services to restrict access to entities based on the role associated with the entities category.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Entities
@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Categories",
+		Id: "Plato.Categories.Roles",
 		Version: "1.0.0"
 	}
 ]

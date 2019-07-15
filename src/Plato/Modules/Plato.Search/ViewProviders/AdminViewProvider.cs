@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Shell;
 using Plato.Search.Models;
 using Plato.Search.Repositories;
 using Plato.Search.Stores;
@@ -15,15 +17,21 @@ namespace Plato.Search.ViewProviders
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
         private readonly IFullTextCatalogStore _fullTextCatalogStore;
         private readonly IFullTextIndexStore _fullTextIndexStore;
+        private readonly IPlatoHost _platoHost;
+        private readonly IShellSettings _shellSettings;
 
         public AdminViewProvider(
             ISearchSettingsStore<SearchSettings> searchSettingsStore,
             IFullTextCatalogStore fullTextCatalogStore,
-            IFullTextIndexStore fullTextIndexStore)
+            IFullTextIndexStore fullTextIndexStore,
+            IPlatoHost platoHost,
+            IShellSettings shellSettings)
         {
             _searchSettingsStore = searchSettingsStore;
             _fullTextCatalogStore = fullTextCatalogStore;
             _fullTextIndexStore = fullTextIndexStore;
+            _shellSettings = shellSettings;
+            _platoHost = platoHost;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(SearchSettings settings, IViewProviderContext context)
@@ -66,6 +74,11 @@ namespace Plato.Search.ViewProviders
                 {
                     SearchType = model.SearchType
                 });
+                if (result != null)
+                {
+                    // Recycle shell context to ensure changes take effect
+                    _platoHost.RecycleShellContext(_shellSettings);
+                }
             }
 
             return await BuildEditAsync(settings, context);

@@ -45,8 +45,8 @@ namespace Plato.Settings.ViewProviders
             _themeLoader = themeLoader;
             _localeProvider = localeProvider;
             _siteSettingsStore = siteSettingsStore;
-            _platoHost = platoHost;
             _shellSettings = shellSettings;
+            _platoHost = platoHost;
 
             T = htmlLocalizer;
             S = stringLocalizer;

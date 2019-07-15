@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Plato.Core.Models;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -13,6 +14,7 @@ using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Search.Assets;
 using Plato.Search.Commands;
+using Plato.Search.Configuration;
 using Plato.Search.Models;
 using Plato.Search.Navigation;
 using Plato.Search.Stores;
@@ -81,6 +83,9 @@ namespace Plato.Search
         
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+         
+            // Configure site options
+            services.AddSingleton<IConfigureOptions<SearchOptions>, SearchOptionsConfiguration>();
 
         }
 

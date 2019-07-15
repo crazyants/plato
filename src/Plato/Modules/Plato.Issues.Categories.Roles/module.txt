@@ -10,5 +10,9 @@ Dependencies:
 	{
 		Id: "Plato.Issues.Categories",
 		Version: "1.0.0"
-	}
+	},
+	{
+		Id: "Plato.Entities.Categories.Roles",
+		Version: "1.0.0"
+	}	
 ]
