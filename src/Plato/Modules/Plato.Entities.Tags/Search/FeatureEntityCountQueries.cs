@@ -30,11 +30,11 @@ namespace Plato.Entities.Tags.Search
             }
 
             // Convert to correct query type
-            var entityQuery = (FeatureEntityCountQuery<TModel>)Convert.ChangeType(query, typeof(FeatureEntityCountQuery<TModel>));
+            var typedQuery = (FeatureEntityCountQuery<TModel>)Convert.ChangeType(query, typeof(FeatureEntityCountQuery<TModel>));
 
             return query.Options.SearchType != SearchTypes.Tsql
-                ? BuildFullTextQueries(entityQuery)
-                : BuildSqlQueries(entityQuery);
+                ? BuildFullTextQueries(typedQuery)
+                : BuildSqlQueries(typedQuery);
 
         }
 

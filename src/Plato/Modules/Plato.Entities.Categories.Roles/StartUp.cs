@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Entities.Labels.Search;
+using Plato.Entities.Categories.Roles.QueryAdapters;
 using Plato.Entities.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions.FederatedQueries;
+using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
-namespace Plato.Entities.Labels
+namespace Plato.Entities.Categories.Roles
 {
+
     public class Startup : StartupBase
     {
         private readonly IShellSettings _shellSettings;
@@ -23,13 +23,9 @@ namespace Plato.Entities.Labels
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // Federated search
-
-            services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
-            services.AddScoped<IFederatedQueryProvider<Entity>, EntityQueries<Entity>>();
-
-            services.AddScoped<IFederatedQueryManager<FeatureEntityCount>, FederatedQueryManager<FeatureEntityCount>>();
-            services.AddScoped<IFederatedQueryProvider<FeatureEntityCount>, FeatureEntityCountQueries<FeatureEntityCount>>();
+            // Query adapters to limit access by role
+            services.AddScoped<IQueryAdapterProvider<Entity>, EntityQueryAdapter>();
+            services.AddScoped<IQueryAdapterProvider<FeatureEntityCount>, FeatureEntityCountQueryAdapter>();
 
         }
 
@@ -39,7 +35,5 @@ namespace Plato.Entities.Labels
             IServiceProvider serviceProvider)
         {
         }
-
     }
-
 }

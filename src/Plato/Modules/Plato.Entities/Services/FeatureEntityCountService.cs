@@ -63,12 +63,9 @@ namespace Plato.Entities.Services
                     // ----------------
                     // Required for role based security checks
                     // ----------------
-
-                    if (user != null)
-                    {
-                        q.UserId.Equals(user.Id);
-                    }
                     
+                    q.UserId.Equals(user?.Id ?? 0);
+                
                     // ----------------
                     // Basic parameters
                     // ----------------

@@ -8,6 +8,7 @@ using Plato.Internal.Stores.Abstractions.FederatedQueries;
 
 namespace Plato.Entities.Search
 {
+
     public class EntityQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
     {
 
@@ -28,11 +29,11 @@ namespace Plato.Entities.Search
             }
             
             // Convert to correct query type
-            var entityQuery = (EntityQuery<TModel>)Convert.ChangeType(query, typeof(EntityQuery<TModel>));
+            var typedQuery = (EntityQuery<TModel>)Convert.ChangeType(query, typeof(EntityQuery<TModel>));
             
             return query.Options.SearchType != SearchTypes.Tsql
-                ? BuildFullTextQueries(entityQuery)
-                : BuildSqlQueries(entityQuery);
+                ? BuildFullTextQueries(typedQuery)
+                : BuildSqlQueries(typedQuery);
         }
 
         // ----------
