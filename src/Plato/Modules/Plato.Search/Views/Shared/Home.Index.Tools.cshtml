@@ -1,15 +1,99 @@
 ﻿@model EntityIndexViewModel<Entity>
 
-@if (!String.IsNullOrEmpty(Model.Options.Search))
-{
-    <form class="form-inline ml-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
-        <div class="position-relative min-w-250">
-            <div class="search-input-group">
-                <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search for keywords..."]" aria-label="Search" autofocus/>
-                <button class="btn btn-primary" type="submit">
-                    <i class="fal fa-search"></i>
+<ul class="list-inline">
+    <li class="list-inline-item align-middle">
+        <a href="#" data-toggle="modal" data-target="#searchHelp" class="d-inline-block">
+            @T["Help"]
+        </a>
+    </li>
+    <li class="list-inline-item align-middle">
+    
+        @if (!String.IsNullOrEmpty(Model.Options.Search))
+        {
+            <form class="form-inline ml-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+                <div class="position-relative min-w-250">
+                    <div class="search-input-group">
+                        <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search for keywords..."]" aria-label="Search" autofocus/>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fal fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        }
+
+
+    </li>
+</ul>
+
+
+<div class="modal fade" id="searchHelp" tabindex="-1" role="dialog" aria-labelledby="searchHelpTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="searchHelpTitle">
+                    @T["Example Searches"]
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="modal-body max-h-300 overflow-auto">
+
+                <h6>abc def</h6>
+                <p>
+                    Returns results that contain both <strong>abc</strong> and <strong>def</strong>.
+                </p>
+
+                <h6>abc and def</h6>
+                <p>
+                    Returns results that contain both <strong>abc</strong> and <strong>def</strong>.
+                </p>
+
+                <h6>abc or def</h6>
+                <p>
+                    Returns results that contain <strong>abc</strong> or <strong>def</strong>.
+                </p>
+
+                <h6>abc and (def or ghi)</h6>
+                <p>
+                    Returns results that contain <strong>abc</strong> and <strong>def</strong> or <strong>ghi</strong>.
+                </p>
+
+                <h6>"abc"</h6>
+                <p>
+                    Returns results that contain the exact term <strong>abc</strong>.
+                </p>
+
+                <h6>+abc</h6>
+                <p>
+                    Returns results that contain the exact term <strong>abc</strong>.
+                </p>
+
+                <h6>-abc</h6>
+                <p>
+                    Returns results that don't contain <strong>abc</strong>.
+                </p>
+
+                <h6>&lt;abc def&gt;</h6>
+                <p>
+                    Returns results that contain <strong>def</strong> near <strong>abc</strong>.
+                </p>
+                
+                <h6>~abc</h6>
+                <p>
+                    Returns results that contain <strong>abc</strong> and terms defined for <strong>abc</strong> within the thesaurus.
+                </p>
+                
+                <h6>Verbs</h6>
+                <p>
+                    When you search for a term we use inflection to also search for all verbs of your search term. For example if you search for <strong>drive</strong> you will also see results that contain the terms <strong>driven</strong>, <strong>driver</strong>, <strong>driving</strong>, <strong>drives</strong>, <strong>drove</strong> etc. To disable inflection perform an exact search by wraping your search term within double quotes or by using the plus operator, for example <strong>"drive"</strong> or <strong>+drive</strong>.
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-    </form>
-}
+    </div>
+</div>

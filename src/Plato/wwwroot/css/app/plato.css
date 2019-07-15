@@ -988,7 +988,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .layout-actions {}
 
 .layout-tools  {
-    white-space: nowrap;
+    
     display: flex;
     flex-flow: nowrap;
     flex-direction: row;
