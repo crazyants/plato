@@ -152,42 +152,34 @@ $(function (win, doc, $) {
                         return html;
 
                     },
-                    onItemClick: function($caller, result, e) {
+                    onItemClick: function ($caller, result, e, $item) {
+                        
                         e.preventDefault();
                         e.stopPropagation();
-                    },
-                    onLoaded: function($pagedList, results) {
+                        
+                        // Ensure we have a historyId
+                        var historyId = parseInt($item.data("historyId"));
+                        if (historyId === 0 || isNaN(historyId)) {
+                            throw new Error("A history id is required!");
+                        }
 
-                        $pagedList.find(".dropdown-item").click(function(e) {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            // Ensure we have a historyId
-                            var historyId = parseInt($(this).data("historyId"));
-                            if (historyId === 0 || isNaN(historyId)) {
-                                throw new Error("A history id is required!");
-                            }
-
-                            // Load the diff
-                            $().dialog({
-                                    id: "historyDialog",
-                                    body: {
-                                        url: "/discuss/history/" + historyId
-                                    },
-                                    css: {
-                                        modal: "modal fade",
-                                        dialog: "modal-dialog modal-lg"
-                                    }
+                        // Load the diff
+                        $().dialog({
+                                id: "historyDialog",
+                                body: {
+                                    url: "/discuss/history/" + historyId
                                 },
-                                "show");
+                                css: {
+                                    modal: "modal fade",
+                                    dialog: "modal-dialog modal-lg"
+                                }
+                            },
+                            "show");
 
-                        });
-
-                        // Activate tooltips
-                        $caller.find('[data-toggle="tooltip"]')
-                            .tooltip({ trigger: "hover" });
-
+                    },
+                    onLoaded: function ($pagedList, results) {
+                        // Enable tooltips
+                        app.ui.initToolTips($caller);
                     }
                 });
 
@@ -293,7 +285,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function($caller) {
-                $caller.find(".dropdown-toggle").click(function() {
+                $caller.find(".dropdown-toggle").click(function(e) {
                     $caller.find('[data-provide="history"]').history();
                 });
             }

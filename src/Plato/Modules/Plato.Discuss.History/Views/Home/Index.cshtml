@@ -7,7 +7,7 @@
         : "DeleteReplyHistory";
 }
 
-<div id="versionModal">
+<div>
     @if (!String.IsNullOrEmpty(Model.Html))
     {
         <div class="modal-header">
@@ -52,12 +52,3 @@
         </div>
     }
 </div>
-
-<script>
-    (function(win, doc, $) {
-        $(doc).ready(function() {
-            // Init plato UI
-            $("#versionModal").platoUI();
-        });
-    }(window, document, jQuery));
-</script>
