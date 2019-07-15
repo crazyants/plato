@@ -69,15 +69,9 @@ namespace Plato.Entities.Services
                         q.UserId.Equals(user.Id);
                     }
                     
-
                     // ----------------
                     // Basic parameters
                     // ----------------
-
-                    if (options.FeatureId != null && options.FeatureId.Value > 0)
-                    {
-                        q.FeatureId.Equals(options.FeatureId.Value);
-                    }
 
                     if (!string.IsNullOrEmpty(options.Search))
                     {

@@ -68,7 +68,6 @@ namespace Plato.Entities.Stores
 
         private WhereInt _id;
         private WhereInt _userId;
-        private WhereInt _featureId;
         private WhereInt _categoryId;
         private WhereInt _roleId;
         private WhereInt _labelId;
@@ -111,12 +110,6 @@ namespace Plato.Entities.Stores
         {
             get => _userId ?? (_userId = new WhereInt());
             set => _userId = value;
-        }
-
-        public WhereInt FeatureId
-        {
-            get => _featureId ?? (_featureId = new WhereInt());
-            set => _featureId = value;
         }
 
         public WhereInt CategoryId
@@ -313,61 +306,7 @@ namespace Plato.Entities.Stores
 
     public class FeatureEntityCountQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
-
-        /*
-
-            DECLARE @MaxRank int;
-            DECLARE @temp TABLE (Id int, [Rank] int); 
-
-            -- Provided via federated search
-            INSERT INTO @temp 
-                SELECT i.[Key], i.[Rank] FROM plato_Entities e INNER JOIN CONTAINSTABLE(plato_Entities, *, 'FORMSOF(INFLECTIONAL, introduction)') AS i ON i.[Key] = e.Id WHERE (e.Id IN (IsNull(i.[Key], 0)));
-
-            -- Provided via federated search
-            INSERT INTO @temp 
-                SELECT er.EntityId, SUM(i.[Rank]) AS [Rank] FROM plato_EntityReplies er INNER JOIN CONTAINSTABLE(plato_EntityReplies, *, 'FORMSOF(INFLECTIONAL, introduction)') i ON i.[Key] = er.Id INNER JOIN plato_Entities e ON e.Id = er.EntityId WHERE (er.Id IN (IsNull(i.[Key], 0)))GROUP BY er.EntityId, i.[Rank];
-
-            DECLARE @results TABLE (Id int, [Rank] int); 
-            INSERT INTO @results 
-                SELECT Id, SUM(Rank) FROM @temp GROUP BY Id;
-
-            SET @MaxRank = (SELECT TOP 1 [Rank] FROM @results ORDER BY [Rank] DESC);
-
-            SELECT e.*, 
-                f.ModuleId, 
-                c.UserName AS CreatedUserName, 
-                c.DisplayName AS CreatedDisplayName,
-                c.Alias AS CreatedAlias,
-                c.PhotoUrl AS CreatedPhotoUrl,
-                c.PhotoColor AS CreatedPhotoColor,
-                c.SignatureHtml AS CreatedSignatureHtml,
-                m.UserName AS ModifiedUserName, 
-                m.DisplayName AS ModifiedDisplayName,
-                m.Alias AS ModifiedAlias, 
-                m.PhotoUrl AS ModifiedPhotoUrl, 
-                m.PhotoColor AS ModifiedPhotoColor, 
-                m.SignatureHtml AS ModifiedSignatureHtml,
-                l.UserName AS LastReplyUserName, 
-                l.DisplayName AS LastReplyDisplayName,
-                l.Alias AS LastReplyAlias, 
-                l.PhotoUrl AS LastReplyPhotoUrl, 
-                l.PhotoColor AS LastReplyPhotoColor, 
-                l.SignatureHtml AS LastReplySignatureHtml, 
-                r.[Rank] AS [Rank], 
-                @MaxRank AS MaxRank 
-            FROM plato_Entities e 
-                INNER JOIN plato_ShellFeatures f ON e.FeatureId = f.Id 
-                INNER JOIN @results r ON r.Id = e.Id -- joined on federated search results
-                LEFT OUTER JOIN plato_Users c ON e.CreatedUserId = c.Id 
-                LEFT OUTER JOIN plato_Users m ON e.ModifiedUserId = m.Id 
-                LEFT OUTER JOIN plato_Users l ON e.LastReplyUserId = l.Id 
-            ORDER BY 
-	            e.IsPinned DESC, 
-	            [Rank] DESC 
-            OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY;
-            
-        */
-
+      
         #region "Constructor"
             
         private readonly string _entitiesTableName;
@@ -392,14 +331,11 @@ namespace Plato.Entities.Stores
         {
 
             var whereClause = BuildWhere();
-      
             var sb = new StringBuilder();
-
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
                 .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
-
             sb.Append("SELECT ")
                 .Append(BuildSelect())
                 .Append(" FROM ")
@@ -407,21 +343,17 @@ namespace Plato.Entities.Stores
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append("  GROUP BY f.ModuleId");
- 
             return sb.ToString();
         }
 
         public string BuildSqlCount()
         {
             var whereClause = BuildWhere();
-
             var sb = new StringBuilder();
-
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
                 .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
-
             sb.Append("SELECT COUNT(e.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
@@ -439,22 +371,12 @@ namespace Plato.Entities.Stores
 
         string BuildSelect()
         {
-            var sb = new StringBuilder();
-            sb.Append("  f.ModuleId AS ModuleId, COUNT(e.Id) AS [Count]");
-
-            return sb.ToString();
-
+            return "f.ModuleId AS ModuleId, COUNT(e.Id) AS [Count]";
         }
 
         string BuildTables()
         {
-
-            //var sb = new StringBuilder();
-            //sb.Append(_entitiesTableName)
-            //    .Append(" e INNER JOIN ")
-            //    .Append(_shellFeaturesTableName)
-            //    .Append(" f ON f.Id = e.FeatureId ");
-
+            
             var sb = new StringBuilder();
             sb.Append(_entitiesTableName).Append(" e ");
 
@@ -468,8 +390,7 @@ namespace Plato.Entities.Stores
             {
                 sb.Append("INNER JOIN @results r ON r.Id = e.Id ");
             }
-
-
+            
             // -----------------
             // Apply any table query adapters
             // -----------------
@@ -510,18 +431,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("e.Id"));
             }
-
-            // -----------------
-            // FeatureId
-            // -----------------
-
-            if (_query.Params.FeatureId.Value > -1)
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.FeatureId.Operator);
-                sb.Append(_query.Params.FeatureId.ToSqlString("e.FeatureId"));
-            }
-
+            
             // -----------------
             // CategoryId
             // -----------------

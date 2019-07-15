@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Entities.Models;
+using Plato.Entities.Tags.Search;
 using Plato.Entities.Tags.Subscribers;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -26,8 +27,11 @@ namespace Plato.Entities.Tags
 
             // Federated search
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
-            services.AddScoped<IFederatedQueryProvider<Entity>, EntityTagSearchQueries<Entity>>();
-            
+            services.AddScoped<IFederatedQueryProvider<Entity>, EntityQueries<Entity>>();
+
+            services.AddScoped<IFederatedQueryManager<FeatureEntityCount>, FederatedQueryManager<FeatureEntityCount>>();
+            services.AddScoped<IFederatedQueryProvider<FeatureEntityCount>, FeatureEntityCountQueries<FeatureEntityCount>>();
+
             // Register broker subscribers
             //services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
             //services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<EntityReply>>();

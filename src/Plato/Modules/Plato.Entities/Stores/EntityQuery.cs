@@ -374,13 +374,9 @@ namespace Plato.Entities.Stores
         private readonly string _shellFeaturesTableName;
         private readonly string _entitiesTableName;
         private readonly string _usersTableName;
-        private readonly string _userRolesTableName;
-        private readonly string _rolesTableName;
         private readonly string _entityRepliesTableName;
         private readonly string _entityLabelsTableName;
         private readonly string _entityTagsTableName;
-        private readonly string _followsTableName;
-        private readonly string _starsTableName;
         private readonly string _categoryRolesTableName;
 
         private readonly EntityQuery<TModel> _query;
@@ -391,13 +387,9 @@ namespace Plato.Entities.Stores
             _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
-            _rolesTableName = GetTableNameWithPrefix("Roles");
-            _userRolesTableName = GetTableNameWithPrefix("UserRoles");
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
             _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
             _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
-            _followsTableName = GetTableNameWithPrefix("Follows");
-            _starsTableName = GetTableNameWithPrefix("Stars");
             _categoryRolesTableName = GetTableNameWithPrefix("CategoryRoles");
 
         }
@@ -413,12 +405,10 @@ namespace Plato.Entities.Stores
             var orderBy = BuildOrderBy();
 
             var sb = new StringBuilder();
-
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
                 .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
-
             sb.Append("SELECT ")
                 .Append(BuildSelect())
                 .Append(" FROM ")
@@ -436,14 +426,11 @@ namespace Plato.Entities.Stores
         public string BuildSqlCount()
         {
             var whereClause = BuildWhere();
-
             var sb = new StringBuilder();
-
             sb.Append("DECLARE @MaxRank int;")
                 .Append(Environment.NewLine)
                 .Append(BuildFederatedResults())
                 .Append(Environment.NewLine);
-
             sb.Append("SELECT COUNT(e.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
@@ -887,8 +874,7 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-
-
+        
         string GetTableNameWithPrefix(string tableName)
         {
             return !string.IsNullOrEmpty(_query.Options.TablePrefix)

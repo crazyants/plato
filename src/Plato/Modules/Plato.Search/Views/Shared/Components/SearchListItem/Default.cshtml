@@ -25,11 +25,50 @@
     @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.Options.Search))
 </div>
 <div>
-    @if (Model.Entity.CreatedUserId > 0)
-    {
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>
-    }
-    <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+
+    <ul class="list-inline">
+        @if (Model.Entity.CreatedUserId > 0)
+        {
+            <li class="list-inline-item">
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>
+            </li>
+        }
+        <li class="list-inline-item">
+            <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        </li>
+        @if (Model.Entity.IsPrivate)
+        {
+            <li class="list-inline-item">
+                @if (Model.Entity.CreatedUserId == base.CurrentUser?.Id)
+                {
+                    <span class="badge badge-warning" data-toggle="tooltip" title="@T["This contribution is private and only visible as you are the author"]">@T["Private"]</span>
+                }
+                else
+                {
+                    <span class="badge badge-warning" data-toggle="tooltip" title="@T["This contribution is private and only visible as you have permission to view private contributions"]">@T["Private"]</span>
+                }
+            </li>
+        }
+        @if (Model.Entity.IsHidden)
+        {
+            <li class="list-inline-item">
+                <span class="badge badge-primary" data-toggle="tooltip" title="@T["This contribution is hidden and only visible as you have permission to view hidden contributions"]">@T["Hidden"]</span>
+            </li>
+        }
+        @if (Model.Entity.IsSpam)
+        {
+            <li class="list-inline-item">
+                <span class="badge badge-info" data-toggle="tooltip" title="@T["This contribution has been flagged as SPAM and is only visible as you have permission to view contributions flagged as SPAM"]">@T["SPAM"]</span>
+            </li>
+        }
+        @if (Model.Entity.IsDeleted)
+        {
+            <li class="list-inline-item">
+                <span class="badge badge-danger" data-toggle="tooltip" title="@T["This contribution has been deleted and is only visible as you have permission to view deleted contributions"]">@T["Deleted"]</span>
+            </li>
+        }
+    </ul>
+
 </div>
 
 

@@ -160,7 +160,7 @@ namespace Plato.Search.ViewComponents
             var model = await GetIndexViewModelAsync(options, pager);
 
             // Get metrics (results per feature)
-            var metrics = await GetFeatureEntityMetricsAsync(options);
+            var metrics = await GetFeatureEntityCountsAsync(options);
 
             // Add metrics to context for use later within navigation builders
             ViewContext.HttpContext.Items[typeof(FeatureEntityCounts)] = metrics;
@@ -247,7 +247,7 @@ namespace Plato.Search.ViewComponents
         }
         
 
-        async Task<FeatureEntityCounts> GetFeatureEntityMetricsAsync(EntityIndexOptions options)
+        async Task<FeatureEntityCounts> GetFeatureEntityCountsAsync(EntityIndexOptions options)
         {
 
             return new FeatureEntityCounts()
@@ -290,8 +290,7 @@ namespace Plato.Search.ViewComponents
                         {
                             q.HidePrivate.True();
                         }
-
-
+                        
                     })
                     .GetResultsAsync(options)
             };
