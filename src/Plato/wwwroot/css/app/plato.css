@@ -891,8 +891,17 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     z-index: 1055;
     bottom: 0;
     top: 0;
+
     margin: 0 !important;
     min-width: 25%;
+}
+
+.modal > .modal-left > .modal-content,
+.modal > .modal-right > .modal-content {
+    border-radius: 0 !important;
+    border-top: 0;
+    border-bottom: 0;
+    height: 100%;
 }
 
 .modal > .modal-2x { min-width: 50%; }
