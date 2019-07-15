@@ -27,6 +27,7 @@ using Plato.Ideas.Tasks;
 using Plato.Ideas.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Search;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
@@ -146,7 +147,7 @@ namespace Plato.Ideas
 
             // Federated query manager 
             services.AddScoped<IFederatedQueryManager<Idea>, FederatedQueryManager<Idea>>();
-            services.AddScoped<IFederatedQueryProvider<Idea>, EntitySearchQueries<Idea>>();
+            services.AddScoped<IFederatedQueryProvider<Idea>, EntityQueries<Idea>>();
           
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Idea>, QueryAdapterManager<Idea>>();

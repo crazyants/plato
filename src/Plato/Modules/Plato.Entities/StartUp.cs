@@ -12,6 +12,7 @@ using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Navigation;
 using Plato.Entities.Repositories;
+using Plato.Entities.Search;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
@@ -88,9 +89,12 @@ namespace Plato.Entities
             services.AddScoped<IFullTextIndexProvider, FullTextIndexes>();
             
             // Federated search
+
             services.AddScoped<IFederatedQueryManager<Entity>, FederatedQueryManager<Entity>>();
-            services.AddScoped<IFederatedQueryProvider<Entity>, EntitySearchQueries<Entity>>();
+            services.AddScoped<IFederatedQueryProvider<Entity>, EntityQueries<Entity>>();
+
             services.AddScoped<IFederatedQueryManager<FeatureEntityCount>, FederatedQueryManager<FeatureEntityCount>>();
+            services.AddScoped<IFederatedQueryProvider<FeatureEntityCount>, FeatureEntityCountQueries<FeatureEntityCount>>();
 
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Entity>, QueryAdapterManager<Entity>>();

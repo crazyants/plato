@@ -27,6 +27,7 @@ using Plato.Articles.ViewProviders;
 using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Search;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
@@ -142,7 +143,7 @@ namespace Plato.Articles
             
             // Federated query manager 
             services.AddScoped<IFederatedQueryManager<Article>, FederatedQueryManager<Article>>();
-            services.AddScoped<IFederatedQueryProvider<Article>, EntitySearchQueries<Article>>();
+            services.AddScoped<IFederatedQueryProvider<Article>, EntityQueries<Article>>();
             
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Article>, QueryAdapterManager<Article>>();

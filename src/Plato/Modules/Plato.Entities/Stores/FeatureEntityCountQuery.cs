@@ -449,12 +449,27 @@ namespace Plato.Entities.Stores
         string BuildTables()
         {
 
+            //var sb = new StringBuilder();
+            //sb.Append(_entitiesTableName)
+            //    .Append(" e INNER JOIN ")
+            //    .Append(_shellFeaturesTableName)
+            //    .Append(" f ON f.Id = e.FeatureId ");
+
             var sb = new StringBuilder();
-            sb.Append(_entitiesTableName)
-                .Append(" e INNER JOIN ")
+            sb.Append(_entitiesTableName).Append(" e ");
+
+            // join shell features table
+            sb.Append("INNER JOIN ")
                 .Append(_shellFeaturesTableName)
-                .Append(" f ON f.Id = e.FeatureId ");
-            
+                .Append(" f ON e.FeatureId = f.Id ");
+
+            // join search results if we have keywords
+            if (HasKeywords())
+            {
+                sb.Append("INNER JOIN @results r ON r.Id = e.Id ");
+            }
+
+
             // -----------------
             // Apply any table query adapters
             // -----------------
@@ -809,7 +824,12 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-        
+
+        bool HasKeywords()
+        {
+            return !string.IsNullOrEmpty(GetKeywords());
+        }
+
         string GetKeywords()
         {
 
@@ -821,6 +841,7 @@ namespace Plato.Entities.Stores
             return _query.Params.Keywords.Value;
 
         }
+
 
         #endregion
 

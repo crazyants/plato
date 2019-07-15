@@ -6,14 +6,15 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Search.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 
-namespace Plato.Entities
+namespace Plato.Entities.Search
 {
-    public class EntitySearchQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
+    
+    public class FeatureEntityCountQueries<TModel> : IFederatedQueryProvider<TModel> where TModel : class
     {
 
         protected readonly IFullTextQueryParser _fullTextQueryParser;
 
-        public EntitySearchQueries(IFullTextQueryParser fullTextQueryParser)
+        public FeatureEntityCountQueries(IFullTextQueryParser fullTextQueryParser)
         {
             _fullTextQueryParser = fullTextQueryParser;
         }
@@ -22,24 +23,24 @@ namespace Plato.Entities
         {
 
             // Ensure correct query type for federated query
-            if (query.GetType() != typeof(EntityQuery<TModel>))
+            if (query.GetType() != typeof(FeatureEntityCountQuery<TModel>))
             {
                 return null;
             }
-            
+
             // Convert to correct query type
-            var entityQuery = (EntityQuery<TModel>)Convert.ChangeType(query, typeof(EntityQuery<TModel>));
-            
+            var typedQuery = (FeatureEntityCountQuery<TModel>)Convert.ChangeType(query, typeof(FeatureEntityCountQuery<TModel>));
+
             return query.Options.SearchType != SearchTypes.Tsql
-                ? BuildFullTextQueries(entityQuery)
-                : BuildSqlQueries(entityQuery);
+                ? BuildFullTextQueries(typedQuery)
+                : BuildSqlQueries(typedQuery);
         }
 
         // ----------
 
-        List<string> BuildSqlQueries(EntityQuery<TModel> query)
+        IList<string> BuildSqlQueries(FeatureEntityCountQuery<TModel> query)
         {
-            
+
             // Entities
             // ----------------------
 
@@ -80,12 +81,12 @@ namespace Plato.Entities
                 q1.ToString(),
                 q2.ToString()
             };
-            
+
         }
-        
-        List<string> BuildFullTextQueries(EntityQuery<TModel> query)
+
+        IList<string> BuildFullTextQueries(FeatureEntityCountQuery<TModel> query)
         {
-            
+
             // Parse keywords into valid full text query syntax
             var fullTextQuery = _fullTextQueryParser.ToFullTextSearchQuery(query.Params.Keywords.Value);
 
@@ -100,7 +101,7 @@ namespace Plato.Entities
             {
                 return null;
             }
-            
+
             var q1 = new StringBuilder();
             q1
                 .Append("SELECT i.[Key], i.[Rank] ")

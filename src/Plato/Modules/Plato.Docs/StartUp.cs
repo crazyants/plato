@@ -30,6 +30,7 @@ using Plato.Docs.NotificationTypes;
 using Plato.Docs.Notifications;
 using Plato.Entities;
 using Plato.Entities.Models;
+using Plato.Entities.Search;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
@@ -146,7 +147,7 @@ namespace Plato.Docs
 
             // Federated query manager 
             services.AddScoped<IFederatedQueryManager<Doc>, FederatedQueryManager<Doc>>();
-            services.AddScoped<IFederatedQueryProvider<Doc>, EntitySearchQueries<Doc>>();
+            services.AddScoped<IFederatedQueryProvider<Doc>, EntityQueries<Doc>>();
         
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Doc>, QueryAdapterManager<Doc>>();

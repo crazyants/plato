@@ -28,8 +28,7 @@ namespace Plato.Entities.Stores
             _queryAdapterManager = queryAdapterManager;
             _dbQuery = dbQuery;
         }
-
-
+        
         public IQuery<FeatureEntityCount> QueryAsync()
         {
             return _dbQuery.ConfigureQuery(new FeatureEntityCountQuery<FeatureEntityCount>(this)

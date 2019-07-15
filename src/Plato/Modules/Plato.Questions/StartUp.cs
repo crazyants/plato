@@ -27,6 +27,7 @@ using Plato.Questions.Tasks;
 using Plato.Questions.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Search;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
@@ -143,7 +144,7 @@ namespace Plato.Questions
             
             // Federated query manager 
             services.AddScoped<IFederatedQueryManager<Question>, FederatedQueryManager<Question>>();
-            services.AddScoped<IFederatedQueryProvider<Question>, EntitySearchQueries<Question>>();
+            services.AddScoped<IFederatedQueryProvider<Question>, EntityQueries<Question>>();
         
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Question>, QueryAdapterManager<Question>>();
