@@ -7,10 +7,10 @@ namespace Plato.Issues.Votes
     {
 
         public static readonly Permission VoteIdeas =
-            new Permission("VoteIdeas", "Can up & down vote ideas");
+            new Permission("VoteIssues", "Can up & down vote issues");
 
         public static readonly Permission VoteIdeaComments =
-            new Permission("VoteIdeaComments", "Can up & down vote idea comments");
+            new Permission("VoteIssueComments", "Can up & down vote issue comments");
 
         public IEnumerable<Permission> GetPermissions()
         {
