@@ -2,7 +2,7 @@
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Ideas.Follow
+namespace Plato.Issues.Follow
 {
 
     public class Reputations : IReputationsProvider<Reputation>

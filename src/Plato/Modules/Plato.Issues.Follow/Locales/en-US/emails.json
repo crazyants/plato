@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewIssueComment",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Comment",
+      "Message": "Hi {0},\n\nA comment has been posted within an issue you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

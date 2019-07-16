@@ -16,7 +16,7 @@ namespace Plato.Ideas.Follow
                 "Unsubscribe",
                 "You are following this idea and will be notified when comments are posted, click to unsubscribe",
                 "Login to follow this idea",
-                "You don't have permission to follow odeas");
+                "You don't have permission to follow ideas");
 
         public IEnumerable<IFollowType> GetFollowTypes()
         {
