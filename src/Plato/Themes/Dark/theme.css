@@ -2508,8 +2508,13 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .modal-content {
-    background-color: #222;
-    border: 1px solid rgba(0,0,0,0.2);
+    background-color: #111;
+    border: 1px solid #282828;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8)
+}
+
+.modal-body {
+    background-color: #0a0a0a;
 }
 
 .modal-backdrop {

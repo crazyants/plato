@@ -52,6 +52,7 @@ namespace Plato.Internal.Data.Providers
                 }
                 catch (Exception ex)
                 {
+                    // Log and rethrow the exception
                     HandleException(ex);
                 }
                 finally

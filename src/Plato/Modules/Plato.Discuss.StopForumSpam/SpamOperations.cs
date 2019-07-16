@@ -10,6 +10,7 @@ namespace Plato.Discuss.StopForumSpam
 
         public static readonly SpamOperation Topic = new SpamOperation(
             "Topics",
+            "Topics",
             "Customize what will happen when topics are detected as SPAM.")
         {
             FlagAsSpam = true,
@@ -20,6 +21,7 @@ namespace Plato.Discuss.StopForumSpam
         };
 
         public static readonly SpamOperation Reply = new SpamOperation(
+            "TopicReplies",
             "Topic Replies",
             "Customize what will happen when replies are detected as SPAM.")
         {

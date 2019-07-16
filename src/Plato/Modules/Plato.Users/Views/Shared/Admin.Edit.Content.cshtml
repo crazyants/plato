@@ -6,9 +6,7 @@
         <div class=" float-right">
             <authorize asp-permission="@Plato.Users.Permissions.UserToVerify.Name">
                 <authorize-success>
-                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="InvalidateUser" asp-route-id="@Model.Id">
-                        @T["Remove Verified"]
-                    </a>
+                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="InvalidateUser" asp-route-id="@Model.Id">@T["Remove Verified"]</a>
                 </authorize-success>
             </authorize>
             <i class="fal fa-info-circle ml-2 align-middle" title="@T["A verified user is someone who has been manually identified as a genuine human by a site administrator or staff member. Verified users will receive a special icon and can skip some SPAM protections."]" data-toggle="tooltip"></i>
@@ -34,9 +32,7 @@
         <div class=" float-right">
             <authorize asp-permission="@Plato.Users.Permissions.UserToStaff.Name">
                 <authorize-success>
-                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="FromStaff" asp-route-id="@Model.Id">
-                        @T["Remove Staff"]
-                    </a>
+                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="FromStaff" asp-route-id="@Model.Id">@T["Remove Staff"]</a>
                 </authorize-success>
             </authorize>
             <i class="fal fa-info-circle ml-2 align-middle" title="@T["A staff member is someone who represents a trusted user within your organization. Staff will receive a special icon and will skip all SPAM protections."]" data-toggle="tooltip"></i>
@@ -62,9 +58,7 @@
         <div class="float-right">
             <authorize asp-permission="@Plato.Users.Permissions.UserToSpam.Name">
                 <authorize-success>
-                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveSpam" asp-route-id="@Model.Id">
-                        @T["Remove SPAM"]
-                    </a>
+                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveSpam" asp-route-id="@Model.Id">@T["Remove SPAM"]</a>
                 </authorize-success>
             </authorize>
             <i class="fal fa-info-circle ml-2 align-middle" title="@T["This user will be hidden from regular users and and only visible via the admin dashboard. Contributions from this user will be automatically flagged as SPAM and will only be visible to those with permission to view contributions flagged as SPAM."]" data-toggle="tooltip"></i>
@@ -90,12 +84,9 @@
         <div class="float-right">
             <authorize asp-permission="@Plato.Users.Permissions.UserToBanned.Name">
                 <authorize-success>
-                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id">
-                        @T["Remove Ban"]
-                    </a>
+                    <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="RemoveBan" asp-route-id="@Model.Id">@T["Remove Ban"]</a>
                 </authorize-success>
             </authorize>
-         
             <i class="fal fa-info-circle ml-2 align-middle" title="@T["Banned users will be logged out and cannot login again or post new contributions. Banned users will also be hidden from regular users and and only visible via the admin dashboard."]" data-toggle="tooltip"></i>
         </div>
         @if (Model.IsBannedUpdatedUser != null)

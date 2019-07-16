@@ -1,0 +1,22 @@
+{
+  "Emails": [
+    {
+      "Id": "NewArticleSpam",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - Possible Spam",
+      "Message": "Hi {0},\n\nThe article \"{1}\" has been detected as SPAM. You can review this topic at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
+    },
+    {
+      "Id": "NewArticleCommentSpam",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - Possible Spam",
+      "Message": "Hi {0},\n\nA comment to the article \"{1}\" has been detected as SPAM. You can review this reply at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +77,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
         
         // -----------------
         // Index
+        // Displays a summary from StopForumSpam.
         // -----------------
 
         public async Task<IActionResult> Index(EntityOptions opts)
@@ -176,7 +176,8 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             }
             
             // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, entity.CategoryId, Permissions.AddToStopForumSpam))
+            if (!await _authorizationService.AuthorizeAsync(User, 
+                entity.CategoryId, Permissions.AddToStopForumSpam))
             {
                 return Unauthorized();
             }
@@ -211,7 +212,7 @@ namespace Plato.Discuss.StopForumSpam.Controllers
             {
                 _alerter.Danger(!string.IsNullOrEmpty(result.Error)
                     ? T[result.Error]
-                    : T["An error occurred adding the user to the StopForumSpam database."]);
+                    : T["An unknown error occurred adding the user to the StopForumSpam database."]);
             }
 
             // Redirect back to reply

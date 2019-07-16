@@ -71,9 +71,8 @@
      }
 }
 
-
 <div class="modal fade" id="spamDetailsModal" tabindex="-1" role="dialog" aria-labelledby="spamDetailsModalHeader" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="spamDetailsModalHeader">
@@ -113,14 +112,14 @@
                         <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="BanUser" asp-route-id="@Model.Id">
                             @T["Ban"]
                         </a>
-                        @T["to ensure this user can never login or contribute."]
+                        @T["to logout this user and ensure they can never login or contribute whilst banned."]
                     </div>
                     <div class="col-6">
                         <h6>@T["Genuine User?"]</h6>
                         <a asp-route-area="Plato.Users" asp-route-controller="Admin" asp-route-action="ValidateUser" asp-route-id="@Model.Id">
                             @T["Verify"]
                         </a>
-                        @T["to ensure this user is never flagged as SPAM."]
+                        @T["this user to ensure they are never falsely flagged as SPAM again."]
                     </div>
                 </div>
 

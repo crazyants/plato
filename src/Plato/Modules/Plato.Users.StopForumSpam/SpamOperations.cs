@@ -10,6 +10,7 @@ namespace Plato.Users.StopForumSpam
 
         public static readonly SpamOperation Registration = new SpamOperation(
             "Registration",
+            "Registration",
             "Customize what will happen when user registrations are detected as SPAM.")
         {
             FlagAsSpam = true,
@@ -20,6 +21,7 @@ namespace Plato.Users.StopForumSpam
         };
 
         public static readonly SpamOperation Login = new SpamOperation(
+            "Login",
             "Login",
             "Customize what will happen when user logins are detected as SPAM.")
         {

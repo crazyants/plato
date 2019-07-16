@@ -282,8 +282,7 @@ namespace Plato.Categories.Handlers
 
                 // Entity categories schema
                 EntityCategories(builder);
-
-
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {

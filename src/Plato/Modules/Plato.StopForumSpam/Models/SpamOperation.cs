@@ -12,6 +12,10 @@ namespace Plato.StopForumSpam.Models
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        [DataMember(Name = "title")]
+        public string Title { get; set; }
+
+
         [DataMember(Name = "description")]
         public string Description { get; set; }
 
@@ -47,7 +51,12 @@ namespace Plato.StopForumSpam.Models
             Name = name;
         }
 
-        public SpamOperation(string name, string description) : this(name)
+        public SpamOperation(string name, string title) : this(name)
+        {
+            Title = title;
+        }
+
+        public SpamOperation(string name, string title, string description) : this(name, title)
         {
             Description = description;
         }

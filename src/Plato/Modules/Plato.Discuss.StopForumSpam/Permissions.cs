@@ -7,7 +7,7 @@ namespace Plato.Discuss.StopForumSpam
     {
 
         public static readonly Permission ViewStopForumSpam =
-            new Permission("DiscussViewSFS", "Can view  StopForumSpam details");
+            new Permission("DiscussViewSFS", "Can view StopForumSpam details");
 
         public static readonly Permission AddToStopForumSpam =
             new Permission("DiscussAddToSFS", "Can submit spammers to StopForumSpam");

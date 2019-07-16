@@ -15,8 +15,7 @@ namespace Plato.Categories.ViewComponents
      
         private readonly ICategoryService<CategoryBase> _categoryService;
 
-        public CategoryDropDownViewComponent(
-            ICategoryService<CategoryBase> categoryService)
+        public CategoryDropDownViewComponent(ICategoryService<CategoryBase> categoryService)
         {
             _categoryService = categoryService;
         }
@@ -35,6 +34,7 @@ namespace Plato.Categories.ViewComponents
             }
             
             model.Categories = await BuildSelectionsAsync(model);
+
             return View(model);
 
         }

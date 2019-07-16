@@ -24,7 +24,7 @@ namespace Plato.Articles.Reactions
             new Reaction("Poor", "Poor", "👎", -1, Sentiment.Negative);
 
         public static readonly Reaction Useless =
-            new Reaction("Useless", "Useless", "🚽", -2, Sentiment.Negative);
+            new Reaction("Useless", "Useless", "😖", -2, Sentiment.Negative);
         
         public IEnumerable<Reaction> GetReactions()
         {

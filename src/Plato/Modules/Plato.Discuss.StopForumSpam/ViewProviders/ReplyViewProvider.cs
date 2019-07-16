@@ -12,8 +12,7 @@ namespace Plato.Discuss.StopForumSpam.ViewProviders
         
         private readonly ISpamOperatorManager<Reply> _spamOperatorManager;
     
-        public ReplyViewProvider(
-            ISpamOperatorManager<Reply> spamOperatorManager)
+        public ReplyViewProvider(ISpamOperatorManager<Reply> spamOperatorManager)
         {
             _spamOperatorManager = spamOperatorManager;
         }

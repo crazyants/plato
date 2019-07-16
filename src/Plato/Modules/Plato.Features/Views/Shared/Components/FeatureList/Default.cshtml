@@ -4,47 +4,75 @@
 @{
     var enablePermission = Permissions.EnableFeatures;
     var disablePermission = Permissions.DisableFeatures;
+    SelectListItem currentCategory = null;
 }
 
 <input type="hidden" name="category" value="@Model.Options.Category" />
 
-<card class="card card-body-flush">
-    <card-title>
-        <h6 class="card-title d-inline-block">@T["Categories"]</h6>
-    </card-title>
-    <card-body>
-        <div class="row no-gutters">
+<div class="modal fade" id="featureCategories" tabindex="-1" role="dialog" aria-labelledby="searchHelpTitle" aria-hidden="true">
+    <div class="modal-dialog modal-right" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="searchHelpTitle">
+                    @T["Categories"]
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-auto p-0">
 
-            @foreach (var option in Model.AvailableCategories)
-            {
-                var isEqualWithValue = option.Value?.Equals(Model.Options.Category, StringComparison.OrdinalIgnoreCase);
-                var isCurrent = isEqualWithValue ?? Model.Options.Category == option.Value;
-                var iconCss = isCurrent
-                    ? "fal fa-fw fa-check"
-                    : "fal fa-fw";
-                var css = isCurrent
-                    ? "dropdown-item active"
-                    : "dropdown-item";
-                var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
-                {
-                    ["action"] = "Index",
-                    ["opts.category"] = option.Value?.ToLower(),
-                };
-                <div class="col-3">
-                    <a class="@css" href="@GetRouteUrl(routeValues)">
-                        <i class="@iconCss"></i>
-                        @T[option.Text]
-                    </a>
+                <div class="list-group list-group-flush list-group-hover">
+                    @foreach (var option in Model.AvailableCategories)
+                    {
+                        var isEqualWithValue = option.Value?.Equals(Model.Options.Category, StringComparison.OrdinalIgnoreCase);
+                        var isCurrent = isEqualWithValue ?? Model.Options.Category == option.Value;
+                        if (isCurrent)
+                        {
+                            currentCategory = option;
+                        }
+                        var iconCss = isCurrent
+                            ? "fal fa-fw fa-check"
+                            : "fal fa-fw";
+                        var css = isCurrent
+                            ? "list-group-item list-group-item-action border-0 active"
+                            : "list-group-item list-group-item-action border-0";
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["action"] = "Index",
+                            ["opts.category"] = option.Value?.ToLower(),
+                        };
+
+                            <a class="@css" href="@GetRouteUrl(routeValues)">
+                                <i class="@iconCss"></i>
+                                @T[option.Text]
+                            </a>
+                   
+                    }
                 </div>
-            }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-    </card-body>
-</card>
+    </div>
+</div>
 
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title d-inline-block">@T["Features"]</h6>
-     
+        <div class="nav navbar p-0 float-right">
+            <div class="nav-item">
+                <a href="#" data-toggle="modal" data-provide="tooltip" title="@T["Browse By Category"]" data-target="#featureCategories" class="nav-link text-muted">
+                    @if (currentCategory != null)
+                    {
+                        @currentCategory.Text
+                    }
+                    <i class="fal fa-bars ml-2"></i>
+                </a>
+            </div>
+        </div>
     </card-title>
     <card-body>
 
