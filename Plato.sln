@@ -379,6 +379,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Categories.Roles", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Articles.StopForumSpam", "src\Plato\Modules\Plato.Articles.StopForumSpam\Plato.Articles.StopForumSpam.csproj", "{DAECCAC6-062C-4EA9-B766-FE53C49E9AE8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Docs.StopForumSpam", "src\Plato\Modules\Plato.Docs.StopForumSpam\Plato.Docs.StopForumSpam.csproj", "{B585EDDB-9D31-44A3-A386-470AABDB5A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1121,6 +1123,10 @@ Global
 		{DAECCAC6-062C-4EA9-B766-FE53C49E9AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAECCAC6-062C-4EA9-B766-FE53C49E9AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAECCAC6-062C-4EA9-B766-FE53C49E9AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B585EDDB-9D31-44A3-A386-470AABDB5A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B585EDDB-9D31-44A3-A386-470AABDB5A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B585EDDB-9D31-44A3-A386-470AABDB5A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B585EDDB-9D31-44A3-A386-470AABDB5A67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1311,6 +1317,7 @@ Global
 		{B9A2E57F-F272-49FE-974C-EC3642579631} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{01B7A076-70C8-4C00-A749-D1C5F59C3B6C} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{DAECCAC6-062C-4EA9-B766-FE53C49E9AE8} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{B585EDDB-9D31-44A3-A386-470AABDB5A67} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

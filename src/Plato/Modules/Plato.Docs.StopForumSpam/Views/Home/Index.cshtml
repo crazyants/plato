@@ -1,0 +1,106 @@
+﻿@using Plato.Docs
+@using Plato.Internal.Abstractions.Settings
+@model StopForumSpamViewModel
+@{
+    var platoOpts = GetOptions<PlatoOptions>();
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h6 class="modal-title">@T["Spam Options"]</h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+</div>
+
+<div class="modal-body">
+    
+    <p>
+        @if (Model.Checker.Succeeded)
+        {
+            if (Model.Checker.Results.HasResults)
+            {
+                if (Model.Checker.Results.Success)
+                {
+                    <span>
+                        @T["This user could be a spammer but new content won't automatically be flagged as SPAM as the configured SPAM aggression level is to low."]
+                    </span>
+                    <span>
+                        @T["You can see below the number of times this users username, email address & IP address has been reported to the central StopForumSpam database."]
+                    </span>
+                }
+            }
+            else
+            {
+                @T["No results could be found for this user within the StopForumSpam database."]
+            }
+        }
+        else
+        {
+            if (Model.Checker.Errors.Any())
+            {
+                var i = 0;
+                @T["Contributions from this user will be automatically flagged as SPAM as this users "]
+                foreach (var error in Model.Checker.Errors)
+                {
+                    i++;
+                    @T[error.Description]
+                    @if (i < Model.Checker.Errors.Count() - 1)
+                    {
+                        <span>,</span>
+                    }
+                    else if (i == Model.Checker.Errors.Count() - 1)
+                    {
+                        <span>&amp;</span>
+                    }
+                }
+                @T[" appears within the StopForumSpam database."]
+                <span>
+                    @T["You can see below the number of times this users username, email address & IP address has been reported to the central StopForumSpam database."]
+                </span>
+            }
+            else
+            {
+                @T["No results could be found for this user within the StopForumSpam database."]
+            }
+
+        }
+    </p>
+
+    <div class="row">
+        <div class="col-4">
+            <h4>@Model.Checker.Results.UserName.Count.ToPrettyInt()</h4>
+            <h6>@T["Username"]</h6>
+        </div>
+        <div class="col-4">
+            <h4>@Model.Checker.Results.Email.Count.ToPrettyInt()</h4>
+            <h6>@T["Email Address"]</h6>
+        </div>
+        <div class="col-4">
+            <h4>@Model.Checker.Results.IpAddress.Count.ToPrettyInt()</h4>
+            <h6>@T["IP Address"]</h6>
+        </div>
+    </div>
+    
+    <authorize asp-permission="@Plato.Docs.StopForumSpam.Permissions.AddToStopForumSpam.Name">
+        <authorize-success>
+            <hr />
+            @if (platoOpts.DemoMode)
+            {
+                <span class="d-inline-block disabled" data-toggle="tooltip" title="@T["This option is disabled within the demo"]">
+                    <a href="#" class="btn btn-primary disabled">@T["Submit Spammer"]</a>
+                </span>
+            }
+            else
+            {
+                <a asp-route-area="Plato.Docs.StopForumSpam" asp-route-controller="Home" asp-route-action="AddSpammer" asp-route-opts.id="@Model.Options.Id" asp-route-opts.alias="@Model.Options.Alias" asp-route-opts.replyId="@Model.Options.ReplyId" data-toggle="tooltip" title="@T["Submit this users details to the central StopForumSpam database"]" class="btn btn-primary">@T["Submit Spammer"]</a>
+            }
+        </authorize-success>
+    </authorize>
+    
+</div>
+
+
+
