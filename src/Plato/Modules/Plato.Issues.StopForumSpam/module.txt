@@ -1,8 +1,8 @@
-Name: Plato Docs StopForumSpam
-Description: Adds StopForumSpam checks when posting new docs or feedback to docs.
+Name: Plato Ideas StopForumSpam
+Description: Adds StopForumSpam checks when posting new ideas or idea comments.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Docs
+Category: Ideas
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Dependencies: 
@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Docs",
+		Id: "Plato.Ideas",
 		Version: "1.0.0"
 	}
 ]
