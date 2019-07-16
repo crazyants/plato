@@ -1,0 +1,18 @@
+Name: Plato Questions StopForumSpam
+Description: Adds StopForumSpam checks when posting new questions or answers.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.StopForumSpam",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	}
+]

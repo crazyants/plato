@@ -385,6 +385,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Ideas.StopForumSpam",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Issues.StopForumSpam", "src\Plato\Modules\Plato.Issues.StopForumSpam\Plato.Issues.StopForumSpam.csproj", "{2E014C87-A7D8-427A-8FDB-EBD725DA5300}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Questions.StopForumSpam", "src\Plato\Modules\Plato.Questions.StopForumSpam\Plato.Questions.StopForumSpam.csproj", "{BC4D1317-B88F-43D2-B951-86E28652904D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Ideas.Follow", "src\Plato\Modules\Plato.Ideas.Follow\Plato.Ideas.Follow.csproj", "{2C534C82-9E44-4D4B-9FD1-53AE864FB80E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1139,6 +1143,14 @@ Global
 		{2E014C87-A7D8-427A-8FDB-EBD725DA5300}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E014C87-A7D8-427A-8FDB-EBD725DA5300}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E014C87-A7D8-427A-8FDB-EBD725DA5300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4D1317-B88F-43D2-B951-86E28652904D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4D1317-B88F-43D2-B951-86E28652904D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4D1317-B88F-43D2-B951-86E28652904D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4D1317-B88F-43D2-B951-86E28652904D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C534C82-9E44-4D4B-9FD1-53AE864FB80E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C534C82-9E44-4D4B-9FD1-53AE864FB80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C534C82-9E44-4D4B-9FD1-53AE864FB80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C534C82-9E44-4D4B-9FD1-53AE864FB80E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1332,6 +1344,8 @@ Global
 		{B585EDDB-9D31-44A3-A386-470AABDB5A67} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{A3BDF284-A6CC-430C-8C2D-5F9E94991D5D} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{2E014C87-A7D8-427A-8FDB-EBD725DA5300} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{BC4D1317-B88F-43D2-B951-86E28652904D} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{2C534C82-9E44-4D4B-9FD1-53AE864FB80E} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

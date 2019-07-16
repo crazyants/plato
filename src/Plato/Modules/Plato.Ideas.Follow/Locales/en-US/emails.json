@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewIdeaComment",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Reply",
+      "Message": "Hi {0},\n\nA comment has been posted within an idea you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}
