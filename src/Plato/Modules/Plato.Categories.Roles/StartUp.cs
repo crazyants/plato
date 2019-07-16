@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Categories.Models;
 using Plato.Categories.Roles.QueryAdapters;
-using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 

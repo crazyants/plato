@@ -3,20 +3,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
+using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
+using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Categories.ViewComponents
 {
     public class CategoryTreeViewComponent : ViewComponent
     {
 
-        private readonly ICategoryStore<CategoryBase> _categoryStore;
-        
-        public CategoryTreeViewComponent(
-            ICategoryStore<CategoryBase> categoryStore)
+        private readonly ICategoryService<CategoryBase> _categoryService;
+
+        public CategoryTreeViewComponent(ICategoryService<CategoryBase> categoryService)
         {
-            _categoryStore = categoryStore;
+            _categoryService = categoryService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(CategoryTreeOptions options)
@@ -48,9 +49,15 @@ namespace Plato.Categories.ViewComponents
         private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(CategoryTreeOptions options)
         {
             
-            var channels = await _categoryStore.GetByFeatureIdAsync(options.IndexOptions.FeatureId);
+            // Get categories
+            var categories = await _categoryService.GetResultsAsync(
+                options.IndexOptions, new PagerOptions()
+                {
+                    Page = 1,
+                    Size = int.MaxValue
+                });
 
-            return channels?.Select(c => new Selection<CategoryBase>
+            return categories?.Data?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = options.SelectedCategories.Any(v => v == c.Id),
                     Value = c

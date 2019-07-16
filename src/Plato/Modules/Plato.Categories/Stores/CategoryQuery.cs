@@ -119,7 +119,7 @@ namespace Plato.Categories.Stores
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT ")
-                .Append(BuildPopulateSelect())
+                .Append(BuildSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
@@ -143,7 +143,7 @@ namespace Plato.Categories.Stores
             return sb.ToString();
         }
 
-        string BuildPopulateSelect()
+        string BuildSelect()
         {
 
             var sb = new StringBuilder();

@@ -41,13 +41,13 @@ namespace Plato.Categories.Stores
             IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager)
         {
+            _typedModuleProvider = typedModuleProvider;
+            _queryAdapterManager = queryAdapterManager;
             _categoryRepository = categoryRepository;
+            _categoryDataStore = categoryDataStore;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
-            _categoryDataStore = categoryDataStore;
-            _typedModuleProvider = typedModuleProvider;
-            _queryAdapterManager = queryAdapterManager;
         }
 
         #region "Implementation"
@@ -171,7 +171,6 @@ namespace Plato.Categories.Stores
                 {
                     results.Data = await MergeCategoryData(results.Data);
                     results.Data = results.Data?.BuildHierarchy<TCategory>().ToList();
-                    //results.Data = results.Data?.OrderBy(r => r.SortOrder).ToList();
                 }
 
                 return results;
