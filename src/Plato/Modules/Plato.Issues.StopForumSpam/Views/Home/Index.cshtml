@@ -1,4 +1,4 @@
-﻿@using Plato.Ideas
+﻿@using Plato.Issues
 @using Plato.Internal.Abstractions.Settings
 @model StopForumSpamViewModel
 @{
@@ -84,7 +84,7 @@
         </div>
     </div>
     
-    <authorize asp-permission="@Plato.Ideas.StopForumSpam.Permissions.AddToStopForumSpam.Name">
+    <authorize asp-permission="@Plato.Issues.StopForumSpam.Permissions.AddToStopForumSpam.Name">
         <authorize-success>
             <hr />
             @if (platoOpts.DemoMode)
@@ -95,7 +95,7 @@
             }
             else
             {
-                <a asp-route-area="Plato.Ideas.StopForumSpam" asp-route-controller="Home" asp-route-action="AddSpammer" asp-route-opts.id="@Model.Options.Id" asp-route-opts.alias="@Model.Options.Alias" asp-route-opts.replyId="@Model.Options.ReplyId" data-toggle="tooltip" title="@T["Submit this users details to the central StopForumSpam database"]" class="btn btn-primary">@T["Submit Spammer"]</a>
+                <a asp-route-area="Plato.Issues.StopForumSpam" asp-route-controller="Home" asp-route-action="AddSpammer" asp-route-opts.id="@Model.Options.Id" asp-route-opts.alias="@Model.Options.Alias" asp-route-opts.replyId="@Model.Options.ReplyId" data-toggle="tooltip" title="@T["Submit this users details to the central StopForumSpam database"]" class="btn btn-primary">@T["Submit Spammer"]</a>
             }
         </authorize-success>
     </authorize>

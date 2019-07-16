@@ -11,33 +11,33 @@ using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
-using Plato.Ideas.Models;
-using Plato.Ideas.StopForumSpam.NotificationTypes;
+using Plato.Issues.Models;
+using Plato.Issues.StopForumSpam.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Net.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam.SpamOperators
+namespace Plato.Issues.StopForumSpam.SpamOperators
 {
 
-    public class IdeaOperator : ISpamOperatorProvider<Idea>
+    public class IssueOperator : ISpamOperatorProvider<Issue>
     {
         
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
-        private readonly INotificationManager<Idea> _notificationManager;
+        private readonly INotificationManager<Issue> _notificationManager;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IClientIpAddress _clientIpAddress;
-        private readonly IEntityStore<Idea> _topicStore;
+        private readonly IEntityStore<Issue> _topicStore;
         private readonly ISpamChecker _spamChecker;
 
-        public IdeaOperator(
+        public IssueOperator(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<Idea> notificationManager,
+            INotificationManager<Issue> notificationManager,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
             IClientIpAddress clientIpAddress,
-            IEntityStore<Idea> topicStore,
+            IEntityStore<Issue> topicStore,
             ISpamChecker spamChecker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -49,11 +49,11 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             _topicStore = topicStore;
         }
 
-        public async Task<ISpamOperatorResult<Idea>> ValidateModelAsync(ISpamOperatorContext<Idea> context)
+        public async Task<ISpamOperatorResult<Issue>> ValidateModelAsync(ISpamOperatorContext<Issue> context)
         {
 
             // Ensure correct operation provider
-            if (!context.Operation.Name.Equals(SpamOperations.Idea.Name, StringComparison.Ordinal))
+            if (!context.Operation.Name.Equals(SpamOperations.Issue.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -66,7 +66,7 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             }
 
             // Create result
-            var result = new SpamOperatorResult<Idea>();
+            var result = new SpamOperatorResult<Issue>();
             
             // Check if user is already flagged as SPAM within Plato
             if (user.IsSpam)
@@ -87,14 +87,14 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             
         }
 
-        public async Task<ISpamOperatorResult<Idea>> UpdateModelAsync(ISpamOperatorContext<Idea> context)
+        public async Task<ISpamOperatorResult<Issue>> UpdateModelAsync(ISpamOperatorContext<Issue> context)
         {
 
             // Perform validation
             var validation = await ValidateModelAsync(context);
 
             // Create result
-            var result = new SpamOperatorResult<Idea>();
+            var result = new SpamOperatorResult<Issue>();
             
             // Not an operator of interest
             if (validation == null)
@@ -150,7 +150,7 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
 
         }
 
-        async Task NotifyAsync(ISpamOperatorContext<Idea> context)
+        async Task NotifyAsync(ISpamOperatorContext<Issue> context)
         {
 
             // Get users to notify
@@ -170,9 +170,9 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             {
 
                 // Web notification
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.IdeaSpam))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.IssueSpam))
                 {
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.IdeaSpam)
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.IssueSpam)
                     {
                         To = user,
                         From = bot
@@ -180,9 +180,9 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
                 }
 
                 // Email notification
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.IdeaSpam))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.IssueSpam))
                 {
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.IdeaSpam)
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.IssueSpam)
                     {
                         To = user
                     }, context.Model);

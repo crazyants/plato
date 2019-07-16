@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Ideas.Models;
+using Plato.Issues.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -12,11 +12,11 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Ideas.StopForumSpam.NotificationTypes;
+using Plato.Issues.StopForumSpam.NotificationTypes;
 
-namespace Plato.Ideas.StopForumSpam.Notifications
+namespace Plato.Issues.StopForumSpam.Notifications
 {
-    public class IdeaSpamEmail : INotificationProvider<Idea>
+    public class IssueSpamEmail : INotificationProvider<Issue>
     {
         
         private readonly IContextFacade _contextFacade;
@@ -24,7 +24,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
         private readonly IEmailManager _emailManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
-        public IdeaSpamEmail(
+        public IssueSpamEmail(
             IContextFacade contextFacade,
             ILocaleStore localeStore, 
             IEmailManager emailManager,
@@ -36,19 +36,19 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
         }
 
-        public async Task<ICommandResult<Idea>> SendAsync(INotificationContext<Idea> context)
+        public async Task<ICommandResult<Issue>> SendAsync(INotificationContext<Issue> context)
         {
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.IdeaSpam.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.IssueSpam.Name, StringComparison.Ordinal))
             {
                 return null;
             }
 
             // Create result
-            var result = new CommandResult<Idea>();
+            var result = new CommandResult<Issue>();
 
             // Get email template
-            const string templateId = "NewIdeaSpam";
+            const string templateId = "NewIssueSpam";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
@@ -61,7 +61,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["area"] = "Plato.Ideas",
+                ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["opts.id"] = context.Model.Id,

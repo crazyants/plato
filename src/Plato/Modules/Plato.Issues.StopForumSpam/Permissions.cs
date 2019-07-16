@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam
+namespace Plato.Issues.StopForumSpam
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
         public static readonly Permission ViewStopForumSpam =
-            new Permission("IdeasViewSFS", "Can view StopForumSpam details");
+            new Permission("IssuesViewSFS", "Can view StopForumSpam details");
 
         public static readonly Permission AddToStopForumSpam =
-            new Permission("IdeasAddToSFS", "Can submit spammers to StopForumSpam");
+            new Permission("IssuesAddToSFS", "Can submit spammers to StopForumSpam");
         
         public IEnumerable<Permission> GetPermissions()
         {

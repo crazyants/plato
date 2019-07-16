@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Ideas.Models;
-using Plato.Ideas.StopForumSpam.NotificationTypes;
+using Plato.Issues.Models;
+using Plato.Issues.StopForumSpam.NotificationTypes;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
@@ -15,13 +15,13 @@ using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam.Notifications
+namespace Plato.Issues.StopForumSpam.Notifications
 {
-    public class CommentSpamEmail : INotificationProvider<IdeaComment>
+    public class CommentSpamEmail : INotificationProvider<Comment>
     {
 
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-        private readonly IEntityStore<Idea> _entityStore;
+        private readonly IEntityStore<Issue> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
@@ -29,7 +29,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
         public CommentSpamEmail(
          
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
-            IEntityStore<Idea> entityStore,
+            IEntityStore<Issue> entityStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
@@ -41,7 +41,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             _entityStore = entityStore;
         }
 
-        public async Task<ICommandResult<IdeaComment>> SendAsync(INotificationContext<IdeaComment> context)
+        public async Task<ICommandResult<Comment>> SendAsync(INotificationContext<Comment> context)
         {
             // Ensure correct notification provider
             if (!context.Notification.Type.Name.Equals(EmailNotifications.CommentSpam.Name, StringComparison.Ordinal))
@@ -50,10 +50,10 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             }
 
             // Create result
-            var result = new CommandResult<IdeaComment>();
+            var result = new CommandResult<Comment>();
 
             // Get email template
-            const string templateId = "NewIdeaCommentSpam";
+            const string templateId = "NewIssueCommentSpam";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
@@ -76,7 +76,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["area"] = "Plato.Ideas",
+                ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Reply",
                 ["opts.id"] = entity.Id,

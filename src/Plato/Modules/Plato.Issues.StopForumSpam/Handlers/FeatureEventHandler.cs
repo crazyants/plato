@@ -2,7 +2,7 @@
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam.Handlers
+namespace Plato.Issues.StopForumSpam.Handlers
 {
     
     public class FeatureEventHandler : BaseFeatureEventHandler

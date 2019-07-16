@@ -1,38 +1,38 @@
 ﻿using System.Threading.Tasks;
-using Plato.Ideas.Models;
+using Plato.Issues.Models;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.StopForumSpam.Services;
 
-namespace Plato.Ideas.StopForumSpam.ViewProviders
+namespace Plato.Issues.StopForumSpam.ViewProviders
 {
 
-    public class CommentViewProvider : BaseViewProvider<IdeaComment>
+    public class CommentViewProvider : BaseViewProvider<Comment>
     {
         
-        private readonly ISpamOperatorManager<IdeaComment> _spamOperatorManager;
+        private readonly ISpamOperatorManager<Comment> _spamOperatorManager;
     
-        public CommentViewProvider(ISpamOperatorManager<IdeaComment> spamOperatorManager)
+        public CommentViewProvider(ISpamOperatorManager<Comment> spamOperatorManager)
         {
             _spamOperatorManager = spamOperatorManager;
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(IdeaComment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Comment model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(IdeaComment model, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Comment model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(IdeaComment reply, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Comment reply, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<bool> ValidateModelAsync(IdeaComment reply, IUpdateModel updater)
+        public override async Task<bool> ValidateModelAsync(Comment reply, IUpdateModel updater)
         {
             
             // Validate model within registered spam operators
@@ -64,7 +64,7 @@ namespace Plato.Ideas.StopForumSpam.ViewProviders
 
         }
 
-        public override async Task ComposeModelAsync(IdeaComment reply, IUpdateModel updater)
+        public override async Task ComposeModelAsync(Comment reply, IUpdateModel updater)
         {
 
             if (!updater.ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace Plato.Ideas.StopForumSpam.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(IdeaComment reply, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Comment reply, IViewProviderContext context)
         {
             if (!context.Updater.ModelState.IsValid)
             {

@@ -3,19 +3,19 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam.NotificationTypes
+namespace Plato.Issues.StopForumSpam.NotificationTypes
 {
     
     public class EmailNotifications : INotificationTypeProvider
     {
 
-        public static readonly EmailNotification IdeaSpam =
-            new EmailNotification("IdeaSpamEmail", "Spam Ideas",
-                "Send me an email notification for each idea detected as SPAM.");
+        public static readonly EmailNotification IssueSpam =
+            new EmailNotification("IssueSpamEmail", "Spam Issues",
+                "Send me an email notification for each issue detected as SPAM.");
 
         public static readonly EmailNotification CommentSpam =
-            new EmailNotification("IdeaCommentSpamEmail", "Spam Idea Comments",
-                "Send me an email notification for each idea comment detected as SPAM.");
+            new EmailNotification("IssueCommentSpamEmail", "Spam Issue Comments",
+                "Send me an email notification for each issue comment detected as SPAM.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -26,7 +26,7 @@ namespace Plato.Ideas.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        IdeaSpam,
+                        IssueSpam,
                         CommentSpam
                     }
                 },
@@ -35,7 +35,7 @@ namespace Plato.Ideas.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        IdeaSpam,
+                        IssueSpam,
                         CommentSpam
                     }
                 }
@@ -51,7 +51,7 @@ namespace Plato.Ideas.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        IdeaSpam,
+                        IssueSpam,
                         CommentSpam
                     }
                 },
@@ -60,7 +60,7 @@ namespace Plato.Ideas.StopForumSpam.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        IdeaSpam,
+                        IssueSpam,
                         CommentSpam
                     }
                 }

@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Ideas.Models;
+using Plato.Issues.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Ideas.StopForumSpam.NotificationTypes;
+using Plato.Issues.StopForumSpam.NotificationTypes;
 
-namespace Plato.Ideas.StopForumSpam.Notifications
+namespace Plato.Issues.StopForumSpam.Notifications
 {
-    public class IdeaSpamWeb : INotificationProvider<Idea>
+    public class IssueSpamWeb : INotificationProvider<Issue>
     {
 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -23,7 +23,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
 
         public IStringLocalizer S { get; }
         
-        public IdeaSpamWeb(
+        public IssueSpamWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             ICapturedRouterUrlHelper urlHelper,
@@ -36,7 +36,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             S = stringLocalizer;
         }
 
-        public async Task<ICommandResult<Idea>> SendAsync(INotificationContext<Idea> context)
+        public async Task<ICommandResult<Issue>> SendAsync(INotificationContext<Issue> context)
         {
             // Validate
             if (context == null)
@@ -60,18 +60,18 @@ namespace Plato.Ideas.StopForumSpam.Notifications
             }
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.IdeaSpam.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.IssueSpam.Name, StringComparison.Ordinal))
             {
                 return null;
             }
             
             // Create result
-            var result = new CommandResult<Idea>();
+            var result = new CommandResult<Issue>();
             
             var baseUri = await _urlHelper.GetBaseUrlAsync();
             var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["area"] = "Plato.Ideas",
+                ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["opts.id"] = context.Model.Id,
@@ -84,7 +84,7 @@ namespace Plato.Ideas.StopForumSpam.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = S["Possible SPAM"].Value,
-                Message = S["An idea has been detected as SPAM!"],
+                Message = S["An issue has been detected as SPAM!"],
                 Url = url,
                 CreatedUserId = context.Notification.From?.Id ?? 0,
                 CreatedDate = DateTimeOffset.UtcNow

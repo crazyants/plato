@@ -1,22 +1,22 @@
 {
   "Emails": [
     {
-      "Id": "NewIdeaSpam",
+      "Id": "NewIssueSpam",
       "To": "",
       "Cc": "",
       "Bcc": "",
       "From": "",
       "Subject": "[SiteName] - Possible Spam",
-      "Message": "Hi {0},\n\nThe idea \"{1}\" has been detected as SPAM. You can review this topic at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
+      "Message": "Hi {0},\n\nThe issue \"{1}\" has been detected as SPAM. You can review this topic at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
     },
     {
-      "Id": "NewIdeaCommentSpam",
+      "Id": "NewIssueCommentSpam",
       "To": "",
       "Cc": "",
       "Bcc": "",
       "From": "",
       "Subject": "[SiteName] - Possible Spam",
-      "Message": "Hi {0},\n\nA comment to the idea \"{1}\" has been detected as SPAM. You can review this reply at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
+      "Message": "Hi {0},\n\nA comment to the issue \"{1}\" has been detected as SPAM. You can review this reply at the link below.\n\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

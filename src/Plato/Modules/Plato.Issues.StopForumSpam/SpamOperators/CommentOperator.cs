@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Ideas.Models;
-using Plato.Ideas.StopForumSpam.NotificationTypes;
+using Plato.Issues.Models;
+using Plato.Issues.StopForumSpam.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Models.Notifications;
@@ -16,24 +16,24 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 
-namespace Plato.Ideas.StopForumSpam.SpamOperators
+namespace Plato.Issues.StopForumSpam.SpamOperators
 {
-    public class CommentOperator : ISpamOperatorProvider<IdeaComment>
+    public class CommentOperator : ISpamOperatorProvider<Comment>
     {
         
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
-        private readonly INotificationManager<IdeaComment> _notificationManager;
+        private readonly INotificationManager<Comment> _notificationManager;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityReplyStore<IdeaComment> _replyStore;
+        private readonly IEntityReplyStore<Comment> _replyStore;
         private readonly ISpamChecker _spamChecker;
 
         public CommentOperator(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
-            INotificationManager<IdeaComment> notificationManager,
+            INotificationManager<Comment> notificationManager,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
-            IEntityReplyStore<IdeaComment> replyStore, 
+            IEntityReplyStore<Comment> replyStore, 
             ISpamChecker spamChecker)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -44,7 +44,7 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             _replyStore = replyStore;
         }
 
-        public async Task<ISpamOperatorResult<IdeaComment>> ValidateModelAsync(ISpamOperatorContext<IdeaComment> context)
+        public async Task<ISpamOperatorResult<Comment>> ValidateModelAsync(ISpamOperatorContext<Comment> context)
         {
 
             // Ensure correct operation provider
@@ -61,7 +61,7 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             }
 
             // Create result
-            var result = new SpamOperatorResult<IdeaComment>();
+            var result = new SpamOperatorResult<Comment>();
             
             // Check if user is already flagged as SPAM within Plato
             if (user.IsSpam)
@@ -82,14 +82,14 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
             
         }
 
-        public async Task<ISpamOperatorResult<IdeaComment>> UpdateModelAsync(ISpamOperatorContext<IdeaComment> context)
+        public async Task<ISpamOperatorResult<Comment>> UpdateModelAsync(ISpamOperatorContext<Comment> context)
         {
 
             // Perform validation
             var validation = await ValidateModelAsync(context);
 
             // Create result
-            var result = new SpamOperatorResult<IdeaComment>();
+            var result = new SpamOperatorResult<Comment>();
 
             // Not an operator of interest
             if (validation == null)
@@ -145,7 +145,7 @@ namespace Plato.Ideas.StopForumSpam.SpamOperators
 
         }
 
-        async Task NotifyAsync(ISpamOperatorContext<IdeaComment> context)
+        async Task NotifyAsync(ISpamOperatorContext<Comment> context)
         {
 
             // Get users to notify

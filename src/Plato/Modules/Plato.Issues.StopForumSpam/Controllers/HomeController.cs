@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Plato.Ideas.Models;
-using Plato.Ideas.StopForumSpam.ViewModels;
+using Plato.Issues.Models;
+using Plato.Issues.StopForumSpam.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
@@ -23,16 +23,16 @@ using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 using Plato.StopForumSpam.Stores;
 
-namespace Plato.Ideas.StopForumSpam.Controllers
+namespace Plato.Issues.StopForumSpam.Controllers
 {
     public class HomeController : Controller
     {
         
         private readonly ISpamSettingsStore<SpamSettings> _spamSettingsStore;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IEntityReplyStore<IdeaComment> _entityReplyStore;
+        private readonly IEntityReplyStore<Comment> _entityReplyStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityStore<Idea> _entityStore;
+        private readonly IEntityStore<Issue> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly ISpamChecker _spamChecker;
         private readonly ISpamClient _spamClient;
@@ -49,10 +49,10 @@ namespace Plato.Ideas.StopForumSpam.Controllers
             IStringLocalizer<HomeController> stringLocalizer,
             ISpamSettingsStore<SpamSettings> spamSettingsStore,
             IAuthorizationService authorizationService,
-            IEntityReplyStore<IdeaComment> entityReplyStore,
+            IEntityReplyStore<Comment> entityReplyStore,
             IPlatoUserStore<User> platoUserStore,
             IOptions<PlatoOptions> platoOpts,
-            IEntityStore<Idea> entityStore,
+            IEntityStore<Issue> entityStore,
             IContextFacade contextFacade,
             ISpamChecker spamChecker, 
             ISpamClient spamClient,
@@ -220,7 +220,7 @@ namespace Plato.Ideas.StopForumSpam.Controllers
             {
                 return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Ideas",
+                    ["area"] = "Plato.Issues",
                     ["controller"] = "Home",
                     ["action"] = "Reply",
                     ["opts.id"] = entity.Id,
@@ -232,7 +232,7 @@ namespace Plato.Ideas.StopForumSpam.Controllers
             // Redirect back to entity
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
-                ["area"] = "Plato.Ideas",
+                ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["opts.id"] = entity.Id,

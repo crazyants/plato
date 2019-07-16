@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Ideas.Models;
+using Plato.Issues.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Ideas.StopForumSpam.Navigation
+namespace Plato.Issues.StopForumSpam.Navigation
 {
-    public class IdeaCommentMenu : INavigationProvider
+    public class IssueMenu : INavigationProvider
     {
         
         public IStringLocalizer T { get; set; }
 
-        public IdeaCommentMenu(IStringLocalizer localizer)
+        public IssueMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -20,27 +20,20 @@ namespace Plato.Ideas.StopForumSpam.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "idea-comment", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "issue", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
             
             // Get entity from context
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Issue)] as Issue;
             if (entity == null)
             {
                 return;
             }
-
-            // Get reply from context
-            var reply = builder.ActionContext.HttpContext.Items[typeof(IdeaComment)] as IdeaComment;
-            if (reply == null)
-            {
-                return;
-            }
-
+            
             // If the entity if flagged as spam display additional options
-            if (reply.IsSpam)
+            if (entity.IsSpam)
             {
 
                 builder
@@ -54,12 +47,12 @@ namespace Plato.Ideas.StopForumSpam.Navigation
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })
-                            .Action("Index", "Home", "Plato.Ideas.StopForumSpam",
+                            .Action("Index", "Home", "Plato.Issues.StopForumSpam",
                                 new RouteValueDictionary()
                                 {
                                     ["opts.id"] = entity.Id.ToString(),
                                     ["opts.alias"] = entity.Alias,
-                                    ["opts.replyId"] = reply.Id.ToString()
+                                    ["opts.replyId"] = "0"
                                 })
                             .Permission(Permissions.ViewStopForumSpam)
                             .LocalNav()

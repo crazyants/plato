@@ -2,16 +2,16 @@
 using Plato.StopForumSpam.Models;
 using Plato.StopForumSpam.Services;
 
-namespace Plato.Ideas.StopForumSpam
+namespace Plato.Issues.StopForumSpam
 {
 
     public class SpamOperations : ISpamOperationProvider<SpamOperation>
     {
 
-        public static readonly SpamOperation Idea = new SpamOperation(
-            "Ideas",
-            "Ideas",
-            "Customize what will happen when ideas are detected as SPAM.")
+        public static readonly SpamOperation Issue = new SpamOperation(
+            "Issues",
+            "Issues",
+            "Customize what will happen when issues are detected as SPAM.")
         {
             FlagAsSpam = true,
             NotifyAdmin = true,
@@ -21,9 +21,9 @@ namespace Plato.Ideas.StopForumSpam
         };
 
         public static readonly SpamOperation Comment = new SpamOperation(
-            "IdeaComments",
-            "Idea Comments",
-            "Customize what will happen when idea comments are detected as SPAM.")
+            "IssueComments",
+            "Issue Comments",
+            "Customize what will happen when issue comments are detected as SPAM.")
         {
             FlagAsSpam = true,
             NotifyAdmin = true,
@@ -36,7 +36,7 @@ namespace Plato.Ideas.StopForumSpam
         {
             return new[]
             {
-                Idea,
+                Issue,
                 Comment
             };
         }

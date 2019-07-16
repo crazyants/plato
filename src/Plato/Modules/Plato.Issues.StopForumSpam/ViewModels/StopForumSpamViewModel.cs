@@ -1,7 +1,7 @@
 ﻿using Plato.Entities.ViewModels;
 using Plato.StopForumSpam.Models;
 
-namespace Plato.Ideas.StopForumSpam.ViewModels
+namespace Plato.Issues.StopForumSpam.ViewModels
 {
     public class StopForumSpamViewModel
     {
