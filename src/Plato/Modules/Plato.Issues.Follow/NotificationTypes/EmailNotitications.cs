@@ -10,7 +10,7 @@ namespace Plato.Issues.Follow.NotificationTypes
     {
         
         public static readonly EmailNotification NewIssueComment =
-            new EmailNotification("NewIssueCommentEmail", "New Issue Comments", "Send me an email notification for each new comment within issues I'm following.");
+            new EmailNotification("NewIssueCommentEmail", "Issue Comments", "Send me an email notification for each new comment within issues I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

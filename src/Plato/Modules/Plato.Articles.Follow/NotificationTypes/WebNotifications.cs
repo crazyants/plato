@@ -10,7 +10,10 @@ namespace Plato.Articles.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewArticleComment =
-            new WebNotification("NewArticleCommentWeb", "New Article Comment", "Show me a web notification for each new comment within articles I'm following.");
+            new WebNotification("NewArticleCommentWeb", "Article Comments", "Show me a web notification for each new comment within articles I'm following.");
+
+        public static readonly WebNotification UpdatedArticle =
+            new WebNotification("UpdatedArticleWeb", "Article Updates", "Show me a web notification for updates within articles I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -21,7 +24,8 @@ namespace Plato.Articles.Follow.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        NewArticleComment
+                        NewArticleComment,
+                        UpdatedArticle
                     }
                 },
                 new DefaultNotificationTypes
@@ -29,7 +33,8 @@ namespace Plato.Articles.Follow.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        NewArticleComment
+                        NewArticleComment,
+                        UpdatedArticle
                     }
                 },
                 new DefaultNotificationTypes
@@ -37,7 +42,8 @@ namespace Plato.Articles.Follow.NotificationTypes
                     RoleName = DefaultRoles.Member,
                     NotificationTypes = new[]
                     {
-                        NewArticleComment
+                        NewArticleComment,
+                        UpdatedArticle
                     }
                 }
 

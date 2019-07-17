@@ -51,9 +51,12 @@ namespace Plato.Articles.Follow
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification managers
+            services.AddScoped<INotificationManager<Article>, NotificationManager<Article>>();
             services.AddScoped<INotificationManager<Comment>, NotificationManager<Comment>>();
-
+            
             // Notification Providers
+            services.AddScoped<INotificationProvider<Article>, UpdatedArticleEmail>();
+            services.AddScoped<INotificationProvider<Article>, UpdatedArticleWeb>();
             services.AddScoped<INotificationProvider<Comment>, NewCommentEmail>();
             services.AddScoped<INotificationProvider<Comment>, NewCommentWeb>();
         

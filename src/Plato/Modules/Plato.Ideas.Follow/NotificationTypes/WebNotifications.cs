@@ -10,7 +10,7 @@ namespace Plato.Ideas.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewIdeaComment =
-            new WebNotification("NewIdeaCommentWeb", "New Idea Comments", "Show me a web notification for each new comment within ideas I'm following.");
+            new WebNotification("NewIdeaCommentWeb", "Idea Comments", "Show me a web notification for each new comment within ideas I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

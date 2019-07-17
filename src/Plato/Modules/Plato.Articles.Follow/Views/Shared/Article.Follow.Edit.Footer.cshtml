@@ -1,0 +1,17 @@
+﻿@model EditFooterViewModel
+
+@{
+    var offText = "Enable to send all users following this article a notification of this change. Notifications will be sent when you click the Update Article button.";
+    var onText = "Notifications are enabled. Users following this article will be notified of your changes when you save the article";
+}
+
+<label title="@T[offText]" data-subscribe-tooltip="@T[offText]" data-unsubscribe-tooltip="@T[onText]" data-toggle="tooltip" for="@Model.NotifyHtmlName" data-on-css="btn btn-lg text-danger" data-off-css="btn btn-lg text-muted" class="btn btn-lg text-muted" role="button">
+    <input type="checkbox" class="hidden" data-provide="follow-checkbox" name="@Model.NotifyHtmlName" id="@Model.NotifyHtmlName" />
+    <i class="fal fa-bell"></i> @T["Send Notification"]
+</label>
+
+
+
+
+
+

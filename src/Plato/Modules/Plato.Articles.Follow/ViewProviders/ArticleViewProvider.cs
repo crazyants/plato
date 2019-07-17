@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Plato.Articles.Follow.NotificationTypes;
 using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Follows.Services;
@@ -10,6 +13,17 @@ using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Security.Abstractions;
+using Plato.Articles.Follow.ViewModels;
+using Plato.Entities.Extensions;
+using Plato.Entities.Models;
+using Plato.Follows.Models;
+using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Extensions;
+using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Articles.Follow.ViewProviders
 {
@@ -17,10 +31,16 @@ namespace Plato.Articles.Follow.ViewProviders
     {
 
         private const string FollowHtmlName = "follow";
-        
+        private const string NotifyHtmlName = "notify";
+
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
+        private readonly INotificationManager<Article> _notificationManager;
         private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
         private readonly IFollowManager<Follows.Models.Follow> _followManager;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IDeferredTaskManager _deferredTaskManager;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IEntityStore<Article> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly HttpRequest _request;
@@ -31,12 +51,22 @@ namespace Plato.Articles.Follow.ViewProviders
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
             IEntityStore<Article> entityStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            INotificationManager<Article> notificationManager,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            IDeferredTaskManager deferredTaskManager,
+            IPlatoUserStore<User> platoUserStore, 
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _authorizationService = authorizationService;
             _followManager = followManager;
             _contextFacade = contextFacade;
+            _notificationManager = notificationManager;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _deferredTaskManager = deferredTaskManager;
+            _platoUserStore = platoUserStore;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
             _followStore = followStore;
             _entityStore = entityStore;
         }
@@ -117,6 +147,11 @@ namespace Plato.Articles.Follow.ViewProviders
             }
 
             return Views(
+                  View<EditFooterViewModel>("Article.Follow.Edit.Footer", model =>
+                  {
+                      model.NotifyHtmlName = NotifyHtmlName;                   
+                      return model;
+                  }).Zone("actions"),
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
                 {
                     model.FollowType = followType;
@@ -130,49 +165,62 @@ namespace Plato.Articles.Follow.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Article topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext updater)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(article.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(topic, updater);
-            }
-
-            // Get the follow checkbox value
-            var follow = false;
-            foreach (var key in _request.Form.Keys)
-            {
-                if (key == FollowHtmlName)
-                {
-                    var values = _request.Form[key];
-                    if (!String.IsNullOrEmpty(values))
-                    {
-                        follow = true;
-                        break;
-                    }
-                }
+                return await BuildEditAsync(article, updater);
             }
 
             // We need to be authenticated to follow
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(article, updater);
             }
+
+            // -----------------
+            // Update follow status
+            // -----------------
+
+            await UpdateFollowStatus(entity, user);
+
+            // -----------------
+            // Send update notifications?
+            // -----------------
+
+            if (NotifyPostedValue())
+            {
+                // Exclude the user who modified the entity
+                var usersToExclude = new List<int>()
+                {
+                    entity.ModifiedUserId
+                };
+
+                await SendNotificationsAsync(entity, usersToExclude);
+            }
+
+            return await BuildEditAsync(article, updater);
+
+        }
+
+        async Task UpdateFollowStatus(IEntity entity, IUser user)
+        {
 
             // The follow type
             var followType = FollowTypes.Article;
-      
+
             // Get any existing follow
             var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
                 followType.Name,
                 entity.Id,
                 user.Id);
-            
+
             // Add the follow
-            if (follow)
+            if (FollowPostedValue())
             {
                 // If we didn't find an existing follow create a new one
                 if (existingFollow == null)
@@ -186,7 +234,7 @@ namespace Plato.Articles.Follow.ViewProviders
                         CreatedDate = DateTime.UtcNow
                     });
                 }
-      
+
             }
             else
             {
@@ -196,8 +244,212 @@ namespace Plato.Articles.Follow.ViewProviders
                 }
             }
 
-            return await BuildEditAsync(topic, updater);
+        }
 
+
+        Task<Article> SendNotificationsAsync(Article entity, IList<int> usersToExclude)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            
+            // No need to send notifications for hidden entities
+            if (entity.IsHidden())
+            {
+                return Task.FromResult(entity);
+            }
+
+            // Add deferred task
+            _deferredTaskManager.AddTask(async context =>
+            {
+
+                // Follow type name
+                var name = FollowTypes.Article.Name;
+
+                // Get all follows for entity
+                var follows = await _followStore.QueryAsync()
+                    .Select<FollowQueryParams>(q =>
+                    {
+                        q.ThingId.Equals(entity.Id);
+                        q.Name.Equals(name);
+                        if (usersToExclude.Count > 0)
+                        {
+                            q.CreatedUserId.IsNotIn(usersToExclude.ToArray());
+                        }
+                    })
+                    .ToList();
+
+                // No follows simply return
+                if (follows?.Data == null)
+                {
+                    return;
+                }
+
+                // Get users
+                var users = await GetUsersAsync(follows?.Data, entity);
+
+                // We always need users
+                if (users == null)
+                {
+                    return;
+                }
+
+                // Send notifications
+                foreach (var user in users)
+                {
+
+                    // Email notifications
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.UpdatedArticle))
+                    {
+                        await _notificationManager.SendAsync(new Notification(EmailNotifications.UpdatedArticle)
+                        {
+                            To = user,
+                        }, entity);
+                    }
+
+                    // Web notifications
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.UpdatedArticle))
+                    {
+                        await _notificationManager.SendAsync(new Notification(WebNotifications.UpdatedArticle)
+                        {
+                            To = user,
+                            From = new User()
+                            {
+                                Id = entity.ModifiedBy.Id,
+                                UserName = entity.ModifiedBy.UserName,
+                                DisplayName = entity.ModifiedBy.DisplayName,
+                                Alias = entity.ModifiedBy.Alias,
+                                PhotoUrl = entity.ModifiedBy.PhotoUrl,
+                                PhotoColor = entity.ModifiedBy.PhotoColor
+                            }
+                        }, entity);
+                    }
+
+                }
+                
+            });
+
+            return Task.FromResult(entity);
+
+        }
+
+        async Task<IEnumerable<IUser>> GetUsersAsync(
+            IEnumerable<Follows.Models.Follow> follows,
+            IEntity entity)
+        {
+
+            // We always need follows to process
+            if (follows == null)
+            {
+                return null;
+            }
+
+            // No need to send notifications if the entity is hidden
+            if (entity.IsHidden())
+            {
+                return null;
+            }
+
+            // Get all users following the entity
+            // Exclude the author so they are not notified of there own posts
+            var users = await _platoUserStore.QueryAsync()
+                .Select<UserQueryParams>(q =>
+                {
+                    q.Id.IsIn(follows
+                        .Select(f => f.CreatedUserId)
+                        .ToArray());
+                })
+                .ToList();
+
+            // No users to further process
+            if (users?.Data == null)
+            {
+                return null;
+            }
+
+            // Build users reducing for permissions
+            var result = new Dictionary<int, IUser>();
+            foreach (var user in users.Data)
+            {
+
+                if (!result.ContainsKey(user.Id))
+                {
+                    result.Add(user.Id, user);
+                }
+
+                // If the entity is hidden but the user does
+                // not have permission to view hidden entities
+                if (entity.IsHidden)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Articles.Permissions.ViewHiddenArticles))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+                // The entity has been flagged as SPAM but the user does
+                // not have permission to view entities flagged as SPAM
+                if (entity.IsSpam)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Articles.Permissions.ViewSpamArticles))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+                // The entity is soft deleted but the user does 
+                // not have permission to view soft deleted entities
+                if (entity.IsDeleted)
+                {
+                    var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                    if (!await _authorizationService.AuthorizeAsync(principal,
+                        entity.CategoryId, Articles.Permissions.ViewDeletedArticles))
+                    {
+                        result.Remove(user.Id);
+                    }
+                }
+
+            }
+
+            return result.Values;
+
+        }
+        bool FollowPostedValue()
+        {            
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key == FollowHtmlName)
+                {
+                    var values = _request.Form[key];
+                    if (!String.IsNullOrEmpty(values))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        bool NotifyPostedValue()
+        {
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key == NotifyHtmlName)
+                {
+                    var values = _request.Form[key];
+                    if (!String.IsNullOrEmpty(values))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
     }

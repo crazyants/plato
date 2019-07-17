@@ -10,7 +10,7 @@ namespace Plato.Issues.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewIssueComment =
-            new WebNotification("NewIssueCommentWeb", "New Issue Comments", "Show me a web notification for each new comment within issues I'm following.");
+            new WebNotification("NewIssueCommentWeb", "Issue Comments", "Show me a web notification for each new comment within issues I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

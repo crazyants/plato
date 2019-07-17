@@ -10,7 +10,7 @@ namespace Plato.Questions.Follow.NotificationTypes
     {
         
         public static readonly EmailNotification NewAnswer =
-            new EmailNotification("NewQuestionAnswerEmail", "New Question Answers", "Send me an email notification for each new answer within questions I'm following.");
+            new EmailNotification("NewQuestionAnswerEmail", "Question Answers", "Send me an email notification for each new answer within questions I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
