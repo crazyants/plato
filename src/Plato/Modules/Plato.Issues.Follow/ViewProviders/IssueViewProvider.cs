@@ -76,7 +76,7 @@ namespace Plato.Issues.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
-                    model.Permission = Permissions.FollowIdeas;
+                    model.Permission = Permissions.FollowIssues;
                     return model;
                 }).Zone("tools").Order(-4)
             );
@@ -110,7 +110,7 @@ namespace Plato.Issues.Follow.ViewProviders
             if (entity.Id == 0)
             {
                 if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                    entity.CategoryId, Permissions.FollowNewIdeas))
+                    entity.CategoryId, Permissions.AutoFollowIssues))
                 {
                     isFollowing = true;
                 }
@@ -123,7 +123,7 @@ namespace Plato.Issues.Follow.ViewProviders
                     model.FollowHtmlName = FollowHtmlName;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
-                    model.Permission = Follow.Permissions.FollowIdeas;
+                    model.Permission = Follow.Permissions.FollowIssues;
                     return model;
                 }).Zone("sidebar").Order(2)
             );

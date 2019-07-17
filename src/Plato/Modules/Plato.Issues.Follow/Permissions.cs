@@ -6,23 +6,26 @@ namespace Plato.Issues.Follow
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission FollowIdeas =
-            new Permission("FollowIdeas", "Can follow ideas");
+        // FollowIssues
+        // AutoFollowIssues
+        // AutoFollowIssueComments
 
-        public static readonly Permission FollowNewIdeas =
-            new Permission("FollowNewIdeas", "Automatically follow new ideas");
+        public static readonly Permission FollowIssues =
+            new Permission("FollowIssues", "Can follow issues");
 
-        public static readonly Permission FollowParticipatedIdeas =
-            new Permission("FollowParticipatedIdeas", "Automatically follow ideas when posting replies");
+        public static readonly Permission AutoFollowIssues =
+            new Permission("AutoFollowIssues", "Automatically follow when posting new issues");
 
-
+        public static readonly Permission AutoFollowIssueComments =
+            new Permission("AutoFollowIssueComments", "Automatically follow issues when posting comments");
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                FollowIdeas,
-                FollowNewIdeas,
-                FollowParticipatedIdeas
+                FollowIssues,
+                AutoFollowIssues,
+                AutoFollowIssueComments
             };
         }
 
@@ -35,9 +38,9 @@ namespace Plato.Issues.Follow
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        FollowIssues,
+                        AutoFollowIssues,
+                        AutoFollowIssueComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -45,9 +48,9 @@ namespace Plato.Issues.Follow
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        FollowIssues,
+                        AutoFollowIssues,
+                        AutoFollowIssueComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -55,9 +58,9 @@ namespace Plato.Issues.Follow
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        FollowIssues,
+                        AutoFollowIssues,
+                        AutoFollowIssueComments
                     }
                 }
             };

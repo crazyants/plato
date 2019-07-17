@@ -5,24 +5,27 @@ namespace Plato.Ideas.Follow
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
-
+        
+        // FollowIdeas
+        // AutoFollowIdeas
+        // AutoFollowIdeaComments
+        
         public static readonly Permission FollowIdeas =
             new Permission("FollowIdeas", "Can follow ideas");
 
-        public static readonly Permission FollowNewIdeas =
-            new Permission("FollowNewIdeas", "Automatically follow new ideas");
+        public static readonly Permission AutoFollowIdeas =
+            new Permission("AutoFollowIdeas", "Automatically follow when posting new ideas");
 
-        public static readonly Permission FollowParticipatedIdeas =
-            new Permission("FollowParticipatedIdeas", "Automatically follow ideas when posting replies");
-
-
+        public static readonly Permission AutoFollowIdeaComments =
+            new Permission("AutoFollowIdeaComments", "Automatically follow ideas when posting replies");
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
                 FollowIdeas,
-                FollowNewIdeas,
-                FollowParticipatedIdeas
+                AutoFollowIdeas,
+                AutoFollowIdeaComments
             };
         }
 
@@ -36,8 +39,8 @@ namespace Plato.Ideas.Follow
                     Permissions = new[]
                     {
                         FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        AutoFollowIdeas,
+                        AutoFollowIdeaComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -46,8 +49,8 @@ namespace Plato.Ideas.Follow
                     Permissions = new[]
                     {
                         FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        AutoFollowIdeas,
+                        AutoFollowIdeaComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -56,8 +59,8 @@ namespace Plato.Ideas.Follow
                     Permissions = new[]
                     {
                         FollowIdeas,
-                        FollowNewIdeas,
-                        FollowParticipatedIdeas
+                        AutoFollowIdeas,
+                        AutoFollowIdeaComments
                     }
                 }
             };

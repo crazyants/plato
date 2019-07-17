@@ -6,23 +6,26 @@ namespace Plato.Discuss.Follow
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        // FollowTopics
+        // AutoFollowTopics
+        // AutoFollowTopicReplies
+
         public static readonly Permission FollowTopics =
             new Permission("FollowTopics", "Can follow topics");
 
-        public static readonly Permission FollowNewTopics =
-            new Permission("FollowNewTopics", "Automatically follow new topics");
+        public static readonly Permission AutoFollowTopics =
+            new Permission("AutoFollowTopics", "Automatically follow when posting new topics");
 
-        public static readonly Permission FollowParticipatedTopics =
-            new Permission("FollowParticipatedTopics", "Automatically follow topics when posting replies");
-
-
+        public static readonly Permission AutoFollowTopicReplies =
+            new Permission("AutoFollowTopicReplies", "Automatically follow topics when posting replies");
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
                 FollowTopics,
-                FollowNewTopics,
-                FollowParticipatedTopics
+                AutoFollowTopics,
+                AutoFollowTopicReplies
             };
         }
 
@@ -36,8 +39,8 @@ namespace Plato.Discuss.Follow
                     Permissions = new[]
                     {
                         FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        AutoFollowTopics,
+                        AutoFollowTopicReplies
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -46,8 +49,8 @@ namespace Plato.Discuss.Follow
                     Permissions = new[]
                     {
                         FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        AutoFollowTopics,
+                        AutoFollowTopicReplies
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -56,8 +59,8 @@ namespace Plato.Discuss.Follow
                     Permissions = new[]
                     {
                         FollowTopics,
-                        FollowNewTopics,
-                        FollowParticipatedTopics
+                        AutoFollowTopics,
+                        AutoFollowTopicReplies
                     }
                 }
             };

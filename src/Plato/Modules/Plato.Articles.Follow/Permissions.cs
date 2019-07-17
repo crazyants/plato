@@ -6,22 +6,31 @@ namespace Plato.Articles.Follow
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        // FollowArticles
+        // AutoFollowArticles
+        // AutoFollowArticleComments
+        // SendArticleFollows
+
         public static readonly Permission FollowArticles =
             new Permission("FollowArticles", "Can follow articles");
 
-        public static readonly Permission FollowNewArticles =
-            new Permission("FollowNewArticles", "Automatically follow new articles");
+        public static readonly Permission AutoFollowArticles =
+            new Permission("AutoFollowArticles", "Automatically follow when posting new articles");
 
-        public static readonly Permission FollowParticipatedArticles =
-            new Permission("FollowParticipatedArticles", "Automatically follow articles when posting comments");
+        public static readonly Permission AutoFollowArticleComments =
+            new Permission("AutoFollowArticleComments", "Automatically follow articles when posting comments");
         
+        public static readonly Permission SendArticleFollows =
+            new Permission("SendArticleFollows", "Can send notifications when updating articles");
+
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
                 FollowArticles,
-                FollowNewArticles,
-                FollowParticipatedArticles
+                AutoFollowArticles,
+                AutoFollowArticleComments,
+                SendArticleFollows
             };
         }
 
@@ -35,8 +44,9 @@ namespace Plato.Articles.Follow
                     Permissions = new[]
                     {
                         FollowArticles,
-                        FollowNewArticles,
-                        FollowParticipatedArticles
+                        AutoFollowArticles,
+                        AutoFollowArticleComments,
+                        SendArticleFollows
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -45,8 +55,8 @@ namespace Plato.Articles.Follow
                     Permissions = new[]
                     {
                         FollowArticles,
-                        FollowNewArticles,
-                        FollowParticipatedArticles
+                        AutoFollowArticles,
+                        AutoFollowArticleComments
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -55,8 +65,9 @@ namespace Plato.Articles.Follow
                     Permissions = new[]
                     {
                         FollowArticles,
-                        FollowNewArticles,
-                        FollowParticipatedArticles
+                        AutoFollowArticles,
+                        AutoFollowArticleComments,
+                        SendArticleFollows
                     }
                 }
             };

@@ -110,7 +110,7 @@ namespace Plato.Ideas.Follow.ViewProviders
             if (entity.Id == 0)
             {
                 if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                    entity.CategoryId, Permissions.FollowNewIdeas))
+                    entity.CategoryId, Permissions.AutoFollowIdeas))
                 {
                     isFollowing = true;
                 }

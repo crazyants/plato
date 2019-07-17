@@ -78,7 +78,7 @@ namespace Plato.Issues.Follow.ViewProviders
             
             // Are we authorized to automatically follow entities we participate in?
             if (!await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                entity.CategoryId, Permissions.FollowParticipatedIdeas))
+                entity.CategoryId, Permissions.AutoFollowIssueComments))
             {
                 return await BuildEditAsync(reply, context);
             }

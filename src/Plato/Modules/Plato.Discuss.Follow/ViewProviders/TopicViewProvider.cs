@@ -110,7 +110,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             if (entity.Id == 0)
             {
                 if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                    entity.CategoryId, Permissions.FollowNewTopics))
+                    entity.CategoryId, Permissions.AutoFollowTopics))
                 {
                     isFollowing = true;
                 }

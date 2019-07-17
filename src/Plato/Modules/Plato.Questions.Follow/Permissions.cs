@@ -6,23 +6,26 @@ namespace Plato.Questions.Follow
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        // FollowQuestions
+        // AutoFollowQuestions
+        // AutoFollowQuestionAnswers
+
         public static readonly Permission FollowQuestions =
             new Permission("FollowQuestions", "Can follow questions");
 
-        public static readonly Permission FollowNewQuestions =
-            new Permission("FollowNewQuestions", "Automatically follow new questions");
+        public static readonly Permission AutoFollowQuestions =
+            new Permission("AutoFollowQuestions", "Automatically follow new questions");
 
-        public static readonly Permission FollowParticipatedQuestions =
-            new Permission("FollowParticipatedQuestions", "Automatically follow questions when posting replies");
-
-
+        public static readonly Permission AutoFollowQuestionAnswers =
+            new Permission("AutoFollowQuestionAnswers", "Automatically follow questions when posting replies");
+        
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
                 FollowQuestions,
-                FollowNewQuestions,
-                FollowParticipatedQuestions
+                AutoFollowQuestions,
+                AutoFollowQuestionAnswers
             };
         }
 
@@ -36,8 +39,8 @@ namespace Plato.Questions.Follow
                     Permissions = new[]
                     {
                         FollowQuestions,
-                        FollowNewQuestions,
-                        FollowParticipatedQuestions
+                        AutoFollowQuestions,
+                        AutoFollowQuestionAnswers
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -46,8 +49,8 @@ namespace Plato.Questions.Follow
                     Permissions = new[]
                     {
                         FollowQuestions,
-                        FollowNewQuestions,
-                        FollowParticipatedQuestions
+                        AutoFollowQuestions,
+                        AutoFollowQuestionAnswers
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -56,8 +59,8 @@ namespace Plato.Questions.Follow
                     Permissions = new[]
                     {
                         FollowQuestions,
-                        FollowNewQuestions,
-                        FollowParticipatedQuestions
+                        AutoFollowQuestions,
+                        AutoFollowQuestionAnswers
                     }
                 }
             };
