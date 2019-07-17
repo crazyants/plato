@@ -40,7 +40,7 @@
 
                                     <avatar data-toggle="tooltip" title="@result.Model.DisplayName" class="avatar avatar-md" url="@result.Model.Avatar.Url" />
 
-                                    <h6 class="d-block mt-2">@result.Model.DisplayName</h6>
+                                    <strong class="d-block mt-2 @result.Model.Css?.ToString()">@result.Model.DisplayName</strong>
 
                                     <span class="d-block text-muted">
                                         <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
@@ -83,7 +83,7 @@
                                
                                 <span class="row no-gutters">
                                     <span class="col-8">
-                                        <strong>@result.Model.DisplayName</strong>
+                                        <strong class="@result.Model.Css?.ToString()">@result.Model.DisplayName</strong>
                                         <br/>
                                         <span class="text-muted">
                                             @@@result.Model.UserName

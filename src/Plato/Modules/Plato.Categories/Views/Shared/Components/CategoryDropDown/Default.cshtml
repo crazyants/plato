@@ -54,7 +54,7 @@
     }
     @if (selectedCategories.Count > 0)
     {
-        <ul data-empty-preview-text="@T["No categories selected."]" class="list-group list-group-flush select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No category selected."]" class="list-group list-group-flush select-dropdown-preview">
             @foreach (var channel in selectedCategories)
             {
                 <li class="list-group-item">
@@ -77,9 +77,9 @@
     }
     else
     {
-        <ul data-empty-preview-text="@T["No categories selected."]" class="list-group list-group-flush select-dropdown-preview">
+        <ul data-empty-preview-text="@T["No category selected."]" class="list-group list-group-flush select-dropdown-preview">
             <li class="list-group-item">
-                @T["No categories selected."]
+                @T["No category selected."]
             </li>
         </ul>
     }

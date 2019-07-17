@@ -6,7 +6,7 @@
       "Cc": "",
       "Bcc": "",
       "From": "",
-      "Subject": "[SiteName] - New Comment",
+      "Subject": "[SiteName] - New Answer",
       "Message": "Hi {0},\n\nAn answer has been posted within a question you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
