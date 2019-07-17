@@ -10,11 +10,11 @@ namespace Plato.Issues.NotificationTypes
     {
 
         public static readonly EmailNotification IssueReport =
-            new EmailNotification("IssueReportEmail", "Reported Issues",
+            new EmailNotification("IssueReportEmail", "Issue Reports",
                 "Send me an email notification each time an issue is reported.");
 
         public static readonly EmailNotification IssueCommentReport =
-            new EmailNotification("IssueCommentReportEmail", "Reported Issue Comments",
+            new EmailNotification("IssueCommentReportEmail", "Issue Comment Reports",
                 "Send me an email notification each time an issue comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

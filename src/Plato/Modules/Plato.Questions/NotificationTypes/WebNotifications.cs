@@ -10,11 +10,11 @@ namespace Plato.Questions.NotificationTypes
     {
 
         public static readonly WebNotification QuestionReport =
-            new WebNotification("QuestionReportWeb", "Reported Questions",
+            new WebNotification("QuestionReportWeb", "Question Reports",
                 "Show me a web notification each time a question is reported.");
 
         public static readonly WebNotification AnswerReport =
-            new WebNotification("AnswerReportWeb", "Reported Question Answers",
+            new WebNotification("AnswerReportWeb", "Question Answer Reports",
                 "Show me a web notification each time a questions answer is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

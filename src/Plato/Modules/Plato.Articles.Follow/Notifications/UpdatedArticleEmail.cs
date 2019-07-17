@@ -14,8 +14,6 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Tasks.Abstractions;
-
 
 namespace Plato.Articles.Follow.Notifications
 {
@@ -24,14 +22,13 @@ namespace Plato.Articles.Follow.Notifications
     {
 
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-        private readonly IEntityStore<Article> _entityStore;
+  
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
 
         public UpdatedArticleEmail(
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
-            IEntityStore<Article> entityStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
@@ -40,7 +37,6 @@ namespace Plato.Articles.Follow.Notifications
             _contextFacade = contextFacade;
             _emailManager = emailManager;
             _localeStore = localeStore;
-            _entityStore = entityStore;
         }
 
         public async Task<ICommandResult<Article>> SendAsync(INotificationContext<Article> context)
@@ -54,10 +50,9 @@ namespace Plato.Articles.Follow.Notifications
 
             // Create result
             var result = new CommandResult<Article>();
-
-
+            
             // Get email template
-            const string templateId = "ArticleUpdate";
+            const string templateId = "UpdatedArticle";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

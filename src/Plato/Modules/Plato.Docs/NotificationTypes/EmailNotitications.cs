@@ -10,11 +10,11 @@ namespace Plato.Docs.NotificationTypes
     {
 
         public static readonly EmailNotification DocReport =
-            new EmailNotification("DocReportEmail", "Reported Docs",
+            new EmailNotification("DocReportEmail", "Doc Reports",
                 "Send me an email notification each time a doc is reported.");
 
         public static readonly EmailNotification CommentReport =
-            new EmailNotification("DocCommentReportEmail", "Reported Doc Comments",
+            new EmailNotification("DocCommentReportEmail", "Doc Comment Reports",
                 "Send me an email notification each time a doc comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

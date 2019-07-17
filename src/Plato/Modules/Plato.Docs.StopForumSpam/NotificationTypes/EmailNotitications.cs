@@ -10,11 +10,11 @@ namespace Plato.Docs.StopForumSpam.NotificationTypes
     {
 
         public static readonly EmailNotification DocSpam =
-            new EmailNotification("DocSpamEmail", "Spam Articles",
+            new EmailNotification("DocSpamEmail", "Doc Spam",
                 "Send me an email notification for each doc detected as SPAM.");
 
         public static readonly EmailNotification CommentSpam =
-            new EmailNotification("DocCommentSpamEmail", "Spam Article Comments",
+            new EmailNotification("DocCommentSpamEmail", "Doc Comment Spam",
                 "Send me an email notification for each doc comment detected as SPAM.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

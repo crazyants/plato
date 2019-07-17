@@ -10,11 +10,11 @@ namespace Plato.Questions.NotificationTypes
     {
 
         public static readonly EmailNotification QuestionReport =
-            new EmailNotification("QuestionReportEmail", "Reported Questions",
+            new EmailNotification("QuestionReportEmail", "Question Reports",
                 "Send me an email notification each time a question is reported.");
 
         public static readonly EmailNotification AnswerReport =
-            new EmailNotification("AnswerReportEmail", "Reported Question Answers",
+            new EmailNotification("AnswerReportEmail", "Question Answer Reports",
                 "Send me an email notification each time a questions answer is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

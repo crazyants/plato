@@ -10,11 +10,11 @@ namespace Plato.Docs.StopForumSpam.NotificationTypes
     {
 
         public static readonly WebNotification DocSpam =
-            new WebNotification("DocSpamWeb", "Spam Doc",
+            new WebNotification("DocSpamWeb", "Doc Spam",
                 "Show me a web notification for each doc detected as SPAM.");
 
         public static readonly WebNotification CommentSpam =
-            new WebNotification("DocCommentSpamWeb", "Spam Doc Comments",
+            new WebNotification("DocCommentSpamWeb", "Doc Comment Spam",
                 "Show me a web notification for each doc comment detected as SPAM.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

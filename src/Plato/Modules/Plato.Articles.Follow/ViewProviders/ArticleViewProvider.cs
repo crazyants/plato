@@ -46,27 +46,27 @@ namespace Plato.Articles.Follow.ViewProviders
         private readonly HttpRequest _request;
  
         public ArticleViewProvider(
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             IFollowManager<Plato.Follows.Models.Follow> followManager,
             IFollowStore<Plato.Follows.Models.Follow> followStore,
+            INotificationManager<Article> notificationManager,
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
-            IEntityStore<Article> entityStore,
-            IContextFacade contextFacade,
-            INotificationManager<Article> notificationManager,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             IDeferredTaskManager deferredTaskManager,
-            IPlatoUserStore<User> platoUserStore, 
-            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory)
+            IPlatoUserStore<User> platoUserStore,
+            IEntityStore<Article> entityStore,
+            IContextFacade contextFacade)
         {
-            _request = httpContextAccessor.HttpContext.Request;
-            _authorizationService = authorizationService;
-            _followManager = followManager;
-            _contextFacade = contextFacade;
-            _notificationManager = notificationManager;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _request = httpContextAccessor.HttpContext.Request;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _authorizationService = authorizationService;
+            _notificationManager = notificationManager;
             _deferredTaskManager = deferredTaskManager;
             _platoUserStore = platoUserStore;
-            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _followManager = followManager;
+            _contextFacade = contextFacade;
             _followStore = followStore;
             _entityStore = entityStore;
         }
@@ -199,7 +199,6 @@ namespace Plato.Articles.Follow.ViewProviders
                 {
                     entity.ModifiedUserId
                 };
-
                 await SendNotificationsAsync(entity, usersToExclude);
             }
 
@@ -245,8 +244,7 @@ namespace Plato.Articles.Follow.ViewProviders
             }
 
         }
-
-
+        
         Task<Article> SendNotificationsAsync(Article entity, IList<int> usersToExclude)
         {
 
@@ -353,7 +351,6 @@ namespace Plato.Articles.Follow.ViewProviders
             }
 
             // Get all users following the entity
-            // Exclude the author so they are not notified of there own posts
             var users = await _platoUserStore.QueryAsync()
                 .Select<UserQueryParams>(q =>
                 {

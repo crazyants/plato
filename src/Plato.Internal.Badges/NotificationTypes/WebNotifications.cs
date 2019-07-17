@@ -10,7 +10,7 @@ namespace Plato.Internal.Badges.NotificationTypes
     {
 
         public static readonly WebNotification NewBadge =
-            new WebNotification("NewBadgeWeb", "New Badges",
+            new WebNotification("NewBadgeWeb", "Badges",
                 "Show me a web notification when I'm awarded a new badge.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

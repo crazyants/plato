@@ -10,7 +10,7 @@ namespace Plato.Internal.Badges.NotificationTypes
     {
 
         public static readonly EmailNotification NewBadge =
-            new EmailNotification("NewBadgeEmail", "New Badges",
+            new EmailNotification("NewBadgeEmail", "Badges",
                 "Send me an email notification when I'm awarded a new badge.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

@@ -11,8 +11,8 @@ namespace Plato.Discuss.Mentions.NotificationTypes
     {
 
         public static readonly EmailNotification NewMention =
-            new EmailNotification("NewMentionEmail", "New Mentions",
-                "Send me an email notification for each new @mention.");
+            new EmailNotification("NewTopicMentionEmail", "Topic Mentions",
+                "Send me an email notification for each new @mention within topics.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

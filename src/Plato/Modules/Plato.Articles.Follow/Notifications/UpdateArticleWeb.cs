@@ -3,13 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Follow.NotificationTypes;
 using Plato.Articles.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
@@ -56,8 +54,7 @@ namespace Plato.Articles.Follow.Notifications
 
             // Create result
             var result = new CommandResult<Article>();
-
-
+            
             // Get base Uri
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
 
@@ -67,8 +64,8 @@ namespace Plato.Articles.Follow.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = context.Model.Title,
-                Message = S["A comment has been posted within an article your following"],
-                CreatedUserId = context.Model.CreatedUserId,
+                Message = S["I've just updated an articles your following"],
+                CreatedUserId = context.Model.ModifiedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["area"] = "Plato.Articles",

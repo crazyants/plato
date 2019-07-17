@@ -10,11 +10,11 @@ namespace Plato.Ideas.NotificationTypes
     {
 
         public static readonly EmailNotification IdeaReport =
-            new EmailNotification("IdeaReportEmail", "Reported Ideas",
+            new EmailNotification("IdeaReportEmail", "Idea Reports",
                 "Send me an email notification each time an idea is reported.");
 
         public static readonly EmailNotification IdeaCommentReport =
-            new EmailNotification("IdeaCommentReportEmail", "Reported Idea Comments",
+            new EmailNotification("IdeaCommentReportEmail", "Idea Comment Reports",
                 "Send me an email notification each time a comment to an idea is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

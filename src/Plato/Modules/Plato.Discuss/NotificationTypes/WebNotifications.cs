@@ -10,11 +10,11 @@ namespace Plato.Discuss.NotificationTypes
     {
 
         public static readonly WebNotification TopicReport =
-            new WebNotification("TopicReportWeb", "Reported Topics",
+            new WebNotification("TopicReportWeb", "Topic Reports",
                 "Show me a web notification each time a topic is reported.");
 
         public static readonly WebNotification ReplyReport =
-            new WebNotification("TopicReplyReportWeb", "Reported Topic Replies",
+            new WebNotification("TopicReplyReportWeb", "Topic Reply Reports",
                 "Show me a web notification each time a reply is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

@@ -10,11 +10,11 @@ namespace Plato.Articles.NotificationTypes
     {
 
         public static readonly WebNotification ArticleReport =
-            new WebNotification("ArticleReportWeb", "Reported Articles",
+            new WebNotification("ArticleReportWeb", "Article Reports",
                 "Show me a web notification each time an article is reported.");
 
         public static readonly WebNotification CommentReport =
-            new WebNotification("CommentReportWeb", "Reported Article Comments",
+            new WebNotification("CommentReportWeb", "Article Comment Reports",
                 "Show me a web notification each time an article comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

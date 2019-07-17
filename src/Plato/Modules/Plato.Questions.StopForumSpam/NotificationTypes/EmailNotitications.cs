@@ -10,11 +10,11 @@ namespace Plato.Questions.StopForumSpam.NotificationTypes
     {
 
         public static readonly EmailNotification QuestionSpam =
-            new EmailNotification("QuestionSpamEmail", "Spam Questions",
+            new EmailNotification("QuestionSpamEmail", "Questions Spam",
                 "Send me an email notification for each question detected as SPAM.");
 
         public static readonly EmailNotification AnswerSpam =
-            new EmailNotification("AnswerSpamEmail", "Spam Question Answers",
+            new EmailNotification("AnswerSpamEmail", "Question Answer Spam",
                 "Send me an email notification for each question answer detected as SPAM.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

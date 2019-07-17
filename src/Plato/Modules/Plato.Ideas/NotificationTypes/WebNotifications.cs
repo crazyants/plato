@@ -10,11 +10,11 @@ namespace Plato.Ideas.NotificationTypes
     {
 
         public static readonly WebNotification IdeaReport =
-            new WebNotification("IdeaReportWeb", "Reported Ideas",
+            new WebNotification("IdeaReportWeb", "Idea Reports",
                 "Show me a web notification each time an idea is reported.");
 
         public static readonly WebNotification IdeaCommentReport =
-            new WebNotification("IdeaCommentReportWeb", "Reported Comments",
+            new WebNotification("IdeaCommentReportWeb", "Idea Comment Reports",
                 "Show me a web notification each time a comment to an idea is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()

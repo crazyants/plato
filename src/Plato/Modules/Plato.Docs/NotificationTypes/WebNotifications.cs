@@ -10,11 +10,11 @@ namespace Plato.Docs.NotificationTypes
     {
 
         public static readonly WebNotification DocReport =
-            new WebNotification("DocReportWeb", "Reported Docs",
+            new WebNotification("DocReportWeb", "Doc Reports",
                 "Show me a web notification each time a doc is reported.");
 
         public static readonly WebNotification CommentReport =
-            new WebNotification("DocCommentReportWeb", "Reported Doc Comments",
+            new WebNotification("DocCommentReportWeb", "Doc Comment Reports",
                 "Show me a web notification each time a doc comment is reported.");
         
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
