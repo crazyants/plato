@@ -1,15 +1,19 @@
 ﻿@model EditFooterViewModel
 
 @{
-    var offText = "Enable to send all users following this article a notification of your change. Notifications will only be sent if the article is public when you click the Update Article button.";
-    var onText = "Notifications are enabled. Users following this article will be notified of your changes when you save the article";
+    var offTooltip = "Enable to send all users following this article a notification of your change. Notifications will only be sent if the article is public when you click the Update Article button.";
+    var onTooltip = "All users following this article will be notified of your changes when you click the Update Article button.";
+    var offText = "Send Notifications?";
+    var onText = "Notifications Enabled!";
 }
 
-<label title="@T[offText]" data-subscribe-tooltip="@T[offText]" data-unsubscribe-tooltip="@T[onText]" data-toggle="tooltip" for="@Model.NotifyHtmlName" data-on-css="btn btn-lg text-danger" data-off-css="btn btn-lg text-muted" class="btn btn-lg text-muted" role="button">
-    <input type="checkbox" class="hidden" data-provide="follow-checkbox" name="@Model.NotifyHtmlName" id="@Model.NotifyHtmlName" />
-    <i class="fal fa-bell"></i> @T["Send Notification"]
-</label>
-
+<div class="float-left">
+    <label title="@T[offTooltip]" data-subscribe-text="@T[offText]" data-unsubscribe-text="@T[onText]" data-subscribe-tooltip="@T[offTooltip]" data-unsubscribe-tooltip="@T[onTooltip]" data-toggle="tooltip" for="@Model.NotifyHtmlName" data-on-css="btn btn-lg text-danger" data-off-css="btn btn-lg text-muted" class="btn btn-lg text-muted" role="button">
+        <input type="checkbox" class="hidden" data-provide="follow-checkbox" name="@Model.NotifyHtmlName" id="@Model.NotifyHtmlName" />
+        <i class="fal fa-bell"></i> 
+        <span>@T[offText]</span>
+    </label>
+</div>
 
 
 

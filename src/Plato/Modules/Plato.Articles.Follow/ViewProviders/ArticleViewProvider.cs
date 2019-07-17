@@ -151,7 +151,7 @@ namespace Plato.Articles.Follow.ViewProviders
                   {
                       model.NotifyHtmlName = NotifyHtmlName;                   
                       return model;
-                  }).Zone("actions"),
+                  }).Zone("footer"),
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
                 {
                     model.FollowType = followType;
