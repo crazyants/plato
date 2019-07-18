@@ -1,6 +1,6 @@
 ﻿using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Articles.Follow.ViewModels
+namespace Plato.Docs.Follow.ViewModels
 {
     public class EditFooterViewModel
     {

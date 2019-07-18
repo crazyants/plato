@@ -109,9 +109,9 @@ namespace Plato.Articles.Drafts.ViewProviders
                         },
                         new SelectDropDownItem()
                         {
-                            Text = "Ready for Review",
+                            Text = "Hidden",
                             Description =
-                                "The article will be visible to those with permission to view hidden articles. Choose this option once your article is ready for review.",
+                                "The article will only be visible to those with permission to view hidden articles. Choose this option once your article is ready for review.",
                             Value = "hidden",
                             Checked = selectedValue == "hidden" ? true : false,
                             Permission = entity.Id == 0
@@ -122,7 +122,7 @@ namespace Plato.Articles.Drafts.ViewProviders
                         {
                             Text = "Public",
                             Description =
-                                "The article will be visible to everyone. Chose this option once your ready to publish to the world",
+                                "The article will be visible to everyone. Chose this option once your ready to publish to the world.",
                             Value = "public",
                             Checked = selectedValue == "public" ? true : false,
                             Permission = entity.Id == 0

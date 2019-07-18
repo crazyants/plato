@@ -98,7 +98,7 @@ namespace Plato.Docs.Drafts.ViewProviders
                         new SelectDropDownItem()
                         {
                             Text = "Private",
-                            Description = "The article will only be visible to you and those with permission to view private articles. Choose this option whilst your authoring your article.",
+                            Description = "The doc will only be visible to you and those with permission to view private docs. Choose this option whilst your authoring your doc.",
                             Value = "private",
                             Checked = selectedValue == "private" ? true : false,
                             Permission = entity.Id == 0
@@ -107,9 +107,9 @@ namespace Plato.Docs.Drafts.ViewProviders
                         },
                         new SelectDropDownItem()
                         {
-                            Text = "Ready for Review",
+                            Text = "Hidden",
                             Description =
-                                "The article will be visible to those with permission to view hidden articles. Choose this option once your article is ready for review.",
+                                "The doc will only be visible to those with permission to view hidden docs. Choose this option once your doc is ready for review.",
                             Value = "hidden",
                             Checked = selectedValue == "hidden" ? true : false,
                             Permission = entity.Id == 0
@@ -120,7 +120,7 @@ namespace Plato.Docs.Drafts.ViewProviders
                         {
                             Text = "Public",
                             Description =
-                                "The article will be visible to everyone. Chose this option once your ready to publish to the world",
+                                "The doc will be visible to everyone. Chose this option once your ready to publish to the world.",
                             Value = "public",
                             Checked = selectedValue == "public" ? true : false,
                             Permission = entity.Id == 0

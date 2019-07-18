@@ -1,0 +1,22 @@
+{
+  "Emails": [
+    {
+      "Id": "NewDocComment",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Comment",
+      "Message": "Hi {0},\n\nA comment has been posted within a doc you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    },
+    {
+      "Id": "UpdatedDoc",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - Doc Updated",
+      "Message": "Hi {0},\n\nA doc your following has been updated....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

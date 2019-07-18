@@ -21,7 +21,7 @@ namespace Plato.Articles.Follow
             new Permission("AutoFollowArticleComments", "Automatically follow articles when posting comments");
         
         public static readonly Permission SendArticleFollows =
-            new Permission("SendArticleFollows", "Can send notifications when updating articles");
+            new Permission("SendArticleFollows", "Can send follow notifications when updating articles");
 
         public IEnumerable<Permission> GetPermissions()
         {

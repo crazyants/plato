@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Plato.Articles.Follow.NotificationTypes;
-using Plato.Articles.Models;
+using Plato.Docs.Follow.NotificationTypes;
+using Plato.Docs.Models;
 using Plato.Entities.Stores;
 using Plato.Follows.Services;
 using Plato.Follows.Stores;
@@ -13,7 +13,7 @@ using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Security.Abstractions;
-using Plato.Articles.Follow.ViewModels;
+using Plato.Docs.Follow.ViewModels;
 using Plato.Entities.Extensions;
 using Plato.Entities.Models;
 using Plato.Internal.Models.Notifications;
@@ -24,9 +24,9 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Articles.Follow.ViewProviders
+namespace Plato.Docs.Follow.ViewProviders
 {
-    public class ArticleViewProvider : BaseViewProvider<Article>
+    public class DocViewProvider : BaseViewProvider<Doc>
     {
 
         private const string FollowHtmlName = "follow";
@@ -34,27 +34,27 @@ namespace Plato.Articles.Follow.ViewProviders
 
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
-        private readonly INotificationManager<Article> _notificationManager;
+        private readonly INotificationManager<Doc> _notificationManager;
         private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
         private readonly IFollowManager<Follows.Models.Follow> _followManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IDeferredTaskManager _deferredTaskManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IEntityStore<Article> _entityStore;
+        private readonly IEntityStore<Doc> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly HttpRequest _request;
  
-        public ArticleViewProvider(
+        public DocViewProvider(
             IUserNotificationTypeDefaults userNotificationTypeDefaults,
             IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             IFollowManager<Plato.Follows.Models.Follow> followManager,
             IFollowStore<Plato.Follows.Models.Follow> followStore,
-            INotificationManager<Article> notificationManager,
+            INotificationManager<Doc> notificationManager,
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
             IDeferredTaskManager deferredTaskManager,
             IPlatoUserStore<User> platoUserStore,
-            IEntityStore<Article> entityStore,
+            IEntityStore<Doc> entityStore,
             IContextFacade contextFacade)
         {
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
@@ -70,21 +70,21 @@ namespace Plato.Articles.Follow.ViewProviders
             _entityStore = entityStore;
         }
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Article entity, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Doc entity, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Article entity, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Doc entity, IViewProviderContext updater)
         {
 
             if (entity == null)
             {
-                return await BuildIndexAsync(new Article(), updater);
+                return await BuildIndexAsync(new Doc(), updater);
             }
 
             var isFollowing = false;
-            var followType = FollowTypes.Article;
+            var followType = FollowTypes.Doc;
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
@@ -105,23 +105,23 @@ namespace Plato.Articles.Follow.ViewProviders
                     model.FollowType = followType;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
-                    model.Permission = Permissions.FollowArticles;
+                    model.Permission = Permissions.FollowDocs;
                     return model;
                 }).Zone("tools").Order(-4)
             );
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Article entity, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildEditAsync(Doc entity, IViewProviderContext context)
         {
             if (entity == null)
             {
-                return await BuildIndexAsync(new Article(), context);
+                return await BuildIndexAsync(new Doc(), context);
             }
 
 
             var isFollowing = false;
-            var followType = FollowTypes.Article;
+            var followType = FollowTypes.Doc;
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
@@ -139,18 +139,18 @@ namespace Plato.Articles.Follow.ViewProviders
             if (entity.Id == 0)
             {
                 if (await _authorizationService.AuthorizeAsync(context.Controller.HttpContext.User,
-                    entity.CategoryId, Permissions.AutoFollowArticles))
+                    entity.CategoryId, Permissions.AutoFollowDocs))
                 {
                     isFollowing = true;
                 }
             }
 
             return Views(
-                  View<EditFooterViewModel>("Article.Follow.Edit.Footer", model =>
+                  View<EditFooterViewModel>("Doc.Follow.Edit.Footer", model =>
                   {
                       model.IsNewEntity = entity.Id == 0 ? true : false;
                       model.NotifyHtmlName = NotifyHtmlName;
-                      model.Permission = Permissions.SendArticleFollows;
+                      model.Permission = Permissions.SendDocFollows;
                       return model;
                   }).Zone("footer"),
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
@@ -159,14 +159,14 @@ namespace Plato.Articles.Follow.ViewProviders
                     model.FollowHtmlName = FollowHtmlName;
                     model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
-                    model.Permission = Permissions.FollowArticles;
+                    model.Permission = Permissions.FollowDocs;
                     return model;
                 }).Zone("sidebar").Order(2)
             );
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Article article, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Doc article, IViewProviderContext updater)
         {
 
             // Ensure entity exists before attempting to update
@@ -211,7 +211,7 @@ namespace Plato.Articles.Follow.ViewProviders
         {
 
             // The follow type
-            var followType = FollowTypes.Article;
+            var followType = FollowTypes.Doc;
 
             // Get any existing follow
             var existingFollow = await _followStore.SelectByNameThingIdAndCreatedUserId(
@@ -246,7 +246,7 @@ namespace Plato.Articles.Follow.ViewProviders
 
         }
         
-        Task<Article> SendNotificationsAsync(Article entity, IList<int> usersToExclude)
+        Task<Doc> SendNotificationsAsync(Doc entity, IList<int> usersToExclude)
         {
 
             if (entity == null)
@@ -259,7 +259,7 @@ namespace Plato.Articles.Follow.ViewProviders
             {
 
                 // Follow type name
-                var name = FollowTypes.Article.Name;
+                var name = FollowTypes.Doc.Name;
 
                 // Get all follows for entity
                 var follows = await _followStore.QueryAsync()
@@ -294,18 +294,18 @@ namespace Plato.Articles.Follow.ViewProviders
                 {
 
                     // Email notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.UpdatedArticle))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.UpdatedDoc))
                     {
-                        await _notificationManager.SendAsync(new Notification(EmailNotifications.UpdatedArticle)
+                        await _notificationManager.SendAsync(new Notification(EmailNotifications.UpdatedDoc)
                         {
                             To = user,
                         }, entity);
                     }
 
                     // Web notifications
-                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.UpdatedArticle))
+                    if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.UpdatedDoc))
                     {
-                        await _notificationManager.SendAsync(new Notification(WebNotifications.UpdatedArticle)
+                        await _notificationManager.SendAsync(new Notification(WebNotifications.UpdatedDoc)
                         {
                             To = user,
                             From = new User()
@@ -369,19 +369,19 @@ namespace Plato.Articles.Follow.ViewProviders
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Articles.Permissions.ViewHiddenArticles))
+                        entity.CategoryId, Docs.Permissions.ViewHiddenDocs))
                     {
                         result.Remove(user.Id);
                     }
                 }
-
+                
                 // If we are not the entity author and the entity is private
                 // ensure we have permission to view private entities
                 if (user.Id != entity.CreatedUserId && entity.IsPrivate)
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Articles.Permissions.ViewPrivateArticles))
+                        entity.CategoryId, Docs.Permissions.ViewPrivateDocs))
                     {
                         result.Remove(user.Id);
                     }
@@ -393,7 +393,7 @@ namespace Plato.Articles.Follow.ViewProviders
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Articles.Permissions.ViewSpamArticles))
+                        entity.CategoryId, Docs.Permissions.ViewSpamDocs))
                     {
                         result.Remove(user.Id);
                     }
@@ -405,7 +405,7 @@ namespace Plato.Articles.Follow.ViewProviders
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Articles.Permissions.ViewDeletedArticles))
+                        entity.CategoryId, Docs.Permissions.ViewDeletedDocs))
                     {
                         result.Remove(user.Id);
                     }
