@@ -1,50 +1,56 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Ideas.Models;
 using Plato.Entities.Reactions.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Reactions.Navigation
+namespace Plato.Ideas.Reactions.Navigation
 {
-    public class TopicFooterMenu : INavigationProvider
+    public class IdeaCommentFooterMenu : INavigationProvider
     {
 
-      
         public IStringLocalizer T { get; set; }
 
-        public TopicFooterMenu(IStringLocalizer localizer)
+        public IdeaCommentFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
-
+        
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "idea-comment-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
+
             if (entity == null)
+            {
+                return;
+            }
+
+            var reply = builder.ActionContext.HttpContext.Items[typeof(IdeaComment)] as IdeaComment;
+
+            if (reply == null)
             {
                 return;
             }
             
             builder
-                .Add(T["Reactions"], int.MaxValue, react => react
+                .Add(T["React"], int.MaxValue, react => react
                     .View("ReactionList", new
                     {
                         model = new ReactionListViewModel()
                         {
                             Entity = entity,
-                            Permission = Permissions.ReactToTopics
+                            Reply = reply,
+                            Permission = Permissions.ReactToIdeaComments
                         }
                     })
-                    .Permission(Permissions.ViewTopicReactions)
+                    .Permission(Permissions.ViewIdeaCommentReactions)
                 );
 
         }

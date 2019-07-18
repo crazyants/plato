@@ -1,19 +1,19 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Ideas.Models;
 using Plato.Entities.Reactions.ViewModels;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Discuss.Reactions.Navigation
+namespace Plato.Ideas.Reactions.Navigation
 {
-    public class TopicFooterMenu : INavigationProvider
+    public class IdeaFooterMenu : INavigationProvider
     {
 
       
         public IStringLocalizer T { get; set; }
 
-        public TopicFooterMenu(IStringLocalizer localizer)
+        public IdeaFooterMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -21,19 +21,19 @@ namespace Plato.Discuss.Reactions.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "idea-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             // Get model from navigation builder
-            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Idea)] as Idea;
+
             if (entity == null)
             {
                 return;
             }
-            
+
             builder
                 .Add(T["Reactions"], int.MaxValue, react => react
                     .View("ReactionList", new
@@ -41,10 +41,10 @@ namespace Plato.Discuss.Reactions.Navigation
                         model = new ReactionListViewModel()
                         {
                             Entity = entity,
-                            Permission = Permissions.ReactToTopics
+                            Permission = Permissions.ReactToIdeas
                         }
                     })
-                    .Permission(Permissions.ViewTopicReactions)
+                    .Permission(Permissions.ViewIdeaReactions)
                 );
 
         }

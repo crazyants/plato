@@ -2,7 +2,7 @@
 using Plato.Entities.Reactions.Models;
 using Plato.Entities.Reactions.Services;
 
-namespace Plato.Discuss.Reactions
+namespace Plato.Ideas.Reactions
 {
 
     public class Reactions : IReactionsProvider<Reaction>

@@ -26,9 +26,19 @@ namespace Plato.Discuss.Reactions.Navigation
 
             // Get model from navigation builder
             var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+
+            if (entity == null)
+            {
+                return;
+            }
+
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+
+            if (reply == null)
+            {
+                return;
+            }
             
-            // Add reaction list to navigation
             builder
                 .Add(T["React"], int.MaxValue, react => react
                     .View("ReactionList", new

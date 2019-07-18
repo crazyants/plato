@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Discuss.Reactions
+namespace Plato.Ideas.Reactions
 {
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ReactToTopics =
-            new Permission("ReactToTopics", "React to topics");
+        public static readonly Permission ReactToIdeas =
+            new Permission("ReactToIdeas", "React to ideas");
 
-        public static readonly Permission ReactToReplies =
-            new Permission("ReactToReplies", "React to topic replies");
+        public static readonly Permission ReactToIdeaComments =
+            new Permission("ReactToIdeaComments", "React to idea comments");
 
-        public static readonly Permission ViewTopicReactions =
-            new Permission("ViewTopicReactions", "View topic reactions");
+        public static readonly Permission ViewIdeaReactions =
+            new Permission("ViewIdeaReactions", "View idea reactions");
 
-        public static readonly Permission ViewReplyReactions =
-            new Permission("ViewReplyReactions", "View topic reply reactions");
+        public static readonly Permission ViewIdeaCommentReactions =
+            new Permission("ViewIdeaCommentReactions", "View idea comment reactions");
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[]
             {
-                ReactToTopics,
-                ReactToReplies,
-                ViewTopicReactions,
-                ViewReplyReactions
+                ReactToIdeas,
+                ReactToIdeaComments,
+                ViewIdeaReactions,
+                ViewIdeaCommentReactions
             };
         }
 
@@ -38,10 +38,10 @@ namespace Plato.Discuss.Reactions
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewTopicReactions,
-                        ViewReplyReactions
+                        ReactToIdeas,
+                        ReactToIdeaComments,
+                        ViewIdeaReactions,
+                        ViewIdeaCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -49,10 +49,10 @@ namespace Plato.Discuss.Reactions
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewTopicReactions,
-                        ViewReplyReactions
+                        ReactToIdeas,
+                        ReactToIdeaComments,
+                        ViewIdeaReactions,
+                        ViewIdeaCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -60,10 +60,10 @@ namespace Plato.Discuss.Reactions
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ReactToTopics,
-                        ReactToReplies,
-                        ViewTopicReactions,
-                        ViewReplyReactions
+                        ReactToIdeas,
+                        ReactToIdeaComments,
+                        ViewIdeaReactions,
+                        ViewIdeaCommentReactions
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -71,8 +71,8 @@ namespace Plato.Discuss.Reactions
                     RoleName = DefaultRoles.Anonymous,
                     Permissions = new[]
                     {
-                        ViewTopicReactions,
-                        ViewReplyReactions
+                        ViewIdeaReactions,
+                        ViewIdeaCommentReactions
                     }
                 }
             };

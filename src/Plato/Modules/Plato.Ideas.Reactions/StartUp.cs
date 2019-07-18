@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Reactions.Handlers;
-using Plato.Discuss.Reactions.Navigation;
+using Plato.Ideas.Reactions.Handlers;
+using Plato.Ideas.Reactions.Navigation;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Discuss.Reactions.Badges;
-using Plato.Discuss.Reactions.Tasks;
+using Plato.Ideas.Reactions.Badges;
+using Plato.Ideas.Reactions.Tasks;
 using Plato.Entities.Reactions.Models;
 using Plato.Entities.Reactions.Services;
 using Plato.Internal.Badges.Abstractions;
@@ -17,7 +17,7 @@ using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Discuss.Reactions
+namespace Plato.Ideas.Reactions
 {
     public class Startup : StartupBase
     {
@@ -35,10 +35,10 @@ namespace Plato.Discuss.Reactions
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Register navigation provider
-            services.AddScoped<INavigationProvider, TopicMenu>();
-            services.AddScoped<INavigationProvider, TopicFooterMenu>();
-            services.AddScoped<INavigationProvider, TopicReplyMenu>();
-            services.AddScoped<INavigationProvider, TopicReplyFooterMenu>();
+            services.AddScoped<INavigationProvider, IdeaMenu>();
+            services.AddScoped<INavigationProvider, IdeaFooterMenu>();
+            services.AddScoped<INavigationProvider, IdeaCommentMenu>();
+            services.AddScoped<INavigationProvider, IdeaCommentFooterMenu>();
          
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
