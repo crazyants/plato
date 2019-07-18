@@ -446,7 +446,9 @@ namespace Plato.Docs.Follow.ViewProviders
                     }
                 }
             }
+
             return false;
+
         }
 
     }
