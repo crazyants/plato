@@ -12,9 +12,9 @@ namespace Plato.Articles.Follow
             new FollowType(
                 "Article",
                 "Follow Article",
-                "Follow this article to get notified when major changes or new comments are posted",
+                "Follow this article to get notified when major changes or comments are posted",
                 "Unsubscribe",
-                "You are following this article and will be notified when major changes & new comments are posted, click to unsubscribe",
+                "You are following this article and will be notified when major changes & comments are posted, click to unsubscribe",
                 "Login to follow this article",
                 "You don't have permission to follow articles");
 
