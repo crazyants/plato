@@ -10,10 +10,10 @@ namespace Plato.Docs.Follow.NotificationTypes
     {
         
         public static readonly WebNotification NewDocComment =
-            new WebNotification("NewDocComment", "Doc Comments", "Show me a web notification for each new comment within articles I'm following.");
+            new WebNotification("NewDocCommentWeb", "Doc Comments", "Show me a web notification for each new comment within articles I'm following.");
 
         public static readonly WebNotification UpdatedDoc =
-            new WebNotification("UpdatedDoc", "Doc Updates", "Show me a web notification for updates within articles I'm following.");
+            new WebNotification("UpdatedDocWeb", "Doc Updates", "Show me a web notification for updates within articles I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

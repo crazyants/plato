@@ -202,7 +202,7 @@ namespace Plato.Articles.Follow.Subscribers
                 }
 
                 // Get users
-                var users = await GetUsersAsync(follows?.Data, reply);
+                var users = await ReduceUsersAsync(follows?.Data, reply);
 
                 // We always need users
                 if (users == null)
@@ -256,9 +256,7 @@ namespace Plato.Articles.Follow.Subscribers
 
         }
 
-        async Task<IEnumerable<IUser>> GetUsersAsync(
-            IEnumerable<Follows.Models.Follow> follows,
-            TEntityReply reply)
+        async Task<IEnumerable<IUser>> ReduceUsersAsync(IEnumerable<Follows.Models.Follow> follows, TEntityReply reply)
         {
 
             // We always need follows to process
@@ -341,10 +339,10 @@ namespace Plato.Articles.Follow.Subscribers
 
             }
 
-            return result.Values;
-
+            return result.Count > 0 ? result.Values : null;
+            
         }
-        
+
         #endregion
 
     }

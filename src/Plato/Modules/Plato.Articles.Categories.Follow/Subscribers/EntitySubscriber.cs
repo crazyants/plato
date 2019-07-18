@@ -208,13 +208,14 @@ namespace Plato.Articles.Categories.Follow.Subscribers
                 .ToList();
 
             // Get all users for the follow
-            var users = await GetUsersAsync(follows?.Data, entity);
+            var users = await ReduceUsersAsync(follows?.Data, entity);
 
             // No users simply return
             if (users == null)
             {
                 return notifiedUsers;
             }
+            
 
             // Send notifications
             foreach (var user in users)
@@ -316,7 +317,7 @@ namespace Plato.Articles.Categories.Follow.Subscribers
                 .ToList();
 
             // Get all users for the follow
-            var users = await GetUsersAsync(follows?.Data, entity);
+            var users = await ReduceUsersAsync(follows?.Data, entity);
 
             // No users simply return
             if (users == null)
@@ -387,9 +388,7 @@ namespace Plato.Articles.Categories.Follow.Subscribers
 
         }
 
-        async Task<IEnumerable<IUser>> GetUsersAsync(
-            IEnumerable<Follows.Models.Follow> follows,
-            TEntity entity)
+        async Task<IEnumerable<IUser>> ReduceUsersAsync(IEnumerable<Follows.Models.Follow> follows, TEntity entity)
         {
 
             // We always need follows to process
@@ -474,7 +473,7 @@ namespace Plato.Articles.Categories.Follow.Subscribers
 
             }
 
-            return result.Values;
+            return result.Count > 0 ? result.Values : null;
 
         }
 

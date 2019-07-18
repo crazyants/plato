@@ -413,9 +413,10 @@ namespace Plato.Articles.Follow.ViewProviders
 
             }
 
-            return result.Values;
-
+            return result.Count > 0 ? result.Values : null;
+            
         }
+
         bool FollowPostedValue()
         {            
             foreach (var key in _request.Form.Keys)

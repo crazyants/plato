@@ -276,9 +276,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
         }
 
-        async Task<IEnumerable<IUser>> ReduceUsersAsync(
-            IEnumerable<Follows.Models.Follow> follows,
-            TEntity entity)
+        async Task<IEnumerable<IUser>> ReduceUsersAsync(IEnumerable<Follows.Models.Follow> follows, TEntity entity)
         {
 
             // We always need follows to process
@@ -364,8 +362,8 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
             }
 
-            return result.Values;
-
+            return result.Count > 0 ? result.Values : null;
+            
         }
 
         #endregion

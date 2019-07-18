@@ -13,7 +13,7 @@ namespace Plato.Docs.Follow.NotificationTypes
             new EmailNotification("NewDocCommentEmail", "Doc Comments", "Send me an email notification for each new comment within articles I'm following.");
 
         public static readonly EmailNotification UpdatedDoc =
-            new EmailNotification("UpdatedDoc", "Doc Updates", "Send me an email notification for changes within articles I'm following.");
+            new EmailNotification("UpdatedDocEmail", "Doc Updates", "Send me an email notification for changes within articles I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

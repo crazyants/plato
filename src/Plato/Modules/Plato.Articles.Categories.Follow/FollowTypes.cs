@@ -20,7 +20,7 @@ namespace Plato.Articles.Categories.Follow
 
         public static readonly FollowType AllCategories =
             new FollowType(
-                "DiscussAllCategories",
+                "ArticleAllCategories",
                 "Follow All Categories",
                 "Follow all categories to get notified when new articles are posted within any category",
                 "Unsubscribe",
