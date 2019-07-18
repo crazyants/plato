@@ -8,14 +8,14 @@
 
         @if (Model != null)
         {
-            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="@T["New Article"]">
+            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary ml-2" title="@T["New Article"]">
                 <i class="fal fa-fw fa-plus"></i>
                 @T["New Article"]
             </a>
         }
         else
         {
-            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary" title="@T["New Article"]">
+            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary ml-2" title="@T["New Article"]">
                 <i class="fal fa-fw fa-plus"></i>
                 @T["New Article"]
             </a>

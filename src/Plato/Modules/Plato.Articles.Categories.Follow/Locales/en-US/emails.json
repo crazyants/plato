@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewArticle",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Article",
+      "Message": "Hi {0},\n\nAm article has been posted within a category you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

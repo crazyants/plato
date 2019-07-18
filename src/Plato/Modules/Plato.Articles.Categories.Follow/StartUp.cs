@@ -2,24 +2,24 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Categories.Follow.Notifications;
-using Plato.Discuss.Categories.Follow.NotificationTypes;
-using Plato.Discuss.Categories.Follow.Subscribers;
-using Plato.Discuss.Categories.Follow.ViewProviders;
+using Plato.Articles.Categories.Follow.Notifications;
+using Plato.Articles.Categories.Follow.NotificationTypes;
+using Plato.Articles.Categories.Follow.Subscribers;
+using Plato.Articles.Categories.Follow.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Discuss.Models;
+using Plato.Articles.Models;
 using Plato.Follows.Services;
-using Plato.Discuss.Categories.Models;
+using Plato.Articles.Categories.Models;
 using Plato.Internal.Security.Abstractions;
-using Plato.Discuss.Categories.Follow.Handlers;
+using Plato.Articles.Categories.Follow.Handlers;
 using Plato.Internal.Features.Abstractions;
 
-namespace Plato.Discuss.Categories.Follow
+namespace Plato.Articles.Categories.Follow
 {
     public class Startup : StartupBase
     {
@@ -42,7 +42,7 @@ namespace Plato.Discuss.Categories.Follow
 
             // Broker subscriptions
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Article>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
@@ -52,11 +52,11 @@ namespace Plato.Discuss.Categories.Follow
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification managers
-            services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();
+            services.AddScoped<INotificationManager<Article>, NotificationManager<Article>>();
 
             // Notification Providers
-            services.AddScoped<INotificationProvider<Topic>, NewTopicEmail>();
-            services.AddScoped<INotificationProvider<Topic>, NewTopicWeb>();
+            services.AddScoped<INotificationProvider<Article>, NewArticleEmail>();
+            services.AddScoped<INotificationProvider<Article>, NewArticleWeb>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

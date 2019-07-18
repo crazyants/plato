@@ -1,0 +1,18 @@
+Name: Plato Articles Categories Follow
+Description: Adds the ability to follow article categories.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Articles
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Follows",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Articles.Categories",
+		Version: "1.0.0"
+	}
+]
