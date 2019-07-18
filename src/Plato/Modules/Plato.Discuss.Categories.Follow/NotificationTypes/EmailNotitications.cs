@@ -12,8 +12,6 @@ namespace Plato.Discuss.Categories.Follow.NotificationTypes
         public static readonly EmailNotification NewTopic =
             new EmailNotification("NewTopicEmail", "Topics", "Send me an email notification for each new topic within categories I'm following.");
         
-
-
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
             return new[]

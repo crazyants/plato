@@ -13,7 +13,7 @@ namespace Plato.Discuss.Labels.Follow.NotificationTypes
             new EmailNotification(
                 "NewTopicLabelEmail",
                 "Topic Labels",
-                "Send me an email notification  for each new topic associated with a label I'm following.");
+                "Send me an email notification for each new topic associated with a label I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {

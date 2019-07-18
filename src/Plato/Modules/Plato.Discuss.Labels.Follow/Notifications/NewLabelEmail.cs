@@ -21,25 +21,23 @@ namespace Plato.Discuss.Labels.Follow.Notifications
 
     public class NewLabelEmail : INotificationProvider<Topic>
     {
-
-        private readonly IContextFacade _contextFacade;
-        private readonly ILocaleStore _localeStore;
-        private readonly IEmailManager _emailManager;
-        private readonly IEntityStore<Topic> _topicStore;
+        
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
+        private readonly IContextFacade _contextFacade;
+        private readonly IEmailManager _emailManager;
+        private readonly ILocaleStore _localeStore;
 
         public NewLabelEmail(
+         
+            ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
-            ILocaleStore localeStore,
             IEmailManager emailManager,
-            IEntityStore<Topic> topicStore,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper)
+            ILocaleStore localeStore)
         {
-            _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
-            _topicStore = topicStore;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+            _contextFacade = contextFacade;
+            _emailManager = emailManager;
+            _localeStore = localeStore;
         }
 
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
@@ -55,7 +53,7 @@ namespace Plato.Discuss.Labels.Follow.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            const string templateId = "NewLabel";
+            const string templateId = "NewTopicLabel";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)

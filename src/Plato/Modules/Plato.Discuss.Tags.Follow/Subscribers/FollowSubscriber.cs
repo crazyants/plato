@@ -9,19 +9,19 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 {
     public class FollowSubscriber : IBrokerSubscriber
     {
-
+        
+        private readonly IUserReputationAwarder _reputationAwarder;
         private readonly ITagStore<TagBase> _tagStore;
         private readonly IBroker _broker;
-        private readonly IUserReputationAwarder _reputationAwarder;
 
         public FollowSubscriber(
-            IBroker broker,
             IUserReputationAwarder reputationAwarder,
-            ITagStore<TagBase> tagStore)
+            ITagStore<TagBase> tagStore,
+            IBroker broker)
         {
-            _broker = broker;
             _reputationAwarder = reputationAwarder;
             _tagStore = tagStore;
+            _broker = broker;
         }
 
         public void Subscribe()
@@ -41,7 +41,7 @@ namespace Plato.Discuss.Tags.Follow.Subscribers
 
         public void Unsubscribe()
         {
-            // Add a reputation for new follows
+ 
             _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"

@@ -17,8 +17,8 @@ namespace Plato.Discuss.Tags.Follow.Notifications
     public class NewTagWeb : INotificationProvider<Topic>
     {
         
-        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
         public IHtmlLocalizer T { get; }
 

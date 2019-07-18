@@ -12,19 +12,19 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
 {
     public class TagViewProvider : BaseViewProvider<Tag>
     {
-
-        private readonly ITagStore<TagBase> _tagStore;
-        private readonly IContextFacade _contextFacade;
+    
         private readonly IFollowStore<Follows.Models.Follow> _followStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly ITagStore<TagBase> _tagStore;
 
         public TagViewProvider(
-            ITagStore<TagBase> tagStore, 
+            IFollowStore<Follows.Models.Follow> followStore,
             IContextFacade contextFacade,
-            IFollowStore<Follows.Models.Follow> followStore)
+            ITagStore<TagBase> tagStore)
         {
-            _tagStore = tagStore;
             _contextFacade = contextFacade;
             _followStore = followStore;
+            _tagStore = tagStore;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
@@ -79,6 +79,7 @@ namespace Plato.Discuss.Tags.Follow.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
     }
 
 }

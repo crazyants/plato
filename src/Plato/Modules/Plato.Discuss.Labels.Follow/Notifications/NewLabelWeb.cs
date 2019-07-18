@@ -17,9 +17,7 @@ namespace Plato.Discuss.Labels.Follow.Notifications
 
     public class NewLabelWeb : INotificationProvider<Topic>
     {
-
-
-       
+        
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
@@ -31,7 +29,6 @@ namespace Plato.Discuss.Labels.Follow.Notifications
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IUserNotificationsManager<UserNotification> userNotificationManager,
-            IEntityStore<Topic> topicStore,
             ICapturedRouterUrlHelper capturedRouterUrlHelper)
         {
         
