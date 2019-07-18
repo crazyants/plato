@@ -2,7 +2,7 @@
 using Plato.Follows.Models;
 using Plato.Follows.Services;
 
-namespace Plato.Docs.Categories.Follow
+namespace Plato.Ideas.Categories.Follow
 {
 
     public class FollowTypes : IFollowTypeProvider
@@ -10,21 +10,21 @@ namespace Plato.Docs.Categories.Follow
         
         public static readonly FollowType Category =
             new FollowType(
-                "DocCategory",
+                "IdeaCategory",
                 "Follow Category",
-                "Follow this category to get notified when new docs are posted within this category",
+                "Follow this category to get notified when new ideas are posted within this category",
                 "Unsubscribe",
-                "You are following this category and will be notified when new docs are posted, click to unsubscribe",
+                "You are following this category and will be notified when new ideas are posted, click to unsubscribe",
                 "Login to follow this category",
                 "You don't have permission to follow this category");
 
         public static readonly FollowType AllCategories =
             new FollowType(
-                "DocAllCategories",
+                "IdeasAllCategories",
                 "Follow All Categories",
-                "Follow all categories to get notified when new docs are posted within any category",
+                "Follow all categories to get notified when new ideas are posted within any category",
                 "Unsubscribe",
-                "You are following all categories and will be notified when new docs are posted, click to unsubscribe",
+                "You are following all categories and will be notified when new ideas are posted, click to unsubscribe",
                 "Login to follow all categories",
                 "You don't have permission to follow all categories");
         

@@ -2,24 +2,24 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Docs.Categories.Follow.Notifications;
-using Plato.Docs.Categories.Follow.NotificationTypes;
-using Plato.Docs.Categories.Follow.Subscribers;
-using Plato.Docs.Categories.Follow.ViewProviders;
+using Plato.Ideas.Categories.Follow.Notifications;
+using Plato.Ideas.Categories.Follow.NotificationTypes;
+using Plato.Ideas.Categories.Follow.Subscribers;
+using Plato.Ideas.Categories.Follow.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Docs.Models;
+using Plato.Ideas.Models;
 using Plato.Follows.Services;
-using Plato.Docs.Categories.Models;
+using Plato.Ideas.Categories.Models;
 using Plato.Internal.Security.Abstractions;
-using Plato.Docs.Categories.Follow.Handlers;
+using Plato.Ideas.Categories.Follow.Handlers;
 using Plato.Internal.Features.Abstractions;
 
-namespace Plato.Docs.Categories.Follow
+namespace Plato.Ideas.Categories.Follow
 {
     public class Startup : StartupBase
     {
@@ -42,7 +42,7 @@ namespace Plato.Docs.Categories.Follow
 
             // Broker subscriptions
             services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Doc>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Idea>>();
 
             // Follow types
             services.AddScoped<IFollowTypeProvider, FollowTypes>();
@@ -52,11 +52,11 @@ namespace Plato.Docs.Categories.Follow
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification managers
-            services.AddScoped<INotificationManager<Doc>, NotificationManager<Doc>>();
+            services.AddScoped<INotificationManager<Idea>, NotificationManager<Idea>>();
 
             // Notification Providers
-            services.AddScoped<INotificationProvider<Doc>, NewDocEmail>();
-            services.AddScoped<INotificationProvider<Doc>, NewDocWeb>();
+            services.AddScoped<INotificationProvider<Idea>, NewIdeaEmail>();
+            services.AddScoped<INotificationProvider<Idea>, NewIdeaWeb>();
 
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();

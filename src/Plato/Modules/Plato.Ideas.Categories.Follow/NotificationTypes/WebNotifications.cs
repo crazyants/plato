@@ -3,14 +3,14 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Docs.Categories.Follow.NotificationTypes
+namespace Plato.Ideas.Categories.Follow.NotificationTypes
 {
 
     public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly WebNotification NewDoc =
-            new WebNotification("NewDocWeb", "Docs", "Show me a web notification for each new doc within categories I'm following.");
+        public static readonly WebNotification NewIdea =
+            new WebNotification("NewIdeaWeb", "Ideas", "Show me a web notification for each new idea within categories I'm following.");
 
         public IEnumerable<DefaultNotificationTypes> GetNotificationTypes()
         {
@@ -21,7 +21,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 },
                 new DefaultNotificationTypes
@@ -29,7 +29,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 },
                 new DefaultNotificationTypes
@@ -37,7 +37,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Member,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 }
 
@@ -53,7 +53,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Administrator,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 },
                 new DefaultNotificationTypes
@@ -61,7 +61,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Staff,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 },
                 new DefaultNotificationTypes
@@ -69,7 +69,7 @@ namespace Plato.Docs.Categories.Follow.NotificationTypes
                     RoleName = DefaultRoles.Member,
                     NotificationTypes = new[]
                     {
-                        NewDoc
+                        NewIdea
                     }
                 }
 

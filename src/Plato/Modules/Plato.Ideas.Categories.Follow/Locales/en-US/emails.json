@@ -1,13 +1,13 @@
 {
   "Emails": [
     {
-      "Id": "NewDoc",
+      "Id": "NewIdea",
       "To": "",
       "Cc": "",
       "Bcc": "",
       "From": "",
-      "Subject": "[SiteName] - New Doc",
-      "Message": "Hi {0},\n\nA doc has been posted within a category you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+      "Subject": "[SiteName] - New Idea",
+      "Message": "Hi {0},\n\nAn idea has been posted within a category you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

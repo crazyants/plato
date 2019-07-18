@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Docs.Categories.Follow.NotificationTypes;
-using Plato.Docs.Models;
+using Plato.Ideas.Categories.Follow.NotificationTypes;
+using Plato.Ideas.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -15,10 +15,10 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
 
-namespace Plato.Docs.Categories.Follow.Notifications
+namespace Plato.Ideas.Categories.Follow.Notifications
 {
 
-    public class NewDocEmail : INotificationProvider<Doc>
+    public class NewIdeaEmail : INotificationProvider<Idea>
     {
         
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
@@ -26,7 +26,7 @@ namespace Plato.Docs.Categories.Follow.Notifications
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
 
-        public NewDocEmail(
+        public NewIdeaEmail(
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
             IEmailManager emailManager,
@@ -38,20 +38,20 @@ namespace Plato.Docs.Categories.Follow.Notifications
             _localeStore = localeStore;
         }
 
-        public async Task<ICommandResult<Doc>> SendAsync(INotificationContext<Doc> context)
+        public async Task<ICommandResult<Idea>> SendAsync(INotificationContext<Idea> context)
         {
             
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewDoc.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewIdea.Name, StringComparison.Ordinal))
             {
                 return null;
             }
             
             // Create result
-            var result = new CommandResult<Doc>();
+            var result = new CommandResult<Idea>();
 
             // Get email template
-            const string templateId = "NewDoc";
+            const string templateId = "NewIdea";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
@@ -61,7 +61,7 @@ namespace Plato.Docs.Categories.Follow.Notifications
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Docs",
+                    ["area"] = "Plato.Ideas",
                     ["controller"] = "Home",
                     ["action"] = "Display",
                     ["opts.id"] = context.Model.Id,

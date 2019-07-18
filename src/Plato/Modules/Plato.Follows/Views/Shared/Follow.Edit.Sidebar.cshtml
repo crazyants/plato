@@ -10,11 +10,7 @@
 
                 @if (!Model.IsFollowing)
                 {
-                    <span class="text-muted">
-                        @T[Model.FollowType.SubscribeDescription]
-                    </span>
-                    <br/><br/>
-                    <label for="@Model.FollowHtmlName" class="btn btn-block btn-secondary" data-on-css="btn-danger" data-off-css="btn-secondary" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" role="button">
+                    <label data-toggle="tooltip" title="@T[Model.FollowType.SubscribeDescription]" for="@Model.FollowHtmlName" class="btn btn-block btn-secondary" data-on-css="btn-danger" data-off-css="btn-secondary" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" role="button">
                         <input type="checkbox" data-provide="follow-checkbox" class="hidden" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
                         <i class="fal fa-bell"></i>
                         <span>
@@ -24,11 +20,7 @@
                 }
                 else
                 {
-                    <span class="text-muted">
-                        @T[Model.FollowType.UnsubscribeDescription]
-                    </span>
-                    <br/><br/>
-                    <label for="@Model.FollowHtmlName" class="btn btn-block btn-danger" data-on-css="btn-danger" data-off-css="btn-secondary" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" role="button">
+                    <label data-toggle="tooltip" title=" @T[Model.FollowType.UnsubscribeDescription]" for="@Model.FollowHtmlName" class="btn btn-block btn-danger" data-on-css="btn-danger" data-off-css="btn-secondary" data-subscribe-text="@T[Model.FollowType.SubscribeText]" data-unsubscribe-text="@T[Model.FollowType.UnsubscribeText]" data-subscribe-tooltip="@T[Model.FollowType.SubscribeDescription]" data-unsubscribe-tooltip="@T[Model.FollowType.UnsubscribeDescription]" role="button">
                         <input type="checkbox" checked data-provide="follow-checkbox" class="hidden" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
                         <i class="fa fa-bell"></i>
                         <span>

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Docs.Categories.Follow.Subscribers
+namespace Plato.Ideas.Categories.Follow.Subscribers
 {
     public class FollowSubscriber : IBrokerSubscriber
     {
@@ -67,7 +67,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
             }
 
             // Award reputation for following channel
-            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed a doc category");
+            await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed an idea category");
 
             return follow;
 
@@ -88,7 +88,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
             }
 
             // Revoke reputation for following tag
-            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Unfollowed a doc category");
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Unfollowed an idea category");
 
             return follow;
 

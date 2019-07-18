@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Plato.Categories.Stores;
-using Plato.Docs.Categories.Models;
+using Plato.Ideas.Categories.Models;
 using Plato.Follows.Stores;
 using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 
-namespace Plato.Docs.Categories.Follow.ViewProviders
+namespace Plato.Ideas.Categories.Follow.ViewProviders
 {
 
     public class CategoryViewProvider : BaseViewProvider<Category>
@@ -48,8 +48,8 @@ namespace Plato.Docs.Categories.Follow.ViewProviders
 
             // Get permission
             var permission = categoryId == 0
-                ? Follow.Permissions.FollowDocCategories
-                : Follow.Permissions.FollowDocCategory;
+                ? Follow.Permissions.FollowIdeaCategories
+                : Follow.Permissions.FollowIdeaCategory;
 
             // Get thingId if available
             var thingId = 0;

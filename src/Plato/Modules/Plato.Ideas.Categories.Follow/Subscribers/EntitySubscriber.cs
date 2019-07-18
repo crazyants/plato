@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Plato.Docs.Categories.Follow.NotificationTypes;
+using Plato.Ideas.Categories.Follow.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Follows.Stores;
 using Plato.Internal.Messaging.Abstractions;
@@ -20,7 +20,7 @@ using Plato.Follows.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Docs.Categories.Follow.Subscribers
+namespace Plato.Ideas.Categories.Follow.Subscribers
 {
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
@@ -222,7 +222,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
             {
 
                 // Email notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewDoc))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewIdea))
                 {
 
                     // Indicate user was notified
@@ -232,7 +232,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewDoc)
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewIdea)
                     {
                         To = user,
                     }, entity);
@@ -240,7 +240,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewDoc))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewIdea))
                 {
 
                     // Indicate user was notified
@@ -250,7 +250,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewDoc)
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewIdea)
                     {
                         To = user,
                         From = new User
@@ -330,7 +330,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
             {
 
                 // Email notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewDoc))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, EmailNotifications.NewIdea))
                 {
 
                     // Indicate user was notified
@@ -340,7 +340,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewDoc)
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewIdea)
                     {
                         To = user,
                     }, entity);
@@ -348,7 +348,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewDoc))
+                if (user.NotificationEnabled(_userNotificationTypeDefaults, WebNotifications.NewIdea))
                 {
 
                     // Indicate user was notified
@@ -358,7 +358,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                     }
 
                     // Notify
-                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewDoc)
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewIdea)
                     {
                         To = user,
                         From = new User
@@ -429,7 +429,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Docs.Permissions.ViewHiddenDocs))
+                        entity.CategoryId, Ideas.Permissions.ViewHiddenIdeas))
                     {
                         result.Remove(user.Id);
                     }
@@ -441,7 +441,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Docs.Permissions.ViewPrivateDocs))
+                        entity.CategoryId, Ideas.Permissions.ViewPrivateIdeas))
                     {
                         result.Remove(user.Id);
                     }
@@ -453,7 +453,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Docs.Permissions.ViewSpamDocs))
+                        entity.CategoryId, Ideas.Permissions.ViewSpamIdeas))
                     {
                         result.Remove(user.Id);
                     }
@@ -465,7 +465,7 @@ namespace Plato.Docs.Categories.Follow.Subscribers
                 {
                     var principal = await _claimsPrincipalFactory.CreateAsync(user);
                     if (!await _authorizationService.AuthorizeAsync(principal,
-                        entity.CategoryId, Docs.Permissions.ViewDeletedDocs))
+                        entity.CategoryId, Ideas.Permissions.ViewDeletedIdeas))
                     {
                         result.Remove(user.Id);
                     }

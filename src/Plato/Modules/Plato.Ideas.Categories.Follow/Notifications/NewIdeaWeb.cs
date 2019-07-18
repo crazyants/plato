@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Docs.Categories.Follow.NotificationTypes;
-using Plato.Docs.Models;
+using Plato.Ideas.Categories.Follow.NotificationTypes;
+using Plato.Ideas.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Docs.Categories.Follow.Notifications
+namespace Plato.Ideas.Categories.Follow.Notifications
 {
 
-    public class NewDocWeb : INotificationProvider<Doc>
+    public class NewIdeaWeb : INotificationProvider<Idea>
     {
         
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -24,7 +24,7 @@ namespace Plato.Docs.Categories.Follow.Notifications
 
         public IStringLocalizer S { get; }
         
-        public NewDocWeb(
+        public NewIdeaWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IUserNotificationsManager<UserNotification> userNotificationManager,
@@ -38,17 +38,17 @@ namespace Plato.Docs.Categories.Follow.Notifications
 
         }
 
-        public async Task<ICommandResult<Doc>> SendAsync(INotificationContext<Doc> context)
+        public async Task<ICommandResult<Idea>> SendAsync(INotificationContext<Idea> context)
         {
             
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(WebNotifications.NewDoc.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.NewIdea.Name, StringComparison.Ordinal))
             {
                 return null;
             }
 
             // Create result
-            var result = new CommandResult<Doc>();
+            var result = new CommandResult<Idea>();
             
             // Build user notification
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
@@ -58,11 +58,11 @@ namespace Plato.Docs.Categories.Follow.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = context.Model.Title,
-                Message = S["A doc has been posted within a category your following"],
+                Message = S["An idea has been posted within a category your following"],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Docs",
+                    ["area"] = "Plato.Ideas",
                     ["controller"] = "Home",
                     ["action"] = "Display",
                     ["opts.id"] = context.Model.Id,
