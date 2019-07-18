@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace Plato.Internal.Data.Abstractions.Extensions
 {
@@ -7,6 +8,7 @@ namespace Plato.Internal.Data.Abstractions.Extensions
 
         public static string ToDbTypeNormalized(this DbType dbType, string stringLength = "") 
         {
+            
             switch (dbType)
             {
                 case DbType.Int16:
@@ -18,8 +20,18 @@ namespace Plato.Internal.Data.Abstractions.Extensions
                 case DbType.Boolean:
                     return "bit";
                 case DbType.AnsiString:
+                    // No column length for strings would create invalid SQL
+                    if (string.IsNullOrEmpty(stringLength))
+                    {
+                        throw new ArgumentNullException(nameof(stringLength));
+                    }
                     return "varchar(" + stringLength + ")";
                 case DbType.String:
+                    // No column length for strings would create invalid SQL
+                    if (string.IsNullOrEmpty(stringLength))
+                    {
+                        throw new ArgumentNullException(nameof(stringLength));
+                    }
                     return "nvarchar(" + stringLength + ")";
                 case DbType.Date:
                     return "datetime";
