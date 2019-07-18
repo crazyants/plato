@@ -8,14 +8,14 @@
 
         @if (Model != null)
         {
-            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="Reply">
+            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary ml-2" title="Reply">
                 <i class="fal fa-fw fa-plus"></i>
                 @T["New Question"]
             </a>
         }
         else
         {
-            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary" title="@T["New Question"]">
+            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary ml-2" title="@T["New Question"]">
                 <i class="fal fa-fw fa-plus"></i>
                 @T["New Question"]
             </a>
@@ -25,7 +25,7 @@
     <authorize-fail>
         @if (base.CurrentUser == null)
         {
-            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary" title="@T["Login to Post"]">
+            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-primary ml-2" title="@T["Login to Post"]">
                 <i class="fal fa-fw fa-lock"></i>
                 @T["Login to Post"]
             </a>

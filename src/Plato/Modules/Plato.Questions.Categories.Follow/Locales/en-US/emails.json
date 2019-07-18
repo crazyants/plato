@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewQuestion",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Question",
+      "Message": "Hi {0},\n\nA question has been posted within a category you're following....\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}
