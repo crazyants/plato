@@ -1,0 +1,18 @@
+Name: Plato Issues Categories Follow
+Description: Adds the ability to follow issue categories.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Issues
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Follows",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Issues.Categories",
+		Version: "1.0.0"
+	}
+]
