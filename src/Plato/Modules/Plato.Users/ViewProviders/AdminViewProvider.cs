@@ -252,6 +252,7 @@ namespace Plato.Users.ViewProviders
                 if (model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase))
                 {
                     // SetUserNameAsync internally sets a new SecurityStamp
+                    // which will invalidate the authentication cookie
                     // This will force the user to be logged out
                     await _userManager.SetUserNameAsync(user, model.UserName);
                 }

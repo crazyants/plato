@@ -86,8 +86,15 @@ namespace Plato.Users.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                await _userManager.SetUserNameAsync(user, model.UserName);
-
+                // Has the username changed?
+                if (model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase))
+                {
+                    // SetUserNameAsync internally sets a new SecurityStamp
+                    // which will invalidate the authentication cookie
+                    // This will force the user to be logged out
+                    await _userManager.SetUserNameAsync(user, model.UserName);
+                }
+                
                 // Has the email address changed?
                 if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
                 {

@@ -9,7 +9,8 @@
             <div class="col-6">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="UserName">
-                        <label asp-for="UserName"><strong>@T["UserName"]</strong></label>
+                        <label asp-for="UserName"><strong>@T["Username"]</strong></label>
+                        <i class="fal fa-info-circle ml-2 align-middle" title="@T["If you change your username you will be logged out and will need to login again."]" data-toggle="tooltip"></i>
                         <span asp-validation-for="UserName" class="text-danger"></span>
                         <input asp-for="UserName" class="form-control" autofocus />
                     </div>

@@ -970,6 +970,7 @@
             }
 
             var $editor = this.$editor,
+                $footer = $editor.find(".md-dropzone"),
                 $textarea = this.$textarea,
                 $writeTab = $("#writeTab" + $editor.attr("id")),
                 $writeLink = $("#writeLink" + $editor.attr("id")),
@@ -983,6 +984,18 @@
 
             // Give flag that tells the editor to enter preview mode
             this.$isPreview = true;
+            
+            // Ensure the preview window matches the textarea height
+            var textareaHeight = 0,
+                footerHeight = 0;
+            if ($textarea.length > 0) { textareaHeight = $textarea.outerHeight(); }
+            if ($footer.length > 0) { footerHeight = $footer.outerHeight(); }
+            var previewHeight = textareaHeight + footerHeight;
+            if (previewHeight > 0) {
+                $previewTab.css({
+                    "height": previewHeight
+                });
+            }
 
             plato.http({
                 url: "api/markdown/parse/post",
@@ -1012,7 +1025,7 @@
             this.disableButtons('all');
 
             // Hide dropzone message
-            this.$editor.find(".dz-message").hide();
+            $footer.hide();
 
             if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
                 this.$editor.addClass('md-editor-disabled');
@@ -1027,10 +1040,24 @@
             this.$isPreview = false;
 
             var $editor = this.$editor,
+                $textarea = this.$textarea,
+                $footer = $editor.find(".md-dropzone"),
                 $writeTab = $("#writeTab" + $editor.attr("id")),
                 $writeLink = $("#writeLink" + $editor.attr("id")),
                 $previewTab = $("#previewTab" + $editor.attr("id")),
                 $previewLink = $("#previewLink" + $editor.attr("id"));
+            
+            // Ensure the textarea matches the textarea height
+            var previewHeight = 0,
+                footerHeight = 0;
+            if ($previewTab.length > 0) { previewHeight = $previewTab.outerHeight(); }
+            if ($footer.length > 0) { footerHeight = $footer.outerHeight(); }
+            var textareaHeight = previewHeight - footerHeight;
+            if (textareaHeight > 0) {
+                $textarea.css({
+                    "height": textareaHeight
+                });
+            }
 
             $writeLink.addClass("active");
             $writeTab.show();
@@ -1045,7 +1072,7 @@
             this.disableButtons(this.$options.disabledButtons);
 
             // Show dropzone message
-            this.$editor.find(".dz-message").show();
+            $footer.show();
 
             // Perform any callbacks
             this.$options.onPreviewEnd(this);
