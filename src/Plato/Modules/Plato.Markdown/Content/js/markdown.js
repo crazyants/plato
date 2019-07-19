@@ -991,7 +991,7 @@
             if ($textarea.length > 0) { textareaHeight = $textarea.outerHeight(); }
             if ($footer.length > 0) { footerHeight = $footer.outerHeight(); }
             var previewHeight = textareaHeight + footerHeight;
-            if (previewHeight > 0) {
+            if (previewHeight > 0 && !this.$isFullscreen) {
                 $previewTab.css({
                     "height": previewHeight
                 });
@@ -1053,7 +1053,7 @@
             if ($previewTab.length > 0) { previewHeight = $previewTab.outerHeight(); }
             if ($footer.length > 0) { footerHeight = $footer.outerHeight(); }
             var textareaHeight = previewHeight - footerHeight;
-            if (textareaHeight > 0) {
+            if (textareaHeight > 0 && !this.$isFullscreen) {
                 $textarea.css({
                     "height": textareaHeight
                 });
