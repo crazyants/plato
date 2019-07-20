@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Plato Setup</title>
+  
+    <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
+    <link rel="stylesheet" href="~/css/app/plato.css" />
+    <link rel="stylesheet" href="~/plato.site/content/css/site.css" />
+
+    @await RenderSectionAsync("Header", required: false)
+</head>
+<body class="bg-light">
+
+
+
+
+
+        <nav class="nav-site">
+            <div class="navbar navbar-expand-lg navbar-light bg-transparent">
+                <div class=" container-fluid">
+
+                    <a class="navbar-brand" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        <span class="plato-brand mr-2"></span> @T["Plato"]
+                    </a>
+
+                    <div class="navbar-mobile">
+                        <div class="navbar-nav">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item nav-item-bars">
+                                    <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]" data-provide="tooltip" title="@T["Navigation"]">
+                                        <i class="fal fa-bars"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-item-search">
+                                    <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]" data-provide="tooltip" title="@T["Search"]">
+                                        <i class="fal fa-search"></i>
+                                    </a>
+                                </li>
+                                @if (this.CurrentUser != null)
+                                {
+                                    <li class="nav-item dropdown">
+                                        <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post">
+                                            <a class="nav-link" href="#" data-toggle="dropdown" data-display="static">
+                                                <avatar class="avatar avatar-sm" url="@this.CurrentUser.Avatar.Url" />
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in position-absolute">
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
+                                                <authorize asp-permission="AdminAccess">
+                                                    <authorize-success>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
+                                                    </authorize-success>
+                                                </authorize>
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
+                        <div class="navbar-nav">
+                            <nav class="my-2 my-md-0 mr-md-3">
+                                <a class="p-2 text-dark" href="#">Features</a>
+                                <a class="p-2 text-dark" href="#">Enterprise</a>
+                                <a class="p-2 text-dark" href="#">Support</a>
+                                <a class="p-2 text-dark" href="#">Pricing</a>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="navbar-user">
+                        <div class="navbar-nav">
+                            @if (this.CurrentUser != null)
+                            {
+                                <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="form-inline">
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item dropdown account">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" id="accountDropDown" data-toggle="dropdown" data-provide="tooltip" title="@T["Account"]">
+                                                <avatar class="avatar avatar-sm" style="width: 28px; height: 28px;" url="@this.CurrentUser.Avatar.Url" />
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="accountDropDown">
+                                                <div class="p-3">
+                                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
+                                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
+                                                        <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
+                                                    </a>
+                                                    <h6 class="d-inline-block align-middle max-w-150 text-truncate" title="@this.CurrentUser.DisplayName">@this.CurrentUser.DisplayName</h6>
+                                                </div>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
+                                                <authorize asp-permission="AdminAccess">
+                                                    <authorize-success>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
+                                                    </authorize-success>
+                                                </authorize>
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </form>
+                            }
+                            else
+                            {
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                                    </li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+    <main role="main">
+        @RenderBody()
+    </main>
+    
+
+    <div class="container">
+        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="row">
+                <div class="col-12 col-md">
+                    <img class="mb-2" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
+                    <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Features</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Cool stuff</a></li>
+                        <li><a class="text-muted" href="#">Random feature</a></li>
+                        <li><a class="text-muted" href="#">Team feature</a></li>
+                        <li><a class="text-muted" href="#">Stuff for developers</a></li>
+                        <li><a class="text-muted" href="#">Another one</a></li>
+                        <li><a class="text-muted" href="#">Last time</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Resources</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Resource</a></li>
+                        <li><a class="text-muted" href="#">Resource name</a></li>
+                        <li><a class="text-muted" href="#">Another resource</a></li>
+                        <li><a class="text-muted" href="#">Final resource</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>About</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Team</a></li>
+                        <li><a class="text-muted" href="#">Locations</a></li>
+                        <li><a class="text-muted" href="#">Privacy</a></li>
+                        <li><a class="text-muted" href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="container-fluid">
+        <hr />
+        <footer>
+            @await RenderSectionAsync("Footer", required: false)
+        </footer>
+    </div>
+
+
+    <script src="~/js/vendors/jquery.js"></script>
+    <script src="~/js/vendors/bootstrap.js"></script>
+    <script src="~/js/app/plato.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+
+
+</body>
+</html>

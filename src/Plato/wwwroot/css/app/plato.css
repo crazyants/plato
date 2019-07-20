@@ -51,7 +51,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     border-style: solid;
     border-top-color: #007BFF;
     border-left-color: #12BF67;
-    border-right-color: #DEB032;
+    border-right-color: #E0E05E;
     border-bottom-color: #DE3254;
     transform: rotate(-45deg);
 }
