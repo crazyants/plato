@@ -1,7 +1,7 @@
 ﻿$(function (win, doc, $) {
-    
-    var engine = new win.BABYLON.Engine(elCanvas, true);
 
+    var elCanvas = doc.getElementById("jumboCanvas")
+    var engine = new win.BABYLON.Engine(elCanvas, true);
     var lightPos = new win.BABYLON.Vector3(0, 8, 0);
     var lightDiffuse = new win.BABYLON.Color3(1, 1, 1);
 
@@ -207,7 +207,7 @@
             t += 0.05;
         });
 
-        var light0; // spotlight that only lits the torus
+        var light0; 
         var light;
         var shadowGen;
         {
@@ -227,7 +227,7 @@
             shadowGen.setDarkness(0);
             light0 = light;
         }
-        var light1; // pointlight that lits all meshes excepts the bulb
+        var light1;
         {
             light = new win.BABYLON.PointLight('light1', lightPos, scene);
             light.diffuse = lightDiffuse;

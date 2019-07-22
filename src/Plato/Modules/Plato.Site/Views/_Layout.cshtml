@@ -15,14 +15,10 @@
     @await RenderSectionAsync("Header", required: false)
 </head>
 <body class="bg-light">
-
-
-
-
-
-        <nav class="nav-site">
-            <div class="navbar navbar-expand-lg navbar-light bg-transparent">
-                <div class=" container-fluid">
+    
+        <nav class="nav-site border-0 sticky-top">
+            <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid py-2">
 
                     <a class="navbar-brand" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
                         <span class="plato-brand mr-2"></span> @T["Plato"]
@@ -77,11 +73,11 @@
 
                     <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                         <div class="navbar-nav">
-                            <nav class="my-2 my-md-0 mr-md-3">
-                                <a class="p-2 text-dark" href="#">Features</a>
-                                <a class="p-2 text-dark" href="#">Enterprise</a>
-                                <a class="p-2 text-dark" href="#">Support</a>
-                                <a class="p-2 text-dark" href="#">Pricing</a>
+                            <nav class="nav nav-pills">
+                                <a class="nav-link" href="#">Features</a>
+                                <a class="nav-link" href="#">Enterprise</a>
+                                <a class="nav-link" href="#">Support</a>
+                                <a class="nav-link" href="#">Pricing</a>
                             </nav>
                         </div>
                     </div>
