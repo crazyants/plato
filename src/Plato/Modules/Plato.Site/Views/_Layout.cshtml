@@ -14,7 +14,7 @@
 
     @await RenderSectionAsync("Header", required: false)
 </head>
-<body class="bg-light">
+<body class="bg-black">
     
         <nav class="nav-site border-0 sticky-top">
             <div class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -140,7 +140,7 @@
         @RenderBody()
     </main>
     
-
+<div class="row bg-black">
     <div class="container">
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
             <div class="row">
@@ -180,13 +180,7 @@
             </div>
         </footer>
     </div>
-
-    <div class="container-fluid">
-        <hr />
-        <footer>
-            @await RenderSectionAsync("Footer", required: false)
-        </footer>
-    </div>
+</div>
 
 
     <script src="~/js/vendors/jquery.js"></script>

@@ -15,7 +15,7 @@
     // scene
     var scene = (() => {
         var scene = new win.BABYLON.Scene(engine);
-        scene.clearColor = new win.BABYLON.Color3(0.9, 0.9, 0.9);
+        scene.clearColor = new win.BABYLON.Color4(0, 0, 0, 0);
 
         var matEmit = new win.BABYLON.StandardMaterial('matEmit', scene);
         matEmit.emissiveColor = lightDiffuse;
