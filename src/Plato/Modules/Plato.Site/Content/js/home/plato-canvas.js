@@ -169,43 +169,28 @@
             pMesh.isVisible = false;
             var instances = [];
             var i = 0;
-            for (var index = 50; index > 0; index--) {
+            for (var index = 100; index > 0; index--) {
                 i += 1;
 
                 var newInstance = pMesh.createInstance("i" + index);
-                newInstance.position.x = Math.cos(i) * getRnd(-50);
-                newInstance.position.y = Math.cos(i) * getRnd(-50);;
-                newInstance.position.z = Math.cos(i) * getRnd(-50);
+                newInstance.position.x = Math.cos(i) * getRnd(-100);
+                newInstance.position.y = Math.cos(i) * getRnd(-100);;
+                newInstance.position.z = Math.cos(i) * getRnd(-100);
                 instances.push(newInstance);
             }
 
 
             // update
             var y = 0;
-
-            var t = 0;
-          
             engine.runRenderLoop(() => {
                 for (var index = 0; index < instances.length; index++) {
                     instances[index].rotation.y = index + y;
-                }
-                //camera.alpha = 4.0 * (Math.PI / 10 + Math.cos(t / 30));
-                //camera.beta = 2.0 * (Math.PI / 10 + Math.sin(t / 20));
-                //camera.radius = 180 + (-20 + 20 * Math.sin(t / 10));
-
-                t += 0.1;
-
-
-                y += 0.01;
+                }y += 0.01;
             });
-
-
+            
             var s = 0;
-
             $(window).scroll(function() {
-             
                 lightPos.x = Math.cos(s) * 100;
-
                 lightPos.z = Math.sin(s) * cameraZ;             
                 camera.position = lightPos;
                 s += 0.009;

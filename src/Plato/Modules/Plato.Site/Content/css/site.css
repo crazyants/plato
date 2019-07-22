@@ -1,5 +1,4 @@
 ﻿
-
 .bg-black { background: black; }
 .bg-black-75 { background: rgba(0,0,0, 0.75); }
 .bg-black-50 { background: rgba(0,0,0, 0.50); }
@@ -10,84 +9,32 @@
 .bg-white-50 { background: rgba(255,255,255, 0.50); }
 .bg-white-25 { background: rgba(255,255,255, 0.25); }
 
+.bg-purple { background: #5C2D91; }
+.bg-purple-75 { background: rgba(92, 45, 145, 0.75); }
+.bg-purple-50 { background: rgba(92, 45, 145, 0.50); }
+.bg-purple-25 { background: rgba(92, 45, 145, 0.25); }
+
+.bg-primary-75 { background: rgba(0, 123, 255, 0.75); }
+.bg-primary-50 { background: rgba(0, 123, 255, 0.50); }
+.bg-primary-25 { background: rgba(0, 123, 255, 0.25); }
 
 .page {
     display: block;
     position: relative;
-    height: 100vh;
     padding: 0;
     margin: 0;
     overflow: hidden;
 }
 
+.page-fill {
+    height: 100vh;
+}
+
 .page .container {
-    position: absolute;
-    z-index: 2;
-    left: 50%;
-    top: 50%;
-    text-align: center;
-    transform: translate(-50%, -50%);
-    padding: 3rem;
+    display: block;
+    margin: 12rem auto;
 }
 
-
-.canvas-background {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    user-select: none;
-    z-index: -1;
-}
-
-
-.canvas-absolute {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    user-select: none;
-    z-index: 0;
-}
-
-.canvas-right {
-  
-    transform: translateX(25%);
-}
-
-
-.masthead {
-    position: relative;
-    padding-top: 10rem;
-    padding-bottom: calc(10rem - 72px);
-}
-
-section.masthead h1 {
-    font-size: 2.25rem
-}
-
-@media (min-width:992px) {
-    header.masthead {
-        height: 100vh;
-        min-height: 40rem;
-        padding-top: 72px;
-        padding-bottom: 0
-    }
-
-    header.masthead p {
-        font-size: 1.15rem
-    }
-
-    header.masthead h1 {
-        font-size: 3rem
-    }
-}
-
-@media (min-width:1200px) {
-    header.masthead h1 {
-        font-size: 3.5rem
-    }
-}
 
 hr.divider {
     max-width: 3.25rem;
@@ -99,15 +46,3 @@ hr.light {
     border-color: #fff
 }
 
-.page-section {
-    padding: 8rem 0
-}
-
-
-
-.dashboard-image {
-    background: url(/plato.site/content/images/dashboard_dark.png);
-   
-    height: 600px;
-    overflow: hidden;
-}

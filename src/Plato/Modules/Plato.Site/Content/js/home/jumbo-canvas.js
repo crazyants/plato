@@ -6,7 +6,6 @@
     });
 
     function init(elCanvas) {
-
         
         var engine = new win.BABYLON.Engine(elCanvas, true);
         var lightPos = new win.BABYLON.Vector3(0, 8, 0);
