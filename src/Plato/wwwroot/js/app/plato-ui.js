@@ -3219,8 +3219,15 @@ $(function (win, doc, $) {
             },
             getTarget: function($caller) {
                 var target = $caller.data("filterListTarget") || $caller.data(dataKey).target;
+                if (target === null) {
+                    throw new Error('You must set a target for the filter list either via the data-filter-list-target data attribute on the calling element or via the target option property.');
+                }
                 if (typeof target === "string") {
-                    return $(target);
+                    var $target = $(target);
+                    if ($target.length > 0) {
+                        return $(target);
+                    }
+                    throw new Error('Could not locate a target for filter list with selector "' + target + '".');
                 }
                 return target;
             },

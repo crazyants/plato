@@ -10,6 +10,12 @@
 .bg-white-25 { background: rgba(255,255,255, 0.25); }
 
 .bg-purple { background: #5C2D91; }
+.border-purple { border-color: #5C2D91; }
+.purple { 
+    background: #5C2D91; 
+    border-color: #5C2D91;
+}
+
 .bg-purple-75 { background: rgba(92, 45, 145, 0.75); }
 .bg-purple-50 { background: rgba(92, 45, 145, 0.50); }
 .bg-purple-25 { background: rgba(92, 45, 145, 0.25); }
@@ -18,6 +24,11 @@
 .bg-primary-50 { background: rgba(0, 123, 255, 0.50); }
 .bg-primary-25 { background: rgba(0, 123, 255, 0.25); }
 
+.bg-info-75 { background: rgba(23, 162, 184, 0.75); }
+.bg-info-50 { background: rgba(23, 162, 184, 0.50); }
+.bg-info-25 { background: rgba(23, 162, 184, 0.25); }
+
+
 .border-radius-0 { border-radius: 0 !important; }
 
 .page {
@@ -25,7 +36,6 @@
     position: relative;
     padding: 0;
     margin: 0;
-    overflow: hidden;
 }
 
 /* full screen */
@@ -91,3 +101,21 @@ hr.light {
     border-color: #fff
 }
 
+/* Skewed Backgrounds */
+
+.skewed {
+    position: relative;
+}
+
+.skewed .bg-skewed {
+    transform: skewY(-4deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.skewed-right .bg-skewed {
+    transform: skewY(4deg);
+}

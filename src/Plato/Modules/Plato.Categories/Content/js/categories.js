@@ -287,7 +287,6 @@ $(function (win, doc, $) {
                     $inputs = $modal.find("input[name=iconCss]"),
                     $checked = $modal.find("input[name=iconCss]:checked");
                    
-
                 if ($checked.length > 0) {
                     selectedIcon = $checked.val();
                 }
@@ -298,6 +297,9 @@ $(function (win, doc, $) {
 
                 $modal.on('hidden.bs.modal',
                     function (e) {
+                        if (selectedIcon === null) {
+                            return;
+                        }
                         if (selectedIcon === "") {
                             return;
                         }
