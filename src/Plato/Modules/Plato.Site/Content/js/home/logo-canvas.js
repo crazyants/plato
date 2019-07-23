@@ -1,22 +1,26 @@
 ﻿$(function (win, doc, $) {
+
+    "use strict";
     
-    var $elements = $('[data-provide="logo"]');
-    $elements.each(function () {
+    $('[data-provide="logo"]').each(function () {
         init($(this)[0]);
     });
 
     function init(elCanvas) {
-        
-        var engine = new win.BABYLON.Engine(elCanvas, true);
-        var lightPos = new win.BABYLON.Vector3(0, 8, 0);
-        var lightDiffuse = new win.BABYLON.Color3(1, 1, 1);
+
+        var engine = new win.BABYLON.Engine(elCanvas, true),
+            lightPos = new win.BABYLON.Vector3(0, 8, 0),
+            lightDiffuse = new win.BABYLON.Color3(1, 1, 1);
 
         // scene
         var scene = (() => {
+
+            // Scene
             var scene = new win.BABYLON.Scene(engine);
             scene.clearColor = new win.BABYLON.Color4(0, 0, 0, 0);
 
-            // mats
+            // Materials
+
             var matEmit = new win.BABYLON.StandardMaterial('matEmit', scene);
             matEmit.emissiveColor = lightDiffuse;
             matEmit.disableLighting = true;
@@ -52,14 +56,14 @@
             blueMaterial.ambientColor = new win.BABYLON.Color3(0, 0, 1);
             blueMaterial.alpha = 0.7;
 
-            var greenMaterial = new BABYLON.StandardMaterial("greenMaterial", scene);
+            var greenMaterial = new win.BABYLON.StandardMaterial("greenMaterial", scene);
             greenMaterial.diffuseColor = new win.BABYLON.Color3(0, 0, 0);
             greenMaterial.specularColor = new win.BABYLON.Color3(1, 1, 1);
             greenMaterial.emissiveColor = new win.BABYLON.Color3(0, 1, 0);
             greenMaterial.ambientColor = new win.BABYLON.Color3(0, 1, 0);
             greenMaterial.alpha = 0.7;
 
-            var yellowMaterial = new BABYLON.StandardMaterial("yellowMaterial", scene);
+            var yellowMaterial = new win.BABYLON.StandardMaterial("yellowMaterial", scene);
             yellowMaterial.diffuseColor = new win.BABYLON.Color3(0, 0, 0);
             yellowMaterial.specularColor = new win.BABYLON.Color3(1, 1, 1);
             yellowMaterial.emissiveColor = new win.BABYLON.Color3(1, 1, 0.35);
@@ -80,29 +84,23 @@
             bulb.position = lightPos;
             bulb.material = alphaMaterial;
 
-            //var room = win.BABYLON.MeshBuilder.CreateBox('room',
-            //    { width: 20, height: 20, depth: 20, sideOrientation: BABYLON.Mesh.BACKSIDE },
-            //    scene);
-            //room.material = matEmit;
-
-            // ---------------------
-
-            var corners = [
+            // Coords
+            var matrix = [
                 new win.BABYLON.Vector2(0, 4),
                 new win.BABYLON.Vector2(0, -4),
                 new win.BABYLON.Vector2(1, -3),
                 new win.BABYLON.Vector2(1, 3),
             ];
 
-            var polyMesh = new win.BABYLON.PolygonMeshBuilder("polytri2", corners, scene);
+            var polyMesh = new win.BABYLON.PolygonMeshBuilder("polytri2", matrix, scene);
 
             var yellowBox = polyMesh.build(true, 1);
             yellowBox.position.y = 4;
             yellowBox.position.x = 1;
             yellowBox.rotation.z = Math.PI / -2;
-            yellowBox.material = yellowMaterial; //redMaterial;
+            yellowBox.material = yellowMaterial;
 
-            var greenBox = polyMesh.build(true, 1); //updatable, extrusion depth - both optional
+            var greenBox = polyMesh.build(true, 1);
             greenBox.position.y = -4;
             greenBox.rotation.z = Math.PI / 2;
             greenBox.material = greenMaterial;
@@ -120,10 +118,7 @@
             redBox.rotation.x = Math.PI / 2;
             redBox.material = redMaterial;
 
-            // ------------------
-            // Merge Meshes
-            // ------------------
-
+            // Merge lines into a single mesh
             var mesh = win.BABYLON.Mesh.MergeMeshes([yellowBox, greenBox, blueBox, redBox],
                 true,
                 true,
@@ -132,11 +127,9 @@
                 true);
             mesh.rotation.y = 0;
             mesh.rotation.x = Math.PI / 4;
-
-            // ------------------
-            // Create a particle system
-            // ------------------
-
+            
+            // Particle system
+          
             var particleSystem = new win.BABYLON.ParticleSystem("particles", 2000, scene);
 
             //Texture of each particle
@@ -145,13 +138,13 @@
 
             // Where the particles come from
             particleSystem.emitter = torus;
-            particleSystem.minEmitBox = new BABYLON.Vector3(-1, 10, 0); // Starting all from
-            particleSystem.maxEmitBox = new BABYLON.Vector3(1, 1, 1); // To...
+            particleSystem.minEmitBox = new win.BABYLON.Vector3(-1, 10, 0); // Starting all from
+            particleSystem.maxEmitBox = new win.BABYLON.Vector3(1, 1, 1); // To...
 
             // Colors of all particles
-            particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
-            particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-            particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+            particleSystem.color1 = new win.BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+            particleSystem.color2 = new win.BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+            particleSystem.colorDead = new win.BABYLON.Color4(0, 0, 0.2, 0.0);
 
             // Size of each particle (random between...
             particleSystem.minSize = 0.1;
@@ -183,8 +176,17 @@
 
             // Start the particle system
             particleSystem.start();
+            
+            // Lights
 
-            // camera
+            var light = new win.BABYLON.PointLight('light1', lightPos, scene);
+            light.diffuse = lightDiffuse;
+            light.intensity = 200;
+            light.excludedMeshes.push(bulb);
+            mesh.receiveShadows = true;
+
+            // Camera
+
             var camera =
                 new win.BABYLON.ArcRotateCamera('camera', Math.PI / 4, Math.PI * 3 / 8, 15, torus, scene, true);
             camera.upperBetaLimit = Math.PI * 3 / 4;
@@ -192,76 +194,21 @@
             camera.upperRadiusLimit = 15;
             camera.lowerRadiusLimit = 5;
 
-            // ------------------------------
+            // Action
 
-            //// Create the "God Rays" effect (volumetric light scattering)
-            //var godrays = new win.BABYLON.VolumetricLightScatteringPostProcess('godrays',
-            //    1.0,
-            //    camera,
-            //    null,
-            //    50,
-            //    BABYLON.Texture.BILINEAR_SAMPLINGMODE,
-            //    engine,
-            //    false);
-            //godrays.mesh.scaling = new win.BABYLON.Vector3(4, 0.05, -20);
+            var t = 0.0,
+                i = 0.0;
 
-            // -------------------------------
-
-            var t = 0.0;
             scene.registerBeforeRender(function() {
                 camera.alpha = 4.0 * (Math.PI / 10 + Math.cos(t / 20));
                 camera.beta = 2.0 * (Math.PI / 10 + Math.sin(t / 20));
                 t += 0.05;
             });
-
-            var light0;
-            var light;
-            var shadowGen;
-            {
-                light = new win.BABYLON.SpotLight('light0',
-                    lightPos,
-                    torus.position.subtract(lightPos),
-                    Math.PI * 2 / 3,
-                    0,
-                    scene);
-                light.diffuse = lightDiffuse;
-                light.intensity = 20;
-                light.includedOnlyMeshes.push(torus); // <<<<<<<<<<<<<<<<<<<<<
-                shadowGen = new win.BABYLON.ShadowGenerator(2048, light);
-                shadowGen.useCloseExponentialShadowMap = true;
-                shadowGen.addShadowCaster(torus); // caster
-                torus.receiveShadows = true; // receiver
-                shadowGen.setDarkness(0);
-                light0 = light;
-            }
-            var light1;
-            {
-                light = new win.BABYLON.PointLight('light1', lightPos, scene);
-                light.diffuse = lightDiffuse;
-                light.intensity = 200;
-                light.excludedMeshes.push(bulb);
-                shadowGen = new win.BABYLON.ShadowGenerator(1024, light);
-                shadowGen.bias = 0.0005;
-                shadowGen.usePercentageCloserFiltering = true;
-                shadowGen.setDarkness(0.3);
-                shadowGen.addShadowCaster(mesh);
-                mesh.receiveShadows = true;
-                //room.receiveShadows = true; 
-                light1 = light;
-            }
-
-            // update
-            var i = 0;
+            
             engine.runRenderLoop(() => {
                 i += 0.008;
                 lightPos.x = -Math.cos(i) * 8;
                 lightPos.z = Math.sin(i) * 8;
-                //light0.position = lightPos;
-                //light0.direction = torus.position.subtract(lightPos);
-                //light1.position = lightPos;
-                //godrays.mesh.position = lightPos;
-                //godrays.mesh.direction = torus.position.subtract(lightPos);
-                //bulb.position = lightPos;
             });
             return scene;
         })();
