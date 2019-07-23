@@ -110,22 +110,37 @@
 </card>
 
 <div class="modal fade" id="selectIconModal" role="dialog" aria-hidden="true">
-
     <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 90%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h6>@T["Channel Icon"]</h6>
+                <h6 class="modal-title">@T["Icons"]</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" style="max-height: 500px; overflow-y: scroll;">
-                @foreach (var icon in Model.ChannelIcons.Icons)
-                {
-                    var css = Model.IconPrefix + icon;
-                    var selected = Model.IconCss == css;
-                    <label class="btn btn-secondary radio-icon" id="@icon">
-                        <input checked="@selected" type="radio" value="@icon" name="iconCss" id="@icon" />
-                        <span><i class="@css"></i></span>
-                    </label>
-                }
+            <div class="modal-body max-h-500 overflow-auto">
+                
+                <div class="form-group">
+                    <input type="search" 
+                           data-provide="filter-list" 
+                           data-filter-list-target="#iconList"
+                           data-filter-list-empty="#iconListEmpty"
+                           class="form-control" placeholder="@T["Search icons"]"/>
+                </div>
+                <div id="iconList" class="list-group list-group-flush flex-row flex-wrap">
+                    @foreach (var icon in Model.ChannelIcons.Icons)
+                    {
+                        var css = Model.IconPrefix + icon;
+                        var selected = Model.IconCss == css;
+                        <label class="radio-icon d-flex list-group-item border-0" id="@icon" data-filter-list-value="@icon">
+                            <input checked="@selected" type="radio" value="@icon" name="iconCss" id="@icon" />
+                            <span><i class="@css"></i></span>
+                        </label>
+                    }
+                </div>
+                <div id="iconListEmpty">
+                    @T["No icons matched your search!"]
+                </div>
             </div>
             <div class="modal-footer">
                 <button tyoe="button" class="btn btn-primary" data-dismiss="modal">

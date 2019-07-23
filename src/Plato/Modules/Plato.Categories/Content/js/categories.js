@@ -295,6 +295,14 @@ $(function (win, doc, $) {
                     selectedIcon = $(this).val();
                 });
 
+                $modal.on('shown.bs.modal',
+                    function (e) {
+                        var $input = $modal.find('[type="search"]');
+                        if ($input.length > 0) {
+                            $input.focus();
+                        }
+                    });
+
                 $modal.on('hidden.bs.modal',
                     function (e) {
                         if (selectedIcon === null) {
