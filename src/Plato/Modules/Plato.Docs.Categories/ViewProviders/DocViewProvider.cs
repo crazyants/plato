@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
@@ -27,9 +28,7 @@ namespace Plato.Docs.Categories.ViewProviders
     {
 
         private const string CategoryHtmlName = "category";
-
-        private readonly ICategoryService<Category> _categoryService;
-
+        
         private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
         private readonly IEntityCategoryManager _entityCategoryManager;
         private readonly ICategoryDetailsUpdater _categoryDetailsUpdater;
@@ -56,8 +55,7 @@ namespace Plato.Docs.Categories.ViewProviders
             IPostManager<Doc> entityManager,
             IEntityStore<Doc> entityStore,
             IFeatureFacade featureFacade,
-            IContextFacade contextFacade,
-            ICategoryService<Category> categoryService)
+            IContextFacade contextFacade)
         {
             _request = httpContextAccessor.HttpContext.Request;
             _entityCategoryManager = entityCategoryManager;
@@ -67,7 +65,6 @@ namespace Plato.Docs.Categories.ViewProviders
             _featureFacade = featureFacade;
             _entityManager = entityManager;
             _contextFacade = contextFacade;
-            _categoryService = categoryService;
             _categoryStore = categoryStore;
             _entityStore = entityStore;
 
@@ -260,12 +257,10 @@ namespace Plato.Docs.Categories.ViewProviders
 
         }
         
-        public override async Task<bool> ValidateModelAsync(Doc doc, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Doc doc, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new CategoryInputViewModel
-            {
-                SelectedCategories = GetCategoriesToAdd()
-            });
+            // For docs categories are optional, we may have docs at the root not within any category
+            return Task.FromResult(true);
 
         }
 

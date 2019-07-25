@@ -45,66 +45,67 @@
     <div class="list-body">
         
         <div class="row">
+         
             <div class="col-12">
+                
+                <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold" title="@Model.Entity.Title">@Model.Entity.Title.TrimToAround(75)</a>
+                @if (Model.Entity.IsPinned)
+                {
+                    <span title="@T["This issue is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                        <i class="fal fa-thumbtack"></i>
+                    </span>
+                }
+                @if (Model.Entity.IsLocked)
+                {
+                    <span title="@T["This issue is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
+                        <i class="fal fa-lock"></i>
+                    </span>
+                }
 
-            @if (Model.Entity.LastReplyDate != null)
-            {
-                <div class="float-right">
-                    <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss"><date utc="@Model.Entity.LastReplyDate"></date></a>
-                </div>
-            }
-
-            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold">@Model.Entity.Title</a>
-            @if (Model.Entity.IsPinned)
-            {
-                <span title="@T["This issue is pinned and is probably important"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                    <i class="fal fa-thumbtack"></i>
-                </span>
-            }
-            @if (Model.Entity.IsLocked)
-            {
-                <span title="@T["This issue is locked and is not accepting new comments"]" data-toggle="tooltip" class="d-inline-block mx-1">
-                    <i class="fal fa-lock"></i>
-                </span>
-            }
-
-            @if (Model.Labels != null)
-            {
-                <span class="pl-2">
+                @if (Model.Labels != null)
+                {
+                 
                     @foreach (var label in Model.Labels)
                     {
-                        <a asp-route-area="Plato.Issues.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                        <a asp-route-area="Plato.Issues.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-xs label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
                         </a>
                     }
-                </span>
-            }
+              
+                }
             </div>
         </div>
         <div class="row">
             <div class="col-12">
 
 
+
                 @if (details?.LatestUsers != null)
                 {
-                    <div class="avatar-group float-right">
+                    <div class="avatar-group float-right ml-2">
                         @foreach (var user in details.LatestUsers)
                         {
                             var replies = user.TotalReplies == 1
                                 ? "reply"
                                 : "replies";
-                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/></a>
+                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@user.Id" asp-route-opts.alias="@user.Alias"><avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url" /></a>
                         }
                     </div>
 
                 }
-
+                
+                @if (Model.Entity.LastReplyDate != null)
+                {
+                    <div class="float-right">
+                        <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss"><date utc="@Model.Entity.LastReplyDate"></date></a>
+                    </div>
+                }
 
                 @if (Model.Entity.CreatedUserId > 0)
                 {
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>
                 }
-                <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
+                <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
                 @if (@Model.Category != null)
                 {
                     <span>@T["in"]</span>

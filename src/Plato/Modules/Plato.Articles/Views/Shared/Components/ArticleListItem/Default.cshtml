@@ -86,7 +86,7 @@
             <span class="pl-2">
                 @foreach (var label in Model.Labels)
                 {
-                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                    <a asp-route-area="Plato.Articles.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.labelId="@label.Id" asp-route-opts.alias="@label.Alias" title="@label.Description" class="btn btn-xs label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                         @label.Name
                     </a>
                 }
