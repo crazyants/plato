@@ -22,7 +22,7 @@ namespace Plato.Site.Controllers
         #region "Actions"
 
         // ---------------------
-        // Homepage
+        // Index / Home
         // ---------------------
 
         [HttpGet, AllowAnonymous]
@@ -33,6 +33,18 @@ namespace Plato.Site.Controllers
 
         }
 
+        // ---------------------
+        // Discuss
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Discuss()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+        
         #endregion
 
     }

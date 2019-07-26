@@ -1,8 +1,11 @@
 ﻿
+
 .bg-black { background: black; }
 .bg-black-75 { background: rgba(0,0,0, 0.75); }
 .bg-black-50 { background: rgba(0,0,0, 0.50); }
 .bg-black-25 { background: rgba(0,0,0, 0.25); }
+
+.bg-dark { background: #0a0a0a !important; }
 
 .bg-white { background: black; }
 .bg-white-75 { background: rgba(255,255,255, 0.75); }
@@ -85,9 +88,18 @@
 
 }
 
+.my-12, .mt-12 { margin-top: 12rem; }
+.my-12, .mb-12 { margin-bottom: 12rem; }
+.my-10, .mt-10 { margin-top: 10rem; }
+.my-10, .mb-10 { margin-bottom: 10rem; }
+.my-8, .mt-8 { margin-top: 8rem; }
+.my-8, .mb-8 { margin-bottom: 8rem; }
+.my-6, .mt-6 { margin-top: 6rem; }
+.my-6, .mb-6 { margin-bottom: 6rem; }
+
 .page .container {
     display: block;
-    margin: 12rem auto;
+    margin: 10rem auto;
 }
 
 
@@ -103,19 +115,33 @@ hr.light {
 
 /* Skewed Backgrounds */
 
-.skewed {
-    position: relative;
-}
-
-.skewed .bg-skewed {
+.skewed,
+.skewed-right .container {
     transform: skewY(-4deg);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
 }
 
-.skewed-right .bg-skewed {
+.skewed-right,
+.skewed .container {
     transform: skewY(4deg);
+   
 }
+
+
+ .grid-links a {
+     text-decoration: none;
+     color: #000;
+ }
+
+.grid-links a i {
+    color: #007BFF;
+}
+
+.grid-links a:hover {
+    background: #007BFF;
+    color: white;
+}
+
+.grid-links a:hover i {
+    color: white;
+}
+

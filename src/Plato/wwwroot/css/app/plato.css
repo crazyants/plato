@@ -57,8 +57,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .plato-brand-sm { padding: 3px; border-width: 3px; }
-.plato-brand-lg { padding: 8px; border-width: 8px; }
-.plato-brand-xl { padding: 20px; border-width: 20px; }
+.plato-brand-md { padding: 16px; border-width: 16px; }
+.plato-brand-lg { padding: 24px; border-width: 24px; }
+.plato-brand-xl { padding: 48px; border-width: 48px; }
 
 /* ------------------------- */
 /* Cursors */
@@ -104,6 +105,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .max-h-500 { max-height: 500px; }
 .max-h-550 { max-height: 550px; }
 .max-h-600 { max-height: 600px; }
+.max-h-700 { max-height: 700px; }
+.max-h-800 { max-height: 800px; }
 
 
 .w-90 { width: 90%; }

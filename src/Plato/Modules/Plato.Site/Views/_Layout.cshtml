@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Plato Setup</title>
-  
+
     <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
     <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
     <link rel="stylesheet" href="~/css/app/plato.css" />
@@ -14,9 +14,9 @@
 
     @await RenderSectionAsync("Header", required: false)
 </head>
-<body class="bg-black">
-    
-    <nav class="nav-site sticky-top">
+<body>
+
+    <nav class="nav-site sticky-top border-dark">
         <div class="navbar navbar-expand-lg navbar-dark bg-black">
             <div class="container-fluid py-2">
 
@@ -73,12 +73,93 @@
 
                 <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                     <div class="navbar-nav">
-                        <nav class="nav nav-pills">
-                            <a class="nav-link" href="#">Features</a>
-                            <a class="nav-link" href="#">Enterprise</a>
-                            <a class="nav-link" href="#">Support</a>
-                            <a class="nav-link" href="#">Pricing</a>
-                        </nav>
+
+                        <div class="nav nav-pills">
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle dropdown-toggle-no-caret" href="#" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="nav-text">
+                                        Features
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
+                                    <div class="nav-item">
+                                        <a class="dropdown-item" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
+                                            <i class="fal fa-comment-alt mr-2"></i>
+                                            <span class="nav-text">Discuss</span>
+                                        </a>
+                                    </div>
+                                    <div class="nav-item">
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                    <div class="nav-item">
+                                        <a class="dropdown-item" href="/u" aria-expanded="false"><i class="fal fa-user mr-2"></i><span class="nav-text">Users</span></a>
+                                    </div>
+                                    <div class="nav-item dropdown-submenu last">
+                                        <a class="dropdown-item" href="/b" aria-expanded="false">
+                                            <i class="fal fa-trophy mr-2"></i>
+                                            <span class="nav-text">Badges</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="/discuss" aria-expanded="false">
+                                    <i class="fal fa-comment-alt fa-flip-y"></i>
+                                    <span class="nav-text">
+                                        Pricing
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link docs text-hidden" href="/docs" aria-expanded="false" data-provide="tooltip" title="" data-original-title="Docs">
+                                    <i class="fal fa-book-open"></i>
+                                    <span class="nav-text">Docs</span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link articles text-hidden" href="/articles" aria-expanded="false" data-provide="tooltip" title="" data-original-title="Articles">
+                                    <i class="fal fa-copy"></i>
+                                    <span class="nav-text">Articles</span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link text-hidden" href="/questions" aria-expanded="false" data-provide="tooltip" title="" data-original-title="Questions">
+                                    <i class="fal fa-question-circle"></i>
+                                    <span class="nav-text">Questions</span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link text-hidden" href="/ideas" aria-expanded="false" data-provide="tooltip" title="" data-original-title="Ideas">
+                                    <i class="fal fa-lightbulb"></i>
+                                    <span class="nav-text">Ideas</span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link text-hidden" href="/issues" aria-expanded="false" data-provide="tooltip" title="" data-original-title="Issues">
+                                    <i class="fal fa-bug"></i>
+                                    <span class="nav-text">Issues</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item last">
+                                <div class="dropdown notifications-dropdown" data-provide="notificationsDropdown">
+                                    <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="" data-provide="tooltip" aria-haspopup="true" aria-expanded="false" data-original-title="Notifications">
+                                        <i class="fal fa-bell"></i>
+                                        <span class="badge badge-danger hidden anim anim-16x anim-infinite anim-pulse-in" data-provide="notificationsBadge"></span>
+                                        <span class="nav-text">Notifications</span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="notificationDropdown">
+                                        <div class="dropdown-header">
+                                            <a class="float-right text-muted" data-toggle="tooltip" title="" href="/notifications/edit" data-original-title="Settings"><i class="fal fa-cog"></i></a>
+                                            <h6>Notifications</h6>
+                                        </div>
+                                        <hr class="m-0">
+                                        <div data-provide="notifications"><a id="notification2717" class="dropdown-item p-2" href="http://localhost:50440/ideas/g/372/media-support-improvements/8922"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="" data-original-title="Jenny01"><span style="background-image: url(/u/l/j/00F19A);"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">1 hour ago</span><span class="float-right p-2 notification-dismiss" title="Delete" data-notification-id="2717"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Media Support Improvements</h6>A comment has been posted within am idea your following</span></a><a id="notification2709" class="dropdown-item p-2" href="http://localhost:50440/discuss/t/519/testing-follow-state"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="" data-original-title="Plato Bot"><span style="background-image: url(/images/bot.png);"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">1 hour ago</span><span class="float-right p-2 notification-dismiss" title="Delete" data-notification-id="2709"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Possible SPAM</h6>A topic has been detected as SPAM!</span></a><a id="notification2695" class="dropdown-item p-2" href="http://localhost:50440/discuss/g/581/what-does-plato-mean-for-instantforum-users/8919"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="" data-original-title="Jenny01"><span style="background-image: url(/u/l/j/00F19A);"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">14 hours ago</span><span class="float-right p-2 notification-dismiss" title="Delete" data-notification-id="2695"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">What does Plato mean for InstantForum users?</h6>A reply has been posted with a tag your following</span></a><a id="notification2691" class="dropdown-item p-2" href="http://localhost:50440/discuss/g/581/what-does-plato-mean-for-instantforum-users/8919"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="" data-original-title="Jenny01"><span style="background-image: url(/u/l/j/00F19A);"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">14 hours ago</span><span class="float-right p-2 notification-dismiss" title="Delete" data-notification-id="2691"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">New Mention</h6>You've been mentioned by Jenny01</span></a><a id="notification2689" class="dropdown-item p-2" href="http://localhost:50440/ideas/g/372/media-support-improvements/8917"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="" data-original-title="admin4"><span style="background-image: url(/u/l/a/96B98D);"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">15 hours ago</span><span class="float-right p-2 notification-dismiss" title="Delete" data-notification-id="2689"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Media Support Improvements</h6>A comment has been posted within am idea your following</span></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -136,17 +217,17 @@
             </div>
         </div>
     </nav>
-    
+
     <main class="d-flex flex-column" role="main">
         @RenderBody()
     </main>
-        
+
     <div class="row no-gutters bg-black">
         <div class="container">
             <footer class="pt-4 my-md-5 pt-md-5">
                 <div class="row">
                     <div class="col-12 col-md">
-                        
+
                         <a class="text-white" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
                             <span class="plato-brand mr-2"></span> @T["Plato"]
                         </a>
