@@ -117,6 +117,12 @@ hr.divider {
     border-color: #007BFF
 }
 
+hr.divider-left {
+    display: inline-block;
+    width: 3.25rem;
+}
+
+
 hr.light {
     border-color: #fff
 }
