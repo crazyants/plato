@@ -7,7 +7,7 @@
     });
 
     function getRnd(max) {
-        return Math.floor(Math.random() * Math.floor(max));
+        return Math.floor(Math.random() * Math.floor(max)) + 4;
     }
     
     function init(elCanvas) {

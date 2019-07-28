@@ -99,9 +99,16 @@
 
 .page .container {
     display: block;
-    margin: 10rem auto;
+    margin: 3rem auto;
 }
 
+/* full screen */
+@media (min-width: 992px) {
+    
+    .page .container {
+        margin: 8rem auto;
+    }
+}
 
 hr.divider {
     max-width: 3.25rem;
@@ -130,7 +137,29 @@ hr.light {
  .grid-links a {
      text-decoration: none;
      color: #000;
+     background: white;
+     border-width: 0;
+     border-bottom-width: 4px;
+     border-style: solid;
  }
+
+.grid-links a.discuss { border-color: #0069d9; }
+.grid-links a.discuss i { color: #0069d9; }
+
+.grid-links a.docs { border-color: #17a2b8; }
+.grid-links a.docs i { color: #17a2b8; }
+
+.grid-links a.articles { border-color: #28a745; }
+.grid-links a.articles i { color: #28a745; }
+
+.grid-links a.questions { border-color: #ffc107; }
+.grid-links a.questions i { color: #ffc107; }
+
+.grid-links a.ideas { border-color: #fd7e14; }
+.grid-links a.ideas i { color: #fd7e14; }
+
+.grid-links a.issues { border-color: #dc3545; }
+.grid-links a.issues i { color: #dc3545; }
 
 .grid-links a i {
     color: #007BFF;
@@ -145,3 +174,30 @@ hr.light {
     color: white;
 }
 
+.box-shadow {
+    box-shadow: 10px 10px 15px rgba(73, 78, 92, 0.1);
+}
+
+.ico-circle {
+    height: 112px;
+    width: 112px;
+    font-size: 2rem;
+    border-radius: 50%;
+    line-height: 1.55;
+    margin: 1.5rem auto;
+    text-align: center;
+    
+    border-width: 100px;
+    border-style: solid;
+    border-top-color: #007BFF;
+    border-left-color: #12BF67;
+    border-right-color: #E0E05E;
+    border-bottom-color: #DE3254;
+    display: block;
+}
+
+.ico-circle i {
+    line-height: 2;
+    font-size: 3rem;
+    color: #007BFF;
+}

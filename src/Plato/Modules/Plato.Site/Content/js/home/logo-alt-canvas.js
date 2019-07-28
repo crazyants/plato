@@ -2,18 +2,20 @@
 
     "use strict";
     
-    $('[data-provide="logo"]').each(function () {
+    $('[data-provide="logo-alt"]').each(function () {
         init($(this)[0]);
     });
-
+    
     function init(elCanvas) {
 
+     
         var engine = new win.BABYLON.Engine(elCanvas, true),
             lightPos = new win.BABYLON.Vector3(0, 8, 0),
             lightDiffuse = new win.BABYLON.Color3(1, 1, 1);
 
         // scene
         var scene = (() => {
+
 
             // Scene
             var scene = new win.BABYLON.Scene(engine);
@@ -70,13 +72,14 @@
             yellowMaterial.ambientColor = new win.BABYLON.Color3(0, 0, 0);
             yellowMaterial.alpha = 0.8;
 
+
             var alphaMaterial = new win.BABYLON.StandardMaterial("alphaMaterial", scene);
             alphaMaterial.alpha = 0;
 
             // meshes
             var torus = win.BABYLON.MeshBuilder.CreateBox('torus', { width: 1, height: 1, depth: 1 }, scene);
             torus.position.y = 0;
-            torus.position.x = 0.5;
+            torus.position.x = 0;
             torus.sideOrientation = win.BABYLON.Mesh.FRONTSIDE;
             torus.material = alphaMaterial;
 
@@ -84,41 +87,29 @@
             bulb.position = lightPos;
             bulb.material = alphaMaterial;
 
+            var redBox = win.BABYLON.MeshBuilder.CreateBox('redBox', { width: 3, height: 3, depth: 3 }, scene);
+            redBox.position.y = -1.5;
+            redBox.position.z = 1.5;
+            redBox.material = redMaterial;
 
-            // Coords
-            var matrix = [
-                new win.BABYLON.Vector2(0, 3),
-                new win.BABYLON.Vector2(0, -3),
-                new win.BABYLON.Vector2(1, -2),
-                new win.BABYLON.Vector2(1, 2),
-            ];
-
-            var polyMesh = new win.BABYLON.PolygonMeshBuilder("polytri2", matrix, scene);
-
-            var yellowBox = polyMesh.build(true, 1);
-            yellowBox.position.y = 3;
-            yellowBox.position.x = 1;
-
-            yellowBox.rotation.z = Math.PI / -2;
-            yellowBox.material = yellowMaterial;
-
-            var greenBox = polyMesh.build(true, 1);
-            greenBox.position.y = -3;
-            greenBox.rotation.z = Math.PI / 2;
+            var greenBox = win.BABYLON.MeshBuilder.CreateBox('greenBox', { width: 3, height: 3, depth: 3 }, scene);
+            greenBox.position.y = -1.5;
+            greenBox.position.z = -1.5;
             greenBox.material = greenMaterial;
 
-            var blueBox = polyMesh.build(true, 1);
-            blueBox.position.z = -3;
-            blueBox.rotation.y = Math.PI / -2;
-            blueBox.rotation.x = Math.PI / 2;
+            var blueBox = win.BABYLON.MeshBuilder.CreateBox('blueBox', { width: 3, height: 3, depth: 3 }, scene);
+            blueBox.position.z = -1.5;
+            blueBox.position.y = 1.5;
+            blueBox.position.x = 0;
             blueBox.material = blueMaterial;
 
-            var redBox = polyMesh.build(true, 1);
-            redBox.position.z = 3;
-            redBox.position.x = 1;
-            redBox.rotation.y = Math.PI / 2;
-            redBox.rotation.x = Math.PI / 2;
-            redBox.material = redMaterial;
+            var yellowBox = win.BABYLON.MeshBuilder.CreateBox('yellowBox', { width: 3, height: 3, depth: 3 }, scene);
+            yellowBox.position.z = 1.5;
+            yellowBox.position.x = 0;
+            yellowBox.position.y = 1.5;
+            yellowBox.material = yellowMaterial;
+
+
 
             // Merge lines into a single mesh
             var mesh = win.BABYLON.Mesh.MergeMeshes([yellowBox, greenBox, blueBox, redBox],
@@ -129,56 +120,9 @@
                 true);
             mesh.rotation.y = 0;
             mesh.rotation.x = Math.PI / 4;
+
             
-            // Particle system
-          
-            var particleSystem = new win.BABYLON.ParticleSystem("particles", 2000, scene);
 
-            //Texture of each particle
-            particleSystem.particleTexture =
-                new win.BABYLON.Texture("https://www.babylonjs-playground.com/textures/flare.png", scene);
-
-            // Where the particles come from
-            particleSystem.emitter = torus;
-            particleSystem.minEmitBox = new win.BABYLON.Vector3(-1, 10, 0); // Starting all from
-            particleSystem.maxEmitBox = new win.BABYLON.Vector3(1, 1, 1); // To...
-
-            // Colors of all particles
-            particleSystem.color1 = new win.BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
-            particleSystem.color2 = new win.BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-            particleSystem.colorDead = new win.BABYLON.Color4(0, 0, 0.2, 0.0);
-
-            // Size of each particle (random between...
-            particleSystem.minSize = 0.1;
-            particleSystem.maxSize = 0.4;
-
-            // Life time of each particle (random between...
-            particleSystem.minLifeTime = 0.3;
-            particleSystem.maxLifeTime = 20.5;
-
-            // Emission rate
-            particleSystem.emitRate = 50;
-            particleSystem.blendMode = win.BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-
-            // Set the gravity of all particles
-            particleSystem.gravity = new win.BABYLON.Vector3(0, -9.81, 0);
-
-            // Direction of each particle after it has been emitted
-            particleSystem.direction1 = new win.BABYLON.Vector3(-10, 10, 3);
-            particleSystem.direction2 = new win.BABYLON.Vector3(10, 10, -3);
-
-            // Angular speed, in radians
-            particleSystem.minAngularSpeed = 0;
-            particleSystem.maxAngularSpeed = Math.PI;
-
-            // Speed
-            particleSystem.minEmitPower = 0.5;
-            particleSystem.maxEmitPower = 1;
-            particleSystem.updateSpeed = 0.005;
-
-            // Start the particle system
-            particleSystem.start();
-            
             // Lights
 
             var light = new win.BABYLON.PointLight('light1', lightPos, scene);
@@ -189,19 +133,23 @@
 
             // Camera
 
-            var camera = new win.BABYLON.ArcRotateCamera('camera', Math.PI / 4, Math.PI * 3 / 8, 13, torus, scene, true);
-        
+            var camera = new win.BABYLON.ArcRotateCamera('camera', 0, Math.PI / 4, 12, torus, scene, true);
+            camera.upperBetaLimit = Math.PI * 3 / 4;
+            camera.wheelPrecision = 10;
+            camera.upperRadiusLimit = 40;
+            camera.lowerRadiusLimit = 5;
+                
             // Action
 
-            var t = 0.0,
-                i = 0.0;
+            var t = 0.0;
 
-            scene.registerBeforeRender(function() {
-                camera.alpha = 4.0 * (Math.PI / 10 + Math.cos(t / 20));
-                camera.beta = 2.0 * (Math.PI / 10 + Math.sin(t / 20));
-                t += 0.05;
+            scene.registerBeforeRender(function () {
+
+                mesh.rotation.y = t;
+                t += 0.01;
             });
-            
+
+            var i = 0;
             engine.runRenderLoop(() => {
                 i += 0.008;
                 lightPos.x = -Math.cos(i) * 8;

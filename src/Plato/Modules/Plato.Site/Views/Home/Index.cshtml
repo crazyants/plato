@@ -6,8 +6,8 @@
             <h1 class="display-4 text-white">
                 Plato
             </h1>
-            <hr class="divider border-primary" />
-            <h3 class="text-white font-weight-light my-4">
+            <hr class="divider border-primary my-4" />
+            <h3 class="text-white font-weight-light">
                 A free, open source, extensible community & support platform built upon .NET core
             </h3>
             <a class="btn btn-primary btn-lg" href="#about">Find Out More</a>
@@ -21,96 +21,97 @@
 
 <!-- Features -->
 <section class="page">
-
-    <div class="container">
-        <div class="p-5 text-center">
+    <div class="container p-0">
+        <div class="p-5 bg-white text-center">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="text-uppercase text-primary font-weight-bold">
+                    <canvas class="w-100 max-w-300  mb-3" data-provide="logo-stack"></canvas>
+                    <h1 class="text-uppercase display-4 text-primary font-weight-bold">
                         Support Made Simple
                     </h1>
-                    <hr class="divider primary my-4">ex
-                    <h3 class="text-muted font-weight-light">
-                        Plato offers simple tools to help you engage & support your users
+                    <hr class="divider primary my-4">
+                    <h3 class="font-weight-light">
+                        Plato offers a full stack of software to help you engage with & support your users
                     </h3>
                 </div>
             </div>
 
-            <div class="row my-5  grid-links">
+            <div class="row my-5 grid-links">
                 <div class="col-12">
                     <div class="row">
-                        <a class="col-lg-4 col-md-6 text-center" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <div class="my-5">
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 discuss text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
                                 <i class="fal fa-4x fa-comment-alt mb-4"></i>
                                 <strong class="d-block h4 mb-2">Discuss</strong>
                                 <span class="d-block mb-0">
-                                    Build a constructive user community
+                                    User Community
                                 </span>
-                            </div>
-                        </a>
-                        <a class="col-lg-4 col-md-6 text-center" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <div class="my-5">
+                            </a>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 docs text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
                                 <i class="fal fa-4x fa-book-open mb-4"></i>
                                 <strong class="d-block h4 mb-2">Docs</strong>
                                 <span class="d-block mb-0">
-                                    Create beautiful product documentation
+                                    Product documentation
                                 </span>
-                            </div>
-                        </a>
-                        <a class="col-lg-4 col-md-6 text-center" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <div class="my-5">
+                            </a>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 articles text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
                                 <i class="fal fa-4x fa-copy mb-4"></i>
                                 <strong class="d-block h4 mb-2">Articles</strong>
                                 <span class="d-block mb-0">
-                                    Offer an online knowledge base
+                                    Knowledge base
                                 </span>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
                     <div class="row">
-                        <a class="col-lg-4 col-md-6" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <span class="d-block my-5">
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 questions text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
+
                                 <i class="fal fa-4x fa-question-circle mb-4"></i>
                                 <strong class="d-block h4 mb-2">Questions</strong>
                                 <span class="d-block mb-0">
-                                    Private public or private Q&A
+                                    Questions & Answers
                                 </span>
-                            </span>
-                        </a>
-                        <a class="col-lg-4 col-md-6 text-center" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <span class="my-5 d-block ">
+
+                            </a>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 ideas text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
+
                                 <i class="fal fa-4x fa-lightbulb mb-4"></i>
                                 <strong class="d-block h4 mb-2">Ideas</strong>
                                 <span class="d-block mb-0">
-                                    Public or private ideation
+                                    Product Ideation
                                 </span>
-                            </span>
-                        </a>
-                        <a class="col-lg-4 col-md-6 text-center" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                            <span class="d-block my-5">
+
+                            </a>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <a class="d-block p-5 issues text-center box-shadow" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
                                 <i class="fal fa-4x fa-bug mb-4"></i>
                                 <strong class="d-block h4 mb-2">Issues</strong>
                                 <span class="d-block mb-0">
-                                    Public or private issue tracking
+                                    Issue tracking
                                 </span>
-                            </span>
-
-                        </a>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-12">
-                    <i class="fal fa-4x fa-plus text-primary mb-4"></i>
+                    <i class="fal fa-plus text-primary fa-4x mb-4"></i>
                     <h1 class="text-uppercase text-primary font-weight-bold">
                         Hundreds of Extra Modules
                     </h1>
                     <hr class="divider primary my-4">
                     <h3 class="text-muted font-weight-light">
                         Custom-fit Plato with hundreds of official modules. Add theming, notifications, reporting, social integrations & more with a single click via the dashboard.
-
                     </h3>
                     <a class="btn btn-primary btn-lg my-4" href="#">All Features</a>
                 </div>
@@ -125,9 +126,8 @@
     <div class="container">
         <div class="p-5">
             <div class="row">
-                <div class="col-12">
-                    <img alt="GitHub Octocat Logo" src="plato.site/content/images/octocat.png" class="img-md-fluid float-lg-right mx-md-auto max-w-300 d-inline-block ml-lg-3" />
-
+                <div class="col-12 text-center text-lg-left ">
+                    <img alt="GitHub Octocat Logo" src="plato.site/content/images/octocat.png" class="img-md-fluid float-none float-lg-right mx-md-auto max-w-300 d-inline-block ml-lg-3 mb-4 mb-lg-0" />
                     <h1 class="text-uppercase text-white font-weight-bold">
                         Get Involved
                     </h1>
@@ -140,16 +140,11 @@
                             Visit Plato on GitHub
                         </a>
                     </p>
-
-
                 </div>
             </div>
-
-
         </div>
     </div>
 </section>
-
 
 <!-- Live Demo -->
 <section class="page skewed">
@@ -157,20 +152,18 @@
         <div class="p-5 text-center">
             <div class="row">
                 <div class="col-12">
-                    <div class="plato-brand plato-brand-md mb-5"></div>
+                    <canvas class="w-100 max-w-300  mb-3" data-provide="logo-stack"></canvas>
                     <h1 class="text-uppercase text-primary font-weight-bold">
                         Explore The Demo
                     </h1>
-                    <hr class="divider primary" />
-                    <h4 class="font-weight-light my-4">
-                        Plato is free and open source. You can contribute to improve the project or just support Plato by staring the project on GitHub.
-                    </h4>
-                    <p>
-                        <a class="btn btn-primary btn-lg" href="https://github.com/InstantASP/plato">
-                            <i class="fab fa-github"></i>
-                            Visit Plato on GitHub
-                        </a>
-                    </p>
+                    <hr class="divider primary my-4" />
+                    <h3 class="font-weight-light">
+                        Take Plato for a spin. The demo provides access to a default administrator account so you can fully explore Plato. Questions? <a href="#">Get in touch</a>
+                    </h3>
+                    <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        Launch Demo <i class="fal fa-chevron-right"></i>
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -182,18 +175,18 @@
     <div class="container">
         <div class="p-5 text-center">
             <h1 class="text-uppercase text-white font-weight-bold">
-                Built with what you know & love
+                Built With
             </h1>
             <hr class="divider light my-4" />
             <div class="row">
-                <div class="col-lg-4 my-3">
-                    <img alt=".NET Core Logo" src="~/plato.site/content/images/netcore.png" class="img-fluid" style="max-width: 200px;" />
+                <div class="col-lg-4 mt-4">
+                    <img alt=".NET Core Logo" src="~/plato.site/content/images/netcore.png" class="img-fluid max-w-150" />
                 </div>
-                <div class="col-lg-4 my-3">
-                    <img alt="Visual Studio Logo" src="~/plato.site/content/images/vs.png" class="img-fluid" style="max-width: 200px;" />
+                <div class="col-lg-4 mt-4">
+                    <img alt="Visual Studio Logo" src="~/plato.site/content/images/vs.png" class="img-fluid max-w-150" />
                 </div>
-                <div class="col-lg-4 my-3">
-                    <img alt="Visual Studio Logo" src="~/plato.site/content/images/bootstrap.png" class="img-fluid" style="max-width: 200px;" />
+                <div class="col-lg-4 mt-4">
+                    <img alt="Visual Studio Logo" src="~/plato.site/content/images/bootstrap.png" class="img-fluid max-w-150" />
                 </div>
             </div>
 
@@ -204,22 +197,18 @@
 <!-- Coming Soon -->
 <section class="page">
     <div class="container">
-
-        <div class="p-5 text-center">
+        <div class="p-5 bg-white text-center">
             <div class="row">
                 <div class="col-12">
-                    <div class="plato-brand plato-brand-md mb-5"></div>
+                    <canvas class="w-100 max-w-300  mb-3" data-provide="logo-stack"></canvas>
                     <h1 class="text-uppercase text-primary font-weight-bold mt-4">
                         1.0 Coming Q3 2019
                     </h1>
                     <hr class="divider primary my-4">
                     <h3 class="font-weight-light">
-                        Plato is currently in development. Download and explore the code or follow the project on GibHub. We ar//e aiming for a 1.0 release very soon.
+                        Plato is currently in development. Download and explore the code or follow the project on GibHub. We are aiming for a 1.0 release Q3 2019.
                     </h3>
-                    <a class="btn btn-primary btn-lg mt-4" href="https://github.com/InstantASP/plato">
-                        <i class="fab fa-github"></i>
-                        Visit Plato on GitHub
-                    </a>
+
                 </div>
             </div>
 
@@ -227,65 +216,126 @@
     </div>
 </section>
 
-
-
-<!-- Made with love -->
-<section class="page skewed bg-black">
+<!-- Clients -->
+<section class="page" style="background: url(/plato.site/content/images/bg2.png) top left no-repeat;">
     <div class="container">
-        <div class="p-5 text-center">
+        <div class="p-5 bg-light text-center">
             <div class="row">
-                <div class="col-12">
-                    <h1 class="text-danger font-weight-light">
-                        Crated with 💛 by InstantASP
+                <div class="col-lg-6 mb-4">
+                    <i class="fal fa-server fa-4x text-info"></i>
+                    <h1 class="text-uppercase text-primary font-weight-bold mt-4">
+                        Managed Hosting
                     </h1>
+                    <h2 class="font-weight-bold text-muted">
+                        $100 USD <span class="small font-weight-light">/ month</span>
+                    </h2>
+                    <hr class="divider primary my-4" />
+
+                    <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        Launch Demo <i class="fal fa-chevron-right"></i>
+                    </a>
+
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <i class="fal fa-alarm-clock text-info fa-4x"></i>
+                    <h1 class="text-uppercase text-primary font-weight-bold mt-4">
+                        Enterprise Support
+                    </h1>
+                    <h2 class="font-weight-bold text-muted">
+                        $400 USD <span class="small font-weight-light">/ year</span>
+                    </h2>
+                    <hr class="divider primary my-4" />
+
+                    <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        Launch Demo <i class="fal fa-chevron-right"></i>
+                    </a>
 
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
+<!-- Pricing -->
+@*<section class="page" style="background: url(/plato.site/content/images/bg2.png) bottom left no-repeat;">
+    <div class="container">
+        <div class="p-5 bg-light text-center">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <i class="fal fa-server fa-4x text-info"></i>
+                    <h1 class="text-uppercase text-primary font-weight-bold mt-4">
+                        Managed Hosting
+                    </h1>
+                    <h2 class="font-weight-bold text-muted">
+                        $100 USD <span class="small font-weight-light">/ month</span>
+                    </h2>
+                    <hr class="divider primary my-4" />
 
-<!-- Questions 3 Columns -->
-<section class="flex-column flex-lg-row  bg-dark no-gutters d-flex overflow-hidden" style="margin-top: -3px;">
-    <div class="col-12 col-lg-4 align-self-start align-self-lg-center text-center">
-        <div class="my-12 mx-auto p-5 bg-primary max-w-600">
-            <h1 class="text-uppercase text-white font-weight-bold">
-                2000 Commits
-            </h1>
-            <hr class="divider light my-4" />
-            <h3 class="text-white font-weight-light my-4">
-                Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
-            </h3>
-            <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+                    <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        Launch Demo <i class="fal fa-chevron-right"></i>
+                    </a>
+
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <i class="fal fa-alarm-clock text-info fa-4x"></i>
+                    <h1 class="text-uppercase text-primary font-weight-bold mt-4">
+                        Enterprise Support
+                    </h1>
+                    <h2 class="font-weight-bold text-muted">
+                        $400 USD <span class="small font-weight-light">/ year</span>
+                    </h2>
+                    <hr class="divider primary my-4" />
+
+                    <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                        Launch Demo <i class="fal fa-chevron-right"></i>
+                    </a>
+
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-1 2order-1 text-center align-self-start align-self-lg-center text-center">
-        <div class="my-12 mx-auto p-5 bg-primary max-w-600">
-            <h1 class="text-uppercase text-white font-weight-bold">
-                2 Years
-            </h1>
-            <hr class="divider light my-4" />
-            <h3 class="text-white font-weight-light my-4">
-                Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
-            </h3>
-            <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+</section>*@
+
+
+@*Questions 3 Columns
+    <section class="flex-column flex-lg-row  bg-dark no-gutters d-flex overflow-hidden" style="margin-top: -3px;">
+        <div class="col-12 col-lg-4 align-self-start align-self-lg-center text-center">
+            <div class="my-12 mx-auto p-5 bg-primary max-w-600">
+                <h1 class="text-uppercase text-white font-weight-bold">
+                    2000 Commits
+                </h1>
+                <hr class="divider light my-4" />
+                <h3 class="text-white font-weight-light my-4">
+                    Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
+                </h3>
+                <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+            </div>
         </div>
-    </div>
-    <div class="col-lg-4 col-md-1 2order-1 text-center align-self-start align-self-lg-center text-center">
-        <div class="my-12 mx-auto p-5 bg-primary max-w-600">
-            <h1 class="text-uppercase text-white font-weight-bold">
-                1 Man
-            </h1>
-            <hr class="divider light my-4" />
-            <h3 class="text-white font-weight-light my-4">
-                Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
-            </h3>
-            <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+        <div class="col-lg-4 col-md-1 2order-1 text-center align-self-start align-self-lg-center text-center">
+            <div class="my-12 mx-auto p-5 bg-primary max-w-600">
+                <h1 class="text-uppercase text-white font-weight-bold">
+                    2 Years
+                </h1>
+                <hr class="divider light my-4" />
+                <h3 class="text-white font-weight-light my-4">
+                    Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
+                </h3>
+                <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+            </div>
         </div>
-    </div>
-</section>
+        <div class="col-lg-4 col-md-1 2order-1 text-center align-self-start align-self-lg-center text-center">
+            <div class="my-12 mx-auto p-5 bg-primary max-w-600">
+                <h1 class="text-uppercase text-white font-weight-bold">
+                    1 Man
+                </h1>
+                <hr class="divider light my-4" />
+                <h3 class="text-white font-weight-light my-4">
+                    Out the box Plato comes with fully responsive dark and light themes for Bootstrap 4.
+                </h3>
+                <a class="btn btn-light btn-lg" href="#about">Find Out More</a>
+            </div>
+        </div>
+    </section>*@
 
 
 
@@ -494,49 +544,6 @@
 
 
 
-    <!-- Pricing New -->
-    <section class="flex-row no-gutters full-page d-flex justify-content-center overflow-hidden skewed">
-
-        <div class="align-self-center">
-            <div class="p-5 bg-primary text-white text-center">
-                <div class="row text-center">
-                    <div class="col-12">
-                        <div class="card-deck mb-3 text-center">
-                            <div class="card border-radius-0 mt-5">
-                                <div class="card-header bg-primary  border-radius-0">
-                                    <h4 class="text-white font-weight-normal">
-                                        Source Code
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <h1 class="card-title text-primary">
-                                        $1299
-                                    </h1>
-
-                                    <button type="button" class="btn btn-lg btn-block btn-primary">Sign up for free</button>
-                                </div>
-                            </div>
-                            <div class="card border-radius-0 mt-5">
-                                <div class="card-header  border-radius-0 bg-primary">
-                                    <h4 class="text-white font-weight-normal">
-                                        Fully Managed
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <h1 class="card-title text-primary">
-                                        $15 <small class="text-muted">/ mo</small>
-                                    </h1>
-
-                                    <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
 
     <!-- Pricing -->
@@ -601,5 +608,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/4.0.3/babylon.js"></script>
     <script src="https://unpkg.com/earcut@2.1.1/dist/earcut.min.js"></script>
     <script src="plato.site/content/js/home/logo-canvas.js"></script>
+    <script src="plato.site/content/js/home/logo-alt-canvas.js"></script>
+    <script src="plato.site/content/js/home/logo-stack-canvas.js"></script>
     <script src="plato.site/content/js/home/plato-canvas.js"></script>
 }
