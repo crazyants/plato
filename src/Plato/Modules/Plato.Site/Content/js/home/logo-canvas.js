@@ -130,55 +130,6 @@
             mesh.rotation.y = 0;
             mesh.rotation.x = Math.PI / 4;
             
-            // Particle system
-          
-            var particleSystem = new win.BABYLON.ParticleSystem("particles", 2000, scene);
-
-            //Texture of each particle
-            particleSystem.particleTexture =
-                new win.BABYLON.Texture("https://www.babylonjs-playground.com/textures/flare.png", scene);
-
-            // Where the particles come from
-            particleSystem.emitter = torus;
-            particleSystem.minEmitBox = new win.BABYLON.Vector3(-1, 10, 0); // Starting all from
-            particleSystem.maxEmitBox = new win.BABYLON.Vector3(1, 1, 1); // To...
-
-            // Colors of all particles
-            particleSystem.color1 = new win.BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
-            particleSystem.color2 = new win.BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-            particleSystem.colorDead = new win.BABYLON.Color4(0, 0, 0.2, 0.0);
-
-            // Size of each particle (random between...
-            particleSystem.minSize = 0.1;
-            particleSystem.maxSize = 0.4;
-
-            // Life time of each particle (random between...
-            particleSystem.minLifeTime = 0.3;
-            particleSystem.maxLifeTime = 20.5;
-
-            // Emission rate
-            particleSystem.emitRate = 50;
-            particleSystem.blendMode = win.BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-
-            // Set the gravity of all particles
-            particleSystem.gravity = new win.BABYLON.Vector3(0, -9.81, 0);
-
-            // Direction of each particle after it has been emitted
-            particleSystem.direction1 = new win.BABYLON.Vector3(-10, 10, 3);
-            particleSystem.direction2 = new win.BABYLON.Vector3(10, 10, -3);
-
-            // Angular speed, in radians
-            particleSystem.minAngularSpeed = 0;
-            particleSystem.maxAngularSpeed = Math.PI;
-
-            // Speed
-            particleSystem.minEmitPower = 0.5;
-            particleSystem.maxEmitPower = 1;
-            particleSystem.updateSpeed = 0.005;
-
-            // Start the particle system
-            particleSystem.start();
-            
             // Lights
 
             var light = new win.BABYLON.PointLight('light1', lightPos, scene);
