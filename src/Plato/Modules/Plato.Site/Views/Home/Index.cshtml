@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Plato - Free, Open Source Community & Support Software built upon .NET core";
+}
+
+<!-- Jumbotron -->
 <section class="flex-column flex-lg-row bg-black no-gutters d-flex overflow-hidden" style="background: url(/plato.site/content/images/bg-home-header.png) top right no-repeat;">
     <div class="col-12 col-lg-6 align-self-start align-self-lg-center text-center">
         <div class="my-5 my-lg-0 mx-auto max-w-600">
@@ -20,7 +24,7 @@
 
 <!-- Features -->
 <section class="page">
-    <div class="container p-0">
+    <div class="container">
         <div class="p-5 bg-white text-center">
             <div class="row">
                 <div class="col-12">
@@ -34,68 +38,76 @@
                     </h3>
                 </div>
             </div>
-            <div class="row my-5 grid-links">
+            <div class="row my-5">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                                <i class="fal fa-4x fa-comment-alt mb-4"></i>
+                            <div class="d-block p-5 text-center border">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-comment-alt"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Discuss</strong>
                                 <span class="d-block mb-0">
                                     User Community
                                 </span>
-                            </a>
+                            </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                                <i class="fal fa-4x fa-book-open mb-4"></i>
+                            <div class="d-block p-5 text-center border">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-book-open"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Docs</strong>
                                 <span class="d-block mb-0">
-                                    Product documentation
+                                    Product Documentation
                                 </span>
-                            </a>
+                            </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                                <i class="fal fa-4x fa-copy mb-4"></i>
+                            <div class="d-block p-5 text-center border">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-copy"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Articles</strong>
                                 <span class="d-block mb-0">
-                                    Knowledge base
+                                    Knowledge Base
                                 </span>
-                            </a>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-
-                                <i class="fal fa-4x fa-question-circle mb-4"></i>
+                            <div class="d-block p-5 text-center border">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-question"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Questions</strong>
                                 <span class="d-block mb-0">
                                     Questions & Answers
                                 </span>
-
-                            </a>
+                            </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-
-                                <i class="fal fa-4x fa-lightbulb mb-4"></i>
+                            <div class="d-block p-5 text-center border">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-lightbulb"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Ideas</strong>
                                 <span class="d-block mb-0">
                                     Product Ideation
                                 </span>
-
-                            </a>
+                            </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <a class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
-                                <i class="fal fa-4x fa-bug mb-4"></i>
+                            <div class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
+                                <span class="icon-circle text-white mb-4">
+                                    <i class="fal fa-4x fa-bug"></i>
+                                </span>
                                 <strong class="d-block h4 mb-2">Issues</strong>
                                 <span class="d-block mb-0">
                                     Issue tracking
                                 </span>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,14 +122,17 @@
                     <h3 class="font-weight-light">
                         Custom-fit Plato with hundreds of official modules. Add theming, notifications, reporting, social integrations & more with a single click via the dashboard.
                     </h3>
-                    <a class="btn btn-primary btn-lg my-4" href="#">All Features</a>
+                    <a class="btn btn-primary btn-lg my-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features">
+                     
+                        Learn more about Plato
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Live Demo -->
+<!-- Explore The Demo -->
 <section class="page" style="background: url(/plato.site/content/images/bg-demo.png) top right no-repeat;">
     <div class="container">
         <div class="p-5 text-center bg-white">
@@ -141,7 +156,7 @@
     </div>
 </section>
 
-<!-- .NET Core -->
+<!-- Built Upon -->
 <section class="page bg-light">
     <div class="container">
         <div class="p-5 text-center">
@@ -189,7 +204,7 @@
     </div>
 </section>
 
-<!-- Services -->
+<!-- Managed Hosting -->
 <section class="page">
     <div class="container">
         <div class="p-5 bg-white">
@@ -203,8 +218,8 @@
                     <h3 class="font-weight-light">
                         Plato is free. Unfortunately data centers are not. We can host & manage Plato for you for a monthly fee.
                     </h3>
-                    <h2 class="font-weight-bold my-4">
-                        $100 USD <span class="small font-weight-light">/ month</span>
+                    <h2 class="font-weight-bold text-primary my-4">
+                        $100 USD <span class="small text-muted font-weight-light">/ month</span>
                     </h2>
                     <a class="btn btn-primary btn-lg" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
                         Learn More

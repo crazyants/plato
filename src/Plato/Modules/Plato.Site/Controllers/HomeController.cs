@@ -34,17 +34,30 @@ namespace Plato.Site.Controllers
         }
 
         // ---------------------
-        // Discuss
+        // Features
         // ---------------------
 
         [HttpGet, AllowAnonymous]
-        public Task<IActionResult> Discuss()
+        public Task<IActionResult> Features()
         {
             // Return view
             return Task.FromResult((IActionResult)View());
 
         }
-        
+
+        // ---------------------
+        // Pricing
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Pricing()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+
         #endregion
 
     }
