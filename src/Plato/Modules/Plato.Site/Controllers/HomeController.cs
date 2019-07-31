@@ -45,6 +45,20 @@ namespace Plato.Site.Controllers
 
         }
 
+
+        // ---------------------
+        // Modules
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Modules()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+
         // ---------------------
         // Pricing
         // ---------------------
