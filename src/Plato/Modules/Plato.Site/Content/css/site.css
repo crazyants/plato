@@ -24,6 +24,10 @@
 .bg-purple-50 { background: rgba(92, 45, 145, 0.50); }
 .bg-purple-25 { background: rgba(92, 45, 145, 0.25); }
 
+.bg-yellow { background: #ECDA0D !important }
+.text-yellow { color: #cccc0b !important }
+.border-yellow { border-color: #ECDA0D !important }
+
 .bg-primary-75 { background: rgba(0, 123, 255, 0.75); }
 .bg-primary-50 { background: rgba(0, 123, 255, 0.50); }
 .bg-primary-25 { background: rgba(0, 123, 255, 0.25); }
@@ -121,27 +125,23 @@ hr.light { border-color: #fff }
     width: 80px;
     height: 80px;
     display: inline-block;
-    border-radius: 50%;
-    background: #B2B2E8;
+    border-radius: 2px;
+    background: white;
     text-align: center;
     border: 2px solid white;
-    box-shadow: 0 0 0 3px #B2B2E8;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
     position: relative;
 }
 
 .icon-circle i {
-    font-size: 2rem;
+    font-size: 2.5rem;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-
-.border-bottom-4 {
-    border-bottom-width: 4px !important;
-}
-
-.border-bottom-primary {
-    border-bottom-color: #007BFF !important;
-}
+.border-top-4 { border-top-width: 4px !important; }
+.border-left-4 { border-left-width: 4px !important; }
+.border-right-4 { border-right-width: 4px !important; }
+.border-bottom-4 { border-bottom-width: 4px !important; }

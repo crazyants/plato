@@ -23,7 +23,7 @@ namespace Plato.Users.Notifications.Navigation
 
             builder
                 .Add(T["Notifications"], 4, profile => profile
-                    .Action("EditProfile", "Home", "Plato.Users.Notifications")
+                    .Action("Index", "Home", "Plato.Users.Notifications")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 );

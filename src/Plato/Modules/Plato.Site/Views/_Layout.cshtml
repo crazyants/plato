@@ -79,7 +79,6 @@
                                         Features
                                     </span>
                                 </a>
-                                
                             </div>
                             <div class="nav-item">
                                 <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules">
@@ -88,13 +87,7 @@
                                     </span>
                                 </a>
                             </div>
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
-                                    <span class="nav-text">
-                                        Pricing
-                                    </span>
-                                </a>
-                            </div>
+                           
                             <div class="nav-item">
                                 <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" target="_blank">
                                     <span class="nav-text">
@@ -106,6 +99,13 @@
                                 <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" target="_blank">
                                     <span class="nav-text">
                                         Support
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
+                                    <span class="nav-text">
+                                        Pricing
                                     </span>
                                 </a>
                             </div>
@@ -156,9 +156,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                                 </li>
-                                <li class="nav-item">
+                                @*<li class="nav-item">
                                     <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
-                                </li>
+                                </li>*@
                             </ul>
                         }
                     </div>

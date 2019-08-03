@@ -49,7 +49,7 @@ namespace Plato.Users.Notifications
                 name: "EditUserNotifications",
                 areaName: "Plato.Users.Notifications",
                 template: "notifications/edit",
-                defaults: new { controller = "Home", action = "EditProfile" }
+                defaults: new { controller = "Home", action = "Index" }
             );
 
         }

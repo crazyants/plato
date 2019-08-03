@@ -23,6 +23,7 @@ namespace Plato.Users.Notifications.Controllers
     public class HomeController : Controller, IUpdateModel
     {
 
+
         private readonly IViewProviderManager<EditNotificationsViewModel> _editProfileViewProvider;
         private readonly INotificationTypeManager _notificationTypeManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -56,7 +57,7 @@ namespace Plato.Users.Notifications.Controllers
 
         }
 
-        public async Task<IActionResult> EditProfile()
+        public async Task<IActionResult> Index()
         {
             
             // We need to be authenticated to access notification settings
@@ -124,8 +125,8 @@ namespace Plato.Users.Notifications.Controllers
 
         }
 
-        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditProfile))]
-        public async Task<IActionResult> EditProfilePost(EditNotificationsViewModel model)
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Index))]
+        public async Task<IActionResult> Index(EditNotificationsViewModel model)
         {
 
             var user = await _userManager.FindByIdAsync(model.Id.ToString());
@@ -146,7 +147,7 @@ namespace Plato.Users.Notifications.Controllers
             if (ModelState.IsValid)
             {
                 _alerter.Success(T["Notifications Updated Successfully!"]);
-                return RedirectToAction(nameof(EditProfile));
+                return RedirectToAction(nameof(Index));
             }
             
             // if we reach this point some view model validation
@@ -159,7 +160,7 @@ namespace Plato.Users.Notifications.Controllers
                 }
             }
 
-            return await EditProfile();
+            return await Index();
 
         }
 
