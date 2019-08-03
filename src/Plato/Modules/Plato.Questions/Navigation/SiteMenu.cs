@@ -20,7 +20,7 @@ namespace Plato.Questions.Navigation
             {
                 return;
             }
-            
+
             builder
                 .Add(T["Questions"], 4, discuss => discuss
                         .IconCss("fal fa-question-circle")
@@ -28,13 +28,13 @@ namespace Plato.Questions.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["Questions"]}
                         })
-                        //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                       , new List<string>() { "questions", "text-hidden" }
+                    , new List<string>() {"questions", "text-hidden"}
                 );
-            
+
         }
 
     }

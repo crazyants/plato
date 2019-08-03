@@ -23,7 +23,7 @@ namespace Plato.Ideas.Navigation
             {
                 return;
             }
-            
+
             builder
                 .Add(T["Ideas"], 5, ideas => ideas
                         .IconCss("fal fa-lightbulb")
@@ -31,11 +31,11 @@ namespace Plato.Ideas.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["Ideas"]}
                         })
-                        //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                       , new List<string>() { "ideas", "text-hidden" }
+                    , new List<string>() {"ideas", "text-hidden"}
                 );
 
         }

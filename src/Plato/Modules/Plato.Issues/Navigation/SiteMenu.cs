@@ -21,7 +21,7 @@ namespace Plato.Issues.Navigation
             {
                 return;
             }
-            
+
             builder
                 .Add(T["Issues"], 7, issues => issues
                         .IconCss("fal fa-bug")
@@ -29,14 +29,15 @@ namespace Plato.Issues.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["Issues"]}
                         })
-                        //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                       , new List<string>() { "articles",  "text-hidden" }
+                    , new List<string>() {"articles", "text-hidden"}
                 );
 
         }
+
     }
 
 }

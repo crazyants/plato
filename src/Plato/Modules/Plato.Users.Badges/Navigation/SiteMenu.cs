@@ -30,30 +30,18 @@ namespace Plato.Users.Badges.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["More"]}
                         })
                         .Add(T["Badges"], int.MaxValue, installed => installed
                             .Action("Index", "Home", "Plato.Users.Badges")
                             .IconCss("fal fa-trophy mr-2")
-                            //.Permission(Permissions.ManageRoles)
                             .LocalNav()
                         ), new List<string>() { "dropdown-toggle-no-caret", "navigation", "text-hidden" }
                 );
 
-
-            //builder
-            //    .Add(T["Badges"], int.MaxValue - 10, badges => badges
-            //            .Action("Index", "Home", "Plato.Users.Badges")
-            //            .IconCss("fal fa-trophy")
-            //            //.Permission(Permissions.ManageRoles)
-            //            .Attributes(new Dictionary<string, object>()
-            //            {
-            //                {"data-provide", "tooltip"},
-            //                {"title", T["Badges"]}
-            //            })
-            //            .LocalNav()
-            //        , new List<string>() { "badges", "text-hidden" });
         }
+
     }
 
 }

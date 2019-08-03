@@ -24,9 +24,9 @@
 .bg-purple-50 { background: rgba(92, 45, 145, 0.50); }
 .bg-purple-25 { background: rgba(92, 45, 145, 0.25); }
 
-.bg-yellow { background: #ECDA0D !important }
-.text-yellow { color: #cccc0b !important }
-.border-yellow { border-color: #ECDA0D !important }
+.bg-yellow { background: #E9DC0A !important }
+.text-yellow { color: #CDCD00 !important }
+.border-yellow { border-color: #E9DC0A !important }
 
 .bg-primary-75 { background: rgba(0, 123, 255, 0.75); }
 .bg-primary-50 { background: rgba(0, 123, 255, 0.50); }
@@ -141,7 +141,55 @@ hr.light { border-color: #fff }
     transform: translate(-50%, -50%);
 }
 
+
 .border-top-4 { border-top-width: 4px !important; }
 .border-left-4 { border-left-width: 4px !important; }
 .border-right-4 { border-right-width: 4px !important; }
 .border-bottom-4 { border-bottom-width: 4px !important; }
+
+.border-top-6 { border-top-width: 6px !important; }
+.border-left-6 { border-left-width: 6px !important; }
+.border-right-6 { border-right-width: 6px !important; }
+.border-bottom-6 { border-bottom-width: 6px !important; }
+
+
+.img-thumbnail {
+    position: relative;
+    display: inline-block;
+}
+
+
+a.img-thumbnail .img-caption {
+    position: absolute;
+    display: block;
+    bottom: 0;
+    left: 0;
+    text-align: left;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    color: white;
+    z-index: 1;
+    transition: opacity 0.50s ease;
+    opacity: 0;
+    border-radius: 0.25rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+a.img-thumbnail:hover .img-caption {
+    opacity: 1;
+}
+
+
+.accordion a[data-toggle="collapse"] .fa-chevron-right {
+    transition: transform .35s ease;
+}
+
+.accordion a[data-toggle="collapse"] .fa-chevron-right {
+    transform: rotate(0);
+}
+
+.accordion a[data-toggle="collapse"][aria-expanded="true"] .fa-chevron-right {
+    transform: rotate(90deg);
+}

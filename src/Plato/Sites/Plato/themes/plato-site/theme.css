@@ -449,13 +449,16 @@ a.label:hover, .label.active {
 
 .list-group-item-action.active .category-icon,
 .list-group-item-action:hover .category-icon {
-    background-color: #EAF4FF;
-    color: #007bff;
+    
+ 
 }
 
 .category-icon {
-    background-color: #EAF4FF;
-    color: #007bff;
+    border-radius: 2px;
+    background: #007BFF;
+    border: solid 1px white;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    color: white;
 }
 
 /* ------------------- */
@@ -583,19 +586,5 @@ a.label:hover, .label.active {
     background-color: white;
 }
 
-.category-icon {
-    display: inline-block;
-    background: white;
-    border: 1px solid white;
-    box-shadow: 0 0 0 2px #ddd;
-    position: relative;
-    color: #B2B2E8;
-    border-radius: 2px;
-}
-
-.category-icon-sm {
-    box-shadow: 0 0 0 1px #ddd;
-}
-
-core-layout .core-header,
-core-layout .core-tools{ display: none; }
+.core-layout .layout-header,
+.core-layout .layout-tools { display: none; }

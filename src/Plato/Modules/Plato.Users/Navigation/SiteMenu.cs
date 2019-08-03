@@ -28,6 +28,7 @@ namespace Plato.Users.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["More"]}
                         })
                         .Add(T["Users"], int.MaxValue - 1, installed => installed

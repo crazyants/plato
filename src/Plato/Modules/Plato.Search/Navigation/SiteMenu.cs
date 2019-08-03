@@ -30,6 +30,7 @@ namespace Plato.Search.Navigation
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
+                            {"data-placement", "bottom"},
                             {"title", T["More"]}
                         })
                         .Add(T["Search"], 0, search => search

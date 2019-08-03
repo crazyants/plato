@@ -19,7 +19,7 @@
     <assets section="Body" />
     <scripts section="Body" />
 
-    
+
     <!-- Site Nav  -->
     <nav class="nav-site">
         <div class="navbar navbar-expand-lg navbar-dark bg-black">
@@ -170,10 +170,13 @@
     </nav>
 
     <!-- Plato Nav  -->
-    <nav class="nav-site bg-light">
+    <nav class="nav-site bg-white">
         <div class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid container-fluid-1280">
-                <div class="navbar-mobile flex-row w-100">
+                <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand">
+                    @siteOpts.SiteName
+                </a>
+                <div class="navbar-mobile">
                     <div class="navbar-nav w-100">
                         <ul class="nav nav-pills align-self-end">
                             <li class="nav-item nav-item-bars">
@@ -189,166 +192,197 @@
                         </ul>
                     </div>
                 </div>
-                <div class="navbar-search collapse mr-4" id="search-collapse">
+                <div class="navbar-search d-lg-none collapse mr-4" id="search-collapse">
                     <navigation name="site-search" class="nav nav-search" />
                 </div>
                 <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                     <div class="navbar-nav">
-                        
-                        <div class="nav nav-pills">
-                            <div class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" data-toggle="dropdown" aria-expanded="false" data-provide="tooltip" title="Explore" data-placement="bottom">
-                                    <i class="fal fa-bars"></i>
-                                    <span class="nav-text">More</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-comment-alt"></i>
-                                            <span class="nav-text">Discuss</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-book-open"></i>
-                                            <span class="nav-text">Docs</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-copy"></i>
-                                            <span class="nav-text">Articles</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-question-circle"></i>
-                                            <span class="nav-text">Questions</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-lightbulb"></i>
-                                            <span class="nav-text">Ideas</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-bug"></i>
-                                            <span class="nav-text">Issues</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <div class="dropdown-divider"></div>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-search mr-2"></i>
-                                            <span class="nav-text">Search</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <div class="dropdown-divider"></div>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-user mr-2"></i>
-                                            <span class="nav-text">Users</span>
-                                        </a>
-                                    </div>
-                                    <div class="nav-item">
-                                        <a asp-route-area="Plato.Users.Badges" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
-                                            <i class="fal fa-trophy mr-2"></i>
-                                            <span class="nav-text">Badges</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @if (this.CurrentUser != null)
-                        {
-                            <div class="nav-item">
-                                <div class="dropdown notifications-dropdown" data-provide="notificationsDropdown">
-                                    <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="Notifications" data-provide="tooltip" aria-haspopup="true" aria-expanded="false" data-placement="bottom">
-                                        <i class="fal fa-bell"></i>
-                                        <span class="badge badge-danger hidden anim anim-16x anim-infinite anim-pulse-in" data-provide="notificationsBadge"></span>
-                                        <span class="nav-text">Notifications</span>
+
+                        @*<div class="nav nav-pills">
+                                <div class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" data-toggle="dropdown" aria-expanded="false" data-provide="tooltip" title="Explore" data-placement="bottom">
+                                        <i class="fal fa-bars"></i>
+                                        <span class="nav-text">More</span>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="notificationDropdown">
-                                        <div class="dropdown-header">
-                                            <a asp-route-area="Plato.Users.Notifications" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted" data-toggle="tooltip" title="Settings" data-placement="bottom">
-                                                <i class="fal fa-cog"></i>
+                                    <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-comment-alt"></i>
+                                                <span class="nav-text">Discuss</span>
                                             </a>
-                                            <h6>Notifications</h6>
                                         </div>
-                                        <hr class="m-0">
-                                        <div data-provide="notifications">
-                                            <p class="text-center"><i class="fal fa-spinner fa-spin"></i></p></div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-book-open"></i>
+                                                <span class="nav-text">Docs</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-copy"></i>
+                                                <span class="nav-text">Articles</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-question-circle"></i>
+                                                <span class="nav-text">Questions</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-lightbulb"></i>
+                                                <span class="nav-text">Ideas</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-bug"></i>
+                                                <span class="nav-text">Issues</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <div class="dropdown-divider"></div>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-search mr-2"></i>
+                                                <span class="nav-text">Search</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <div class="dropdown-divider"></div>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-user mr-2"></i>
+                                                <span class="nav-text">Users</span>
+                                            </a>
+                                        </div>
+                                        <div class="nav-item">
+                                            <a asp-route-area="Plato.Users.Badges" asp-route-controller="Home" asp-route-action="Index" class="dropdown-item">
+                                                <i class="fal fa-trophy mr-2"></i>
+                                                <span class="nav-text">Badges</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                        </div>
+                            @if (this.CurrentUser != null)
+                            {
+                                <div class="nav-item">
+                                    <div class="dropdown notifications-dropdown" data-provide="notificationsDropdown">
+                                        <a class="nav-link dropdown-toggle dropdown-toggle-no-caret text-hidden" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="Notifications" data-provide="tooltip" aria-haspopup="true" aria-expanded="false" data-placement="bottom">
+                                            <i class="fal fa-bell"></i>
+                                            <span class="badge badge-danger hidden anim anim-16x anim-infinite anim-pulse-in" data-provide="notificationsBadge"></span>
+                                            <span class="nav-text">Notifications</span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="notificationDropdown">
+                                            <div class="dropdown-header">
+                                                <a asp-route-area="Plato.Users.Notifications" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted" data-toggle="tooltip" title="Settings" data-placement="bottom">
+                                                    <i class="fal fa-cog"></i>
+                                                </a>
+                                                <h6>Notifications</h6>
+                                            </div>
+                                            <hr class="m-0">
+                                            <div data-provide="notifications">
+                                                <p class="text-center"><i class="fal fa-spinner fa-spin"></i></p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            </div>*@
 
-
-                        @*<navigation name="site"
+                        <navigation name="site"
                                     class="nav nav-pills"
-                                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"/>*@
+                                    child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
 
                     </div>
                 </div>
-                <div class="navbar-user">
-                    <div class="navbar-nav">
-                        @if (this.CurrentUser != null)
-                        {
-                            <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="form-inline">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item dropdown account">
-                                        <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" id="accountDropDown" data-toggle="dropdown" data-provide="tooltip" title="@T["Account"]">
-                                            <avatar class="avatar avatar-sm" style="width: 28px; height: 28px;" url="@this.CurrentUser.Avatar.Url" />
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="accountDropDown">
-                                            <div class="p-3">
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
-                                                    <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
-                                                </a>
-                                                <h6 class="d-inline-block align-middle max-w-150 text-truncate" title="@this.CurrentUser.DisplayName">@this.CurrentUser.DisplayName</h6>
+                @*<div class="navbar-user">
+                        <div class="navbar-nav">
+                            @if (this.CurrentUser != null)
+                            {
+                                <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="form-inline">
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item dropdown account">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" id="accountDropDown" data-toggle="dropdown" data-provide="tooltip" title="@T["Account"]">
+                                                <avatar class="avatar avatar-sm" style="width: 28px; height: 28px;" url="@this.CurrentUser.Avatar.Url" />
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="accountDropDown">
+                                                <div class="p-3">
+                                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
+                                                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
+                                                        <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
+                                                    </a>
+                                                    <h6 class="d-inline-block align-middle max-w-150 text-truncate" title="@this.CurrentUser.DisplayName">@this.CurrentUser.DisplayName</h6>
+                                                </div>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
+                                                <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
+                                                <authorize asp-permission="AdminAccess">
+                                                    <authorize-success>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
+                                                    </authorize-success>
+                                                </authorize>
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                             </div>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
-                                            <authorize asp-permission="AdminAccess">
-                                                <authorize-success>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
-                                                </authorize-success>
-                                            </authorize>
-                                            <div class="dropdown-divider"></div>
-                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                                        </div>
-                                    </li>
+                                        </li>
 
+                                    </ul>
+                                </form>
+                            }
+                            else
+                            {
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                                    </li>
                                 </ul>
-                            </form>
-                        }
-                        else
-                        {
-                            <ul class="nav nav-pills">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
-                                </li>
-                            </ul>
-                        }
+                            }
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </nav>
+
+    @if (RouteEquals("Plato.Core", "Home", "Index"))
+    {
+        <div class="bg-light border-bottom mb-2">
+            <div class="container-fluid container-fluid-1280 py-5">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="font-weight-light">
+                            @T["How can we help?"]
+                        </h1>
+                        <form class="form-inline mt-4" asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+                            <div class="w-80 mx-auto position-relative min-w-250">
+                                <div class="search-input-group">
+                                    <input data-provide="searchAutoComplete" type="search" class="form-control" autocomplete="off" placeholder="Search for keywords..." id="Search" name="Search" value="" />
+                                    <div id="searchResults" class="dropdown-menu dropdown-menu-no-arrow w-100" role="menu">
+                                        <p class="text-center">
+                                            <i class="fal fa-spinner fa-spin"></i>
+                                        </p>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" role="button">
+                                        <i class="fal fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
+    }
 
     <div class="container-fluid container-fluid-1280 pt-2">
         @if (platoOpts.DemoMode)
