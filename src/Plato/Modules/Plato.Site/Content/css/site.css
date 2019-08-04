@@ -38,6 +38,16 @@
 .bg-info-50 { background: rgba(23, 162, 184, 0.50); }
 .bg-info-25 { background: rgba(23, 162, 184, 0.25); }
 
+
+.bg-primary-sm {
+    padding: 3em 0;
+    background: #007BFF; 
+    background: linear-gradient(135deg,#007BFF 0,#007BFF 100%); 
+    background-size: 85%; 
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
 /* Borders */
 
 .border-top-4 { border-top-width: 4px !important; }
@@ -111,7 +121,8 @@ hr.light { border-color: #fff }
     margin: 0;
 }
 
-.page .container {
+.page .container,
+.page .container-fluid {
     display: block;
     margin: 3rem auto;
 }
@@ -119,7 +130,8 @@ hr.light { border-color: #fff }
 /* full screen */
 @media (min-width: 992px) {
     
-    .page .container {
+    .page .container,
+    .page .container-fluid {
         margin: 8rem auto;
     }
 }
