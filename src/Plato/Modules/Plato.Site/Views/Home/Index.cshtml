@@ -3,7 +3,7 @@
 }
 
 <!-- Jumbotron -->
-<section class="flex-column flex-lg-row bg-black no-gutters d-flex overflow-hidden" style="background: url(/plato.site/content/images/bg-home-header.png) top right no-repeat;">
+<section class="flex-column flex-lg-row no-gutters d-flex overflow-hidden">
     <div class="col-12 col-lg-6 align-self-start align-self-lg-center text-center">
         <div class="my-5 my-lg-0 mx-auto max-w-600">
             <canvas data-provide="logo" class="w-100"></canvas>
@@ -25,7 +25,7 @@
 <!-- Features -->
 <section class="page" style="background: url(/plato.site/content/images/bg14.png) bottom right no-repeat;">
     <div class="container">
-        <div class="p-5 bg-white text-center">
+        <div class="p-5 text-center">
             <div class="row">
                 <div class="col-12">
                     <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
@@ -34,7 +34,7 @@
                     </h1>
                     <hr class="divider primary my-4">
                     <h3 class="font-weight-light">
-                        Plato offers a full stack of software to help you engage with & support your users
+                        Plato offers a full stack of software to help you collaborate with & support your users
                     </h3>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <span class="icon-circle bg-primary mb-4">
                                     <i class="fal fa-4x fa-comment-alt text-white"></i>
                                 </span>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <span class="icon-circle bg-info mb-4">
                                     <i class="fal fa-4x fa-book-open text-white"></i>
                                 </span>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <span class="icon-circle bg-success mb-4">
                                     <i class="fal fa-4x fa-copy text-white"></i>
                                 </span>
@@ -77,7 +77,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <span class="icon-circle bg-yellow mb-4">
                                     <i class="fal fa-4x fa-question text-white"></i>
                                 </span>
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <span class="icon-circle bg-warning mb-4">
                                     <i class="fal fa-4x fa-lightbulb text-white"></i>
                                 </span>
@@ -99,7 +99,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
+                            <div class="d-block p-5 text-center bg-white border" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Discuss">
                                 <span class="icon-circle bg-danger mb-4">
                                     <i class="fal fa-4x fa-bug text-white"></i>
                                 </span>
@@ -114,18 +114,20 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <i class="fal fa-plus text-primary fa-4x mb-4"></i>
-                    <h1 class="text-uppercase text-primary font-weight-bold">
-                        Hundreds of Modules
-                    </h1>
-                    <hr class="divider primary my-4">
-                    <h3 class="font-weight-light">
-                        Custom-fit Plato with hundreds of official modules. Add theming, notifications, reporting, social integrations & more with a single click via the dashboard.
-                    </h3>
-                    <a class="btn btn-primary btn-lg my-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features">
-                     
-                        Learn more about Plato
-                    </a>
+                    <div class="p-5 bg-white">
+                        <i class="fal fa-plus text-primary fa-4x mb-4"></i>
+                        <h1 class="text-uppercase text-primary font-weight-bold">
+                            Hundreds of Modules
+                        </h1>
+                        <hr class="divider primary my-4">
+                        <h3 class="font-weight-light">
+                            Custom-fit Plato with hundreds of official modules. Add theming, notifications, reporting, social integrations & more with a single click via the dashboard.
+                        </h3>
+                        <a class="btn btn-primary btn-lg my-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features">
+
+                            Learn more about Plato
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

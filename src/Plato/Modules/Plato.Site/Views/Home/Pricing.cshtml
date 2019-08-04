@@ -2,250 +2,172 @@
     ViewData["Title"] = "Plato - Pricing";
 }
 
-<!-- Jumbotron -->
-<section class="flex-column d-flex text-center bg-light">
-    <div class="row">
-        <div class="col-12">
-            <div class="my-6 mx-auto">
-                <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
-                <h1 class="text-uppercase display-4 text-primary font-weight-bold">
-                    Pricing from free? Yes, please!
-                </h1>
-                <hr class="divider border-primary" />
-                <h2 class="font-weight-light my-4">
-                    Plato is 100% free, open source software. Forever. If you prefer we can host & manage things for you.
-                </h2>
+<div style="background: url(/plato.site/content/images/bg18.png) top center no-repeat;">
+
+
+    <!-- Jumbotron -->
+    <section class="flex-column d-flex text-center bg-white">
+        <div class="row">
+            <div class="col-12">
+                <div class="my-6 mx-auto">
+                    <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
+                    <h1 class="text-uppercase display-4 text-primary font-weight-bold">
+                        Pricing from free? Yes, please!
+                    </h1>
+                    <hr class="divider border-primary" />
+                    <h2 class="font-weight-light my-4">
+                        Plato is 100% free, open source software. Forever. If you prefer we can host & manage things for you.
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Plans -->
+    <section class="page">
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-12 col-lg-4 mb-5 mb-lg-0">
+                    <div class="card text-center border-radius-0 border-0 box-shadow">
+                        <div class="card-header bg-primary border-0">
+                            <h3 class="text-white">Free</h3>
+                            <h3 class="text-white">$0 forever</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                For teams or individuals wanting to host Plato on their own infrastructure for an unlimited period of time.
+                            </p>
+                            <ol class="list-inline">
+                                <li class="d-block p-3 pt-0">
+                                    Self hosted
+                                </li>
+                                <li class="d-block p-3">
+                                    Full source code
+                                </li>
+                                <li class="d-block p-3">
+                                    All standard modules
+                                </li>
+                                <li class="d-block p-3">
+                                    MIT License
+                                </li>
+                                <li class="d-block p-3">
+                                    Documentation
+                                </li>
+                                <li class="d-block p-3">
+                                    Community support
+                                </li>
+                            </ol>
+                            <a href="#" class="btn btn-lg btn-primary mt-2">
+                                <i class="fab fa-github"></i> Install from GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 mb-5 mb-lg-0">
+                    <div class="card text-center border-radius-0 border-0 box-shadow">
+                        <div class="card-header bg-success border-0">
+                            <h3 class="text-white">Standard</h3>
+                            <h3 class="text-white">$100 / mo</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                For teams and businesses ready to make Plato the hub for their customer support and collaboration.
+                            </p>
+                            <ol class="list-inline">
+                                <li class="d-block p-3 pt-0">
+                                    Managed hosting within Azure
+                                </li>
+                                <li class="d-block p-3">
+                                    <strong>100K</strong> page views per month
+                                </li>
+                                <li class="d-block p-3">
+                                    <strong>10GB</strong> of storage
+                                </li>
+                                <li class="d-block p-3">
+                                    <strong>Unlimited</strong> users & posts
+                                </li>
+                                <li class="d-block p-3">
+                                    Use your domain
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Use a custom top level or sub domain of your choice ensuring a consistent experience for your users."></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    SSL
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Your Plato installation will be protected by SSL by default."></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    Email + Phone support
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
+                                </li>
+                            </ol>
+                            <a href="#" class="btn btn-lg btn-primary mt-2">
+                                Buy Now
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-4 mb-5 mb-lg-0">
+                    <div class="card text-center border-radius-0 border-0 box-shadow">
+                        <div class="card-header bg-danger border-0">
+                            <h3 class="text-white">Business</h3>
+                            <h3 class=" text-white">$300 / mo</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                For businesses needing all standard features plus single sign on, remote access and high availability.
+                            </p>
+                            <ol class="list-inline">
+                                <li class="d-block p-3 pt-0">
+                                    Managed hosting within Azure
+                                </li>
+                                <li class="d-block p-3">
+                                    <strong>500K</strong> page views per month
+                                </li>
+                                <li class="d-block p-3">
+                                    <strong>50GB</strong> of storage
+                                </li>
+                                <li class="d-block p-3 pt-0">
+                                    Single Sign On
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Adds additional support for OAuth2 & SAML authentication"></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    Business modules
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Includes IP Guard, GDPR Notice, Staff Notes, Canned Replies, Assignees & more..."></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    Remote Data Access
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Provide full access to your Plato database to assist with reporting and compliance requirements."></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    Geo redundancy
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Your data is replicated in real-time across two geographically distinct data centers with near real-time fail-over"></i>
+                                </li>
+                                <li class="d-block p-3">
+                                    Email + Phone support
+                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
+                                </li>
+                            </ol>
+                            <a href="#" class="btn btn-lg btn-primary mt-2">
+                                Buy Now
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
         </div>
+    </section>
 
-    </div>
-</section>
-
-<!-- Plans -->
-<div class="page">
-    <div class="container">
-        <div class="row mt-4">
-            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
-                <div class="card text-center border-radius-0 border-left-0 border-right-0 border-bottom-0 border-top-6 border-primary box-shadow">
-                    <div class="card-body">
-                        <h3 class="text-primary">Free</h3>
-                        <h3 class="text-muted">$0 forever</h3>
-                        <hr />
-                        <p>
-                            For teams or individuals wanting to host Plato on their own infrastructure for an unlimited period of time.
-                        </p>
-                        <ol class="list-inline">
-                            <li class="d-block p-3 pt-0">
-                                Self hosted
-                            </li>
-                            <li class="d-block p-3">
-                                Full source code
-                            </li>
-                            <li class="d-block p-3">
-                                All standard modules
-                            </li>
-                            <li class="d-block p-3">
-                                MIT License
-                            </li>
-                            <li class="d-block p-3">
-                                Documentation
-                            </li>
-                            <li class="d-block p-3">
-                                Community support
-                            </li>
-                        </ol>
-                        <a href="#" class="btn btn-lg btn-primary mt-2">
-                            <i class="fab fa-github"></i> Install from GitHub
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
-                <div class="card text-center border-radius-0 border-left-0 border-right-0 border-bottom-0 border-top-6 border-success box-shadow">
-                    <div class="card-body">
-                        <h3 class="text-success">Standard</h3>
-                        <h3 class="text-muted">$100 / mo</h3>
-                        <hr />
-                        <p>
-                            For teams and businesses ready to make Plato the hub for their customer support and collaboration.
-                        </p>
-                        <ol class="list-inline">
-                            <li class="d-block p-3 pt-0">
-                                Managed hosting within Azure
-                            </li>
-                            <li class="d-block p-3">
-                                <strong>100K</strong> page views per month
-                            </li>
-                            <li class="d-block p-3">
-                                <strong>10GB</strong> of storage
-                            </li>
-                            <li class="d-block p-3">
-                                <strong>Unlimited</strong> users & posts
-                            </li>
-                            <li class="d-block p-3">
-                                Use your domain
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Use a custom top level or sub domain of your choice ensuring a consistent experience for your users."></i>
-                            </li>
-                            <li class="d-block p-3">
-                                SSL
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Your Plato installation will be protected by SSL by default."></i>
-                            </li>
-                            <li class="d-block p-3">
-                                Email + Phone support
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
-                            </li>
-                        </ol>
-                        <a href="#" class="btn btn-lg btn-primary mt-2">
-                            Buy Now
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
-                <div class="card text-center border-radius-0 border-left-0 border-right-0 border-bottom-0 border-top-6 border-danger box-shadow">
-                    <div class="card-body">
-                        <h3 class="text-danger">Business</h3>
-                        <h3 class=" text-muted">$300 / mo</h3>
-                        <hr />
-                        <p>
-                            For businesses needing all standard features plus single sign on, remote access and high availability.
-                        </p>
-                        <ol class="list-inline">
-                            <li class="d-block p-3 pt-0">
-                                Managed hosting within Azure
-                            </li>
-                            <li class="d-block p-3">
-                                <strong>500K</strong> page views per month
-                            </li>
-                            <li class="d-block p-3">
-                                <strong>50GB</strong> of storage
-                            </li>
-                            <li class="d-block p-3 pt-0">
-                                Single Sign On
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Adds additional support for OAuth2 & SAML authentication"></i>
-                            </li>
-                            <li class="d-block p-3">
-                                Business modules
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Includes IP Guard, GDPR Notice, Staff Notes, Canned Replies, Assignees & more..."></i>
-                            </li>
-                            <li class="d-block p-3">
-                                Remote Data Access
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Provide full access to your Plato database to assist with reporting and compliance requirements."></i>
-                            </li>
-                            <li class="d-block p-3">
-                                Geo redundancy
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Your data is replicated in real-time across two geographically distinct data centers with near real-time fail-over"></i>
-                            </li>
-                            <li class="d-block p-3">
-                                Email + Phone support
-                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
-                            </li>
-                        </ol>
-                        <a href="#" class="btn btn-lg btn-primary mt-2">
-                            Buy Now
-                        </a>
-
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
 </div>
-
-<!-- Brand -->
 <section class="page bg-light">
     <div class="container">
+
+        <!-- Security -->
         <div class="row">
             <div class="col-12 text-center">
-                <img alt="Plato Logo" src="/plato.site/content/images/instantasp-logo.png" class="img-md-fluid mx-md-auto max-w-80 d-inline-block ml-lg-3 mb-4 mb-lg-0" />
-                <h1 class="text-uppercase font-weight-bold mt-4 text-primary">
-                    A brand you can trust
-                </h1>
-                <h3 class="font-weight-light">
-                    Plato is developed and maintained by <a href="https://www.instantasp.co.uk/">InstantASP</a>.
-                </h3>
-                <hr class="divider border-primary" />
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="flex-column flex-lg-row d-flex justify-content-center align-items-center w-100 text-center bg-primary-sm">
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-clock"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                24/7/365
-                            </h5>
-                            <hr class="divider border-primary" />
-                            All our hosted customers get a response within 24 hours (usually less) directly from our product developers.
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-angle-double-up"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                18 Years
-                            </h5>
-                            <hr class="divider border-primary" />
-                            Established in 2001 we've been in busines developing community & support software for over 18 years.
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-heart"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                20,000 Customers
-                            </h5>
-                            <hr class="divider border-primary" />
-                            We strive to support those that support us.
-                            Over the years we've helped over 20,000 happy customers.
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-chart-bar"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Proven Results
-                            </h5>
-                            <hr class="divider border-primary" />
-                            We've helped thousands of companies deliver simple user communities & customer support.
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Security -->
-<section class="page bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <img alt="Plato Logo" src="/plato.site/content/images/logo.png" class="img-md-fluid mx-md-auto max-w-80 d-inline-block ml-lg-3 mb-4 mb-lg-0" />
                 <h1 class="text-uppercase font-weight-bold mt-4 text-primary">
                     Security you can trust
                 </h1>
@@ -256,162 +178,197 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="flex-column flex-lg-row d-flex justify-content-center align-items-center w-100 text-center bg-primary-sm">
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-lock"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                SSL
-                            </h5>
-                            <hr class="divider border-primary" />
-                            All our hosting plans come standard with SSL ensuring secure connections.
-                        </div>
-
+            <div class="flex-column flex-lg-row d-flex justify-content-lg-center align-items-start align-items-lg-center w-100 text-center bg-primary-85-percent">
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-lock"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            SSL
+                        </h5>
+                        <hr class="divider border-primary" />
+                        All our hosting plans come standard with SSL ensuring secure connections.
                     </div>
                 </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-shield"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Encryption
-                            </h5>
-                            <hr class="divider border-primary" />
-                            Your data is protected by enterprise class encryption both in transit and at rest.
-                        </div>
-
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-shield"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Encryption
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Your data is protected by enterprise class encryption both in transit and at rest.
                     </div>
                 </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-server"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Azure Hosted
-                            </h5>
-                            <hr class="divider border-primary" />
-                            All our customers are hosted within Microsoft operated data centers.
-                        </div>
-
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-server"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Azure Hosted
+                        </h5>
+                        <hr class="divider border-primary" />
+                        All our customers are hosted within Microsoft operated data centers.
                     </div>
                 </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-code"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Open Source
-                            </h5>
-                            <hr class="divider border-primary" />
-                            Our code is open source and peer reviewed. We have nothing to hide.
-                        </div>
-
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-code"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Open Source
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Our code is open source and peer reviewed. We have nothing to hide.
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
-</section>
-
-<!-- Reliability -->
-<section class="page bg-light">
-    <div class="container">
-        <div class="row">
+        <!-- Reliability -->
+        <div class="row mt-4">
             <div class="col-12 text-center">
-                <img alt="Plato Logo" src="/plato.site/content/images/logo.png" class="img-md-fluid mx-md-auto max-w-80 d-inline-block ml-lg-3 mb-4 mb-lg-0" />
                 <h1 class="text-uppercase font-weight-bold mt-4 text-primary">
                     Reliability you can trust
                 </h1>
                 <h3 class="font-weight-light">
-                    99.99% guaranteed uptime
+                    Backed by our 99.99% guaranteed up-time
                 </h3>
                 <hr class="divider border-primary" />
             </div>
         </div>
         <div class="row mt-4">
-            <div class="flex-column flex-lg-row d-flex justify-content-center align-items-center w-100 text-center bg-primary-sm">
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-lock"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Monitoring
-                            </h5>
-                            <hr class="divider border-primary" />
-                            All our hosting plans come standard with SSL ensuring secure connections.
-                        </div>
+            <div class="flex-column flex-lg-row d-flex justify-content-lg-center align-items-start align-items-lg-center w-100 text-center bg-primary-85-percent">
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-bell"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Monitoring
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Monitored for availability 24/7 from 5 different geo-graphic regions.
+                    </div>
 
+                </div>
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-bezier-curve"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Replication
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Real-time data replication across 2 geo-graphically distinct data centers.
                     </div>
                 </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-shield"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Backups
-                            </h5>
-                            <hr class="divider border-primary" />
-                            Your data is protected by enterprise class encryption both in transit and at rest.
-                        </div>
-
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-cloud"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Redundancy
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Multiple levels of redundancy guarantee a 99.99% hosted service up-time.
                     </div>
                 </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-server"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                Relication
-                            </h5>
-                            <hr class="divider border-primary" />
-                            All our customers are hosted within Microsoft operated data centers.
-                        </div>
-
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-save"></i>
                     </div>
-                </div>
-                <div class="col-12 col-lg-3">
-                    <div class="bg-white py-5 px-4 text-center box-shadow">
-                        <div class="icon-circle">
-                            <i class="fal fa-code"></i>
-                        </div>
-                        <div class="d-block">
-                            <h5 class="font-weight-bold text-primary text-uppercase mt-4">
-                                
-                            </h5>
-                            <hr class="divider border-primary" />
-                            Our code is open source and peer reviewed. We have nothing to hide.
-                        </div>
-
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Backups
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Automated back-ups are taken every 24 hours and stored encrypted off site.
                     </div>
                 </div>
             </div>
 
         </div>
+        <!-- Brand -->
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <h1 class="text-uppercase font-weight-bold mt-4 text-primary">
+                    A brand you can trust
+                </h1>
+                <h3 class="font-weight-light">
+                    Plato is developed and maintained by <a href="https://www.instantasp.co.uk/">InstantASP</a>.
+                </h3>
+                <hr class="divider border-primary" />
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="flex-column flex-lg-row d-flex justify-content-start justify-content-lg-center align-items-start align-items-lg-center w-100 text-center bg-primary-85-percent">
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-clock"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            24/7/365
+                        </h5>
+                        <hr class="divider border-primary" />
+                        All our hosted customers get a response within 24 hours (usually less) directly from our product developers.
+                    </div>
+                </div>
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-angle-double-up"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            18 Years
+                        </h5>
+                        <hr class="divider border-primary" />
+                        Established in 2001 we've been in busines developing community & support software for over 18 years.
+                    </div>
+                </div>
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-heart"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            20,000 Customers
+                        </h5>
+                        <hr class="divider border-primary" />
+                        We strive to support those that support us.
+                        Over the years we've helped over 20,000 happy customers.
+                    </div>
+                </div>
+                <div class="bg-white w-100 mx-2 py-5 px-4 text-center box-shadow">
+                    <div class="icon-circle">
+                        <i class="fal fa-chart-bar"></i>
+                    </div>
+                    <div class="d-block">
+                        <h5 class="font-weight-bold text-primary text-uppercase mt-4">
+                            Proven Results
+                        </h5>
+                        <hr class="divider border-primary" />
+                        We've helped thousands of companies deliver simple user communities & customer support.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-
 <!-- FAQ -->
-<section class="page bg-white" style="background: url(/plato.site/content/images/bg1.png) bottom right no-repeat;">
+<section class="page bg-white">
     <div class="container">
         <div class="row text-center">
             <div class="col-12">
+                <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
                 <h1 class="text-uppercase text-primary font-weight-bold">
                     Frequently Asked Questions
                 </h1>
@@ -592,5 +549,26 @@
             </div>
         </div>
 
+    </div>
+</section>
+
+
+<!-- Call to action -->
+<section class="page bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-uppercase font-weight-bold text-white">
+                    Enterprise Support
+                </h1>
+                <h3 class="font-weight-light text-white">
+                    If your self hosting Plato and need dedicated, priority support we would love to assist.
+                </h3>
+                <hr class="divider border-light"/>
+                <a class="btn btn-light text-primary btn-lg mt-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
+                    Contact Us
+                </a>
+            </div>
+        </div>
     </div>
 </section>

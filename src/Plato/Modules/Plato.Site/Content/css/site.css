@@ -39,13 +39,19 @@
 .bg-info-25 { background: rgba(23, 162, 184, 0.25); }
 
 
-.bg-primary-sm {
-    padding: 3em 0;
-    background: #007BFF; 
-    background: linear-gradient(135deg,#007BFF 0,#007BFF 100%); 
-    background-size: 85%; 
-    background-repeat: no-repeat;
-    background-position: center center;
+
+/* full screen */
+@media (min-width: 992px) {
+
+    .bg-primary-85-percent {
+        padding: 3em 0;
+        background: #007BFF; 
+        background: linear-gradient(135deg,#007BFF 0,#007BFF 100%); 
+        background-size: 85%; 
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+    
 }
 
 /* Borders */
@@ -201,6 +207,7 @@ a.img-thumbnail:hover .img-caption {
     opacity: 1;
 }
 
+/* Accordion */
 
 .accordion a[data-toggle="collapse"] .fa-chevron-right {
     transition: transform .35s ease;
