@@ -25,6 +25,7 @@ namespace Plato.Internal.Modules.Locator
         private const string AuthorSection = "author";
         private const string WebsiteSection = "website";
         private const string TagsSection = "tags";
+        private const string IconSection = "icon";
         private const string AntiForgerySection = "antiforgery";
         private const string ZonesSection = "zones";
         private const string BaseThemeSection = "basetheme";
@@ -194,6 +195,7 @@ namespace Plato.Internal.Modules.Locator
                 Author = GetValue(manifest, AuthorSection),
                 WebSite = GetValue(manifest, WebsiteSection),
                 Tags = GetValue(manifest, TagsSection),
+                Icon = GetValue(manifest, IconSection),
                 Dependencies = GetModuleDependencies(manifest, DependenciesSection)
             };
 
@@ -270,6 +272,9 @@ namespace Plato.Internal.Modules.Locator
                             break;
                         case TagsSection:
                             manifest.Add(TagsSection, field[1]);
+                            break;
+                        case IconSection:
+                            manifest.Add(IconSection, field[1]);
                             break;
                         case AntiForgerySection:
                             manifest.Add(AntiForgerySection, field[1]);

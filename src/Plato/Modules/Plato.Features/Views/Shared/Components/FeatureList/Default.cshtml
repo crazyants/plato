@@ -84,6 +84,11 @@
                     <li class="list-group-item list-group-item-action">
                         <div class="row">
                             <div class="col-lg-9">
+
+                                @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
+                                {
+                                    <img class="max-w-40 float-left my-3 mr-3" src="@feature.Descriptor.Icon" />
+                                }
                                 <h6>
                                     @feature.Descriptor.Name
                                     @if (!String.IsNullOrEmpty(feature.Version))

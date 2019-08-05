@@ -92,7 +92,7 @@ namespace Plato.Internal.Modules.Loader
                 
             }
 
-            // recursive lookup
+            // Recursive lookup
             var subFolders = Directory.GetDirectories(path);
             for (var i = 0; i <= subFolders.Length - 1; i++)
             {
@@ -132,5 +132,7 @@ namespace Plato.Internal.Modules.Loader
         }
 
         #endregion
+
     }
+
 }

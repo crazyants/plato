@@ -454,13 +454,17 @@ a.label:hover, .label.active {
 }
 
 .category-icon {
-    border-radius: 2px;
-    background: #007BFF;
+    border-radius: 50%;
+    background: #96C9FF;
     border: solid 1px white;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
     color: white;
+    border: 1px solid white;
+    box-shadow: 0 0 0 10px rgba(0,0,0,0.1);
 }
 
+.category-icon-sm {
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
 /* ------------------- */
 /* Vote Toggle */
 /* ------------------- */

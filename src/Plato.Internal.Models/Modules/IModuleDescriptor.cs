@@ -24,6 +24,8 @@ namespace Plato.Internal.Models.Modules
 
         string Tags { get; set; }
         
+        string Icon { get; set; }
+
         string Location { get; set; }
            
         string Path { get; set; }

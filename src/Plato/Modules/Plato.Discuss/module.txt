@@ -4,6 +4,7 @@ Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss
 PlatoVersion: 1.0.0
+Icon: /plato.discuss/content/images/icon.png
 Version: 1.0.0
 Dependencies: 
 [
