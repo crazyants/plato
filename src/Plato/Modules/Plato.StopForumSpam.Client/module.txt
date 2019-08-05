@@ -5,3 +5,4 @@ WebSite: https://www.instantasp.co.uk/
 Category: Spam
 PlatoVersion: 1.0.0
 Version: 1.0.0
+Icon: /plato.stopforumspam.client/content/images/icon.png
