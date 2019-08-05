@@ -5,3 +5,4 @@ WebSite: https://www.instantasp.co.uk/
 Category: Users
 PlatoVersion: 1.0.0
 Version: 1.0.4
+Icon: /plato.users.badges/content/images/icon.png

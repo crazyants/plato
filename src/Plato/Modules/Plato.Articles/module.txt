@@ -5,6 +5,7 @@ WebSite: https://www.instantasp.co.uk/
 Category: Articles
 Version: 1.0.0
 PlatoVersion: 1.0.0
+Icon: /plato.articles/content/images/icon.png
 Dependencies: 
 [
 	{
