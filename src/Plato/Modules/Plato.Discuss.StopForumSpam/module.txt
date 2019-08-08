@@ -1,5 +1,5 @@
 Name: Plato Discuss StopForumSpam
-Description: Adds StopForumSpam checks when posting new topics or replies within the discuss module.
+Description: Adds StopForumSpam checks when posting new topics or replies.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss
