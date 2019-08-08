@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Features
+@model FeaturesIndexViewModel
+
+
+@foreach (var option in Model.AvailableCategories.Where(c => c.Text != "All"))
+{
+    <h4 class="my-4">@option.Text</h4>
+    <hr/>
+    <div class="list-group list-group-flush">
+        <div class="row no-gutters">
+            @{
+                var features = Model.Features?
+                    .Where(f => f.Descriptor.Category.Equals(option.Text, StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(o => o.Descriptor.Name);
+            }
+            @if (features != null)
+            {
+                foreach (var feature in features)
+                {
+                    <div class="float-left list-group-item col-12 col-lg-4 col-md-6 border-0">
+                   
+                 
+                        @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
+                        {
+                        <div class="list-left">
+                            <img class="max-w-40 my-3" src="@feature.Descriptor.Icon" />
+                        </div>
+                            
+                        }
+                        <div class="list-body">
+                            <h6>@feature.Descriptor.Name</h6>
+                            @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
+                            {
+                                @feature.Descriptor.Description<br/>
+                            }
+                        </div>
+                        </div>
+                 
+
+                }
+            }
+            else
+            {
+                <div class="list-group-item">
+                    @T["No features available!"]
+                </div>
+            }
+
+        </div>
+    </div>
+
+}

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Plato.Features.ViewModels
+@{
     ViewData["Title"] = "Plato - Built for Extension";
 }
 
@@ -24,16 +25,41 @@
     </div>
 </section>
 
-
-<!-- Modules -->
 <section class="page">
     <div class="container">
-        <div class="p-5 bg-white text-center">
+        
+        
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-uppercase text-primary font-weight-bold">
+                    All Modules
+                </h1>
+                <h3 class="font-weight-light">
+                    All modules listed below are official modules and provided out of the box with Plato.
+                </h3>
+                <hr class="divider primary my-4">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @await DisplayAsync(new View("SiteModuleList", new
+                {
+                    options = new FeatureIndexOptions()
+                }))
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modules System -->
+<section class="page bg-light">
+    <div class="container">
+
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
                     <h1 class="text-uppercase text-primary font-weight-bold">
-                        The Plato Module System
+                        The Module System
                     </h1>
                     <hr class="divider primary my-4">
                 </div>
@@ -42,7 +68,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <strong class="d-block h4 mb-2">
                                     Auto Discovery
                                 </strong>
@@ -62,7 +88,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border border">
+                            <div class="d-block p-5 text-center  bg-white border">
                                 <strong class="d-block h4 mb-2">Auto Upgrades</strong>
                                 <span class="d-block mb-0">
                                     Plato offers automated detection and upgrading of out of date modules.
@@ -72,7 +98,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <strong class="d-block h4 mb-2">
                                     Events & Messages
                                 </strong>
@@ -82,7 +108,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <strong class="d-block h4 mb-2">Interfaces</strong>
                                 <span class="d-block mb-0">
                                     Plato exposes hundreds of interfaces developers can implement to extend Plato.
@@ -90,7 +116,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="d-block p-5 text-center border border">
+                            <div class="d-block p-5 text-center bg-white border">
                                 <strong class="d-block h4 mb-2">Versioning</strong>
                                 <span class="d-block mb-0">
                                     As modules are versioned they can be released independently of the Plato core.
@@ -101,7 +127,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <img src="~/plato.site/content/images/octocat-icon.png" alt="GitHub Octocat Logo" title="GitHub Octocat Logo" class="max-w-100 mb-4" />
                     <h1 class="text-uppercase text-primary font-weight-bold">
                         Browse all official modules on GitHub
@@ -112,12 +138,12 @@
                     </a>
                 </div>
             </div>
-        </div>
+
     </div>
 </section>
 
 
-<!-- Discuss -->
+@*<!-- Discuss -->
 <section class="flex-column flex-lg-row bg-white no-gutters full-page d-flex overflow-hidden" style="margin-top: -3px;">
     <div class="col-12 order-lg-2 col-lg-6 align-self-start align-self-lg-center text-center">
         <div class="my-5 my-lg-0 mx-auto p-5 bg-primary max-w-600">
@@ -278,7 +304,7 @@
 
         </div>
     </div>
-</section>
+</section>*@
 
 <!-- Features -->
 @*<section class="page bg-black">
@@ -375,7 +401,7 @@
         </div>
     </section>*@
 
-<!-- Bootstrap -->
+@*<!-- Bootstrap -->
 <section class="flex-column flex-lg-row bg-white no-gutters full-page d-flex overflow-hidden" style="margin-top: -3px;">
     <div class="col-12 order-lg-2 col-lg-6 align-self-start align-self-lg-center text-center">
         <div class="my-5 my-lg-0 mx-auto p-5 bg-primary max-w-600">
@@ -425,13 +451,5 @@
 
         </div>
     </div>
-</section>
+</section>*@
 
-
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/4.0.3/babylon.js"></script>
-    <script src="https://unpkg.com/earcut@2.1.1/dist/earcut.min.js"></script>
-    <script src="~/plato.site/content/js/home/logo-canvas.js"></script>
-    <script src="~/plato.site/content/js/home/logo-stack-canvas.js"></script>
-    <script src="~/plato.site/content/js/home/plato-canvas.js"></script>
-}

@@ -2,7 +2,7 @@ Name: Plato Categories
 Description: Adds core data services to allow you to organize entities into categories.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Categories
 PlatoVersion: 1.0.0
 Version: 1.0.0
 Icon: /plato.categories/content/images/icon.png

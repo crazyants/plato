@@ -1,0 +1,199 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Features
+@model FeaturesIndexViewModel
+@{
+    var enablePermission = Permissions.EnableFeatures;
+    var disablePermission = Permissions.DisableFeatures;
+    SelectListItem currentCategory = null;
+}
+
+<input type="hidden" name="category" value="@Model.Options.Category" />
+
+<div class="modal fade" id="featureCategories" tabindex="-1" role="dialog" aria-labelledby="searchHelpTitle" aria-hidden="true">
+    <div class="modal-dialog modal-right" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="searchHelpTitle">
+                    @T["Categories"]
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-auto p-0">
+
+                <div class="list-group list-group-flush list-group-hover">
+                    @foreach (var option in Model.AvailableCategories)
+                    {
+                        var isEqualWithValue = option.Value?.Equals(Model.Options.Category, StringComparison.OrdinalIgnoreCase);
+                        var isCurrent = isEqualWithValue ?? Model.Options.Category == option.Value;
+                        if (isCurrent)
+                        {
+                            currentCategory = option;
+                        }
+                        var iconCss = isCurrent
+                            ? "fal fa-fw fa-check"
+                            : "fal fa-fw";
+                        var css = isCurrent
+                            ? "list-group-item list-group-item-action border-0 active"
+                            : "list-group-item list-group-item-action border-0";
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["action"] = "Index",
+                            ["opts.category"] = option.Value?.ToLower(),
+                        };
+
+                            <a class="@css" href="@GetRouteUrl(routeValues)">
+                                <i class="@iconCss"></i>
+                                @T[option.Text]
+                            </a>
+                   
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title d-inline-block">@T["Features"]</h6>
+        <div class="nav navbar p-0 float-right">
+            <div class="nav-item">
+                <a href="#" data-toggle="modal" data-provide="tooltip" title="@T["Browse By Category"]" data-target="#featureCategories" class="nav-link text-muted">
+                    @if (currentCategory != null)
+                    {
+                        @currentCategory.Text
+                    }
+                    <i class="fal fa-bars ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </card-title>
+    <card-body>
+
+        <ul class="list-group list-group-flush list-group-hover">
+            @{
+                var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
+            }
+            @if (features != null)
+            {
+                foreach (var feature in features)
+                {
+                    <li class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-lg-9">
+
+                                @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
+                                {
+                                    <img class="max-w-40 float-left my-3 mr-3" src="@feature.Descriptor.Icon" />
+                                }
+                                <h6>
+                                    @feature.Descriptor.Name
+                                    @if (!String.IsNullOrEmpty(feature.Version))
+                                    {
+                                        <span class="badge badge-secondary badge-pill">
+                                            @feature.Version
+                                        </span>
+                                    }
+                                </h6>
+
+                                @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
+                                {
+                                    @feature.Descriptor.Description<br />
+                                }
+
+                                @if (!string.IsNullOrEmpty(feature.Descriptor.Category))
+                                {
+                                    <div class="text-muted">
+                                        @T["By"]
+                                        @if (!string.IsNullOrEmpty(feature.Descriptor.WebSite))
+                                        {
+                                            <a href="@feature.Descriptor.WebSite" target="_blank">@feature.Descriptor.Author</a>
+                                        }
+                                        else
+                                        {
+                                            @feature.Descriptor.Author
+                                        }
+                                        @if (!string.IsNullOrEmpty(@feature.Descriptor.Category))
+                                        {
+                                            <span>- @feature.Descriptor.Category</span>
+                                        }
+
+                                    </div>
+                                }
+
+                                @{
+                                    var dependencyNames = feature.FeatureDependencies
+                                        .OrderBy(o => o.ModuleId)
+                                        .Select(d => d.ModuleId).ToArray();
+                                    var dependentNames = feature.DependentFeatures
+                                        .OrderBy(o => o.ModuleId)
+                                        .Select(d => d.ModuleId).ToArray();
+                                }
+
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
+                                    @if (dependencyNames.Length > 0)
+                                    {
+                                        <i class="fal fa-code-branch fa-flip-vertical"></i>
+                                    }
+                                    else
+                                    {
+                                        @T["No dependencies"]
+                                    }
+                                </span>
+                                <span data-toggle="tooltip" title="@T["Dependent feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
+                                    @if (dependentNames.Length > 0)
+                                    {
+                                        <i class="fal fa-code-branch"></i>
+                                    }
+                                    else
+                                    {
+                                        @T["No dependent features"]
+                                    }
+                                </span>
+                                @if (!feature.IsRequired)
+                                {
+                                    @if (!feature.IsEnabled)
+                                    {
+                                        <authorize asp-permission="@enablePermission.Name">
+                                            <authorize-success>
+                                                <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                                    @T["Enable"]
+                                                </button>
+                                            </authorize-success>
+                                        </authorize>
+
+                                    }
+                                    else
+                                    {
+                                        <authorize asp-permission="@disablePermission.Name">
+                                            <authorize-success>
+                                                <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                                    @T["Disable"]
+                                                </button>
+                                            </authorize-success>
+                                        </authorize>
+
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item">
+                    @T["No features available!"]
+                </li>
+            }
+
+        </ul>
+
+    </card-body>
+</card>
