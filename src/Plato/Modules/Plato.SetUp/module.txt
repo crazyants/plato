@@ -1,7 +1,8 @@
 ﻿Name: Plato SetUp
-Description: Provides set-up services for Plato.
+Description: Provides web based set-up for Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
 PlatoVersion: 1.0.0
 Version: 1.0.0
+Icon: /plato.setup/content/images/icon.png

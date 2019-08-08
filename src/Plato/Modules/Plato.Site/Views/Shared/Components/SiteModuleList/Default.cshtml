@@ -5,8 +5,9 @@
 
 @foreach (var option in Model.AvailableCategories.Where(c => c.Text != "All"))
 {
-    <h4 class="my-4">@option.Text</h4>
-    <hr/>
+    <h4 class="mt-4">@option.Text</h4>
+    <hr class="mt-4 mb-4"/>
+
     <div class="list-group list-group-flush">
         <div class="row no-gutters">
             @{
@@ -19,14 +20,11 @@
                 foreach (var feature in features)
                 {
                     <div class="float-left list-group-item col-12 col-lg-4 col-md-6 border-0">
-                   
-                 
                         @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
                         {
-                        <div class="list-left">
-                            <img class="max-w-40 my-3" src="@feature.Descriptor.Icon" />
-                        </div>
-                            
+                            <div class="list-left">
+                                <img class="max-w-40" src="@feature.Descriptor.Icon" />
+                            </div>
                         }
                         <div class="list-body">
                             <h6>@feature.Descriptor.Name</h6>
@@ -35,9 +33,7 @@
                                 @feature.Descriptor.Description<br/>
                             }
                         </div>
-                        </div>
-                 
-
+                    </div>
                 }
             }
             else

@@ -1,5 +1,5 @@
 Name: Plato Demo
-Description: A demo module for testing purposes.
+Description: A demo module. Used as a starting point when creating new modules.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
