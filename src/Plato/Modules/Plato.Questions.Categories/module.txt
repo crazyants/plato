@@ -5,7 +5,7 @@ WebSite: https://www.instantasp.co.uk/
 Category: Questions
 PlatoVersion: 1.0.0
 Version: 1.0.0
-Icon: /plato.questions.categories.roles/content/images/icon.png
+Icon: /plato.questions.categories/content/images/icon.png
 Dependencies: 
 [
 	{
