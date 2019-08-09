@@ -5,6 +5,7 @@ WebSite: https://www.instantasp.co.uk/
 Category: Spam
 PlatoVersion: 1.0.0
 Version: 1.0.0
+Icon: /plato.users.recaptcha2/content/images/icon.png
 Dependencies: 
 [
 	{
