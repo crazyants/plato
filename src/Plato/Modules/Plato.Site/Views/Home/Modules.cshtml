@@ -1,15 +1,14 @@
-﻿@using Plato.Features.ViewModels
-@{
-    ViewData["Title"] = "Plato - Built for Extension";
+﻿@{
+    AddTitleSegment(T["Modules"]);
 }
 
 <!-- Jumbotron -->
 <section class="flex-column d-flex text-center">
-    <div class="row">
+    <div class="row no-gutters">
         <div class="col-12">
             <div class="my-6 mx-auto">
                 <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
-                <h1 class="text-uppercase display-4 text-primary font-weight-bold">
+                <h1 class="text-uppercase display-4 text-primary font-weight-bold mx-auto w-70">
                     All Official Modules
                 </h1>
                 <hr class="divider border-primary" />
@@ -23,7 +22,7 @@
 </section>
 
 <!-- All Modules -->
-<section class="page">
+<section class="page bg-light">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -31,12 +30,6 @@
                 {
                     options = new FeatureIndexOptions()
                 }))
-                <h4 class="mt-4">Have a module suggestion?</h4>
-                <hr class="mt-4 mb-4" />
-
-                <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index">
-                    <i class="fa fa-plus mr-2"></i>Suggest a module
-                </a>
             </div>
         </div>
     </div>

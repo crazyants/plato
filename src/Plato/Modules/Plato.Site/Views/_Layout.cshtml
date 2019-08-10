@@ -4,21 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewData["Title"]</title>
+    <title asp-separator=" - ">Plato</title>
     <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
     <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
     <link rel="stylesheet" href="~/css/app/plato.css" />
     <link rel="stylesheet" href="~/plato.site/content/css/site.css" />
-
+    <link rel="stylesheet" href="/sites/plato/themes/plato-site/theme.css" />
     @await RenderSectionAsync("Header", required: false)
 </head>
 <body>
-
-    <nav class="nav-site sticky-top border-dark">
+    
+<div class="page-loader" data-provide="page-loader">
+    <div class="plato-loader position-absolute-center">
+        <div class="cube"></div>
+        <div class="cube bg-primary"></div>
+        <div class="cube bg-success"></div>
+        <div class="cube bg-warning"></div>
+        <div class="cube bg-danger"></div>
+    </div>
+</div>
+    
+<nav class="nav-site sticky-top border-dark">
         <div class="navbar navbar-expand-lg navbar-dark bg-black">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
-                    <span class="plato-brand mr-2"></span> @T["Plato"]
+                    <span class="plato-brand mr-2"></span>@T["Plato"]
                 </a>
                 <div class="navbar-mobile">
                     <div class="navbar-nav">
@@ -69,15 +79,14 @@
 
                 <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
                     <div class="navbar-nav">
-
                         <div class="nav nav-pills">
                             <div class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle dropdown-toggle-no-caret" href="#" data-toggle="dropdown" aria-expanded="false">
                                     Features
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-no-arrow anim anim-2x anim-scale-in">
+                                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
                                     <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="dropdown-item">
-                                        What is Plato
+                                        About Plato
                                     </a>
                                     <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" class="dropdown-item">
                                         Key Features
@@ -90,8 +99,7 @@
                                         Plato on GitHub
                                     </a>
                                 </div>
-                            </div>
-                         
+                            </div>                         
                             <div class="nav-item">
                                 <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" target="_blank">
                                     <span class="nav-text">
@@ -115,7 +123,6 @@
                             </div>
 
                         </div>
-
                     </div>
                 </div>
                 <div class="navbar-user">
@@ -172,10 +179,10 @@
         </div>
     </nav>
 
-    <main class="d-flex flex-column" role="main">
-        @RenderBody()
-    </main>
-    
+<main class="d-flex flex-column" role="main">
+    @RenderBody()
+</main>
+
 
 <div class="row  no-gutters bg-black">
     <div class="container">
@@ -183,9 +190,9 @@
             <div class="row">
                 <div class="col-12 col-md">
                     <a class="text-white" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
-                        <span class="plato-brand mr-2"></span> @T["Plato"]
+                        <span class="plato-brand mr-2"></span>@T["Plato"]
                     </a>
-                    <small class="d-block my-4 text-muted">&copy; InstantASP 2019</small>
+                    <small class="d-block my-4 text-muted">&copy; <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> @DateTime.Now.Year</small>
                 </div>
                 <div class="col-6 col-md">
                     <h5>Plato</h5>
@@ -197,7 +204,7 @@
                         </li>
                         <li class="d-block mb-2">
                             <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="text-white">
-                                What is Plato?
+                                About Plato
                             </a>
                         </li>
                         <li class="d-block mb-2">

@@ -447,19 +447,9 @@ a.label:hover, .label.active {
 /* Category Icon */
 /* ------------------- */
 
-.list-group-item-action.active .category-icon,
-.list-group-item-action:hover .category-icon {
-    
- 
-}
-
 .category-icon {
-    border-radius: 50%;
-    background: #96C9FF;
-    border: solid 1px white;
+    background: #BFDEFF;
     color: white;
-    border: 1px solid white;
-    box-shadow: 0 0 0 10px rgba(0,0,0,0.1);
 }
 
 .category-icon-sm {

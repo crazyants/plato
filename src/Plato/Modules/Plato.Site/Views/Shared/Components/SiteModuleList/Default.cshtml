@@ -2,48 +2,47 @@
 @using Plato.Features
 @model FeaturesIndexViewModel
 
-
 @foreach (var option in Model.AvailableCategories.Where(c => c.Text != "All"))
 {
-    <h4 class="mt-4">@option.Text</h4>
-    <hr class="mt-4 mb-4"/>
+    var features = Model.Features?
+        .Where(f => f.Descriptor.Category.Equals(option.Text, StringComparison.OrdinalIgnoreCase))
+        .OrderBy(o => o.Descriptor.Name);
 
-    <div class="list-group list-group-flush">
-        <div class="row no-gutters">
-            @{
-                var features = Model.Features?
-                    .Where(f => f.Descriptor.Category.Equals(option.Text, StringComparison.OrdinalIgnoreCase))
-                    .OrderBy(o => o.Descriptor.Name);
-            }
-            @if (features != null)
-            {
-                foreach (var feature in features)
-                {
-                    <div class="float-left list-group-item col-12 col-lg-4 col-md-6 border-0">
-                        @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
-                        {
-                            <div class="list-left">
-                                <img class="max-w-40" src="@feature.Descriptor.Icon" />
-                            </div>
-                        }
-                        <div class="list-body">
-                            <h6>@feature.Descriptor.Name</h6>
-                            @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
-                            {
-                                @feature.Descriptor.Description<br/>
-                            }
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="list-group-item">
-                    @T["No features available!"]
-                </div>
-            }
+    <h3 class="mt-5 font-weight-bold text-uppercase text-primary">@option.Text</h3>
+    <hr/>
 
-        </div>
-    </div>
+
+    @if (features != null)
+     {
+         <div class="row text-center">
+             @foreach (var feature in features)
+             {
+                 <div class="col-12 col-lg-4 mt-4">
+                     <div class="w-100 h-100 py-5 px-4 bg-white border box-shadow">
+                         @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
+                         {
+                             <img class="max-w-60 mx-auto d-block" src="@feature.Descriptor.Icon"/>
+                         }
+                         <h6 class="mt-4">@feature.Descriptor.Name</h6>
+                         @if (!String.IsNullOrEmpty(feature.Descriptor.Description))
+                         {
+                             <p>
+                                 @feature.Descriptor.Description
+                             </p>
+                         }
+                     </div>
+                 </div>
+
+
+
+             }
+         </div>
+     }
+     else
+     {
+         <div class="list-group-item">
+             @T["No features available!"]
+         </div>
+     }
 
 }

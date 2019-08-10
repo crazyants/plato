@@ -1,44 +1,16 @@
 ﻿
-
 /* Colors */
 
 .bg-black { background: black; }
-.bg-black-75 { background: rgba(0,0,0, 0.75); }
-.bg-black-50 { background: rgba(0,0,0, 0.50); }
-.bg-black-25 { background: rgba(0,0,0, 0.25); }
-
-.bg-dark { background: #0a0a0a !important; }
-
-.bg-white { background: black; }
-.bg-white-75 { background: rgba(255,255,255, 0.75); }
-.bg-white-50 { background: rgba(255,255,255, 0.50); }
-.bg-white-25 { background: rgba(255,255,255, 0.25); }
 
 .bg-purple { background: #5C2D91; }
 .border-purple { border-color: #5C2D91; }
-.purple { 
-    background: #5C2D91; 
-    border-color: #5C2D91;
-}
+.purple { background: #5C2D91; border-color: #5C2D91; }
 .text-purple { color: #5C2D91; }
-
-.bg-purple-75 { background: rgba(92, 45, 145, 0.75); }
-.bg-purple-50 { background: rgba(92, 45, 145, 0.50); }
-.bg-purple-25 { background: rgba(92, 45, 145, 0.25); }
-
-.bg-yellow { background: #E9DC0A !important }
-.text-yellow { color: #CDCD00 !important }
-.border-yellow { border-color: #E9DC0A !important }
 
 .bg-primary-75 { background: rgba(0, 123, 255, 0.75); }
 .bg-primary-50 { background: rgba(0, 123, 255, 0.50); }
 .bg-primary-25 { background: rgba(0, 123, 255, 0.25); }
-
-.bg-info-75 { background: rgba(23, 162, 184, 0.75); }
-.bg-info-50 { background: rgba(23, 162, 184, 0.50); }
-.bg-info-25 { background: rgba(23, 162, 184, 0.25); }
-
-
 
 /* full screen */
 @media (min-width: 992px) {
@@ -53,23 +25,6 @@
     }
     
 }
-
-/* Borders */
-
-.border-top-4 { border-top-width: 4px !important; }
-.border-left-4 { border-left-width: 4px !important; }
-.border-right-4 { border-right-width: 4px !important; }
-.border-bottom-4 { border-bottom-width: 4px !important; }
-
-.border-top-6 { border-top-width: 6px !important; }
-.border-left-6 { border-left-width: 6px !important; }
-.border-right-6 { border-right-width: 6px !important; }
-.border-bottom-6 { border-bottom-width: 6px !important; }
-
-.border-radius-0 { border-radius: 0 !important; }
-
-/* Text */
-
 
 /* Widths */
 
@@ -96,7 +51,6 @@
     .w-md-30,
     .w-md-20,
     .w-md-10 { width: 100%; }
-
 }
 
 .my-12, .mt-12 { margin-top: 12rem; }
