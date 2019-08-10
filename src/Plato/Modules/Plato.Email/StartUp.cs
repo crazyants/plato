@@ -8,7 +8,6 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Email.Handlers;
-using Plato.Email.Models;
 using Plato.Email.Navigation;
 using Plato.Email.Repositories;
 using Plato.Email.Services;

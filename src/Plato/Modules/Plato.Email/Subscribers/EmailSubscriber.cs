@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Plato.Email.Models;
+using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 

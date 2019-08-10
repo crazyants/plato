@@ -1,10 +1,16 @@
 ﻿using System.Diagnostics;
+using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Site.ViewModels;
 
 namespace Plato.Site.Controllers
 {
@@ -12,9 +18,17 @@ namespace Plato.Site.Controllers
     {
 
         #region "Constructor"
-       
-        public HomeController()
+
+        private readonly IEmailManager _emailManager;
+        private readonly SmtpSettings _smtpSettings;
+
+
+        public HomeController(
+            IEmailManager emailManager,
+            IOptions<SmtpSettings> smtpSettings)
         {
+            _emailManager = emailManager;
+            _smtpSettings = smtpSettings.Value;
         }
 
         #endregion
@@ -29,7 +43,7 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> Index()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -41,7 +55,7 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> About()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -53,7 +67,7 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> Features()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -66,7 +80,7 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> Modules()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -79,7 +93,7 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> Pricing()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
@@ -92,10 +106,44 @@ namespace Plato.Site.Controllers
         public Task<IActionResult> Contact()
         {
             // Return view
-            return Task.FromResult((IActionResult)View());
+            return Task.FromResult((IActionResult) View());
 
         }
 
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contact(ContactFormViewModel viewModel)
+        {
+
+            // Build message
+            var message = new MailMessage
+            {
+                From = new MailAddress(viewModel.Email),
+                Subject = viewModel.Subject,
+                Body = viewModel.Message,
+                IsBodyHtml = true,
+            };
+
+            message.To.Add(_smtpSettings.DefaultFrom);
+
+            // Send message
+            var result = await _emailManager.SaveAsync(message);
+            if (result.Succeeded)
+            {
+                // Success - Redirect to confirmation page
+                return RedirectToAction(nameof(ContactConfirmation));
+            }
+
+            return await Contact(viewModel);
+
+        }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ContactConfirmation()
+        {
+            // Return view
+            return View();
+
+        }
 
         #endregion
 

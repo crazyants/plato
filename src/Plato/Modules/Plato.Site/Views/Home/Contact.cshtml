@@ -1,34 +1,69 @@
-﻿@{
+﻿@model ContactFormViewModel
+@{
     AddTitleSegment(T["Contact"]);
 }
 
-<!-- Jumbotron -->
-<section class="flex-column d-flex text-center">
-    <div class="row no-gutters">
-        <div class="col-12">
-            <div class="my-6 mx-auto">
-                <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
-                <h1 class="text-uppercase display-4 text-primary font-weight-bold">
-                    How can we help?
-                </h1>
-                <hr class="divider border-primary" />
-                <h2 class="font-weight-light my-4 mx-auto w-70">
-                    We would love to hear from you. Use the forum below to get in touch.
-                </h2>
+
+    <!-- Jumbotron -->
+    <section class="flex-column d-flex text-center">
+        <div class="row no-gutters">
+            <div class="col-12">
+                <div class="my-6 mx-auto">
+                    <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
+                    <h1 class="text-uppercase display-4 text-primary font-weight-bold">
+                        How can we help?
+                    </h1>
+                    <hr class="divider border-primary" />
+                    <h2 class="font-weight-light my-4 mx-auto w-70">
+                        We would love to hear from you. Use the form below to get in touch.
+                    </h2>
+                </div>
             </div>
         </div>
-
-    </div>
-</section>
-
-<!-- Contact Form -->
+    </section>
+    
+    <!-- Contact Form -->
 <section class="page bg-light">
     <div class="container">
         <div class="row">
             <div class="col-12">
-              
+                <div class="p-5 bg-white">
+
+                    <form asp-action="Contact" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
+
+                        <h3 class="font-weight-bold text-primary text-uppercase">Send us a message</h3>
+                        <hr class="my-4" />
+
+                        <div class="form-group">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                            <input asp-for="Name" placeholder="@T["your name"]" class="form-control" autofocus />
+                        </div>
+
+                        <div class="form-group">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <input asp-for="Email" placeholder="@T["your email address"]" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                            <input asp-for="Subject" placeholder="@T["subject"]" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                            <textarea asp-for="Message" rows="9" placeholder="@T["your message"]" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" role="button" class="btn btn-primary btn-block btn-lg py-3">@T["Send Message"]</button>
+                        </div>
+
+                    </form>
+
+                </div>
 
             </div>
         </div>
     </div>
 </section>
+

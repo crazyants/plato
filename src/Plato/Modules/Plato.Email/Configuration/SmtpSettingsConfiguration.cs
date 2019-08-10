@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Plato.Email.Models;
 using Plato.Email.Stores;
+using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email.Configuration
 {

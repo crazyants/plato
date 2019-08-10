@@ -1,6 +1,6 @@
 ﻿using Plato.Internal.Abstractions;
 
-namespace Plato.Email.Models
+namespace Plato.Internal.Emails.Abstractions
 {
     public class EmailSettings : Serializable
     {

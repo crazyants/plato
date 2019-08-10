@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Plato.Email.Models;
 using Plato.Internal.Cache.Abstractions;
+using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Stores.Abstract;
 
 namespace Plato.Email.Stores

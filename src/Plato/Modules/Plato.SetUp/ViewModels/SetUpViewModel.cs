@@ -31,12 +31,10 @@ namespace Plato.SetUp.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
+        [Required, DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
+        [Required, DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
         
     }

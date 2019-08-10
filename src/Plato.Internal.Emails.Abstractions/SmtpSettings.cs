@@ -1,8 +1,8 @@
 ﻿using System.Net.Mail;
 
-namespace Plato.Email.Models
+namespace Plato.Internal.Emails.Abstractions
 {
- 
+
     public class SmtpSettings
     {
 
