@@ -500,6 +500,10 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .dropdown-menu-right:before { left: auto; right: 9px; top: -16px; }
 .dropdown-menu-right:after { left: auto; right: 10px; top: -14px; }
 
+.dropdown-menu-no-arrow:before { display: none !important; }
+.dropdown-menu-no-arrow:after { display: none !important;  }
+
+
 /* disable bootstrap caret */
 .dropdown-toggle-no-caret:after {
     display: none;

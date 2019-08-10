@@ -71,32 +71,31 @@
                     <div class="navbar-nav">
 
                         <div class="nav nav-pills">
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features">
-                                    <span class="nav-text text-nowrap">
-                                        Features
-                                    </span>
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle dropdown-toggle-no-caret" href="#" data-toggle="dropdown" aria-expanded="false">
+                                    Features
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-no-arrow anim anim-2x anim-scale-in">
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="dropdown-item">
+                                        What is Plato
+                                    </a>
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" class="dropdown-item">
+                                        Key Features
+                                    </a>
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" class="dropdown-item">
+                                        Official Modules
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="https://github.com/InstantASP/plato" class="dropdown-item">
+                                        Plato on GitHub
+                                    </a>
+                                </div>
                             </div>
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules">
-                                    <span class="nav-text">
-                                        Modules
-                                    </span>
-                                </a>
-                            </div>
-                           
+                         
                             <div class="nav-item">
                                 <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" target="_blank">
                                     <span class="nav-text">
                                         Demo
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
-                                    <span class="nav-text">
-                                        Support
                                     </span>
                                 </a>
                             </div>
@@ -107,6 +106,14 @@
                                     </span>
                                 </a>
                             </div>
+                            <div class="nav-item">
+                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                                    <span class="nav-text">
+                                        Support
+                                    </span>
+                                </a>
+                            </div>
+
                         </div>
 
                     </div>
@@ -181,32 +188,108 @@
                     <small class="d-block my-4 text-muted">&copy; InstantASP 2019</small>
                 </div>
                 <div class="col-6 col-md">
-                    <h5>Features</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Cool stuff</a></li>
-                        <li><a class="text-muted" href="#">Random feature</a></li>
-                        <li><a class="text-muted" href="#">Team feature</a></li>
-                        <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                        <li><a class="text-muted" href="#">Another one</a></li>
-                        <li><a class="text-muted" href="#">Last time</a></li>
+                    <h5>Plato</h5>
+                    <ul class="list-inline">
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Home
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="text-white">
+                                What is Plato?
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" class="text-white">
+                                Key Features
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" class="text-white">
+                                Official Modules
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Demo
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing" class="text-white">
+                                Pricing
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-6 col-md">
-                    <h5>Resources</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Resource</a></li>
-                        <li><a class="text-muted" href="#">Resource name</a></li>
-                        <li><a class="text-muted" href="#">Another resource</a></li>
-                        <li><a class="text-muted" href="#">Final resource</a></li>
+                    <h5>Support</h5>
+                    <ul class="list-inline">
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Forums
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Documentation
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Knowledgebase
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Q&A
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Suggest Ideas
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Submit an Issue
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-6 col-md">
                     <h5>About</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Team</a></li>
-                        <li><a class="text-muted" href="#">Locations</a></li>
-                        <li><a class="text-muted" href="#">Privacy</a></li>
-                        <li><a class="text-muted" href="#">Terms</a></li>
+                    <ul class="list-inline">
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Who we are
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Docs
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Articles
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Questions
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Ideas
+                            </a>
+                        </li>
+                        <li class="d-block mb-2">
+                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="text-white">
+                                Issues
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

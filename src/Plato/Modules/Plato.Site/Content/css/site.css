@@ -45,8 +45,8 @@
 
     .bg-primary-85-percent {
         padding: 3em 0;
-        background: #007BFF; 
-        background: linear-gradient(135deg,#007BFF 0,#007BFF 100%); 
+        background: #BFDEFF; 
+        background: linear-gradient(135deg,#BFDEFF 0,#BFDEFF 100%); 
         background-size: 85%; 
         background-repeat: no-repeat;
         background-position: center center;
@@ -149,9 +149,9 @@ hr.light { border-color: #fff }
     height: 80px;
     display: inline-block;
     border-radius: 50%;
-    background: #96C9FF;
+    background: #BFDEFF;
     text-align: center;
-    border: 1px solid white;
+    border: 0;
     box-shadow: 0 0 0 10px rgba(0,0,0,0.1);
     position: relative;
     color: white;
@@ -183,7 +183,6 @@ hr.light { border-color: #fff }
     position: relative;
     display: inline-block;
 }
-
 
 a.img-thumbnail .img-caption {
     position: absolute;

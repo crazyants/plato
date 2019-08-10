@@ -4,23 +4,20 @@
 }
 
 <!-- Jumbotron -->
-<section class="flex-column d-flex text-center" style="background: url(/plato.site/content/images/bg14.png) bottom center repeat-x;">
+<section class="flex-column d-flex text-center">
     <div class="row">
         <div class="col-12">
             <div class="my-6 mx-auto">
                 <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
                 <h1 class="text-uppercase display-4 text-primary font-weight-bold">
-                    Built for Extension
+                    All Official Modules
                 </h1>
                 <hr class="divider border-primary" />
-                <h2 class="font-weight-light my-4">
-                    Plato is built upon modules. Modules are independent NuGet packages that can add functionality to Plato.
+                <h2 class="font-weight-light my-4 mx-auto w-70">
+                    Plato is built upon modules. Modules are independent NuGet packages that add functionality to Plato.
+                    All the modules below are official modules and available out of the box with Plato.
                 </h2>
-
             </div>
-        </div>
-        <div class="col-12 max-h-700 overflow-hidden">
-            <img alt="Plato Features Screen Grab" src="~/plato.site/content/images/features.png" class="img-fluid mx-auto w-80 d-inline-block" />
         </div>
     </div>
 </section>
@@ -29,137 +26,37 @@
 <section class="page">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="text-uppercase text-primary font-weight-bold">
-                    All Modules
-                </h1>
-                <h3 class="font-weight-light">
-                    All modules below are official modules and available out of the box with Plato.
-                </h3>
-                <hr class="divider primary my-4">
-            </div>
-        </div>
-        <div class="row">
             <div class="col-12">
                 @await DisplayAsync(new View("SiteModuleList", new
                 {
                     options = new FeatureIndexOptions()
                 }))
+                <h4 class="mt-4">Have a module suggestion?</h4>
+                <hr class="mt-4 mb-4" />
+
+                <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index">
+                    <i class="fa fa-plus mr-2"></i>Suggest a module
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-
-<!-- The Module System -->
-<section class="page bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
-                <h1 class="text-uppercase text-primary font-weight-bold">
-                    The Module System
-                </h1>
-                <h3 class="font-weight-light my-4">
-                    The Plato module system offers the following features...
-                </h3>
-                <hr class="divider primary my-4">
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center bg-white border">
-                            <strong class="d-block h4 mb-2">
-                                Auto Discovery
-                            </strong>
-                            <span class="d-block mb-0">
-                                Plato will automatically detect newly installed modules and check compatibility.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center bg-white border">
-                            <strong class="d-block h4 mb-2">
-                                One Click Install
-                            </strong>
-                            <span class="d-block mb-0">
-                                Modules can be enabled or disabled anytime via the Plato administrator dashboard.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center  bg-white border">
-                            <strong class="d-block h4 mb-2">Auto Upgrades</strong>
-                            <span class="d-block mb-0">
-                                Plato offers automated detection and upgrading of out of date modules.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center bg-white border">
-                            <strong class="d-block h4 mb-2">
-                                Events & Messages
-                            </strong>
-                            <span class="d-block mb-0">
-                                Modules can hook into hundreds of events exposed via the Plato message broker.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center bg-white border">
-                            <strong class="d-block h4 mb-2">Interfaces</strong>
-                            <span class="d-block mb-0">
-                                Plato exposes hundreds of interfaces developers can implement to extend Plato.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="d-block p-5 text-center bg-white border">
-                            <strong class="d-block h4 mb-2">Versioning</strong>
-                            <span class="d-block mb-0">
-                                As modules are versioned they can be released independently of the Plato core.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- An Extensible Modular Architecture -->
+<!-- Explore The Demo -->
 <section class="page bg-primary-25">
     <div class="container">
-        <div class="p-5 bg-white">
-            <div class="row">
-                <div class="col-12 text-center text-lg-left ">
-                    <img alt="Plato Logo" src="~/plato.site/content/images/vsmodules.png" class="img-md-fluid float-none float-lg-right mx-md-auto max-w-500 d-inline-block ml-lg-5 mb-4 mb-lg-0" />
-                    <h1 class="font-weight-bold text-primary text-uppercase">
-                        An Extensible Modular Architecture
-                    </h1>
-                    <p class="mt-4">
-                        Plato is built from the ground up to be highly extensible via the built-in module system.
-                        All features offered by Plato are built upon this same module system.
-                    </p>
-                    <p>
-                        Modules are independent NuGet packages or Visual Studio projects that can extend Plato to add or modify functionality. Plato exposes hundreds of extensibility points allowing module developers to easily customize any aspect of Plato.
-                    </p>
-                    <p>
-                        You can see various module projects provided with Plato opposite within the Visual Studio solution explorer.
-                    </p>
-                    <p>
-                        <h3 class="font-weight-light">
-                            <a class="btn btn-primary btn-lg my-4" href="https://github.com/InstantASP/plato/tree/master/src/Plato/Modules" target="_blank">
-                                <img src="~/plato.site/content/images/octocat-icon-light.png" alt="GitHub Octocat Logo" title="GitHub Octocat Logo" class="max-w-40 align-middle mr-2" />Browse all modules on GitHub...
-                            </a>
-                        </h3>
-                    </p>
-                </div>
-            </div>
+        <div class="p-5 text-center bg-white">
+            <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
+            <h1 class="text-uppercase text-primary font-weight-bold">
+                Explore The Demo
+            </h1>
+            <hr class="divider primary my-4" />
+            <h3 class="font-weight-light">
+                Take Plato for a spin. The demo provides access to a default administrator account so you can fully explore Plato. Questions? <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Contact">Get in touch</a>
+            </h3>
+            <a class="btn btn-primary btn-lg mt-4" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                Launch Demo
+            </a>
         </div>
     </div>
 </section>

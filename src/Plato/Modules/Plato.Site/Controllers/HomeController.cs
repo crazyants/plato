@@ -34,6 +34,18 @@ namespace Plato.Site.Controllers
         }
 
         // ---------------------
+        // About
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> About()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+        // ---------------------
         // Features
         // ---------------------
 
@@ -65,6 +77,19 @@ namespace Plato.Site.Controllers
 
         [HttpGet, AllowAnonymous]
         public Task<IActionResult> Pricing()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+
+        // ---------------------
+        // Contact
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Contact()
         {
             // Return view
             return Task.FromResult((IActionResult)View());
