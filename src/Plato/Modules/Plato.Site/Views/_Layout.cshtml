@@ -14,7 +14,7 @@
 </head>
 <body>
     
-<div class="page-loader" data-provide="page-loader">
+<div class="page-loader" data-provide="loader">
     <div class="plato-loader position-absolute-center">
         <div class="cube"></div>
         <div class="cube bg-primary"></div>
@@ -27,7 +27,7 @@
 <nav class="nav-site sticky-top border-dark">
         <div class="navbar navbar-expand-lg navbar-dark bg-black">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
+                <a class="navbar-brand" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy">
                     <span class="plato-brand mr-2"></span>@T["Plato"]
                 </a>
                 <div class="navbar-mobile">
@@ -70,7 +70,7 @@
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="loader-spy">@T["Login"]</a>
                                 </li>
                             }
                         </ul>
@@ -85,37 +85,37 @@
                                     Features
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="dropdown-item">
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" data-provide="loader-spy" class="dropdown-item">
                                         About Plato
                                     </a>
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" class="dropdown-item">
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" data-provide="loader-spy" class="dropdown-item">
                                         Key Features
                                     </a>
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" class="dropdown-item">
+                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" data-provide="loader-spy" class="dropdown-item">
                                         Official Modules
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a href="https://github.com/InstantASP/plato" class="dropdown-item">
+                                    <a href="https://github.com/InstantASP/plato" data-provide="loader-spy" class="dropdown-item">
                                         Plato on GitHub
                                     </a>
                                 </div>
                             </div>                         
                             <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" target="_blank">
+                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy" target="_blank">
                                     <span class="nav-text">
                                         Demo
                                     </span>
                                 </a>
                             </div>
                             <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
+                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing" data-provide="loader-spy">
                                     <span class="nav-text">
                                         Pricing
                                     </span>
                                 </a>
                             </div>
                             <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy">
                                     <span class="nav-text">
                                         Support
                                     </span>
@@ -138,7 +138,7 @@
                                         <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="accountDropDown">
                                             <div class="p-3">
                                                 <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
+                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-provide="loader-spy" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
                                                     <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
                                                 </a>
                                                 <h6 class="d-inline-block align-middle max-w-150 text-truncate" title="@this.CurrentUser.DisplayName">@this.CurrentUser.DisplayName</h6>
@@ -166,7 +166,7 @@
                         {
                             <ul class="nav nav-pills">
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="loader-spy">@T["Login"]</a>
                                 </li>
                                 @*<li class="nav-item">
                                     <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
@@ -182,9 +182,8 @@
 <main class="d-flex flex-column" role="main">
     @RenderBody()
 </main>
-
-
-<div class="row  no-gutters bg-black">
+    
+<div class="row no-gutters bg-black">
     <div class="container">
         <footer class="pt-4 my-md-5 pt-md-5">
             <div class="row">
@@ -192,7 +191,13 @@
                     <a class="text-white" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
                         <span class="plato-brand mr-2"></span>@T["Plato"]
                     </a>
-                    <small class="d-block my-4 text-muted">&copy; <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> @DateTime.Now.Year</small>
+                    <p class="d-block my-4 text-muted">
+                        Plato is developed and maintained by <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> but open to everyone.
+                    </p>
+                    <p class="d-block my-4 text-muted">
+                        
+                        &copy; <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> @DateTime.Now.Year
+                    </p>
                 </div>
                 <div class="col-6 col-md">
                     <h5>Plato</h5>
@@ -304,11 +309,11 @@
     </div>
 </div>
 
-
-    <script src="~/js/vendors/jquery.js"></script>
-    <script src="~/js/vendors/bootstrap.js"></script>
-    <script src="~/js/app/plato.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+<script src="~/js/vendors/jquery.js"></script>
+<script src="~/js/vendors/bootstrap.js"></script>
+<script src="~/js/app/plato.js" asp-append-version="true"></script>
+<script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
+@RenderSection("Scripts", required: false)
 
 
 

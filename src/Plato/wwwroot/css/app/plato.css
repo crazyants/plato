@@ -73,17 +73,21 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     top: 0;
     left: 0;
     opacity: 1;
-    transition: all 2s ease-out;
+    transition: opacity 0.2s ease-out;
+    visibility: visible;
 }
 
 .page-loader-hidden {
     opacity: 0;
+    visibility: hidden;
+
 }
 
 .plato-loader {
   width: 100px;
   -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg);
+
 }
 
 .plato-loader .cube {
@@ -94,18 +98,20 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
   float: right;
   opacity: 0;
   outline: 1px solid transparent;
-
 }
+
 .plato-loader .cube:nth-child(1) {
   background-color: rgba(150, 150, 150, 0.2);
-  -webkit-animation: purpleAnim 2s infinite 0.55s;
-          animation: purpleAnim 2s infinite 0.55s;
+  -webkit-animation: cubeAnim 2s infinite 0.55s;
+          animation: cubeAnim 2s infinite 0.55s;
   position: fixed;
 }
+
 .plato-loader .cube:nth-child(2) {
   -webkit-animation: cubeAnim1 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 0.26s;
           animation: cubeAnim1 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 0.26s;
 }
+
 .plato-loader .cube:nth-child(3) {
   -webkit-animation: cubeAnim4 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 1.755s;
           animation: cubeAnim4 2s infinite cubic-bezier(0.4, 0, 0.2, 1) 1.755s;
@@ -239,7 +245,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     opacity: 0;
   }
 }
-@-webkit-keyframes purpleAnim {
+@-webkit-keyframes cubeAnim {
   0% {
     -webkit-transform: translate(50px, 0px);
             transform: translate(50px, 0px);
@@ -263,7 +269,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     opacity: 1;
   }
 }
-@keyframes purpleAnim {
+@keyframes cubeAnim {
   0% {
     -webkit-transform: translate(50px, 0px);
             transform: translate(50px, 0px);

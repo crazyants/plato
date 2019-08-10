@@ -6277,21 +6277,17 @@ $(function (win, doc, $) {
 
     }();
 
-    /* pageLoader */
-    var pageLoader = function () {
+    /* loader */
+    var loader = function () {
 
-        var dataKey = "pageLoader",
+        var dataKey = "loader",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {
-            event: "click"
-        };
+        var defaults = {};
 
         var methods = {
             timer: null,
             init: function ($caller, methodName) {
-
-
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -6300,30 +6296,17 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-
                 this.bind($caller);
-
             },
-            bind: function ($caller) {
-              
-            },
-            unbind: function ($caller) {
-             
-            },
-            show: function($caller) {
-
+            show: function ($caller) {
+                if ($caller.hasClass("page-loader-hidden")) {
+                    $caller.removeClass("page-loader-hidden");
+                }
             },
             hide: function($caller) {
-
-                console.log("hide");
-                $caller.addClass("page-loader-hidden");
-            },
-            _getButton: function ($caller) {
-                var $btn = $caller.next();
-                if ($btn[0].tagName === "BUTTON" || $btn[0].tagName === "A") {
-                    return $btn;
+                if ($caller.hasClass("page-loader")) {
+                    $caller.addClass("page-loader-hidden");
                 }
-                return null;
             }
         };
 
@@ -6383,6 +6366,56 @@ $(function (win, doc, $) {
 
     }();
 
+    /* loaderSpy */
+    var loaderSpy = function () {
+
+        var dataKey = "loaderSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                var event = $caller.data(dataKey).event;
+                $caller.on(event, function() {
+                    $('[data-provide="loader"]').loader("show");
+                });
+            },
+            unbind: function ($caller) {
+                $caller.off(event);
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+
+                if (this.length > 0) {
+                    // $(selector).loaderSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this));
+                    });
+                } 
+            }
+
+        };
+
+    }();
+    
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -6413,7 +6446,8 @@ $(function (win, doc, $) {
         suggester: suggester.init,
         popper: popper.init,
         password: password.init,
-        pageLoader: pageLoader.init
+        loader: loader.init,
+        loaderSpy: loaderSpy.init
     });
 
     // ---------------------------
@@ -6479,8 +6513,11 @@ $(function (win, doc, $) {
         /* password */
         this.find('[data-provide="password"]').password();
 
-        /* pageLoader */
-        this.find('[data-provide="page-loader"]').pageLoader("hide");
+        /* loader */
+        this.find('[data-provide="loader"]').loader("hide");
+
+        /* loaderSpy */
+        this.find('[data-provide="loader-spy"]').loaderSpy();
 
         // Bind scroll events
         $(win).scrollSpy({
@@ -7087,8 +7124,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         replySpy: replySpy.init,
