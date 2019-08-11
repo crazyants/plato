@@ -18,7 +18,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public virtual ITableBuilder CreateTable(SchemaTable table)
         {
-            var tableName = GetTableName(table.Name);
+            var tableName = PrependTablePrefix(table.Name);
 
             if (Options.DropTablesBeforeCreate)
             {
@@ -79,7 +79,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public virtual ITableBuilder DropTable(SchemaTable table)
         {
-            var tableName = GetTableName(table.Name);
+            var tableName = PrependTablePrefix(table.Name);
 
             // drop table ensuring it exists first
             var sb = new StringBuilder();
@@ -101,7 +101,7 @@ namespace Plato.Internal.Data.Schemas.Builders
         public virtual ITableBuilder CreateTableColumns(SchemaTable table)
         {
 
-            var tableName = GetTableName(table.Name);
+            var tableName = PrependTablePrefix(table.Name);
             if (table.Columns.Count > 0)
             {
                 foreach (var column in table.Columns)
@@ -153,7 +153,7 @@ namespace Plato.Internal.Data.Schemas.Builders
         public virtual ITableBuilder AlterTableColumns(SchemaTable table)
         {
 
-            var tableName = GetTableName(table.Name);
+            var tableName = PrependTablePrefix(table.Name);
             if (table.Columns.Count > 0)
             {
                 foreach (var column in table.Columns)
@@ -205,7 +205,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public virtual ITableBuilder DropTableColumns(SchemaTable table)
         {
-            var tableName = GetTableName(table.Name);
+            var tableName = PrependTablePrefix(table.Name);
             var sb = new StringBuilder();
             if (table.Columns.Count > 0)
             {

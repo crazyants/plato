@@ -133,8 +133,7 @@ namespace Plato.Entities.Metrics
             return output;
 
         }
-
-
+        
         public ICollection<string> v_1_0_3()
         {
 
@@ -217,7 +216,6 @@ namespace Plato.Entities.Metrics
             return output;
 
         }
-
 
     }
 

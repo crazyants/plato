@@ -32,13 +32,13 @@ namespace Plato.Internal.Data.Schemas.Builders
             var sb = new StringBuilder();
 
             sb.Append("IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'")
-                .Append(GetProcedureName(procedure.Name))
+                .Append(PrependTablePrefix(procedure.Name))
                 .Append("') AND type in (N'P', N'PC'))")
                 .Append(NewLine)
                 .Append("BEGIN")
                 .Append(NewLine)
                 .Append("DROP PROCEDURE ")
-                .Append(GetProcedureName(procedure.Name))
+                .Append(PrependTablePrefix(procedure.Name))
                 .Append(";")
                 .Append(NewLine)
                 .Append("END");
@@ -160,7 +160,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
-               .Append(GetProcedureName(procedure.Name))
+               .Append(PrependTablePrefix(procedure.Name))
                 .Append(NewLine)
                 .Append("AS")
                 .Append(NewLine)
@@ -175,7 +175,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                 .Append(NewLine);
 
             sb.Append("SELECT * FROM ")
-                .Append(GetTableName(procedure.Table.Name))
+                .Append(PrependTablePrefix(procedure.Table.Name))
                 .Append(" WITH (nolock)");
 
             return sb.ToString();
@@ -186,12 +186,12 @@ namespace Plato.Internal.Data.Schemas.Builders
         {
 
             if (procedure.Parameters == null)
-                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
+                throw new Exception($"Attempting to create '{PrependTablePrefix(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
-                .Append(GetProcedureName(procedure.Name))
+                .Append(PrependTablePrefix(procedure.Name))
                 .Append(" (")
                 .Append(NewLine);
 
@@ -221,7 +221,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                 .Append(NewLine);
 
             sb.Append("SELECT * FROM ")
-                .Append(GetTableName(procedure.Table.Name))
+                .Append(PrependTablePrefix(procedure.Table.Name))
                 .Append(" WITH (nolock) ")
                 .Append(NewLine)
                 .Append("WHERE (")
@@ -288,13 +288,13 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             if (procedure.Parameters == null)
             {
-                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
+                throw new Exception($"Attempting to create '{PrependTablePrefix(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
             }
 
             var sb = new StringBuilder();
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
-                  .Append(GetProcedureName(procedure.Name))
+                  .Append(PrependTablePrefix(procedure.Name))
                 .Append(" (")
                 .Append(NewLine);
 
@@ -434,12 +434,12 @@ namespace Plato.Internal.Data.Schemas.Builders
         {
 
             if (procedure.Parameters == null)
-                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
+                throw new Exception($"Attempting to create '{PrependTablePrefix(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
-               .Append(GetProcedureName(procedure.Name))
+               .Append(PrependTablePrefix(procedure.Name))
                 .Append(" (")
                 .Append(NewLine);
 
@@ -473,7 +473,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             sb.Append("IF EXISTS (SELECT ")
                 .Append(procedure.Table.PrimaryKeyColumn.NameNormalized)
                 .Append(" FROM ")
-                .Append(GetTableName(procedure.Table.Name))
+                .Append(PrependTablePrefix(procedure.Table.Name))
                 .Append(" WHERE (");
 
             i = 0;
@@ -498,7 +498,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             sb
                 .Append("   ")
                 .Append("DELETE FROM ")
-                .Append(GetTableName(procedure.Table.Name))
+                .Append(PrependTablePrefix(procedure.Table.Name))
                 .Append(NewLine)
                 .Append("   ")
                 .Append("WHERE (")
@@ -553,7 +553,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE [")
-                 .Append(GetProcedureName(procedure.Name))
+                 .Append(PrependTablePrefix(procedure.Name))
                 .Append("]");
 
             if (parameters.Count > 0)
@@ -609,7 +609,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             if (procedure.Table.PrimaryKeyColumn == null)
                 throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
 
-            var tableName = GetTableName(procedure.Table.Name);
+            var tableName = PrependTablePrefix(procedure.Table.Name);
             var columns = procedure.Table.Columns;
 
             // Check to ensure we have more than just a primary key
@@ -632,7 +632,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE [")
-                .Append(GetProcedureName(procedure.Name))
+                .Append(PrependTablePrefix(procedure.Name))
                 .Append("]");
 
             if (columns.Count > 0)

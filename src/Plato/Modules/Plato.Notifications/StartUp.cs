@@ -6,6 +6,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Handlers;
 using Plato.Notifications.Repositories;
@@ -41,7 +42,10 @@ namespace Plato.Notifications
 
             // Replace user notification type defaults with real implementation
             services.Replace<IUserNotificationTypeDefaults, UserNotificationTypeDefaults>(ServiceLifetime.Scoped);
-            
+    
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
+
         }
 
         public override void Configure(

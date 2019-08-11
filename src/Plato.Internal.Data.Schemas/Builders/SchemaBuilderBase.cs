@@ -39,32 +39,19 @@ namespace Plato.Internal.Data.Schemas.Builders
             configure(Options);
             return this;
         }
-
-        public string GetTableName(string tableName)
-        {
-            return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + tableName
-                : tableName;
-        }
+        
 
         public string GetSingularTableName(string tableName)
         {
             return _pluralize.Singular(tableName);
         }
-
-        public string GetProcedureName(string procedureName)
+        
+        public string PrependTablePrefix(string input)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + procedureName
-                : procedureName;
+                ? _tablePrefix + input
+                : input;
         }
-        public string GetIndexName(string indexName)
-        {
-            return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + indexName
-                : indexName;
-        }
-
 
         public ISchemaBuilderBase AddStatement(string statement)
         {

@@ -7,6 +7,7 @@ using Plato.Features.Navigation;
 using Plato.Features.ViewModels;
 using Plato.Features.ViewProviders;
 using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
@@ -31,7 +32,10 @@ namespace Plato.Features
        
             // Register moderation permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
-
+        
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
+         
         }
 
         public override void Configure(

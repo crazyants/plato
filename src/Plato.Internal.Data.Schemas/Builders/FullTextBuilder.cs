@@ -135,7 +135,7 @@ namespace Plato.Internal.Data.Schemas.Builders
       
             // Check index exists
             sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append("'))")
                 .Append(NewLine)
                 .Append("BEGIN")
@@ -143,7 +143,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // Drop columns
             sb.Append("ALTER FULLTEXT INDEX ON ")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append(" DROP (")
                 .Append(columnNames.ToDelimitedString())
                 .Append(");")
@@ -170,7 +170,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // Check index exists
             sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append("'))")
                 .Append(NewLine)
                 .Append("BEGIN")
@@ -178,7 +178,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // Drop the index
             sb.Append("DROP FULLTEXT INDEX ON ")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append(";")
                 .Append(NewLine);
 
@@ -200,7 +200,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // Check index exists
             sb.Append("IF EXISTS (SELECT * FROM sys.fulltext_indexes fti WHERE fti.object_id = OBJECT_ID(N'")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append("'))")
                 .Append(NewLine)
                 .Append("BEGIN")
@@ -208,7 +208,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             // Drop the index
             sb.Append("ALTER FULLTEXT INDEX ON ")
-                .Append(GetTableName(tableName))
+                .Append(PrependTablePrefix(tableName))
                 .Append(" DISABLE;")
                 .Append(NewLine);
 
@@ -226,7 +226,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append(alter ? "ALTER" : "CREATE")
                 .Append(" FULLTEXT INDEX ON ")
-                .Append(GetTableName(index.TableName))
+                .Append(PrependTablePrefix(index.TableName))
                 .Append(" (")
                 .Append(index.ColumnNames.ToDelimitedString())
                 .Append(" LANGUAGE ")

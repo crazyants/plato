@@ -70,9 +70,9 @@ namespace Plato.Internal.Data.Schemas.Builders
             var indexName = index.GenerateName();
 
             sb.Append("CREATE INDEX ")
-                .Append(GetIndexName(indexName))
+                .Append(PrependTablePrefix(indexName))
                 .Append(" ON ")
-                .Append(GetIndexName(index.TableName))
+                .Append(PrependTablePrefix(index.TableName))
                 .Append(" (")
                 .Append(index.Columns.ToDelimitedString(','))
                 .Append(")");
@@ -99,9 +99,9 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             var sb = new StringBuilder();
             sb.Append("ALTER INDEX ")
-                .Append(GetIndexName(indexName))
+                .Append(PrependTablePrefix(indexName))
                 .Append(" ON ")
-                .Append(index.TableName)
+                .Append(PrependTablePrefix(index.TableName))
                 .Append(" REORGANIZE");
 
             return sb.ToString();
@@ -111,26 +111,19 @@ namespace Plato.Internal.Data.Schemas.Builders
         private string DropIndexInternal(SchemaIndex index)
         {
 
-            // DROP INDEX
-            //  IX_tableName_firstColumn ON tableName.columnName,  
-            //  IX_tableName_firstColumn ON tableName.columnName;
+            // DROP INDEX IX_tableName_firstColumn ON tableName
             // GO
+            
+            var indexName = index.GenerateName();
 
             var sb = new StringBuilder();
+            sb.Append("DROP INDEX ")
+                .Append(PrependTablePrefix(indexName))
+                .Append(" ON ")
+                .Append(PrependTablePrefix(index.TableName))
+                .Append(";")
+                .Append(NewLine);
 
-            var indexName = index.GenerateName();
-            
-            foreach (var column in index.Columns)
-            {
-                sb.Append("DROP INDEX ")
-                    .Append(GetIndexName(indexName))
-                    .Append(" ON ")
-                    .Append(index.TableName)
-                    .Append(".")
-                    .Append(column)
-                    .Append(NewLine);
-            }
-    
             return sb.ToString();
 
         }
