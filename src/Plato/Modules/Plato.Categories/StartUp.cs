@@ -10,6 +10,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Categories.Subscribers;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -61,6 +62,9 @@ namespace Plato.Categories
 
             // Query adapters
             services.AddScoped<IQueryAdapterManager<CategoryBase>, QueryAdapterManager<CategoryBase>>();
+            
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
             
         }
 

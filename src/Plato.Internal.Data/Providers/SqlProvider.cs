@@ -23,8 +23,8 @@ namespace Plato.Internal.Data.Providers
             _logger = logger;
             _connectionString = dbContextOptions.Value.ConnectionString;
         }
-        
-        public int CommandTimeout { get; set; }
+
+        public int CommandTimeout { get; set; } = 120;
         
         public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
@@ -202,6 +202,7 @@ namespace Plato.Internal.Data.Providers
             cmd.Connection = connection;
             cmd.CommandText = commandText;
             cmd.CommandType = commandType;
+            cmd.CommandTimeout = CommandTimeout;
 
             if (dbParams != null)
             {

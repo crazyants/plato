@@ -12,6 +12,7 @@ using Plato.Follows.Repositories;
 using Plato.Follows.Services;
 using Plato.Follows.Stores;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Data.Migrations.Abstractions;
 
 namespace Plato.Follows
 {
@@ -46,7 +47,10 @@ namespace Plato.Follows
 
             // Follow managers
             services.AddScoped<IFollowManager<Follow>, FollowManager>();
-            
+         
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
+
         }
 
         public override void Configure(

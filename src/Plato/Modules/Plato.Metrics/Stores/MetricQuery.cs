@@ -44,7 +44,7 @@ namespace Plato.Metrics.Stores
             var ipV6Address = Params.IpV6Address.Value ?? string.Empty;
             var userAgent = Params.UserAgent.Value ?? string.Empty;
             
-            return await _store.SelectAsync(new[]
+            return await _store.SelectAsync(new IDbDataParameter[]
             {
                 new DbParam("PageIndex", DbType.Int32, PageIndex),
                 new DbParam("PageSize", DbType.Int32, PageSize),
@@ -58,8 +58,7 @@ namespace Plato.Metrics.Stores
             });
 
         }
-
-
+        
     }
 
     #endregion

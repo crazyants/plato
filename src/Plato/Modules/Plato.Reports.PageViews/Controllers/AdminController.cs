@@ -21,7 +21,6 @@ namespace Plato.Reports.PageViews.Controllers
     {
         
         private readonly IViewProviderManager<PageViewIndex> _pageViewsViewProvider;
-     
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
@@ -35,20 +34,18 @@ namespace Plato.Reports.PageViews.Controllers
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IViewProviderManager<PageViewIndex> pageViewsViewProvider,
-            IViewProviderManager<ReportIndex> reportViewProvider,
             IBreadCrumbManager breadCrumbManager,
-            ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
-          
-            _contextFacade = contextFacade;          
-            _breadCrumbManager = breadCrumbManager;
-            _alerter = alerter;
-            _featureFacade = featureFacade;
+            
             _pageViewsViewProvider = pageViewsViewProvider;
-
+            _breadCrumbManager = breadCrumbManager;
+            _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
+            _alerter = alerter;
+            
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -69,8 +66,7 @@ namespace Plato.Reports.PageViews.Controllers
             {
                 pager = new PagerOptions();
             }
-
-
+            
             // Get default options
             var defaultViewOptions = new ReportOptions();
             var defaultPagerOptions = new PagerOptions();
