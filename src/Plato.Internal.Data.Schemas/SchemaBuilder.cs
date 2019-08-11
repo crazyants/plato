@@ -18,6 +18,7 @@ namespace Plato.Internal.Data.Schemas
             {
 
                 var statements = new List<string>();
+
                 foreach (var statement in TableBuilder.Statements)
                 {
                     statements.Add(statement);
@@ -29,6 +30,11 @@ namespace Plato.Internal.Data.Schemas
                 }
 
                 foreach (var statement in FullTextBuilder.Statements)
+                {
+                    statements.Add(statement);
+                }
+
+                foreach (var statement in IndexBuilder.Statements)
                 {
                     statements.Add(statement);
                 }

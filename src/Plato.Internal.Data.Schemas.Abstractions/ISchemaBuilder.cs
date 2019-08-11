@@ -12,6 +12,8 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         IFullTextBuilder FullTextBuilder { get; }
 
+        IIndexBuilder IndexBuilder { get;  }
+        
     }
     
 }

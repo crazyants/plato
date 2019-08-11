@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Data.Migrations.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -44,6 +45,9 @@ namespace Plato.Metrics
 
             // Action filter
             services.AddScoped<IModularActionFilter, MetricFilter>();
+         
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
 
         }
 

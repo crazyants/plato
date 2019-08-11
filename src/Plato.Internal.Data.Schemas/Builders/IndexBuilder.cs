@@ -71,9 +71,11 @@ namespace Plato.Internal.Data.Schemas.Builders
 
             sb.Append("CREATE INDEX ")
                 .Append(GetIndexName(indexName))
-                .Append(" ( ")
+                .Append(" ON ")
+                .Append(GetIndexName(index.TableName))
+                .Append(" (")
                 .Append(index.Columns.ToDelimitedString(','))
-                .Append(" )");
+                .Append(")");
 
             if (index.FillFactor > 0)
             {
@@ -81,6 +83,8 @@ namespace Plato.Internal.Data.Schemas.Builders
                     .Append(index.FillFactor)
                     .Append(")");
             }
+
+            sb.Append(";");
 
             return sb.ToString();
 
@@ -90,8 +94,7 @@ namespace Plato.Internal.Data.Schemas.Builders
         {
 
             // Defragment by physically removing rows that have been logically deleted from the table, and merging rowgroups.  
-            // ALTER INDEX cci_FactInternetSales2 ON FactInternetSales2 REORGANIZE;
-            
+    
             var indexName = index.GenerateName();
 
             var sb = new StringBuilder();

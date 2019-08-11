@@ -13,7 +13,7 @@ namespace Plato.Metrics.Handlers
     
         public string Version { get; } = "1.0.0";
         
-        // Labels table
+        // Metrics table
         private readonly SchemaTable _metrics = new SchemaTable()
         {
             Name = "Metrics",

@@ -27,6 +27,12 @@ namespace Plato.Entities.Metrics
                     ModuleId = ModuleId,
                     Version = "1.0.2",
                     Statements = v_1_0_2()
+                },
+                new PreparedMigration()
+                {
+                    ModuleId = ModuleId,
+                    Version = "1.0.3",
+                    Statements = v_1_0_3()
                 }
             };
 
@@ -34,7 +40,7 @@ namespace Plato.Entities.Metrics
 
         public ICollection<string> v_1_0_2()
         {
-            
+
             var entityMetrics = new SchemaTable()
             {
                 Name = "EntityMetrics",
@@ -127,6 +133,91 @@ namespace Plato.Entities.Metrics
             return output;
 
         }
+
+
+        public ICollection<string> v_1_0_3()
+        {
+
+            var entityMetrics = new SchemaTable()
+            {
+                Name = "EntityMetrics",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EntityId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserAgent",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset
+                    }
+                }
+            };
+
+            var output = new List<string>();
+
+            using (var builder = _schemaBuilder)
+            {
+
+                builder
+                    .Configure(options =>
+                    {
+                        options.ModuleName = ModuleId;
+                        options.Version = "1.0.3";
+                    });
+
+                // TODO: Add to FeatureEventHandlers
+                builder.IndexBuilder.CreateIndex(new SchemaIndex()
+                {
+                    TableName = entityMetrics.Name,
+                    Columns = new string[]
+                    {
+                        "EntityId",
+                        "CreatedUserId",
+                        "CreatedDate"
+                    }
+                });
+
+                // Add builder results to output
+                output.AddRange(builder.Statements);
+
+            }
+
+            return output;
+
+        }
+
 
     }
 
