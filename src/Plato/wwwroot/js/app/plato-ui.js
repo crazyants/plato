@@ -6382,13 +6382,31 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
+
                 var event = $caller.data(dataKey).event;
-                $caller.on(event, function() {
-                    $('[data-provide="loader"]').loader("show");
-                });
+                if (event) {
+
+                    $caller.on(event, function () {
+
+                        console.log($(this).attr("target"))
+                        // Simply return if we have a specific target
+                        if ($(this).attr("target")) {
+                            return;
+                        }
+
+                        // Show loader
+                        $('[data-provide="loader"]').loader("show");
+
+                    });
+
+                }
+             
             },
             unbind: function ($caller) {
-                $caller.off(event);
+                var event = $caller.data(dataKey).event;
+                if (event) {
+                    $caller.off(event);
+                }
             }
         };
 

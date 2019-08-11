@@ -131,7 +131,6 @@ namespace Plato.Entities.Metrics.Stores
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
             _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
-
         }
 
         #endregion

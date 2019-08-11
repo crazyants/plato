@@ -9,6 +9,10 @@ namespace Plato.Internal.Tasks
     public class BackgroundTaskManager : IBackgroundTaskManager
     {
 
+        // Disabled to work on performance in other areas
+        // TODO: Set to true after other performance optimizations
+        public bool Enabled { get; set; }= false;
+
         private readonly ISafeTimerFactory _safeTimerFactory;
         private readonly IEnumerable<IBackgroundTaskProvider> _providers;
         private readonly ILogger<BackgroundTaskManager> _logger;
@@ -25,6 +29,11 @@ namespace Plato.Internal.Tasks
 
         public void StartTasks()
         {
+
+            if (!Enabled)
+            {
+                return;
+            }
 
             foreach (var provider in _providers)
             {

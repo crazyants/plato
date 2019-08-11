@@ -4,9 +4,10 @@ Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Entities
 PlatoVersion: 1.0.0
-Version: 1.0.0
+Version: 1.0.2
 Icon: /plato.entities.metrics/content/images/icon.png
-Dependencies: [
+Dependencies: 
+[
 	{
 		Id: "Plato.Entities",
 		Version: "1.0.0"

@@ -13,309 +13,37 @@
     @await RenderSectionAsync("Header", required: false)
 </head>
 <body>
-    
-<div class="page-loader" data-provide="loader">
-    <div class="plato-loader position-absolute-center">
-        <div class="cube"></div>
-        <div class="cube bg-primary"></div>
-        <div class="cube bg-success"></div>
-        <div class="cube bg-warning"></div>
-        <div class="cube bg-danger"></div>
-    </div>
-</div>
-    
-<nav class="nav-site sticky-top border-dark">
-        <div class="navbar navbar-expand-lg navbar-dark bg-black">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy">
-                    <span class="plato-brand mr-2"></span>@T["Plato"]
-                </a>
-                <div class="navbar-mobile">
-                    <div class="navbar-nav">
-                        <ul class="nav nav-pills">
-                            <li class="nav-item nav-item-bars">
-                                <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]" data-provide="tooltip" title="@T["Navigation"]">
-                                    <i class="fal fa-bars"></i>
-                                </a>
-                            </li>
-                            <li class="nav-item nav-item-search">
-                                <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]" data-provide="tooltip" title="@T["Search"]">
-                                    <i class="fal fa-search"></i>
-                                </a>
-                            </li>
-                            @if (this.CurrentUser != null)
-                            {
-                                <li class="nav-item dropdown">
-                                    <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post">
-                                        <a class="nav-link" href="#" data-toggle="dropdown" data-display="static">
-                                            <avatar class="avatar avatar-sm" url="@this.CurrentUser.Avatar.Url" />
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in position-absolute">
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
-                                            <authorize asp-permission="AdminAccess">
-                                                <authorize-success>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
-                                                </authorize-success>
-                                            </authorize>
-                                            <div class="dropdown-divider"></div>
-                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                                        </div>
-                                    </form>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="loader-spy">@T["Login"]</a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
 
-                <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
-                    <div class="navbar-nav">
-                        <div class="nav nav-pills">
-                            <div class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle dropdown-toggle-no-caret" href="#" data-toggle="dropdown" aria-expanded="false">
-                                    Features
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in">
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" data-provide="loader-spy" class="dropdown-item">
-                                        About Plato
-                                    </a>
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" data-provide="loader-spy" class="dropdown-item">
-                                        Key Features
-                                    </a>
-                                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" data-provide="loader-spy" class="dropdown-item">
-                                        Official Modules
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="https://github.com/InstantASP/plato" data-provide="loader-spy" class="dropdown-item">
-                                        Plato on GitHub
-                                    </a>
-                                </div>
-                            </div>                         
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy" target="_blank">
-                                    <span class="nav-text">
-                                        Demo
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing" data-provide="loader-spy">
-                                    <span class="nav-text">
-                                        Pricing
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="nav-item">
-                                <a class="nav-link" asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" data-provide="loader-spy">
-                                    <span class="nav-text">
-                                        Support
-                                    </span>
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="navbar-user">
-                    <div class="navbar-nav">
-                        @if (this.CurrentUser != null)
-                        {
-                            <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="form-inline">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item dropdown account">
-                                        <a href="#" class="nav-link dropdown-toggle dropdown-toggle-no-caret" id="accountDropDown" data-toggle="dropdown" data-provide="tooltip" title="@T["Account"]">
-                                            <avatar class="avatar avatar-sm" style="width: 28px; height: 28px;" url="@this.CurrentUser.Avatar.Url" />
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="accountDropDown">
-                                            <div class="p-3">
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@this.CurrentUser.Id" asp-route-opts.alias="@this.CurrentUser.Alias" class="btn btn-sm btn-primary float-right">@T["Profile"]</a>
-                                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile" data-provide="loader-spy" data-toggle="tooltip" title="@T["Edit Photo"]" class="d-inline-block mr-2">
-                                                    <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
-                                                </a>
-                                                <h6 class="d-inline-block align-middle max-w-150 text-truncate" title="@this.CurrentUser.DisplayName">@this.CurrentUser.DisplayName</h6>
-                                            </div>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSignature">@T["Signature"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
-                                            <authorize asp-permission="AdminAccess">
-                                                <authorize-success>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" asp-route-area="Plato.Admin" asp-route-controller="Admin" asp-route-action="Index">@T["Dashboard"]</a>
-                                                </authorize-success>
-                                            </authorize>
-                                            <div class="dropdown-divider"></div>
-                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                            </form>
-                        }
-                        else
-                        {
-                            <ul class="nav nav-pills">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" asp-route-returnUrl="@Context.Request.Path" data-provide="loader-spy">@T["Login"]</a>
-                                </li>
-                                @*<li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
-                                </li>*@
-                            </ul>
-                        }
-                    </div>
-                </div>
-            </div>
+    <div class="page-loader" data-provide="loader">
+        <div class="plato-loader position-absolute-center">
+            <div class="cube"></div>
+            <div class="cube bg-primary"></div>
+            <div class="cube bg-success"></div>
+            <div class="cube bg-warning"></div>
+            <div class="cube bg-danger"></div>
         </div>
-    </nav>
-
-<main class="d-flex flex-column" role="main">
-    @RenderBody()
-</main>
-    
-<div class="row no-gutters bg-black">
-    <div class="container">
-        <footer class="pt-4 my-md-5 pt-md-5">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <a class="text-white" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index">
-                        <span class="plato-brand mr-2"></span>@T["Plato"]
-                    </a>
-                    <p class="d-block my-4 text-muted">
-                        Plato is developed and maintained by <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> but open to everyone.
-                    </p>
-                    <p class="d-block my-4 text-muted">
-                        
-                        &copy; <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> @DateTime.Now.Year
-                    </p>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Plato</h5>
-                    <ul class="list-inline">
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Home
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="About" class="text-white">
-                                About Plato
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Features" class="text-white">
-                                Key Features
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Modules" class="text-white">
-                                Official Modules
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Demo
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing" class="text-white">
-                                Pricing
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Support</h5>
-                    <ul class="list-inline">
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Forums
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Documentation
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Knowledgebase
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Q&A
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Suggest Ideas
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Submit an Issue
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>About</h5>
-                    <ul class="list-inline">
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Who we are
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Docs
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Articles" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Articles
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Questions
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Ideas
-                            </a>
-                        </li>
-                        <li class="d-block mb-2">
-                            <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="text-white">
-                                Issues
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
     </div>
-</div>
 
-<script src="~/js/vendors/jquery.js"></script>
-<script src="~/js/vendors/bootstrap.js"></script>
-<script src="~/js/app/plato.js" asp-append-version="true"></script>
-<script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
-@RenderSection("Scripts", required: false)
+    @await DisplayAsync(new View("SiteHeader", new
+    {
+        options = new FeatureIndexOptions()
+    }))
+
+    <main class="d-flex flex-column" role="main">
+        @RenderBody()
+    </main>
+
+    @await DisplayAsync(new View("SiteFooter", new
+    {
+        options = new FeatureIndexOptions()
+    }))
 
 
+    <script src="~/js/vendors/jquery.js"></script>
+    <script src="~/js/vendors/bootstrap.js"></script>
+    <script src="~/js/app/plato.js" asp-append-version="true"></script>
+    <script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>

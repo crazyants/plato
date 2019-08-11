@@ -1,4 +1,14 @@
 ﻿
+.home-page-tiles .font-weight-bold {
+    color: #007bff;
+    text-transform: uppercase;
+    font-size: 100%;
+}
+
+.home-page-tiles a.list-group-item-action:hover .font-weight-bold {
+    color: white;
+}
+
 /* ------------------- */
 /* Fixed Header & Sidebar */
 /* ------------------- */

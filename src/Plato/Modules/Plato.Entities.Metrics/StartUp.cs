@@ -12,6 +12,7 @@ using Plato.Entities.Metrics.Models;
 using Plato.Entities.Metrics.Repositories;
 using Plato.Entities.Metrics.Services;
 using Plato.Entities.Metrics.Stores;
+using Plato.Internal.Data.Migrations.Abstractions;
 
 namespace Plato.Entities.Metrics
 {
@@ -43,6 +44,9 @@ namespace Plato.Entities.Metrics
 
             // Action filter
             services.AddScoped<IModularActionFilter, EntityMetricFilter>();
+        
+            // Migrations
+            services.AddSingleton<IMigrationProvider, Migrations>();
 
         }
 

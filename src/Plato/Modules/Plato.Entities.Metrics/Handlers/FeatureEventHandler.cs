@@ -13,7 +13,7 @@ namespace Plato.Entities.Metrics.Handlers
     
         public string Version { get; } = "1.0.0";
         
-        // Labels table
+        // Entity Metrics table
         private readonly SchemaTable _entityMetrics = new SchemaTable()
         {
             Name = "EntityMetrics",
@@ -191,16 +191,22 @@ namespace Plato.Entities.Metrics.Handlers
                 .CreateProcedure(
                     new SchemaProcedure(
                             $"SelectEntityMetricById",
-                            @" SELECT m.*, 
+                            @" SELECT em.*, 
+                                    e.Title,
+                                    e.Alias,
+                                    e.FeatureId,
+                                    f.ModuleId,
                                     u.UserName,                              
                                     u.DisplayName,                                  
                                     u.Alias,
                                     u.PhotoUrl,
                                     u.PhotoColor
-                                FROM {prefix}_EntityMetrics m WITH (nolock) 
-                                    LEFT OUTER JOIN {prefix}_Users u ON m.CreatedUserId = u.Id                                    
+                                FROM {prefix}_EntityMetrics em WITH (nolock) 
+                                    INNER JOIN {prefix}_Entities e ON em.EntityId = e.Id
+                                    INNER JOIN {prefix}_ShellFeatures f ON e.FeatureId = f.Id
+                                    LEFT OUTER JOIN {prefix}_Users u ON em.CreatedUserId = u.Id                                    
                                 WHERE (
-                                   m.Id = @Id
+                                   em.Id = @Id
                                 )")
                         .ForTable(_entityMetrics)
                         .WithParameter(_entityMetrics.PrimaryKeyColumn))

@@ -3,26 +3,25 @@
     AddTitleSegment(T["Contact"]);
 }
 
-
-    <!-- Jumbotron -->
-    <section class="flex-column d-flex text-center">
-        <div class="row no-gutters">
-            <div class="col-12">
-                <div class="my-6 mx-auto">
-                    <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
-                    <h1 class="text-uppercase display-4 text-primary font-weight-bold">
-                        How can we help?
-                    </h1>
-                    <hr class="divider border-primary" />
-                    <h2 class="font-weight-light my-4 mx-auto w-70">
-                        We would love to hear from you. Use the form below to get in touch.
-                    </h2>
-                </div>
+<!-- Jumbotron -->
+<section class="flex-column d-flex text-center">
+    <div class="row no-gutters">
+        <div class="col-12">
+            <div class="my-6 mx-auto">
+                <img src="~/plato.site/content/images/logo.png" alt="Plato Logo" title="Plato Logo" class="max-w-100 mb-4" />
+                <h1 class="text-uppercase display-4 text-primary font-weight-bold">
+                    How can we help?
+                </h1>
+                <hr class="divider border-primary" />
+                <h2 class="font-weight-light my-4 mx-auto w-70">
+                    We would love to hear from you. Use the form below to get in touch.
+                </h2>
             </div>
         </div>
-    </section>
-    
-    <!-- Contact Form -->
+    </div>
+</section>
+
+<!-- Contact Form -->
 <section class="page bg-light">
     <div class="container">
         <div class="row">
@@ -61,9 +60,73 @@
                     </form>
 
                 </div>
-
             </div>
         </div>
     </div>
 </section>
 
+<!-- Address -->
+<section class="page bg-primary-25">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="p-5 bg-white">
+
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <h3 class="font-weight-bold text-primary text-uppercase">Postal Address</h3>
+                            <hr class="my-4" />
+                            <address>
+                                <strong>InstantASP Ltd</strong><br />
+                                11 The Crescent<br />
+                                Bucklow Hill<br />
+                                Knutsford<br />
+                                Cheshire<br />
+                                WA16 6RQ<br />
+                                United Kingdom
+                            </address>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <h3 class="font-weight-bold text-primary text-uppercase">Email & Phone</h3>
+                            <hr class="my-4" />
+
+                            <p>
+                                <strong>Email</strong><br />
+                                <a href="mailto:sales@instantasp.co.uk" class="text-dark">
+                                    sales@instantasp.co.uk
+                                </a>
+                            </p>
+
+                            <p>
+                                <strong>Phone</strong><br />
+                                <a href="tel:441565832827" class="text-dark">+44 (0) 1565 832 827</a> - Sales Only
+                            </p>
+                            <p>
+                                We are available  Mon-Fri 9am-6pm BST. If you call out of hours please leave a message and we'll call you back.
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to action -->
+<section class="page bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-uppercase font-weight-bold text-white">
+                    Ready to make Plato your support hub?
+                </h1>
+                <a class="btn btn-light text-primary btn-lg mt-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
