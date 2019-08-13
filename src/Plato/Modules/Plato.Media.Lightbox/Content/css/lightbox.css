@@ -1,8 +1,6 @@
 
-/* ------ light box ------ */
-/* http://sorgalla.com/lity/
-*  Jan Sorgalla; */
-.lity {
+
+.lightbox {
     z-index: 9990;
     position: fixed;
     top: 0;
@@ -20,16 +18,16 @@
     transition: opacity 0.5s ease;
 }
 
-.lity.lity-opened {
+.lightbox.lightbox-opened {
     opacity: 1;
     visibility: visible;
 }
 
-.lity.lity-closed {
+.lightbox.lightbox-closed {
     opacity: 0;
 }
 
-.lity-wrap {
+.lightbox-wrap {
     z-index: 9990;
     position: fixed;
     top: 0;
@@ -40,7 +38,7 @@
     outline: none !important;
 }
 
-.lity-wrap:before {
+.lightbox-wrap:before {
     content: '';
     display: inline-block;
     height: 100%;
@@ -48,7 +46,7 @@
     margin-right: -0.25em;
 }
 
-.lity-loader {
+.lightbox-loader {
     z-index: 9991;
     color: #fff;
     position: absolute;
@@ -64,11 +62,11 @@
     transition: opacity 0.3s ease;
 }
 
-.lity-loading .lity-loader {
+.lightbox-loading .lightbox-loader {
     opacity: 1;
 }
 
-.lity-container {
+.lightbox-container {
     z-index: 9992;
     position: relative;
     text-align: left;
@@ -80,7 +78,7 @@
     outline: none !important;
 }
 
-.lity-content {
+.lightbox-content {
     z-index: 9993;
     width: 100%;
     text-align: center;
@@ -91,29 +89,30 @@
     -webkit-transition: -webkit-transform 0.3s ease;
     -o-transition: -o-transform 0.3s ease;
     transition: transform 0.3s ease;
+    transform-origin: center center;
 }
 
-.lity-content img {
+.lightbox-content img {
     max-width: 90%;
     height: auto;
     display: inline-block;
 }
 
-.lity-opened .lity-content {
+.lightbox-opened .lightbox-content {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     -o-transform: scale(1);
     transform: scale(1);
 }
 
-.lity-closed .lity-content {
+.lightbox-closed .lightbox-content {
     -webkit-transform: scale(0.8);
     -ms-transform: scale(0.8);
     -o-transform: scale(0.8);
     transform: scale(0.8);
 }
 
-.lity-close {
+.lightbox-close {
     z-index: 9994;
     width: 35px;
     height: 35px;
@@ -138,15 +137,15 @@
     box-shadow: none;
 }
 
-.lity-close::-moz-focus-inner {
+.lightbox-close::-moz-focus-inner {
     border: 0;
     padding: 0;
 }
 
-.lity-close:hover,
-.lity-close:focus,
-.lity-close:active,
-.lity-close:visited {
+.lightbox-close:hover,
+.lightbox-close:focus,
+.lightbox-close:active,
+.lightbox-close:visited {
     text-decoration: none;
     text-align: center;
     padding: 0;
@@ -163,6 +162,6 @@
     box-shadow: none;
 }
 
-.lity-close:active {
+.lightbox-close:active {
     top: 1px;
 }
