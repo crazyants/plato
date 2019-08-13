@@ -13,6 +13,8 @@ namespace Plato.Internal.Data.Providers
     public class SqlProvider : IDataProvider
     {
         
+        public int CommandTimeout { get; set; } = 120;
+        
         private readonly ILogger<SqlProvider> _logger;
         private readonly string _connectionString;
     
@@ -24,8 +26,6 @@ namespace Plato.Internal.Data.Providers
             _connectionString = dbContextOptions.Value.ConnectionString;
         }
 
-        public int CommandTimeout { get; set; } = 120;
-        
         public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
 

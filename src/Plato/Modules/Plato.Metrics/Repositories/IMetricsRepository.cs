@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plato.Internal.Repositories;
+﻿using Plato.Internal.Repositories;
 
 namespace Plato.Metrics.Repositories
 {

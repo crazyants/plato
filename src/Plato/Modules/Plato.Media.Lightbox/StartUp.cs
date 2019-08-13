@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Media.LightBox.Assets;
 
 namespace Plato.Media.Lightbox
 {
@@ -19,6 +21,11 @@ namespace Plato.Media.Lightbox
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Client assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
+
         }
 
         public override void Configure(

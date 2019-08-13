@@ -4479,14 +4479,34 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function($caller) {
+            init: function ($caller, methodName) {
+                
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return null;
+                }
+                
                 this.bind($caller);
+
             },
             bind: function($caller) {
                 var selector = $caller.data(dataKey).selector;
                 $caller.find(selector).each(function() {
                     if ($(this).attr("href")) {
+                        $(this).attr("data-auto-target", "true");
                         $(this).attr("target", "_blank");
+                    }
+                });
+            },
+            unbind: function ($caller) {
+                var selector = $caller.data(dataKey).selector;
+                $caller.find(selector).each(function () {
+                    if ($(this).attr("data-auto-target")) {
+                        $(this).removeAttr("target");
                     }
                 });
             }
@@ -4541,7 +4561,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -4558,15 +4577,21 @@ $(function (win, doc, $) {
 
         var methods = {
             timer: null,
-            init: function($caller) {
+            init: function ($caller, methodName) {
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return null;
+                }
                 this.bind($caller);
             },
             bind: function($caller) {
-
                 // Iterate images to auto link
                 var selector = $caller.data(dataKey).selector;
                 $caller.find(selector).each(function(i) {
-
                     // Ensure we have a src attribute to link to
                     if ($(this).attr("src")) {
 
@@ -4583,7 +4608,27 @@ $(function (win, doc, $) {
                         }
 
                     }
-
+                });
+            },
+            unbind: function ($caller) {
+                // Iterate images to auto link
+                var selector = $caller.data(dataKey).selector;
+                $caller.find(selector).each(function (i) {
+                    // Ensure we have a src attribute to link to
+                    var src = $(this).attr("src");
+                    if (src) {
+                        // Is the parent tag a link?
+                        var $parent = $(this).parent();
+                        var parentTag = $parent.prop("tagName");
+                        var href = $parent.attr("href");
+                        // Ensure a parent link to the same image
+                        if (parentTag && parentTag === "A" && href === src) {
+                            // Add the inner image after the link
+                            $parent.after($(this));
+                            // Remove the link
+                            $parent.remove();
+                        }
+                    }
                 });
             }
         };
@@ -4637,7 +4682,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -4649,19 +4693,38 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            selector: "a"
+            autoTargetBlank: true,
+            autoLinkImages : true
         };
 
         var methods = {
             timer: null,
-            init: function($caller) {
+            init: function ($caller, methodName) {
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return null;
+                }
                 this.bind($caller);
             },
             bind: function($caller) {
-
-                $caller
-                    .autoTargetBlank()
-                    .autoLinkImages();
+                if ($caller.data(dataKey).autoTargetBlank) {
+                    $caller.autoTargetBlank();
+                }
+                if ($caller.data(dataKey).autoLinkImages) {
+                    $caller.autoLinkImages();
+                }
+            },
+            unbind: function ($caller) {
+                if ($caller.data(dataKey).autoTargetBlank) {
+                    $caller.autoTargetBlank("unbind");
+                }
+                if ($caller.data(dataKey).autoLinkImages) {
+                    $caller.autoLinkImages("unbind");
+                }
             }
         };
 
@@ -4714,7 +4777,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -4857,7 +4919,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -4990,8 +5051,7 @@ $(function (win, doc, $) {
                 return $caller.data("maxItems")
                     ? parseInt($caller.data("maxItems"))
                     : $caller.data(dataKey).maxItems;
-            },
-
+            }
         };
 
         return {
@@ -5230,7 +5290,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -5371,7 +5430,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -5715,7 +5773,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -6164,7 +6221,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -6272,7 +6328,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -6361,7 +6416,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -6382,25 +6436,17 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-
                 var event = $caller.data(dataKey).event;
                 if (event) {
-
                     $caller.on(event, function () {
-
-                        console.log($(this).attr("target"))
                         // Simply return if we have a specific target
                         if ($(this).attr("target")) {
                             return;
                         }
-
                         // Show loader
                         $('[data-provide="loader"]').loader("show");
-
                     });
-
                 }
-             
             },
             unbind: function ($caller) {
                 var event = $caller.data(dataKey).event;
@@ -6429,7 +6475,6 @@ $(function (win, doc, $) {
                     });
                 } 
             }
-
         };
 
     }();
