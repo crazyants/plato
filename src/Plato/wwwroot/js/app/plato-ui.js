@@ -4185,7 +4185,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
@@ -4408,7 +4407,6 @@ $(function (win, doc, $) {
             _isBottom: function ($caller) {
                 return $caller.hasClass("resizable-bottom");
             }
-
         };
 
         return {
@@ -4462,7 +4460,6 @@ $(function (win, doc, $) {
                 }
 
             }
-
         };
 
     }();
