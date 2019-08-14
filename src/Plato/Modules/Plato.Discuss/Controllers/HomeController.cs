@@ -668,7 +668,7 @@ namespace Plato.Discuss.Controllers
                     // Add any authorization errors
                     foreach (var error in authorizeResult.Errors)
                     {
-                        _alerter.Success(T[error.Description]);
+                        _alerter.Danger(T[error.Description]);
                     }
 
                     // Redirect to index

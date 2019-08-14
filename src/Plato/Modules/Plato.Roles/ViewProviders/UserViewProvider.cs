@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
@@ -16,28 +17,21 @@ namespace Plato.Roles.ViewProviders
     {
 
         private const string HtmlName = "UserRoles";
-
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        
         private readonly IPlatoRoleStore _platoRoleStore;
-        private readonly IContextFacade _contextFacade;
+        private readonly UserManager<User> _userManager;
         private readonly HttpRequest _request;
-
         private readonly IStringLocalizer T;
         
         public UserViewProvider(
             IStringLocalizer<UserViewProvider> stringLocalizee,
             IHttpContextAccessor httpContextAccessor,
-            SignInManager<User> signInManager,
             IPlatoRoleStore platoRoleStore,
-            UserManager<User> userManager,
-            IContextFacade contextFacade)
+            UserManager<User> userManager)
         {
       
             _request = httpContextAccessor.HttpContext.Request;
             _platoRoleStore = platoRoleStore;
-            _contextFacade = contextFacade;
-            _signInManager = signInManager;
             _userManager = userManager;
 
             T = stringLocalizee;
@@ -83,27 +77,34 @@ namespace Plato.Roles.ViewProviders
 
         }
 
+        public override async Task ComposeModelAsync(User user, IUpdateModel updater)
+        {
+
+            // Build selected roles
+            var rolesToAdd = GetSelectedRoles();
+
+            // Update model
+            var model = new EditUserRolesViewModel
+            {
+                SelectedRoles = rolesToAdd
+            };
+            
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+                user.RoleNames = model.SelectedRoles;
+            }
+
+        }
+
+
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IViewProviderContext context)
         {
    
             // Build selected roles
-            var rolesToAdd = new List<string>();
-            foreach (var key in _request.Form.Keys)
-            {
-                if (key.StartsWith(HtmlName))
-                {
-                    var values = _request.Form[key];
-                    foreach (var value in values)
-                    {
-                        if (!rolesToAdd.Contains(value))
-                        {
-                            rolesToAdd.Add(value);
-                        }
-                        
-                    }
-                }
-            }
-            
+            var rolesToAdd = GetSelectedRoles();
+
             // Update model
             var model = new EditUserRolesViewModel
             {
@@ -117,13 +118,12 @@ namespace Plato.Roles.ViewProviders
 
             if (context.Updater.ModelState.IsValid)
             {
-                var hasRoleChanges = false;
+
                 var rolesToRemove = new List<string>();
                 foreach (var role in await _userManager.GetRolesAsync(user))
                 {
                     if (!rolesToAdd.Contains(role))
                     {
-                        hasRoleChanges = true;
                         rolesToRemove.Add(role);
                     }
                 }
@@ -138,7 +138,6 @@ namespace Plato.Roles.ViewProviders
                 {
                     if (!await _userManager.IsInRoleAsync(user, role))
                     {
-                        hasRoleChanges = true;
                         await _userManager.AddToRoleAsync(user, role);
                     }
                 }
@@ -150,29 +149,35 @@ namespace Plato.Roles.ViewProviders
                     context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                // Re-signin current authenticated User to reflect
-                // the claim changes if roles are updated within the identity cookie
-                if (hasRoleChanges)
-                {
-
-                    var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
-                    if (currentUser == null)
-                    {
-                        return await BuildEditAsync(user, context);
-                    }
-
-                    if (currentUser.Id == user.Id)
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                    }
-              
-                }
-
             }
            
             return await BuildEditAsync(user, context);
 
         }
 
+        private IList<string> GetSelectedRoles()
+        {
+            var output = new List<string>();
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith(HtmlName))
+                {
+                    var values = _request.Form[key];
+                    foreach (var value in values)
+                    {
+                        if (!output.Contains(value))
+                        {
+                            output.Add(value);
+                        }
+
+                    }
+                }
+            }
+
+            return output;
+
+        }
+
     }
+
 }

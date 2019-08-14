@@ -121,14 +121,12 @@ namespace Plato.Users.ViewProviders
             {
                 isBannedBy = await _userStore.GetByIdAsync(user.IsBannedUpdatedUserId);
             }
-
-
+            
             if (user.IsStaff && user.IsStaffUpdatedUserId > 0)
             {
                 isStaffBy = await _userStore.GetByIdAsync(user.IsStaffUpdatedUserId);
             }
-
-
+            
             var viewModel = new EditUserViewModel()
             {
                 Id = user.Id,
@@ -180,17 +178,26 @@ namespace Plato.Users.ViewProviders
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                DisplayName = user.DisplayName
+                DisplayName = user.DisplayName,
+                Password = user.Password,
+                Biography = user.Biography,
+                Location = user.Location,
+                Signature = user.Signature,
+                Url = user.Url
             };
 
             await updater.TryUpdateModelAsync(model);
 
             if (updater.ModelState.IsValid)
             {
-
                 user.UserName = model.UserName;
                 user.Email = model.Email;
                 user.DisplayName = model.DisplayName;
+                user.Password = model.Password;
+                user.Biography = model.Biography;
+                user.Location = model.Location;
+                user.Signature = model.Signature;
+                user.Url = model.Url;
             }
 
         }
@@ -200,22 +207,28 @@ namespace Plato.Users.ViewProviders
 
             var model = new EditUserViewModel
             {
+                Id = user.Id,
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Password = user.Password,
+                Biography = user.Biography,
+                Location = user.Location,
+                Signature = user.Signature,
+                Url = user.Url
             };
 
-            if (await IsNewUser(user.Id.ToString()))
-            {
-                if (model.Password != model.PasswordConfirmation)
-                {
-                    updater.ModelState.AddModelError(nameof(model.PasswordConfirmation), T["Password and Password Confirmation do not match"]);
-                }
-            }
+            //if (await IsNewUser(user.Id.ToString()))
+            //{
+            //    if (model.Password != model.PasswordConfirmation)
+            //    {
+            //        updater.ModelState.AddModelError(nameof(model.PasswordConfirmation), T["Password and Password Confirmation do not match"]);
+            //        return false;
+            //    }
+            //}
+            
+            return await updater.TryUpdateModelAsync(model);
 
-            var valid = await updater.TryUpdateModelAsync(model);
-
-            return valid;
         }
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IViewProviderContext context)
@@ -228,19 +241,8 @@ namespace Plato.Users.ViewProviders
                 return await BuildEditAsync(user, context);
             }
 
-            model.UserName = model.UserName?.Trim();
-            model.Email = model.Email?.Trim();
-            model.DisplayName = model?.DisplayName.Trim();
-
             if (context.Updater.ModelState.IsValid)
             {
-
-                // Update display name. Username and email address are update via UserManager
-                user.DisplayName = model.DisplayName;
-                user.Biography = model.Biography;
-                user.Location = model.Location;
-                user.Signature = model.Signature;
-                user.Url = model.Url;
 
                 // Update photo
                 if (model.AvatarFile != null)
@@ -257,49 +259,12 @@ namespace Plato.Users.ViewProviders
                     await _userManager.SetUserNameAsync(user, model.UserName);
                 }
                 
-                // Has the email address changed?
+                // Has the email changed?
                 if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
                 {
                     // Only call SetEmailAsync if the email address changes
                     // SetEmailAsync internally sets EmailConfirmed to "false"
                     await _userManager.SetEmailAsync(user, model.Email);
-                }
-                
-                // Persist changes
-                var result = await _platoUserManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    
-                    // TODO Move to CreatePost
-                    // Mark admin created users as confirmed
-                    //var tokenResult = await _platoUserManager.GetEmailConfirmationUserAsync(result.Response.Email);
-                    //if (tokenResult.Succeeded)
-                    //{
-                    //    var confirmationResult = await _platoUserManager.ConfirmEmailAsync(model.Email,
-                    //        tokenResult.Response.ConfirmationToken);
-                    //    if (!confirmationResult.Succeeded)
-                    //    {
-                    //        foreach (var error in confirmationResult.Errors)
-                    //        {
-                    //            context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    //        }
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    foreach (var error in tokenResult.Errors)
-                    //    {
-                    //        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    //    }
-                    //}
-
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
                 }
 
             }

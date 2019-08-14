@@ -1,5 +1,7 @@
 ﻿@model EditUserViewModel
 
+<div asp-validation-summary="All"></div>
+
 @if (Model.IsVerified && !Model.IsNewUser)
 {
     <div class="alert alert-info">

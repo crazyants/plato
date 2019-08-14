@@ -205,8 +205,7 @@ namespace Plato.Users.Services
             return result.Failed(errors.ToArray());
 
         }
-
-
+        
         public async Task<ICommandResult<TUser>> UpdateAsync(TUser model)
         {
 

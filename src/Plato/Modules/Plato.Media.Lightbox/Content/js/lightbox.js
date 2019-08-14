@@ -14,12 +14,8 @@ $(function (win, doc, $) {
 
     // --------
 
-    var app = win.$.Plato;
-
-    // --------
-
     /* lightBox */
-    var lightBox = function(options) {
+    var lightBox = function (options) {
 
         var dataKey = "lightBox",
             dataIdKey = dataKey + "Id";
@@ -32,7 +28,7 @@ $(function (win, doc, $) {
         };
 
         var $template = null;
-        
+
         var methods = {
             init: function ($caller, methodName) {
 
@@ -53,10 +49,13 @@ $(function (win, doc, $) {
                 this.bind($caller);
 
             },
-            bind: function($caller) {
-                
+            bind: function ($caller) {
+
+                // Unbind default auto linking of images
+                $caller.autoLinkImages("unbind");
+
                 var selector = $caller.data(dataKey).selector;
-                $caller.find(selector).each(function(i) {
+                $caller.find(selector).each(function (i) {
                     var src = $(this).attr("src");
                     if (src) {
                         var $parent = $(this).parent();
@@ -69,10 +68,10 @@ $(function (win, doc, $) {
                                     "target": "_blank"
                                 });
                             $a.on("click",
-                                function(e) {
+                                function (e) {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    methods.open($caller, $(this).attr("href"));
+                                    methods.open($caller, $(this));
                                 });
                             $(this).wrap($a);
                         }
@@ -80,8 +79,8 @@ $(function (win, doc, $) {
                 });
 
             },
-            open: function ($caller, src) {
-                
+            open: function ($caller, $link) {
+
                 if (!$template) {
                     return false;
                 }
@@ -96,33 +95,24 @@ $(function (win, doc, $) {
 
                 var $content = $template.find(".lightbox-content");
                 if ($content.length > 0) {
-                    var $img = $("<img/>",
+                    $content.empty().append($("<img/>",
                         {
-                            "src": src
-                        });
-
-                    $img.load = function() {
-                        console.log("image loaded");
-                    };
-
-                    $content.empty().append($img);
+                            "src": $link.attr("href"),
+                            "title": $link.attr("title") || ""
+                        }));
                 }
-                
+
                 if (!$template.hasClass("lightbox-opened")) {
                     $template.addClass("lightbox-opened");
                 }
 
 
             },
-            close: function($caller) {
+            close: function ($caller) {
 
                 if (!$template) {
                     return false;
                 }
-
-
-                var deferred = $.Deferred();
-
 
                 if ($template.hasClass("lightbox-loading")) {
                     $template.removeClass("lightbox-loading");
@@ -135,9 +125,9 @@ $(function (win, doc, $) {
                 if (!$template.hasClass("lightbox-closed")) {
                     $template.addClass("lightbox-closed");
                 }
-                
+
             },
-            _build: function($caller) {
+            _build: function ($caller) {
                 var id = $caller.data(dataKey).id,
                     template = $caller.data(dataKey).template,
                     selector = "#" + id,
@@ -146,15 +136,13 @@ $(function (win, doc, $) {
                             "id": id
                         });
                 if ($(selector).length === 0) {
-
                     // Bind close click
                     $el.on("click",
-                        function(e) {
+                        function (e) {
                             if ($(e.target).is("[data-lightbox-close]") || $(e.target).is(".lightbox-container")) {
                                 methods.close();
                             }
                         });
-
                     // Bind escape key
                     if ($caller.data(dataKey).esc) {
                         $(win).on("keyup", function (e) {
@@ -163,7 +151,6 @@ $(function (win, doc, $) {
                             }
                         });
                     }
-
                     // Add to dom
                     $("body").append($el);
                     // Populate local variable
@@ -173,7 +160,7 @@ $(function (win, doc, $) {
         };
 
         return {
-            init: function() {
+            init: function () {
 
                 var options = {};
                 var methodName = null;
@@ -181,25 +168,25 @@ $(function (win, doc, $) {
                     var a = arguments[i];
                     if (a) {
                         switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
                         }
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).lightBox()
-                    return this.each(function() {
+                    return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -231,15 +218,22 @@ $(function (win, doc, $) {
         lightBox: lightBox.init
     });
 
+    // --------
+
+    var app = win.$.Plato;
+    
     app.ready(function () {
-
-        // Unbind default auto linking of images
-        $('[data-provide="markdownBody"]')
-            .autoLinkImages("unbind");
-
-        // Add light box support
+        
+        // lightBox
         $('[data-provide="markdownBody"]')
             .lightBox();
+
+        // Activate lightBox when loaded via infiniteScroll load
+        $().infiniteScroll(function($ele) {
+                $ele.find('[data-provide="markdownBody"]')
+                    .lightBox();
+            },
+            "ready");
 
     });
 

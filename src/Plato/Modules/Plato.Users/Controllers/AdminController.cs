@@ -190,13 +190,21 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
 
-            // Validate model state within view providers
-            var valid = await _viewProvider.IsModelStateValidAsync(new User()
+            // Build user
+            var user = new User()
             {
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 Email = model.Email,
-            }, this);
+                Password = model.Password,
+                Biography = model.Biography,
+                Location = model.Location,
+                Signature = model.Signature,
+                Url = model.Url
+            };
+
+            // Validate model state within view providers
+            var valid = await _viewProvider.IsModelStateValidAsync(user, this);
 
             // Ensure password fields match
             if (model.Password != model.PasswordConfirmation)
@@ -208,36 +216,29 @@ namespace Plato.Users.Controllers
             // Validate model state within all view providers
             if (valid)
             {
-             
-                // Get fully composed type from all involved view providers
-                //var user = await _viewProvider.GetComposedType(this);
 
-                // We need to first add the fully composed type
-                // so we have a unique Id for all ProvideUpdateAsync
-                // methods within any involved view provider
+                // Get composed model from all involved view providers
+                user = await _viewProvider.ComposeModelAsync(user, this);
+
+                // Create the composed type
                 var result = await _platoUserManager.CreateAsync(
-                    model.UserName,
-                    model.DisplayName,
-                    model.Email,
-                    model.Password);
+                    user.UserName,
+                    user.DisplayName,
+                    user.Email,
+                    user.Password);
                 if (result.Succeeded)
                 {
-
-                    // Get new user
-                    var newUser = await _userManager.FindByEmailAsync(model.Email);
-                    if (newUser != null)
-                    {
-                        // Execute view providers ProvideUpdateAsync method
-                        await _viewProvider.ProvideUpdateAsync(newUser, this);
-                    }
-                    
+             
+                    // Execute view providers ProvideUpdateAsync method
+                    await _viewProvider.ProvideUpdateAsync(result.Response, this);
+                 
                     // Everything was OK
                     _alerter.Success(T["User Created Successfully!"]);
                     
                     // Redirect back to edit user
                     return RedirectToAction(nameof(Edit), new RouteValueDictionary()
                     {
-                        ["id"] = newUser.Id.ToString()
+                        ["id"] = result.Response.Id.ToString()
                     });
 
                 }
@@ -252,16 +253,6 @@ namespace Plato.Users.Controllers
                 
             }
             
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    _alerter.Danger(T[error.ErrorMessage]);
-                }
-            }
-
             return await Create();
 
         }
@@ -316,37 +307,50 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var existingUser = await _userManager.FindByIdAsync(id);
+            if (existingUser == null)
             {
                 return NotFound();
             }
-            
-            var result = await _viewProvider.ProvideUpdateAsync((User)user, this);
-            if (ModelState.IsValid)
+
+            // Get composed model from view providers
+            var  user = await _viewProvider.ComposeModelAsync(existingUser, this);
+
+            // Validate model state within all view providers
+            var valid = true; // await _viewProvider.IsModelStateValidAsync(user, this);
+            if (valid)
             {
-
-                _alerter.Success(T["User Updated Successfully!"]);
-
-                // Redirect back to edit user
-                return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                
+                // Update user
+                var result = await _platoUserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    ["id"] = user.Id.ToString()
-                });
 
-            }
+                    // Execute view providers ProvideUpdateAsync method
+                    await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    // Add confirmation
+                    _alerter.Success(T["User Updated Successfully!"]);
+
+                    // Redirect back to edit user
+                    return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                    {
+                        ["id"] = user.Id.ToString()
+                    });
+
                 }
+                else
+                {
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                
             }
 
-            return await Edit(user.Id.ToString());
+            return await Edit(id);
 
         }
 

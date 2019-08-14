@@ -17,7 +17,8 @@ namespace Plato.Internal.Stores.Users
     {
 
         #region "Private Variables"
-        
+
+        public const string ById = "ById";
         public const string ByUsername = "ByUsername";
         public const string ByUsernameNormalized = "ByUsernameNormalized";
         public const string ByEmail = "ByEmail";
@@ -166,7 +167,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByIdAsync(int id)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByIdAsync(id);

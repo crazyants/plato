@@ -6600,13 +6600,16 @@ $(function (win, doc, $) {
         // Activate plug-ins used within infiniteScroll load
         $().infiniteScroll(function ($ele) {
 
-            /* Initialize bootstrap tooltips upon infiniteScroll load */
+            /* tooltips */
             app.ui.initToolTips($ele);
             
-            /* Initialize dialogSpy upon infiniteScroll load */
+            /* markdownBody */
+            $ele.find('[data-provide="markdownBody"]').markdownBody();
+
+            /* dialogSpy */
             $ele.find('[data-provide="dialog"]').dialogSpy();
 
-            /* Initialize replySpy upon infiniteScroll load */
+            /* replySpy */
             $ele.replySpy("bind");
 
             /* popper */

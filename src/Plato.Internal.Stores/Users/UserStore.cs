@@ -110,8 +110,8 @@ namespace Plato.Internal.Stores.Users
                 return null;
             }
                 
-
             return await _platoUserStore.GetByIdAsync(id);
+
         }
 
         public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)

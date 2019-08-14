@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -10,16 +9,12 @@ namespace Plato.WebApi.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<User>
     {
-
-        private readonly UserManager<User> _userManager;
+        
         private readonly IPlatoUserStore<User> _platoUserStore;
         
-        public UserViewProvider(
-            UserManager<User> userManager,
-            IPlatoUserStore<User> platoUserStore)
+        public UserViewProvider(IPlatoUserStore<User> platoUserStore)
         {
-            _userManager = userManager;
-            _platoUserStore = platoUserStore;
+             _platoUserStore = platoUserStore;
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(User user, IViewProviderContext updater)

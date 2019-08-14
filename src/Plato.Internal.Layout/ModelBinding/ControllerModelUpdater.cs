@@ -13,13 +13,13 @@ namespace Plato.Internal.Layout.ModelBinding
 
         private readonly Controller _controller;
 
-        public ModelStateDictionary ModelState { get; }
+        public ModelStateDictionary ModelState => _controller.ModelState;
 
-        public RouteData RouteData { get; }
+        public RouteData RouteData => _controller.RouteData;
 
-        public ViewDataDictionary ViewData { get; }
+        public ViewDataDictionary ViewData => _controller.ViewData;
 
-        public HttpContext HttpContext { get; }
+        public HttpContext HttpContext => _controller.HttpContext;
 
         public ControllerModelUpdater(Controller controller)
         {
