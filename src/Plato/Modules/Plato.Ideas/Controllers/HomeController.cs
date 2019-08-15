@@ -644,8 +644,6 @@ namespace Plato.Ideas.Controllers
 
                 // Update the entity
                 var result = await _ideaManager.UpdateAsync(entity);
-
-                // Ensure success
                 if (result.Succeeded)
                 {
 

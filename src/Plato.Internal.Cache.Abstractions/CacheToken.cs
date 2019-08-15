@@ -9,7 +9,9 @@ namespace Plato.Internal.Cache.Abstractions
 
         private readonly Type _type;
         private readonly int _typeHashCode;
-        private readonly string _varyByHashCode;
+        private readonly string _varyByHash;
+
+        public Type ForType => _type;
 
         public CacheToken(Type type, params object[] varyBy)
         {
@@ -23,13 +25,15 @@ namespace Plato.Internal.Cache.Abstractions
                 {
                     if (vary != null)
                     {
-                        sb.Append(vary.GetHashCode());
+                        sb
+                            .Append(vary.ToString());
+                            //.Append(vary.GetHashCode());
                     }
                 }
             }
           
             _type = type;
-            _varyByHashCode = sb.ToString();
+            _varyByHash = sb.ToString();
             _typeHashCode = _type.GetHashCode();
         }
 
@@ -66,14 +70,14 @@ namespace Plato.Internal.Cache.Abstractions
             {
                 var hashCode = (_type != null ? _type.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ _typeHashCode;
-                hashCode = (hashCode * 397) ^ (_varyByHashCode != null ? _varyByHashCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_varyByHash != null ? _varyByHash.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
         public override string ToString()
         {
-            return $"{_type}_{GetHashCode()}";
+            return $"{_type}-{GetHashCode()}";
         }
         
     }

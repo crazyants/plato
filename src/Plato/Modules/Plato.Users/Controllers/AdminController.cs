@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +16,9 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Repositories.Users;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -33,6 +34,9 @@ namespace Plato.Users.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IUserRepository<User> _userRepository;
+
         private readonly IUserEmails _userEmails;
         private readonly IAlerter _alerter;
 
@@ -51,7 +55,9 @@ namespace Plato.Users.Controllers
             UserManager<User> userManager,
             IContextFacade contextFacade,
             IUserEmails userEmails,
-            IAlerter alerter)
+            IAlerter alerter, 
+            IPlatoUserStore<User> platoUserStore,
+            IUserRepository<User> userRepository)
         {
 
             _authorizationService = authorizationService;
@@ -63,6 +69,8 @@ namespace Plato.Users.Controllers
             _userManager = userManager;
             _userEmails = userEmails;
             _alerter = alerter;
+            _platoUserStore = platoUserStore;
+            _userRepository = userRepository;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -106,15 +114,15 @@ namespace Plato.Users.Controllers
 
             // Add non default route data for pagination purposes
             if (opts.Search != defaultViewOptions.Search)
-                this.RouteData.Values.Add("opts.search", opts.Search);
+                RouteData.Values.Add("opts.search", opts.Search);
             if (opts.Sort != defaultViewOptions.Sort)
-                this.RouteData.Values.Add("opts.sort", opts.Sort);
+                RouteData.Values.Add("opts.sort", opts.Sort);
             if (opts.Order != defaultViewOptions.Order)
-                this.RouteData.Values.Add("opts.order", opts.Order);
+                RouteData.Values.Add("opts.order", opts.Order);
             if (pager.Page != defaultPagerOptions.Page)
-                this.RouteData.Values.Add("pager.page", pager.Page);
+                RouteData.Values.Add("pager.page", pager.Page);
             if (pager.Size != defaultPagerOptions.Size)
-                this.RouteData.Values.Add("pager.size", pager.Size);
+                RouteData.Values.Add("pager.size", pager.Size);
             
             // Enable edit options for admin view
             opts.EnableEdit = true;
@@ -264,14 +272,25 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Edit(string id)
         {
 
+            // Validate
+            var ok = int.TryParse(id, out var userId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
             // Ensure we have permission 
             if (!await _authorizationService.AuthorizeAsync(User,
                 Permissions.EditUsers))
             {
                 return Unauthorized();
             }
+
+            var user = await _platoUserStore.GetByIdAsync(userId);
+
             // Ensure user exists
-            var user = await _userManager.FindByIdAsync(id);
+            //var user = await _userManager.FindByIdAsync(id);
+            
             if (user == null)
             {
                 return NotFound();
@@ -295,9 +314,9 @@ namespace Plato.Users.Controllers
             return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(user, this));
 
         }
-        
+
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(string id)
+        public async Task<IActionResult> EditPost(EditUserViewModel model)
         {
 
             // Ensure we have permission 
@@ -306,21 +325,61 @@ namespace Plato.Users.Controllers
             {
                 return Unauthorized();
             }
-
-            var existingUser = await _userManager.FindByIdAsync(id);
-            if (existingUser == null)
+            
+            var user = await _platoUserStore.GetByIdAsync(model.Id);
+            //var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
             {
                 return NotFound();
             }
 
-            // Get composed model from view providers
-            var  user = await _viewProvider.ComposeModelAsync(existingUser, this);
+            // Update user
+            //var user = await _userRepository.SelectByIdAsync(model.Id);
+            user.DisplayName = model.DisplayName;
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+            user.Biography = model.Biography;
+            user.Location = model.Location;
+            user.Signature = model.Signature;
+            user.Url = model.Url;
+            
+            // Validate view providers
+            var valid = await _viewProvider.IsModelStateValidAsync(user, this);
 
+            // Validate Uniqueness
+            // -------------------------
+
+            // Is this a unique email?
+            var userByEmail = await _platoUserStore.GetByEmailAsync(model.Email);
+            if (userByEmail != null)
+            {
+                // found another account with same email
+                if (userByEmail.Id != model.Id)
+                {
+                    ViewData.ModelState.AddModelError(nameof(model.Email), "The email already exists");
+                    valid = false;
+                }
+            }
+
+            // Is this a unique username?
+            var userByUserName = await _platoUserStore.GetByUserNameAsync(model.UserName.Normalize());
+            if (userByUserName != null)
+            {
+                // found another account with same username
+                if (userByUserName.Id != model.Id)
+                {
+                    ViewData.ModelState.AddModelError(nameof(model.Email), "The username already exists");
+                    valid = false;
+                }
+            }
+            
             // Validate model state within all view providers
-            var valid = true; // await _viewProvider.IsModelStateValidAsync(user, this);
             if (valid)
             {
-                
+
+                // Get composed model from view providers
+                //user = await _viewProvider.ComposeModelAsync(user, this);
+
                 // Update user
                 var result = await _platoUserManager.UpdateAsync(user);
                 if (result.Succeeded)
@@ -344,13 +403,17 @@ namespace Plato.Users.Controllers
                     // Errors that may have occurred whilst updating the entity
                     foreach (var error in result.Errors)
                     {
+                        _alerter.Danger(T[error.Description]);
+
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-                
+
             }
 
-            return await Edit(id);
+            user = null;
+            
+            return await Edit(model.Id.ToString());
 
         }
 
@@ -526,9 +589,9 @@ namespace Plato.Users.Controllers
                 var user = result.Response;
                 if (user != null)
                 {
-                    user.ConfirmationToken = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ConfirmationToken));
+                    user.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ConfirmationToken));
                     var emailResult = await _userEmails.SendEmailConfirmationTokenAsync(user);
-                    if (result.Succeeded)
+                    if (emailResult.Succeeded)
                     {
                         _alerter.Success(T["Confirmation Email Sent Successfully!"]);
                     }
@@ -994,7 +1057,7 @@ namespace Plato.Users.Controllers
             currentUser.IsBannedUpdatedDate = DateTimeOffset.UtcNow;
 
             // Invalidate security stamp to force sign-out banned users
-            await _securityStampStore.SetSecurityStampAsync(currentUser, System.Guid.NewGuid().ToString(), new CancellationToken());
+            await _securityStampStore.SetSecurityStampAsync(currentUser, Guid.NewGuid().ToString(), new CancellationToken());
 
             // Update user
             var result = await _userManager.UpdateAsync(currentUser);

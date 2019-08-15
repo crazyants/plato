@@ -132,12 +132,9 @@ namespace Plato.StopForumSpam.Client.Services
 
             // Store result in cache for a short period of time to avoid multiple http requests
             var token = _cacheManager.GetOrCreateToken(this.GetType(), sb.ToString().TrimEnd(','));
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry, options) =>
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-
-                // Keep in cache for this time, reset time if accessed.
-                options.SetSlidingExpiration(TimeSpan.FromMinutes(1));
-             
+                
                 // Make request
                 var result = await _httpClient.GetAsync(new Uri("http://www.stopforumspam.com/api"), parameters);
                 if (result.Succeeded)

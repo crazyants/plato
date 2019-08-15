@@ -19,35 +19,35 @@ namespace Plato.Users.Services
 
     public class PlatoUserManager<TUser> : IPlatoUserManager<TUser> where TUser : class, IUser
     {
-        
+
+        private readonly IUserSecurityStampStore<TUser> _securityStampStore;
+        private readonly IPlatoUserStore<TUser> _platoUserStore;
+        private readonly ISiteSettingsStore _siteSettingsStore;
+        private readonly IUserColorProvider _userColorProvider;
+        private readonly IClientIpAddress _clientIpAddress;
         private readonly UserManager<TUser> _userManager;
         private readonly IBroker _broker;
-        private readonly IClientIpAddress _clientIpAddress;
-        private readonly ISiteSettingsStore _siteSettingsStore;
-        private readonly IPlatoUserStore<TUser> _platoUserStore;
-        private readonly IUserColorProvider _userColorProvider;
-        private readonly IUserSecurityStampStore<TUser> _securityStampStore;
+        
         private readonly IStringLocalizer<PlatoUserManager<TUser>> T;
 
         public PlatoUserManager(
-            IOptions<IdentityOptions> identityOptions,
             IStringLocalizer<PlatoUserManager<TUser>> stringLocalizer,
-            UserManager<TUser> userManager,
-            ISiteSettingsStore siteSettingsStore,
+            IUserSecurityStampStore<TUser> securityStampStore,
             IPlatoUserStore<TUser> platoUserStore,
-            IUserColorProvider userColorProvider, 
+            IUserColorProvider userColorProvider,
+            ISiteSettingsStore siteSettingsStore,
             IClientIpAddress clientIpAddress,
-            IBroker broker, 
-            IUserSecurityStampStore<TUser> securityStampStore)
+            UserManager<TUser> userManager,
+            IBroker broker)
         {
+            _securityStampStore = securityStampStore;
             _siteSettingsStore = siteSettingsStore;
-            _platoUserStore = platoUserStore;
-            _userManager = userManager;
             _userColorProvider = userColorProvider;
             _clientIpAddress = clientIpAddress;
+            _platoUserStore = platoUserStore;
+            _userManager = userManager;
             _broker = broker;
-            _securityStampStore = securityStampStore;
-
+         
             T = stringLocalizer;
 
         }
@@ -205,20 +205,20 @@ namespace Plato.Users.Services
             return result.Failed(errors.ToArray());
 
         }
-        
+
         public async Task<ICommandResult<TUser>> UpdateAsync(TUser model)
         {
 
             var result = new CommandResult<TUser>();
-            
+
             // Validate
             // -------------------------
-            
+
             if (model.Id <= 0)
             {
                 return result.Failed(new CommandError("Id", T["You must specify a user id to update"]));
             }
-            
+
             if (String.IsNullOrEmpty(model.UserName) || String.IsNullOrWhiteSpace(model.UserName))
             {
                 return result.Failed(new CommandError("UserMame", T["A username is required"]));
@@ -231,7 +231,7 @@ namespace Plato.Users.Services
 
             // Check Uniqueness
             // -------------------------
-
+            
             // Is this a unique email?
             var userByEmail = await _userManager.FindByEmailAsync(model.Email);
             if (userByEmail != null)
@@ -253,7 +253,7 @@ namespace Plato.Users.Services
                     return result.Failed(new CommandError("UserMame", T["The username already exists"]));
                 }
             }
-            
+
             model.ModifiedDate = DateTimeOffset.Now;
             model.SignatureHtml = await ParseSignatureHtml(model.Signature);
 
@@ -276,7 +276,7 @@ namespace Plato.Users.Services
                 {
                     model = await handler.Invoke(new Message<TUser>(model, this));
                 }
-                
+
                 return result.Success(user);
 
             }
@@ -286,6 +286,7 @@ namespace Plato.Users.Services
             {
                 errors.Add(new CommandError(error.Code, T[error.Description]));
             }
+
             return result.Failed(errors.ToArray());
 
         }

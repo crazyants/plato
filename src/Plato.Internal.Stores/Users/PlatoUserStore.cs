@@ -29,15 +29,15 @@ namespace Plato.Internal.Stores.Users
         public const string ByPlatoBot = "PlatoBot";
 
         private readonly IUserDataStore<UserData> _userDataStore;
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbQueryConfiguration _dbQuery;
         private readonly IUserRepository<User> _userRepository;
-        private readonly ILogger<PlatoUserStore> _logger;
-        private readonly IAliasCreator _aliasCreator;
-        private readonly IKeyGenerator _keyGenerator;
         private readonly IUserDataDecorator _userDataDecorator;
         private readonly IUserRoleDecorator _userRoleDecorator;
-
+        private readonly ILogger<PlatoUserStore> _logger;
+        private readonly IDbQueryConfiguration _dbQuery;
+        private readonly IAliasCreator _aliasCreator;
+        private readonly IKeyGenerator _keyGenerator;
+        private readonly ICacheManager _cacheManager;
+        
         #endregion
 
         #region "constructor"
@@ -53,13 +53,13 @@ namespace Plato.Internal.Stores.Users
             IUserDataDecorator userDataDecorator,
             IUserRoleDecorator userRoleDecorator)
         {
-            _userRepository = userRepository;
-            _cacheManager = cacheManager;
-            _userDataStore = userDataStore;
-            _aliasCreator = aliasCreator;
-            _keyGenerator = keyGenerator;
             _userDataDecorator = userDataDecorator;
             _userRoleDecorator = userRoleDecorator;
+            _userRepository = userRepository;
+            _userDataStore = userDataStore;
+            _cacheManager = cacheManager;
+            _aliasCreator = aliasCreator;
+            _keyGenerator = keyGenerator;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -167,6 +167,12 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByIdAsync(int id)
         {
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
@@ -352,7 +358,7 @@ namespace Plato.Internal.Stores.Users
 
             // Expire user cache tokens
             _cacheManager.CancelTokens(this.GetType());
-            _cacheManager.CancelTokens(this.GetType(), user.Id);
+            _cacheManager.CancelTokens(this.GetType(), ById, user.Id);
             _cacheManager.CancelTokens(this.GetType(), ByUsernameNormalized, user.NormalizedUserName);
             _cacheManager.CancelTokens(this.GetType(), ByUsername, user.UserName);
             _cacheManager.CancelTokens(this.GetType(), ByEmailNormalized, user.NormalizedEmail);

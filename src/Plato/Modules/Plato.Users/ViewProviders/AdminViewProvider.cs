@@ -13,6 +13,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
@@ -35,6 +36,10 @@ namespace Plato.Users.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly ISitesFolder _sitesFolder;
         private readonly IUrlHelper _urlHelper;
+
+        private readonly IUserRepository<User> _userRepository;
+
+
         private readonly IStringLocalizer T;
 
         public AdminViewProvider(
@@ -44,6 +49,7 @@ namespace Plato.Users.ViewProviders
             IStringLocalizer<AdminViewProvider> stringLocalizer,
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IPlatoUserManager<User> platoUserManager,
+            IUserRepository<User> userRepository,
             IHostingEnvironment hostEnvironment,
             IUrlHelperFactory urlHelperFactory,
             IPlatoUserStore<User> userStore,
@@ -53,10 +59,11 @@ namespace Plato.Users.ViewProviders
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
             _platoUserManager = platoUserManager;
             _userPhotoStore = userPhotoStore;
+            _userRepository = userRepository;
             _userManager = userManager;
             _sitesFolder = sitesFolder;
             _userStore = userStore;
-            
+
             T = stringLocalizer;
 
             // paths
@@ -100,7 +107,7 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
 
-            var details = user.GetOrCreate<UserDetail>();
+            //var details = user.GetOrCreate<UserDetail>();
 
             User isVerifiedBy = null;
             User isSpamBy = null;
@@ -218,15 +225,6 @@ namespace Plato.Users.ViewProviders
                 Url = user.Url
             };
 
-            //if (await IsNewUser(user.Id.ToString()))
-            //{
-            //    if (model.Password != model.PasswordConfirmation)
-            //    {
-            //        updater.ModelState.AddModelError(nameof(model.PasswordConfirmation), T["Password and Password Confirmation do not match"]);
-            //        return false;
-            //    }
-            //}
-            
             return await updater.TryUpdateModelAsync(model);
 
         }
@@ -341,9 +339,9 @@ namespace Plato.Users.ViewProviders
         }
 
 
-        public async Task<bool> IsNewUser(string userId)
+        public async Task<bool> IsNewUser(int userId)
         {
-            return await _userManager.FindByIdAsync(userId) == null;
+            return await _userRepository.SelectByIdAsync(userId) == null;
         }
 
         #endregion

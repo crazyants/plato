@@ -89,31 +89,31 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
-            var roleNames = new List<string>(2)
-            {
-                DefaultRoles.Administrator,
-                DefaultRoles.Staff
-            };
+            //var roleNames = new List<string>(2)
+            //{
+            //    DefaultRoles.Administrator,
+            //    DefaultRoles.Staff
+            //};
 
-            var users = await _platoUserStore.QueryAsync()
-                .Select<UserQueryParams>(q =>
-                {
-                    q.RoleName.IsIn(roleNames.ToArray());
-                })
-                .ToList();
-            if (users?.Data != null)
-            {
+            //var users = await _platoUserStore.QueryAsync()
+            //    .Select<UserQueryParams>(q =>
+            //    {
+            //        q.RoleName.IsIn(roleNames.ToArray());
+            //    })
+            //    .ToList();
+            //if (users?.Data != null)
+            //{
           
-                var sb = new StringBuilder();
-                foreach (var user in users.Data)
-                {
-                    sb.Append(user.DisplayName + String.Join(",", user.RoleNames));
-                }
+            //    var sb = new StringBuilder();
+            //    foreach (var user in users.Data)
+            //    {
+            //        sb.Append(user.DisplayName + String.Join(",", user.RoleNames));
+            //    }
 
-                ViewData["users"] = sb.ToString();
-            }
+            //    ViewData["users"] = sb.ToString();
+            //}
 
-            await CreateSampleUsers();
+            //await CreateSampleUsers();
 
             // ----------------------------------------------------------------
 

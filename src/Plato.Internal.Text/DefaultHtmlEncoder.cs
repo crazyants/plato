@@ -19,6 +19,13 @@ namespace Plato.Internal.Text
 
         public string Encode(string html)
         {
+
+            // We always need a string to encode
+            if (string.IsNullOrEmpty(html))
+            {
+                return html;
+            }
+
             // Encode the supplied html but ensure
             // we convert encoded new lines back into \n
             // then convert all \n to <br/>

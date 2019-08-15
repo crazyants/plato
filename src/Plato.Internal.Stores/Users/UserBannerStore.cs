@@ -15,8 +15,8 @@ namespace Plato.Internal.Stores.Users
     {
 
         private readonly string _key = "UserBanner";
-        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly IUserBannerRepository<UserBanner> _userBannerRepository;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _memoryCache;

@@ -13,9 +13,14 @@ namespace Plato.Internal.Cache.Extensions
             this IServiceCollection services)
         {
 
-            services.Add(ServiceDescriptor.Singleton<IMemoryCache, MemoryCache>());
-            services.Add(ServiceDescriptor.Transient<IDistributedCache, MemoryDistributedCache>());
+            // Same as services.AddMemoryCache();
+             services.Add(ServiceDescriptor.Singleton<IMemoryCache, MemoryCache>());
 
+            // Not implemented - Can be swapped out with real RedisCache
+            // I.e. services.AddDistributedRedisCache(options => {});
+            services.Add(ServiceDescriptor.Transient<IDistributedCache, MemoryDistributedCache>());
+            
+            // Add cache implementations as singletons
             services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<ICacheDependency, CacheDependency>();
 

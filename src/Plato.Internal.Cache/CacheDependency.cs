@@ -32,7 +32,7 @@ namespace Plato.Internal.Cache
 
         public void CancelToken(string key)
         {
-            if (_dependencies.TryRemove(key, out CacheDependencyInfo changeTokenInfo))
+            if (_dependencies.TryRemove(key, out var changeTokenInfo))
             {
                 changeTokenInfo.CancellationToken.Cancel();
             }

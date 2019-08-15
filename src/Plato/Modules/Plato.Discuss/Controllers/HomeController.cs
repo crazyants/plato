@@ -640,8 +640,6 @@ namespace Plato.Discuss.Controllers
 
                 // Update the entity
                 var result = await _topicManager.UpdateAsync(entity);
-
-                // Ensure success
                 if (result.Succeeded)
                 {
 
