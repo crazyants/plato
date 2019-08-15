@@ -14,15 +14,15 @@ namespace Plato.Media.Stores
         private const string ById = "ById";
 
         private readonly IMediaRepository<Models.Media> _mediaRepository;
+        private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<MediaStore> _logger;
-        private readonly IDbQueryConfiguration _dbQuery;
-
+       
         public MediaStore(
             IMediaRepository<Models.Media> mediaRepository, 
+            IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
-            ILogger<MediaStore> logger,
-            IDbQueryConfiguration dbQuery)
+            ILogger<MediaStore> logger)
         {
             _mediaRepository = mediaRepository;
             _cacheManager = cacheManager;
@@ -37,7 +37,7 @@ namespace Plato.Media.Stores
             var result = await _mediaRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Plato.Media.Stores
             var result = await _mediaRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -67,7 +67,9 @@ namespace Plato.Media.Stores
                     _logger.LogInformation("Deleted media '{0}' with id {1}",
                         model.Name, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -104,8 +106,13 @@ namespace Plato.Media.Stores
             });
         }
 
+        public void CancelTokens(Models.Media model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
         #endregion
-        
+
     }
 
 }

@@ -17,21 +17,22 @@ namespace Plato.Internal.Stores.Shell
 
     public class ShellFeatureStore : IShellFeatureStore<ShellFeature>
     {
-        private readonly ICacheManager _cacheManager;
+     
         private readonly IShellFeatureRepository<ShellFeature> _featureRepository;
         private readonly ILogger<ShellFeatureStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public ShellFeatureStore(
-            ILogger<ShellFeatureStore> logger, 
             IShellFeatureRepository<ShellFeature> featureRepository,
-            ICacheManager cacheManager,
-            IDbQueryConfiguration dbQuery)
+            ILogger<ShellFeatureStore> logger,
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
-            _logger = logger;
             _featureRepository = featureRepository;
             _cacheManager = cacheManager;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         public async Task<ShellFeature> CreateAsync(ShellFeature feature)
@@ -47,13 +48,13 @@ namespace Plato.Internal.Stores.Shell
                 feature.Settings = await feature.FeatureSettings.SerializeAsync();
             }
 
-            var newFeature = await _featureRepository.InsertUpdateAsync(feature);
-            if (newFeature != null)
+            var result = await _featureRepository.InsertUpdateAsync(feature);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return newFeature;
+            return result;
 
         }
 
@@ -71,23 +72,22 @@ namespace Plato.Internal.Stores.Shell
                 feature.Settings = await feature.FeatureSettings.SerializeAsync();
             }
             
-            var updatedFeature = await _featureRepository.InsertUpdateAsync(feature);
-
-            if (updatedFeature != null)
+            var result = await _featureRepository.InsertUpdateAsync(feature);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return updatedFeature;
+            return result;
 
         }
 
-        public async Task<bool> DeleteAsync(ShellFeature feature)
+        public async Task<bool> DeleteAsync(ShellFeature model)
         {
-            var success = await _featureRepository.DeleteAsync(feature.Id);
+            var success = await _featureRepository.DeleteAsync(model.Id);
             if (success)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return success;
@@ -140,6 +140,11 @@ namespace Plato.Internal.Stores.Shell
 
             });
 
+        }
+
+        public void CancelTokens(ShellFeature model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
     }

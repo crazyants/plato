@@ -29,19 +29,19 @@ namespace Plato.Labels.Stores
         private readonly ICacheManager _cacheManager;
 
         public LabelStore(
+            ILabelDataStore<LabelData> labelDataStore,
             ILabelRepository<TLabel> labelRepository,
-            ICacheManager cacheManager,
+            ITypedModuleProvider typedModuleProvider,
             ILogger<LabelStore<TLabel>> logger,
             IDbQueryConfiguration dbQuery,
-            ILabelDataStore<LabelData> labelDataStore,
-            ITypedModuleProvider typedModuleProvider)
+            ICacheManager cacheManager)
         {
-            _labelRepository = labelRepository;
-            _cacheManager = cacheManager;
-            _logger = logger;
-            _dbQuery = dbQuery;
-            _labelDataStore = labelDataStore;
             _typedModuleProvider = typedModuleProvider;
+            _labelRepository = labelRepository;
+            _labelDataStore = labelDataStore;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #region "Implementation"
@@ -52,19 +52,13 @@ namespace Plato.Labels.Stores
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var newLabel = await _labelRepository.InsertUpdateAsync(model);
-            if (newLabel != null)
+            var result = await _labelRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Added new Label with id {1}",
-                        newLabel.Id);
-                }
-
-                CancelTokens(newLabel);
+                CancelTokens(result);
             }
 
-            return newLabel;
+            return result;
 
         }
 
@@ -74,19 +68,13 @@ namespace Plato.Labels.Stores
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var updatedLabel = await _labelRepository.InsertUpdateAsync(model);
-            if (updatedLabel != null)
+            var result = await _labelRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Updated existing label with id {1}",
-                        updatedLabel.Id);
-                }
-
-                CancelTokens(updatedLabel);
+                CancelTokens(result);
             }
 
-            return updatedLabel;
+            return result;
 
         }
 
@@ -170,6 +158,11 @@ namespace Plato.Labels.Stores
                 return results;
 
             });
+        }
+
+        public void CancelTokens(TLabel model)
+        {
+            CancelTokensInternal(model);
         }
 
         #endregion
@@ -285,7 +278,7 @@ namespace Plato.Labels.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void CancelTokens(TLabel label)
+        void CancelTokensInternal(TLabel label)
         {
 
             // Clear generic type
@@ -299,8 +292,7 @@ namespace Plato.Labels.Stores
 
             // Clear label data
             _cacheManager.CancelTokens(typeof(LabelDataStore));
-
-
+            
         }
 
         #endregion

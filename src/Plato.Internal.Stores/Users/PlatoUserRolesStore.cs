@@ -166,7 +166,12 @@ namespace Plato.Internal.Stores.Users
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRolesRepository.SelectAsync(dbParams));
         }
-
         
+        public void CancelTokens(UserRole model)
+        {
+            throw new NotImplementedException();
+        }
+
     }
+
 }

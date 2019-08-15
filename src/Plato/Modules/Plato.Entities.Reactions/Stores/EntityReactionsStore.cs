@@ -17,33 +17,31 @@ namespace Plato.Entities.Reactions.Stores
     {
 
         private readonly IEntityReactionsRepository<EntityReaction> _entityReactionRepository;
-        private readonly ICacheManager _cacheManager;
-        private readonly ILogger<EntityReactionsStore> _logger;
         private readonly IReactionsManager<Reaction> _reactionManager;
+        private readonly ILogger<EntityReactionsStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public EntityReactionsStore(
             IEntityReactionsRepository<EntityReaction> entityReactionRepository,
-            ICacheManager cacheManager,
+            IReactionsManager<Reaction> reactionManager,
             ILogger<EntityReactionsStore> logger,
             IDbQueryConfiguration dbQuery,
-            IReactionsManager<Reaction> reactionManager)
+            ICacheManager cacheManager)
         {
             _entityReactionRepository = entityReactionRepository;
-            _cacheManager = cacheManager;
-            _logger = logger;
-            _dbQuery = dbQuery;
             _reactionManager = reactionManager;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
-
-        #region "Implementation"
-
+        
         public async Task<EntityReaction> CreateAsync(EntityReaction model)
         {
             var result = await _entityReactionRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -54,7 +52,7 @@ namespace Plato.Entities.Reactions.Stores
             var result = await _entityReactionRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -70,7 +68,9 @@ namespace Plato.Entities.Reactions.Stores
                     _logger.LogInformation("Deleted reaction '{0}' with id {1}",
                         model.ReactionName, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -138,8 +138,11 @@ namespace Plato.Entities.Reactions.Stores
             });
         }
 
-        #endregion
-
-
+        public void CancelTokens(EntityReaction model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+        
     }
+
 }

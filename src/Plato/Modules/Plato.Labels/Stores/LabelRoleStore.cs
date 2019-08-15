@@ -17,20 +17,20 @@ namespace Plato.Labels.Stores
         private const string ByLabelIdKey = "ByLabelId";
 
         private readonly ILabelRoleRepository<LabelRole> _labelRoleRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<LabelRoleStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public LabelRoleStore(
             ILabelRoleRepository<LabelRole> labelRoleRepository,
-            ICacheManager cacheManager,
             ILogger<LabelRoleStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _labelRoleRepository = labelRoleRepository;
             _cacheManager = cacheManager;
-            _logger = logger;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #region "Implementation"
@@ -40,9 +40,7 @@ namespace Plato.Labels.Stores
             var result = await _labelRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, model.LabelId);
+                CancelTokens(result);
             }
 
             return result;
@@ -53,9 +51,7 @@ namespace Plato.Labels.Stores
             var result = await _labelRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, model.LabelId);
+                CancelTokens(result);
             }
 
             return result;
@@ -73,9 +69,9 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted Label role for Label '{0}' with id {1}",
                         model.LabelId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, model.LabelId);
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -170,6 +166,19 @@ namespace Plato.Labels.Stores
             }
 
             return success;
+        }
+
+        public void CancelTokens(LabelRole model = null)
+        {
+
+            _cacheManager.CancelTokens(this.GetType());
+
+            if (model != null)
+            {
+                _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);
+                _cacheManager.CancelTokens(this.GetType(), ByLabelIdKey, model.LabelId);
+            }
+            
         }
 
     }

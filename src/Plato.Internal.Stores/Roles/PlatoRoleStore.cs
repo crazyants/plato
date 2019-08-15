@@ -17,8 +17,6 @@ namespace Plato.Internal.Stores.Roles
     {
 
         public const string UserId = "ByUserId";
-
-        #region "Constructor"
         
         private readonly IRoleRepository<Role> _roleRepository;
         private readonly ILogger<PlatoRoleStore> _logger;
@@ -36,42 +34,29 @@ namespace Plato.Internal.Stores.Roles
             _cacheManager = cacheManager;
             _logger = logger;
         }
-
-        #endregion
         
-        #region "Implementation"
-
         public async Task<Role> CreateAsync(Role role)
         {
             
-            var newRole = await _roleRepository.InsertUpdateAsync(role);
-            if (newRole != null)
+            var result = await _roleRepository.InsertUpdateAsync(role);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation($"Role with name {newRole.Name} created successfully");
-                }
-                ClearCache(role);
+                CancelTokens(result);
             }
 
-            return newRole;
+            return result;
         }
 
         public async Task<Role> UpdateAsync(Role role)
         {
 
-            var updatedRole = await _roleRepository.InsertUpdateAsync(role);
-
-            if (updatedRole != null)
+            var result = await _roleRepository.InsertUpdateAsync(role);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation($"Role with name {updatedRole.Name} updated successfully");
-                }
-                ClearCache(role);
+                CancelTokens(role);
             }
 
-            return updatedRole;
+            return result;
 
         }
 
@@ -85,7 +70,7 @@ namespace Plato.Internal.Stores.Roles
                 {
                     _logger.LogInformation($"Role with name {role.Name} was deleted successfully");
                 }
-                ClearCache(role);
+                CancelTokens(role);
             }
 
             return result;
@@ -184,21 +169,26 @@ namespace Plato.Internal.Stores.Roles
             var roles = await GetRolesByUserIdAsync(userId);
             return roles?.Select(r => r.Id).OrderBy(r => r).ToList();
         }
+        
+        public void CancelTokens(Role model = null)
+        {
+
+            _cacheManager.CancelTokens(this.GetType());
+
+            if (model != null)
+            {
+                _cacheManager.CancelTokens(this.GetType(), model.Id);
+                _cacheManager.CancelTokens(this.GetType(), model.Name);
+                _cacheManager.CancelTokens(this.GetType(), model.NormalizedName);
+            }
+          
+        }
 
         void ClearCache(User user)
         {
             _cacheManager.CancelTokens(this.GetType(), UserId, user.Id);
         }
         
-        void ClearCache(Role role)
-        {
-            _cacheManager.CancelTokens(this.GetType());
-            _cacheManager.CancelTokens(this.GetType(), role.Id);
-            _cacheManager.CancelTokens(this.GetType(), role.Name);
-            _cacheManager.CancelTokens(this.GetType(), role.NormalizedName);
-        }
-
-        #endregion
-
     }
+
 }
