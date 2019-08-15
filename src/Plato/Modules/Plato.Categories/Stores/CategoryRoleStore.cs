@@ -17,15 +17,15 @@ namespace Plato.Categories.Stores
         private const string ByCategoryIdKey = "BycategoryId";
 
         private readonly ICategoryRoleRepository<CategoryRole> _categoryRoleRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<CategoryRoleStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public CategoryRoleStore(
             ICategoryRoleRepository<CategoryRole> categoryRoleRepository,
-            ICacheManager cacheManager,
             ILogger<CategoryRoleStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _categoryRoleRepository = categoryRoleRepository;
             _cacheManager = cacheManager;
@@ -38,7 +38,7 @@ namespace Plato.Categories.Stores
             var result = await _categoryRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                ClearCache(model);
+                CancelTokens(model);
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Plato.Categories.Stores
             var result = await _categoryRoleRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                ClearCache(model);
+                CancelTokens(model);
             }
 
             return result;
@@ -67,7 +67,7 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted category role for category '{0}' with id {1}",
                         model.CategoryId, model.Id);
                 }
-                ClearCache(model);
+                CancelTokens(model);
             }
 
             return success;
@@ -138,7 +138,8 @@ namespace Plato.Categories.Stores
             return success;
         }
 
-        void ClearCache(CategoryRole model)
+
+        public void CancelTokens(CategoryRole model)
         {
             _cacheManager.CancelTokens(this.GetType());
             _cacheManager.CancelTokens(this.GetType(), ByIdKey, model.Id);

@@ -62,7 +62,7 @@ namespace Plato.Labels.Stores
             var result = await _entityLabelRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -94,7 +94,7 @@ namespace Plato.Labels.Stores
             var result = await _entityLabelRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -110,7 +110,8 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted Label role for Label '{0}' with id {1}",
                         model.LabelId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
             }
 
             return success;
@@ -185,7 +186,7 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted all labels for entityId '{0}'",
                         entityId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens()
             }
 
             return success;
@@ -202,10 +203,15 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted entity label for entityId '{0}' and labelId {1}",
                         entityId, labelId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens()
             }
 
             return success;
+        }
+
+        public void CancelTokens(EntityLabel model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
         #endregion

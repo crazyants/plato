@@ -173,12 +173,12 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentOutOfRangeException(nameof(id));
             }
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
+            //var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
+            //return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            //{
                 var user = await _userRepository.SelectByIdAsync(id);
                 return await _userDataDecorator.DecorateAsync(user);
-            });
+            //});
         }
 
         public async Task<User> GetByUserNameNormalizedAsync(string userNameNormalized)
@@ -308,6 +308,11 @@ namespace Plato.Internal.Stores.Users
             });
         }
 
+        public void CancelTokens(User user)
+        {
+            CancelTokensInternal(user);
+        }
+
         #endregion
 
         #region "Private Methods"
@@ -353,7 +358,7 @@ namespace Plato.Internal.Stores.Users
 
         }
         
-        void CancelTokens(User user)
+        void CancelTokensInternal(User user)
         {
 
             // Expire user cache tokens

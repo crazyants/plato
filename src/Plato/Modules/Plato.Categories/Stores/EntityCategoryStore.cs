@@ -62,7 +62,7 @@ namespace Plato.Categories.Stores
             var result = await _entityCategoryRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens();
             }
 
             return result;
@@ -94,7 +94,7 @@ namespace Plato.Categories.Stores
             var result = await _entityCategoryRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens();
             }
 
             return result;
@@ -110,7 +110,7 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted category role for category '{0}' with id {1}",
                         model.CategoryId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens();
             }
 
             return success;
@@ -118,11 +118,9 @@ namespace Plato.Categories.Stores
 
         public async Task<EntityCategory> GetByIdAsync(int id)
         {
-
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _entityCategoryRepository.SelectByIdAsync(id));
-
         }
 
         public IQuery<EntityCategory> QueryAsync()
@@ -159,7 +157,7 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted all category roles for category '{0}'",
                         entityId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens();
             }
 
             return success;
@@ -176,12 +174,17 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted entity category for entity Id '{0}' and categoryId {1}",
                         entityId, entityId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens();
             }
 
             return success;
         }
-        
+
+        public void CancelTokens(EntityCategory model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 }

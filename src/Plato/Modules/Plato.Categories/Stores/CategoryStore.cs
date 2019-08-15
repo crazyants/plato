@@ -232,11 +232,16 @@ namespace Plato.Categories.Stores
             return categories?.RecurseChildren<TCategory>(category.Id);
 
         }
-        
+
+        public void CancelTokens(TCategory model)
+        {
+            CancelTokensInternal(model);
+        }
+
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<IEnumerable<CategoryData>> SerializeMetaDataAsync(TCategory category)
         {
 
@@ -346,7 +351,7 @@ namespace Plato.Categories.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void CancelTokens(TCategory model)
+        void CancelTokensInternal(TCategory model)
         {
 
             // Clear current type

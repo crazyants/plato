@@ -275,7 +275,7 @@ namespace Plato.Internal.Repositories.Users
             User user = null;
             using (var context = _dbContext)
             {
-                user = await context.ExecuteReaderAsync<User>(
+                user = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByApiKey",
                     async reader => await BuildUserFromResultSets(reader),

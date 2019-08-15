@@ -44,7 +44,7 @@ namespace Plato.Categories.Stores
             var result =  await _categoryDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return result;
@@ -55,8 +55,7 @@ namespace Plato.Categories.Stores
             var result = await _categoryDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ById, result.Id);
+                CancelTokens(model);
             }
 
             return result;
@@ -73,8 +72,7 @@ namespace Plato.Categories.Stores
                         model.Key, model.CategoryId);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
+                CancelTokens(model);
             }
 
             return success;
@@ -104,6 +102,11 @@ namespace Plato.Categories.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryDataRepository.SelectByCategoryIdAsync(categoryId));
         }
 
+        public void CancelTokens(CategoryData model)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+            _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
+        }
     }
 
 }

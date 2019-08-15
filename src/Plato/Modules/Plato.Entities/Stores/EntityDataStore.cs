@@ -49,7 +49,7 @@ namespace Plato.Entities.Stores
             var result =  await _entityDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -60,7 +60,7 @@ namespace Plato.Entities.Stores
             var result = await _entityDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -77,7 +77,7 @@ namespace Plato.Entities.Stores
                         model.Key, model.EntityId);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return success;
@@ -107,6 +107,10 @@ namespace Plato.Entities.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityDataRepository.SelectByEntityIdAsync(entityId));
         }
 
+        public void CancelTokens(IEntityData model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 }

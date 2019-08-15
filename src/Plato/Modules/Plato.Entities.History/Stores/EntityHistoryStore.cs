@@ -15,10 +15,10 @@ namespace Plato.Entities.History.Stores
     {
         
         private readonly IEntityHistoryRepository<EntityHistory> _entityHistoryRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<EntityHistoryStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-   
+        private readonly ICacheManager _cacheManager;
+
         public EntityHistoryStore(
             IEntityHistoryRepository<EntityHistory> entityHistoryRepository,
             ICacheManager cacheManager,
@@ -53,13 +53,13 @@ namespace Plato.Entities.History.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
            
-            var follow = await _entityHistoryRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _entityHistoryRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<EntityHistory> UpdateAsync(EntityHistory model)
@@ -82,13 +82,13 @@ namespace Plato.Entities.History.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
-            var follow = await _entityHistoryRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _entityHistoryRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<bool> DeleteAsync(EntityHistory model)
@@ -112,7 +112,8 @@ namespace Plato.Entities.History.Stores
                     _logger.LogInformation("Deleted entity history for entity id {0}, entity reply id {1} from user id {1}",
                         model.EntityId, model.EntityReplyId, model.CreatedUserId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
             }
 
             return success;
@@ -145,7 +146,12 @@ namespace Plato.Entities.History.Stores
 
             });
         }
-        
+
+        public void CancelTokens(EntityHistory model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
         #endregion
 
     }

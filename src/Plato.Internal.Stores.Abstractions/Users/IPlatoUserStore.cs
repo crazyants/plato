@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Stores.Abstractions.Users
 {
@@ -20,6 +21,7 @@ namespace Plato.Internal.Stores.Abstractions.Users
         Task<T> GetByApiKeyAsync(string apiKey);
 
         Task<T> GetPlatoBotAsync();
-
+        
     }
+
 }

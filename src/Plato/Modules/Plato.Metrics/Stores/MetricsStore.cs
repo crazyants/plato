@@ -38,7 +38,7 @@ namespace Plato.Metrics.Stores
             var result = await _metricRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Plato.Metrics.Stores
             var result = await _metricRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -64,7 +64,8 @@ namespace Plato.Metrics.Stores
                 {
                     _logger.LogInformation("Deleted metric with id {1}", model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens();
             }
 
             return success;
@@ -73,6 +74,11 @@ namespace Plato.Metrics.Stores
         public async Task<Metric> GetByIdAsync(int id)
         {
             return await _metricRepository.SelectByIdAsync(id);
+        }
+
+        public void CancelTokens(Metric model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
         public IQuery<Metric> QueryAsync()

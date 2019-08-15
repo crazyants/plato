@@ -47,7 +47,7 @@ namespace Plato.Internal.Cache
         }
 
 
-        public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
+        public async  Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
         {
             
             // Generate unique key

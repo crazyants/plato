@@ -35,7 +35,6 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IUserRepository<User> _userRepository;
 
         private readonly IUserEmails _userEmails;
         private readonly IAlerter _alerter;
@@ -64,13 +63,13 @@ namespace Plato.Users.Controllers
             _securityStampStore = securityStampStore;
             _breadCrumbManager = breadCrumbManager;
             _platoUserManager = platoUserManager;
+            _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
             _viewProvider = viewProvider;
             _userManager = userManager;
             _userEmails = userEmails;
             _alerter = alerter;
-            _platoUserStore = platoUserStore;
-            _userRepository = userRepository;
+            
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -327,14 +326,12 @@ namespace Plato.Users.Controllers
             }
             
             var user = await _platoUserStore.GetByIdAsync(model.Id);
-            //var user = await _userManager.FindByIdAsync(model.Id.ToString());
             if (user == null)
             {
                 return NotFound();
             }
 
             // Update user
-            //var user = await _userRepository.SelectByIdAsync(model.Id);
             user.DisplayName = model.DisplayName;
             user.UserName = model.UserName;
             user.Email = model.Email;
@@ -356,7 +353,9 @@ namespace Plato.Users.Controllers
                 // found another account with same email
                 if (userByEmail.Id != model.Id)
                 {
+                    // Add validation errors
                     ViewData.ModelState.AddModelError(nameof(model.Email), "The email already exists");
+                    // Not valid
                     valid = false;
                 }
             }
@@ -377,8 +376,8 @@ namespace Plato.Users.Controllers
             if (valid)
             {
 
-                // Get composed model from view providers
-                //user = await _viewProvider.ComposeModelAsync(user, this);
+                // Get composed model from involved view providers
+                user = await _viewProvider.ComposeModelAsync(user, this);
 
                 // Update user
                 var result = await _platoUserManager.UpdateAsync(user);
@@ -403,16 +402,20 @@ namespace Plato.Users.Controllers
                     // Errors that may have occurred whilst updating the entity
                     foreach (var error in result.Errors)
                     {
-                        _alerter.Danger(T[error.Description]);
-
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
 
             }
 
-            user = null;
+            // Important to expire cache otherwise our modifications made
+            // above to the user object may persist even though validation failed
+            if (!valid)
+            {
+                _platoUserStore.CancelTokens(user);
+            }
             
+            // Redirect back to any errors
             return await Edit(model.Id.ToString());
 
         }

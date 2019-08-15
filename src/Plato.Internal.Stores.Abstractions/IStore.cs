@@ -2,8 +2,15 @@
 
 namespace Plato.Internal.Stores.Abstractions
 {
-    
-    public interface IStore<TModel> : IQueryableStore<TModel> where TModel : class
+
+    public interface ICacheableStore<TModel> where TModel : class
+    {
+        void CancelTokens(TModel model);
+    }
+
+    public interface IStore<TModel> :
+        ICacheableStore<TModel>,
+        IQueryableStore<TModel> where TModel : class
     {
 
         Task<TModel> CreateAsync(TModel model);
@@ -13,7 +20,7 @@ namespace Plato.Internal.Stores.Abstractions
         Task<bool> DeleteAsync(TModel model);
 
         Task<TModel> GetByIdAsync(int id);
-
+        
     }
 
 
