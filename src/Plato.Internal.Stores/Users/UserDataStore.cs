@@ -17,21 +17,21 @@ namespace Plato.Internal.Stores.Users
 
         public const string ByUser = "ByUser";
 
-        private readonly ICacheManager _cacheManager;
         private readonly IUserDataRepository<UserData> _userDataRepository;
         private readonly ILogger<UserDataStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-   
+        private readonly ICacheManager _cacheManager;
+
         public UserDataStore(
-            ICacheManager cacheManager,
             IUserDataRepository<UserData> userDataRepository,
             ILogger<UserDataStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
             _userDataRepository = userDataRepository;
-            _logger = logger;
+            _cacheManager = cacheManager;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
         
         public async Task<UserData> CreateAsync(UserData model)
@@ -39,7 +39,7 @@ namespace Plato.Internal.Stores.Users
             var result =  await _userDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -51,7 +51,7 @@ namespace Plato.Internal.Stores.Users
             var result = await _userDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -69,7 +69,7 @@ namespace Plato.Internal.Stores.Users
                         model.Key, model.UserId);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
 
             }
 
@@ -106,5 +106,12 @@ namespace Plato.Internal.Stores.Users
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUser, userId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectByUserIdAsync(userId));
         }
+
+        public void CancelTokens(UserData model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
     }
+
 }

@@ -15,10 +15,8 @@ namespace Plato.Internal.Stores.Badges
     
     public class UserBadgeStore : IUserBadgeStore<UserBadge>
     {
-
-
+        
         private readonly IUserBadgeRepository<UserBadge> _userBadgeRepository;
-
         private readonly ILogger<UserBadgeStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
@@ -38,39 +36,26 @@ namespace Plato.Internal.Stores.Badges
         public async Task<UserBadge> CreateAsync(UserBadge model)
         {
             
-            var newUserBadge = await _userBadgeRepository.InsertUpdateAsync(model);
-            if (newUserBadge != null)
+            var result = await _userBadgeRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Added new user badge with id {1}",
-                        newUserBadge.Id);
-                }
-                
-                _cacheManager.CancelTokens(this.GetType());
-
+                CancelTokens(result);
             }
 
-            return newUserBadge;
+            return result;
 
         }
 
         public async Task<UserBadge> UpdateAsync(UserBadge model)
         {
             
-            var updatedUserBadge = await _userBadgeRepository.InsertUpdateAsync(model);
-            if (updatedUserBadge != null)
+            var result = await _userBadgeRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Updated existing user badge with id {1}",
-                        updatedUserBadge.Id);
-                }
-
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return updatedUserBadge;
+            return result;
 
         }
 
@@ -86,7 +71,7 @@ namespace Plato.Internal.Stores.Badges
                         model.BadgeName, model.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
 
             }
 
@@ -121,44 +106,13 @@ namespace Plato.Internal.Stores.Badges
                 return await _userBadgeRepository.SelectAsync(dbParams);
 
             });
+
         }
-
-        //public async Task<IEnumerable<BadgeEntry>> GetUserBadgesAsync(int userId, IEnumerable<IBadge> badges)
-        //{
-       
-        //    var badgesList = badges.ToList();
-        //    if (badgesList.Count == 0)
-        //    {
-        //        return null;
-        //    }
-
-        //    var userBadges = await QueryAsync()
-        //        .Select<UserBadgeQueryParams>(q =>
-        //        {
-        //            q.UserId.Equals(userId);
-        //        })
-        //        .OrderBy("Id", OrderBy.Asc)
-        //        .ToList();
-          
-        //    var output = new List<BadgeEntry>();
-        //    if (userBadges != null)
-        //    {
-        //        foreach (var userBadge in userBadges.Data)
-        //        {
-        //            var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
-        //            if (badge != null)
-        //            {
-        //                output.Add(new BadgeEntry(badge)
-        //                {
-        //                    AwardedDate = userBadge.CreatedDate
-        //                });
-        //            }
-        //        }
-        //    }
-          
-        //    return output;
-
-        //}
+        
+        public void CancelTokens(UserBadge model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
 
     }
 

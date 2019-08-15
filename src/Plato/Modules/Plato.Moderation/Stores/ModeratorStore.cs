@@ -16,30 +16,28 @@ namespace Plato.Moderation.Stores
     {
 
         private readonly IModeratorRepository<Moderator> _moderatorRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<ModeratorStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public ModeratorStore(
             IModeratorRepository<Moderator> moderatorRepository,
-            ICacheManager cacheManager,
             ILogger<ModeratorStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _moderatorRepository = moderatorRepository;
             _cacheManager = cacheManager;
-            _logger = logger;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
-
-        #region "Implementation"
-
+        
         public async Task<Moderator> CreateAsync(Moderator model)
         {
             var result = await _moderatorRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -51,7 +49,7 @@ namespace Plato.Moderation.Stores
             var result = await _moderatorRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -69,7 +67,9 @@ namespace Plato.Moderation.Stores
                     _logger.LogInformation("Deleted moderator for user '{0}' and category '{1}' with id {2}",
                         model.UserId, model.CategoryId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+                
             }
 
             return success;
@@ -103,10 +103,12 @@ namespace Plato.Moderation.Stores
 
             });
         }
-
-        #endregion
+        
+        public void CancelTokens(Moderator model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
 
     }
-
-
+    
 }

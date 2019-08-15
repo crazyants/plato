@@ -17,27 +17,25 @@ namespace Plato.Stars.Stores
     public class StarStore : IStarStore<Star>
     {
         
-        private readonly IStarRepository<Star> _followRepository;
-        private readonly ICacheManager _cacheManager;
-        private readonly ILogger<StarStore> _logger;
+        private readonly IStarRepository<Star> _starRepository;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
         private readonly IKeyGenerator _keyGenerator;
+        private readonly ILogger<StarStore> _logger;
 
         public StarStore(
-            IStarRepository<Star> followRepository,
-            ICacheManager cacheManager,
-            ILogger<StarStore> logger,
+            IStarRepository<Star> starRepository,
             IDbQueryConfiguration dbQuery,
-            IKeyGenerator keyGenerator)
+            IKeyGenerator keyGenerator,
+            ICacheManager cacheManager,
+            ILogger<StarStore> logger)
         {
-            _followRepository = followRepository;
-            _cacheManager = cacheManager;
-            _logger = logger;
-            _dbQuery = dbQuery;
+            _starRepository = starRepository;
             _keyGenerator = keyGenerator;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
-
-        #region "Implementation"
 
         public async Task<Star> CreateAsync(Star model)
         {
@@ -65,13 +63,13 @@ namespace Plato.Stars.Stores
                 });
             }
 
-            var follow = await _followRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _starRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<Star> UpdateAsync(Star model)
@@ -100,13 +98,13 @@ namespace Plato.Stars.Stores
                 });
             }
             
-            var follow = await _followRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _starRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<bool> DeleteAsync(Star model)
@@ -122,7 +120,7 @@ namespace Plato.Stars.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
             
-            var success = await _followRepository.DeleteAsync(model.Id);
+            var success = await _starRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -130,7 +128,9 @@ namespace Plato.Stars.Stores
                     _logger.LogInformation("Deleted follow with EntityId {0} UserId {1}",
                         model.ThingId, model.CreatedUserId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -138,7 +138,7 @@ namespace Plato.Stars.Stores
 
         public async Task<Star> GetByIdAsync(int id)
         {
-            return await _followRepository.SelectByIdAsync(id);
+            return await _starRepository.SelectByIdAsync(id);
         }
 
         public IQuery<Star> QueryAsync()
@@ -159,7 +159,7 @@ namespace Plato.Stars.Stores
                         token.ToString(), dbParams.Select(p => p.Value));
                 }
 
-                return await _followRepository.SelectAsync(dbParams);
+                return await _starRepository.SelectAsync(dbParams);
 
             });
         }
@@ -176,7 +176,7 @@ namespace Plato.Stars.Stores
                         name, thingId, token.ToString());
                 }
 
-                return await _followRepository.SelectByNameAndThingId(name, thingId);
+                return await _starRepository.SelectByNameAndThingId(name, thingId);
 
             });
         }
@@ -193,12 +193,15 @@ namespace Plato.Stars.Stores
                       name,  createdUserId, thingId, token.ToString());
                 }
 
-                return await _followRepository.SelectByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
+                return await _starRepository.SelectByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
 
             });
         }
 
-        #endregion
+        public void CancelTokens(Star model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
 
     }
 

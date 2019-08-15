@@ -16,17 +16,17 @@ namespace Plato.Labels.Stores
     {
 
         private const string ByEntityId = "ByEntityId";
-        
+
         private readonly IEntityLabelRepository<EntityLabel> _entityLabelRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<EntityLabelStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public EntityLabelStore(
             IEntityLabelRepository<EntityLabel> entityLabelRepository,
-            ICacheManager cacheManager,
             ILogger<EntityLabelStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _entityLabelRepository = entityLabelRepository;
             _cacheManager = cacheManager;
@@ -186,7 +186,8 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted all labels for entityId '{0}'",
                         entityId);
                 }
-                CancelTokens()
+
+                CancelTokens();
             }
 
             return success;
@@ -203,7 +204,9 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted entity label for entityId '{0}' and labelId {1}",
                         entityId, labelId);
                 }
-                CancelTokens()
+
+                CancelTokens();
+
             }
 
             return success;

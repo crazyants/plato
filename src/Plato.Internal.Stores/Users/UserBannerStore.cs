@@ -18,22 +18,16 @@ namespace Plato.Internal.Stores.Users
 
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly IUserBannerRepository<UserBanner> _userBannerRepository;
-        private readonly IDistributedCache _distributedCache;
-        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<UserBannerStore> _logger;
-
-        #region "Constrcutor"
+        private readonly IMemoryCache _memoryCache;
 
         public UserBannerStore(
             IUserBannerRepository<UserBanner> userBannerRepository,
-            IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
-            ILogger<UserBannerStore> logger
-            )
+            ILogger<UserBannerStore> logger,
+            IMemoryCache memoryCache)
         {
             _userBannerRepository = userBannerRepository;
             _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
             _logger = logger;
 
             _cacheEntryOptions = new MemoryCacheEntryOptions
@@ -43,26 +37,19 @@ namespace Plato.Internal.Stores.Users
 
         }
 
-        #endregion
-
-        #region "Implementation"
-
         public async Task<UserBanner> CreateAsync(UserBanner userBanner)
         {
             if (userBanner == null)
                 throw new ArgumentNullException(nameof(userBanner));
             if (userBanner.Id > 0)
                 throw new ArgumentOutOfRangeException(nameof(userBanner.Id));
-            var newUserPhoto = await _userBannerRepository.InsertUpdateAsync(userBanner);
-            if (newUserPhoto != null)
+            var result = await _userBannerRepository.InsertUpdateAsync(userBanner);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
-                ClearCache(userBanner);
+                CancelTokens(result);
             }
 
-            return newUserPhoto;
+            return result;
         }
 
         public Task<bool> DeleteAsync(UserBanner model)
@@ -122,30 +109,24 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentNullException(nameof(userBanner));
             if (userBanner.Id == 0)
                 throw new ArgumentOutOfRangeException(nameof(userBanner.Id));
-            var updatedUserPhoto = await _userBannerRepository.InsertUpdateAsync(userBanner);
-            if (updatedUserPhoto != null)
+            var result = await _userBannerRepository.InsertUpdateAsync(userBanner);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
-                ClearCache(updatedUserPhoto);
+                CancelTokens(result);
             }
-            return updatedUserPhoto;
+            return result;
         }
 
-        #endregion
-        
-        #region "Private Methods"
-        
-        private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)
-        {
-            return _key + "_" + cacheKey + "_" + vaule;
-        }
 
-        private void ClearCache(UserBanner userBanner)
+        public void CancelTokens(UserBanner model)
         {
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, userBanner.Id));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserId, userBanner.UserId));
+            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, model.Id));
+            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserId, model.UserId));
+        }
+        
+        private string GetCacheKey(LocalCacheKeys cacheKey, object value)
+        {
+            return _key + "_" + cacheKey + "_" + value;
         }
 
         private enum LocalCacheKeys
@@ -153,9 +134,7 @@ namespace Plato.Internal.Stores.Users
             ById,
             ByUserId
         }
-
-        #endregion
-
-
+        
     }
+
 }

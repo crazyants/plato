@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Notifications.Models;
 using Plato.Notifications.Repositories;
 
 namespace Plato.Notifications.Stores
@@ -16,15 +15,15 @@ namespace Plato.Notifications.Stores
     {
         
         private readonly IUserNotificationsRepository<UserNotification> _entityMentionsRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<UserNotificationsStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public UserNotificationsStore(
             IUserNotificationsRepository<UserNotification> entityMentionsRepository,
-            ICacheManager cacheManager,
             ILogger<UserNotificationsStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _entityMentionsRepository = entityMentionsRepository;
             _cacheManager = cacheManager;
@@ -52,7 +51,7 @@ namespace Plato.Notifications.Stores
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -78,7 +77,7 @@ namespace Plato.Notifications.Stores
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -94,7 +93,9 @@ namespace Plato.Notifications.Stores
                     _logger.LogInformation("Deleted mention role for userId '{0}' with id {1}",
                         model.UserId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -146,6 +147,12 @@ namespace Plato.Notifications.Stores
 
             return success;
         }
+
+        public void CancelTokens(UserNotification model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
     }
 
 }

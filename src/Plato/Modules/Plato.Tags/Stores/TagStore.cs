@@ -32,8 +32,8 @@ namespace Plato.Tags.Stores
         {
             _tagRepository = tagRepository;
             _cacheManager = cacheManager;
-            _logger = logger;
             _dbQuery = dbQuery;
+            _logger = logger;
         }
   
         public async Task<TModel> CreateAsync(TModel model)
@@ -41,7 +41,7 @@ namespace Plato.Tags.Stores
             var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                CancelTokens(model);
+                CancelTokens(result);
             }
 
             return result;
@@ -53,7 +53,7 @@ namespace Plato.Tags.Stores
             var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                CancelTokens(model);
+                CancelTokens(result);
             }
 
             return result;
@@ -139,7 +139,7 @@ namespace Plato.Tags.Stores
 
         }
 
-        void CancelTokens(TModel model)
+        public void CancelTokens(TModel model = null)
         {
             // Current type
             _cacheManager.CancelTokens(this.GetType());

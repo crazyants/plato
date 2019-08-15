@@ -17,9 +17,7 @@ namespace Plato.Internal.Stores.Users
         private readonly ICacheManager _cacheManager;
         private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
         private readonly ILogger<UserPhotoStore> _logger;
-
-        #region "Constrcutor"
-
+        
         public UserPhotoStore(
             IUserPhotoRepository<UserPhoto> userPhotoRepository,
             ILogger<UserPhotoStore> logger,
@@ -29,40 +27,48 @@ namespace Plato.Internal.Stores.Users
             _cacheManager = cacheManager;
             _logger = logger;
         }
-
-        #endregion
-
-        #region "Implementation"
-
+        
         public async Task<UserPhoto> CreateAsync(UserPhoto userPhoto)
         {
             if (userPhoto == null)
-                throw new ArgumentNullException(nameof(userPhoto));
-            if (userPhoto.Id > 0)
-                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
-            var newUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
-            if (newUserPhoto != null)
             {
-                _cacheManager.CancelTokens(this.GetType(), "ById", userPhoto.Id);
-                _cacheManager.CancelTokens(this.GetType(), userPhoto.UserId);
+                throw new ArgumentNullException(nameof(userPhoto));
+            }
+                
+            if (userPhoto.Id > 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
+            }
+                
+            var result = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
+            if (result != null)
+            {
+                CancelTokens(result);
             }
 
-            return newUserPhoto;
+            return result;
         }
         
         public async Task<UserPhoto> UpdateAsync(UserPhoto userPhoto)
         {
             if (userPhoto == null)
-                throw new ArgumentNullException(nameof(userPhoto));
-            if (userPhoto.Id == 0)
-                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
-            var updatedUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
-            if (updatedUserPhoto != null)
             {
-                _cacheManager.CancelTokens(this.GetType(), "ById", userPhoto.Id);
-                _cacheManager.CancelTokens(this.GetType(), userPhoto.UserId);
+                throw new ArgumentNullException(nameof(userPhoto));
             }
-            return updatedUserPhoto;
+                
+            if (userPhoto.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
+            }
+                
+            var result = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
+            if (result != null)
+            {
+                CancelTokens(result);
+            }
+
+            return result;
+
         }
         
         public Task<bool> DeleteAsync(UserPhoto model)
@@ -95,8 +101,15 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
-        #endregion
-        
+        public void CancelTokens(UserPhoto model)
+        {
+            if (model != null)
+            {
+                _cacheManager.CancelTokens(this.GetType(), "ById", model.Id);
+                _cacheManager.CancelTokens(this.GetType(), model.UserId);
+            }
+        }
+
     }
 
 }

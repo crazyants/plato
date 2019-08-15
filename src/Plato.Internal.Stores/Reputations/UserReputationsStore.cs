@@ -36,39 +36,26 @@ namespace Plato.Internal.Stores.Reputations
         public async Task<UserReputation> CreateAsync(UserReputation model)
         {
 
-            var newUserReputation = await _userReputationsRepository.InsertUpdateAsync(model);
-            if (newUserReputation != null)
+            var result = await _userReputationsRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Added new user reputation with id {1}",
-                        newUserReputation.Id);
-                }
-
-                _cacheManager.CancelTokens(this.GetType());
-
+                CancelTokens(result);
             }
 
-            return newUserReputation;
+            return result;
 
         }
 
         public async Task<UserReputation> UpdateAsync(UserReputation model)
         {
 
-            var updatedUserReputation = await _userReputationsRepository.InsertUpdateAsync(model);
-            if (updatedUserReputation != null)
+            var result = await _userReputationsRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Updated existing user reputation with id {1}",
-                        updatedUserReputation.Id);
-                }
-
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return updatedUserReputation;
+            return result;
 
         }
 
@@ -84,7 +71,7 @@ namespace Plato.Internal.Stores.Reputations
                         model.Name, model.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
 
             }
 
@@ -156,6 +143,10 @@ namespace Plato.Internal.Stores.Reputations
 
         }
 
+        public void CancelTokens(UserReputation model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 
