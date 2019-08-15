@@ -18,23 +18,23 @@ namespace Plato.Follows.Stores
     {
         
         private readonly IFollowRepository<Follow> _followRepository;
-        private readonly ICacheManager _cacheManager;
-        private readonly ILogger<FollowStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ILogger<FollowStore> _logger;
+        private readonly ICacheManager _cacheManager;
         private readonly IKeyGenerator _keyGenerator;
         
         public FollowStore(
             IFollowRepository<Follow> followRepository,
-            ICacheManager cacheManager,
-            ILogger<FollowStore> logger,
             IDbQueryConfiguration dbQuery,
+            ILogger<FollowStore> logger,
+            ICacheManager cacheManager,
             IKeyGenerator keyGenerator)
         {
             _followRepository = followRepository;
-            _cacheManager = cacheManager;
-            _logger = logger;
-            _dbQuery = dbQuery;
             _keyGenerator = keyGenerator;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #region "Implementation"
@@ -65,13 +65,13 @@ namespace Plato.Follows.Stores
                 });
             }
 
-            var follow = await _followRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _followRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<Follow> UpdateAsync(Follow model)
@@ -100,13 +100,13 @@ namespace Plato.Follows.Stores
                 });
             }
             
-            var follow = await _followRepository.InsertUpdateAsync(model);
-            if (follow != null)
+            var result = await _followRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
-            return follow;
+            return result;
         }
 
         public async Task<bool> DeleteAsync(Follow model)
@@ -130,7 +130,9 @@ namespace Plato.Follows.Stores
                     _logger.LogInformation("Deleted follow with EntityId {0} UserId {1}",
                         model.ThingId, model.CreatedUserId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -196,6 +198,11 @@ namespace Plato.Follows.Stores
                 return await _followRepository.SelectByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
 
             });
+        }
+
+        public void CancelTokens(Follow model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
         #endregion

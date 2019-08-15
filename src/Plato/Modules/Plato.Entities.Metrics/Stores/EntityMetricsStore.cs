@@ -38,7 +38,7 @@ namespace Plato.Entities.Metrics.Stores
             var result = await _entityMetricRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Plato.Entities.Metrics.Stores
             var result = await _entityMetricRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -64,7 +64,8 @@ namespace Plato.Entities.Metrics.Stores
                 {
                     _logger.LogInformation("Deleted entity metric with id {1}", model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
             }
 
             return success;
@@ -88,7 +89,11 @@ namespace Plato.Entities.Metrics.Stores
         }
         
         #endregion
-        
+
+        public void CancelTokens(EntityMetric model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 }

@@ -38,7 +38,7 @@ namespace Plato.Email.Stores
             var result = await _emailRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -50,7 +50,7 @@ namespace Plato.Email.Stores
             var result = await _emailRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -68,7 +68,8 @@ namespace Plato.Email.Stores
                     _logger.LogInformation("Deleted email '{0}' with id {1}",
                         model.Subject, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
             }
 
             return success;
@@ -109,7 +110,12 @@ namespace Plato.Email.Stores
             });
         }
 
+        public void CancelTokens(EmailMessage model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
         #endregion
-        
+
     }
 }

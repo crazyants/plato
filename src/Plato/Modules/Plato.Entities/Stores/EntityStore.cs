@@ -67,19 +67,13 @@ namespace Plato.Entities.Stores
             // Transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var newEntity = await _entityRepository.InsertUpdateAsync(model);
-            if (newEntity != null)
+            var result = await _entityRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Added new entity with id {1}",
-                        newEntity.Id);
-                }
-
-                CancelTokens(newEntity);
+                CancelTokens(result);
             }
 
-            return await MergeEntityData(newEntity); ;
+            return await MergeEntityData(result); ;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity model)
@@ -93,20 +87,13 @@ namespace Plato.Entities.Stores
             // Transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var updatedEntity = await _entityRepository.InsertUpdateAsync(model);
-            if (updatedEntity != null)
+            var result = await _entityRepository.InsertUpdateAsync(model);
+            if (result != null)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Updated entity with id {1}",
-                        updatedEntity.Id);
-                }
-
-                CancelTokens(updatedEntity);
-
+                CancelTokens(result);
             }
 
-            return await MergeEntityData(updatedEntity);
+            return await MergeEntityData(result);
 
         }
 
@@ -232,6 +219,11 @@ namespace Plato.Entities.Stores
             return entities?.BuildHierarchy<TEntity>()
                 .RecurseChildren<TEntity>(entity.Id).Reverse();
         }
+        
+        public void CancelTokens(TEntity model)
+        {
+            CancelTokensInternal(model);
+        }
 
         #endregion
 
@@ -346,7 +338,7 @@ namespace Plato.Entities.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void CancelTokens(TEntity model)
+        void CancelTokensInternal(TEntity model)
         {
 
             // Clear cache for current type, EntityStore<Entity>,
@@ -368,7 +360,7 @@ namespace Plato.Entities.Stores
         }
 
         #endregion
-        
+
     }
 
 }

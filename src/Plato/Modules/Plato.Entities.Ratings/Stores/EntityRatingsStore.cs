@@ -38,7 +38,7 @@ namespace Plato.Entities.Ratings.Stores
             var result = await _entityRatingRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -49,7 +49,7 @@ namespace Plato.Entities.Ratings.Stores
             var result = await _entityRatingRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -64,7 +64,8 @@ namespace Plato.Entities.Ratings.Stores
                 {
                     _logger.LogInformation("Deleted rating with id {1}", model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
             }
 
             return success;
@@ -99,8 +100,13 @@ namespace Plato.Entities.Ratings.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRatingRepository.SelectEntityRatingsByUserIdAndEntityId(userId, entityId));
         }
 
+        public void CancelTokens(EntityRating model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
+
         #endregion
-        
+
     }
 }
 

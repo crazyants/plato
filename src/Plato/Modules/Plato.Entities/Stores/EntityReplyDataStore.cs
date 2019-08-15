@@ -23,25 +23,25 @@ namespace Plato.Entities.Stores
 
     public class EntityReplyDataStore : IEntityReplyDataStore<IEntityReplyData>
     {
-
-        private readonly ICacheManager _cacheManager;
+        
         private readonly IEntityReplyDataRepository<IEntityReplyData> _entityDataRepository;
+        private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<EntityDataStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-        
+        private readonly ICacheManager _cacheManager;
+
         public EntityReplyDataStore(
-            ICacheManager cacheManager,
-            IEntityReplyDataRepository<IEntityReplyData> entityDataRepository, 
+            IEntityReplyDataRepository<IEntityReplyData> entityDataRepository,
+            ITypedModuleProvider typedModuleProvider,
             ILogger<EntityDataStore> logger,
             IDbQueryConfiguration dbQuery,
-            ITypedModuleProvider typedModuleProvider)
+            ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
             _entityDataRepository = entityDataRepository;
-            _logger = logger;
-            _dbQuery = dbQuery;
             _typedModuleProvider = typedModuleProvider;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
         
         public async Task<IEntityReplyData> CreateAsync(IEntityReplyData model)
@@ -49,7 +49,7 @@ namespace Plato.Entities.Stores
             var result =  await _entityDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -60,7 +60,7 @@ namespace Plato.Entities.Stores
             var result = await _entityDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -77,7 +77,7 @@ namespace Plato.Entities.Stores
                         model.Key, model.ReplyId);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return success;
@@ -107,6 +107,10 @@ namespace Plato.Entities.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityDataRepository.SelectByReplyIdAsync(replyId));
         }
 
+        public void CancelTokens(IEntityReplyData model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 }

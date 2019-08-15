@@ -15,15 +15,15 @@ namespace Plato.Mentions.Stores
     {
         
         private readonly IEntityMentionsRepository<EntityMention> _entityMentionsRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger<EntityMentionsStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ICacheManager _cacheManager;
 
         public EntityMentionsStore(
             IEntityMentionsRepository<EntityMention> entityMentionsRepository,
-            ICacheManager cacheManager,
             ILogger<EntityMentionsStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            ICacheManager cacheManager)
         {
             _entityMentionsRepository = entityMentionsRepository;
             _cacheManager = cacheManager;
@@ -56,7 +56,7 @@ namespace Plato.Mentions.Stores
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -87,7 +87,7 @@ namespace Plato.Mentions.Stores
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -103,7 +103,7 @@ namespace Plato.Mentions.Stores
                     _logger.LogInformation("Deleted mention role for userId '{0}' with id {1}",
                         model.UserId, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
             }
 
             return success;
@@ -151,7 +151,7 @@ namespace Plato.Mentions.Stores
                     _logger.LogInformation("Deleted all mentions for entity Id '{0}'",
                         entityId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens();
             }
 
             return success;
@@ -168,13 +168,18 @@ namespace Plato.Mentions.Stores
                     _logger.LogInformation("Deleted all mentions for entity reply with Id '{0}'",
                         entityReplyId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens();
             }
 
             return success;
 
         }
 
+        public void CancelTokens(EntityMention model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
+        }
     }
 
 }

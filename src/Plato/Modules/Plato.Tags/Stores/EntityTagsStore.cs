@@ -63,7 +63,7 @@ namespace Plato.Tags.Stores
             var result = await _entityTagsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -95,7 +95,7 @@ namespace Plato.Tags.Stores
             var result = await _entityTagsRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -111,7 +111,9 @@ namespace Plato.Tags.Stores
                     _logger.LogInformation("Deleted entity tag for entityId '{0}' and tagId {1}",
                         model.EntityId, model.TagId);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -197,6 +199,11 @@ namespace Plato.Tags.Stores
             }
 
             return success;
+        }
+
+        public void CancelTokens(EntityTag model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
         #endregion

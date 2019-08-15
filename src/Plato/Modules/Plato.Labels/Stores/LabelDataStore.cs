@@ -14,25 +14,25 @@ namespace Plato.Labels.Stores
 
     public class LabelDataStore : ILabelDataStore<LabelData>
     {
-
-        private readonly ICacheManager _cacheManager;
+        
         private readonly ILabelDataRepository<LabelData> _labelDataRepository;
+        private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<LabelDataStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-        
+        private readonly ICacheManager _cacheManager;
+
         public LabelDataStore(
-            ICacheManager cacheManager,
-            ILabelDataRepository<LabelData> labelDataRepository, 
+            ILabelDataRepository<LabelData> labelDataRepository,
+            ITypedModuleProvider typedModuleProvider,
             ILogger<LabelDataStore> logger,
             IDbQueryConfiguration dbQuery,
-            ITypedModuleProvider typedModuleProvider)
+            ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
             _labelDataRepository = labelDataRepository;
-            _logger = logger;
-            _dbQuery = dbQuery;
             _typedModuleProvider = typedModuleProvider;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
         
         public async Task<LabelData> CreateAsync(LabelData model)
@@ -40,7 +40,7 @@ namespace Plato.Labels.Stores
             var result =  await _labelDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -51,7 +51,7 @@ namespace Plato.Labels.Stores
             var result = await _labelDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(result);
             }
 
             return result;
@@ -68,7 +68,8 @@ namespace Plato.Labels.Stores
                         model.Key, model.LabelId);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(model);
+
             }
 
             return success;
@@ -96,6 +97,11 @@ namespace Plato.Labels.Stores
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _labelDataRepository.SelectByLabelIdAsync(entityId));
+        }
+
+        public void CancelTokens(LabelData model = null)
+        {
+            _cacheManager.CancelTokens(this.GetType());
         }
 
     }
