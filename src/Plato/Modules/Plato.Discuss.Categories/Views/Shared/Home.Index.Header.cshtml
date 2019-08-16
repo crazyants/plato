@@ -5,13 +5,13 @@
     <div class="list-left">
         @if (!String.IsNullOrWhiteSpace(Model.IconCss))
         {
-            <span class="category-icon category-icon-md" style="background-color: @Model.BackColor; color: @Model.ForeColor">
+            <span class="icon-wrapper icon-wrapper-md" style="background-color: @Model.BackColor; color: @Model.ForeColor">
                 <i class="@Model.IconCss"></i>
             </span>
         }
         else
         {
-            <span class="category-icon category-icon-md">
+            <span class="icon-wrapper icon-wrapper-md">
                 <i class="fal fa-folder"></i>
             </span>
         }

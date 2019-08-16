@@ -32,7 +32,7 @@
 
                         <label asp-for="Name"><strong>@T["Icon"]</strong></label>
                         <br />
-                        <button type="button" href="#selectIconModal" data-provide="category-icon-modal" data-icon-prefix="@Model.ChannelIcons.Prefix" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary" role="button">
+                        <button type="button" href="#selectIconModal" data-provide="icon-wrapper-modal" data-icon-prefix="@Model.ChannelIcons.Prefix" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary" role="button">
                             @if (String.IsNullOrEmpty(Model.IconCss))
                             {
                                 <i class="fal fa-plus"></i>

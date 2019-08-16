@@ -44,7 +44,11 @@
                                  }
                             }
                         </div>
-
+                        
+                        @if (!string.IsNullOrEmpty(feature.Descriptor.Icon))
+                        {
+                            <img class="max-w-40 float-left my-3 mr-3" src="@feature.Descriptor.Icon" />
+                        }
                         <h6>
                             @feature.Descriptor.Name
                         </h6>

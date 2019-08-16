@@ -474,6 +474,39 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .hidden { display: none !important; }
 
 /* ------------------------- */
+/* Icon Wrapper */
+/* ------------------------- */
+
+.icon-wrapper {
+    vertical-align: middle; 
+    text-align: center; 
+    display: inline-block; 
+    border-radius: 100%;
+    position: relative;
+}
+
+.icon-wrapper i
+{
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+}
+
+/* Icon sizes */
+
+.icon-wrapper-xsm { width: 16px; height: 16px; }
+.icon-wrapper-xsm i { font-size: 8pt; }
+.icon-wrapper-sm { width: 26px; height: 26px; }
+.icon-wrapper-sm i { font-size: 10pt; }
+.icon-wrapper-md { width: 40px; height: 40px; }
+.icon-wrapper-md i { font-size: 12pt; }
+.icon-wrapper-lg { width: 62px; height: 62px; }
+.icon-wrapper-lg i { font-size: 24pt; }
+.icon-wrapper-xlg { width: 86px; height: 86px; }
+.icon-wrapper-xlg i { font-size: 36pt; }
+
+/* ------------------------- */
 /* Animate Bootstrap tooltips */
 /* ------------------------- */
 

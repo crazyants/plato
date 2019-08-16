@@ -14,10 +14,10 @@ namespace Plato.Users.ViewProviders
     public class EditAccountViewProvider : BaseViewProvider<EditAccountViewModel>
     {
         
-        private readonly UserManager<User> _userManager;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-  
+        private readonly UserManager<User> _userManager;
+
         public EditAccountViewProvider(
             IPlatoUserStore<User> platoUserStore,
             UserManager<User> userManager,
@@ -86,29 +86,29 @@ namespace Plato.Users.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                // Has the username changed?
-                if (model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase))
-                {
-                    // SetUserNameAsync internally sets a new SecurityStamp
-                    // which will invalidate the authentication cookie
-                    // This will force the user to be logged out
-                    await _userManager.SetUserNameAsync(user, model.UserName);
-                }
+                //// Has the username changed?
+                //if (model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    // SetUserNameAsync internally sets a new SecurityStamp
+                //    // which will invalidate the authentication cookie
+                //    // This will force the user to be logged out
+                //    await _userManager.SetUserNameAsync(user, model.UserName);
+                //}
                 
-                // Has the email address changed?
-                if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Only call SetEmailAsync if the email address changes
-                    // SetEmailAsync internally sets EmailConfirmed to "false"
-                    await _userManager.SetEmailAsync(user, model.Email);
-                }
+                //// Has the email address changed?
+                //if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    // Only call SetEmailAsync if the email address changes
+                //    // SetEmailAsync internally sets EmailConfirmed to "false"
+                //    await _userManager.SetEmailAsync(user, model.Email);
+                //}
 
-                // Update user
-                var result = await _platoUserManager.UpdateAsync(user);
-                foreach (var error in result.Errors)
-                {
-                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                }
+                //// Update user
+                //var result = await _platoUserManager.UpdateAsync(user);
+                //foreach (var error in result.Errors)
+                //{
+                //    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                //}
 
             }
 

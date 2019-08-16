@@ -1,31 +1,4 @@
 
-/* icons */
-
-.category-icon {
-    vertical-align: middle; 
-    text-align: center; 
-    display: inline-block; 
-    border-radius: 100%;
-    position: relative;
+.categories {
+    display: block;
 }
-
-.category-icon i
-{
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-}
-
-/* Icon sizes */
-
-.category-icon-xsm { width: 16px; height: 16px; }
-.category-icon-xsm i { font-size: 8pt; }
-.category-icon-sm { width: 26px; height: 26px; }
-.category-icon-sm i { font-size: 10pt; }
-.category-icon-md { width: 40px; height: 40px; }
-.category-icon-md i { font-size: 12pt; }
-.category-icon-lg { width: 62px; height: 62px; }
-.category-icon-lg i { font-size: 24pt; }
-.category-icon-xlg { width: 86px; height: 86px; }
-.category-icon-xlg i { font-size: 36pt; }

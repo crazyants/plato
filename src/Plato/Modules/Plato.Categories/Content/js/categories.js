@@ -385,7 +385,7 @@ $(function (win, doc, $) {
 
     app.ready(function () {
 
-        $('[data-provide="category-icon-modal"]')
+        $('[data-provide="icon-wrapper-modal"]')
             .categoryIconModal();
 
         /* category dropdown */

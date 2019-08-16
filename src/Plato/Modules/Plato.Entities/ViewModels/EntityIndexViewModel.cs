@@ -58,9 +58,12 @@ namespace Plato.Entities.ViewModels
 
         [JsonIgnore]
         public int TagId { get; set; }
-        
-        private IDictionary<string, OrderBy> _sortColumns;
 
+        public string NoResultsText { get; set; }
+
+
+        private IDictionary<string, OrderBy> _sortColumns;
+        
         [JsonIgnore]
         public IDictionary<string, OrderBy> SortColumns => _sortColumns ?? (_sortColumns = new Dictionary<string, OrderBy>());
 

@@ -447,13 +447,13 @@ a.label:hover, .label.active {
 /* Category Icon */
 /* ------------------- */
 
-.list-group-item-action.active .category-icon,
-.list-group-item-action:hover .category-icon {
+.list-group-item-action.active .icon-wrapper,
+.list-group-item-action:hover .icon-wrapper {
     background-color: #EAF4FF;
     color: #007bff;
 }
 
-.category-icon {
+.icon-wrapper {
     background-color: #EAF4FF;
     color: #007bff;
 }

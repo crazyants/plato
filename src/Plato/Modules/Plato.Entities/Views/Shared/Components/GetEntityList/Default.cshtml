@@ -26,5 +26,14 @@
          </li>
      }
 }
+else
+{
+    @if (!string.IsNullOrEmpty(Model.Options.NoResultsText))
+     {
+         <li class="list-group-item p-3">
+             @T[Model.Options.NoResultsText]
+         </li>
+     }
+}
 
 

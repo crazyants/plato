@@ -12,13 +12,13 @@
     <div class="p-3">
         @if (!String.IsNullOrEmpty(Model.Category.IconCss))
         {
-            <div class="category-icon category-icon-lg" style="background-color: @childBgColor; color: @childForeColor">
+            <div class="icon-wrapper icon-wrapper-lg" style="background-color: @childBgColor; color: @childForeColor">
                 <i class="@Model.Category.IconCss"></i>
             </div>
         }
         else
         {
-            <div class="category-icon category-icon-lg">
+            <div class="icon-wrapper icon-wrapper-lg">
                 <i class="fal fa-folder"></i>
             </div>
         }

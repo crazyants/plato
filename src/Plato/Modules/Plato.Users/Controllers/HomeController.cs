@@ -301,31 +301,43 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-
+            
             // Validate model state within all view providers
             if (await _editProfileViewProvider.IsModelStateValidAsync(model, this))
             {
-                var result = await _editProfileViewProvider.ProvideUpdateAsync(model, this);
 
-                // Ensure model state is still valid after view providers have executed
-                if (ModelState.IsValid)
+                // Update user
+                var result = await _platoUserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
+
+                    // Invoke BuildUpdateAsync within involved view providers
+                    await _editProfileViewProvider.ProvideUpdateAsync(model, this);
+
+                    // Add confirmation
                     _alerter.Success(T["Profile Updated Successfully!"]);
+
+                    // Redirect
                     return RedirectToAction(nameof(EditProfile));
+
                 }
-
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
+                else
                 {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-            }
 
+            }
+            
+            // If errors occur manually expire the cache otherwise our
+            // modifications made above to the object may persist as the
+            // object is not updated and the cache is not invalidated by the store
+            _platoUserStore.CancelTokens(user);
+            
+            // Display errors
             return await EditProfile();
 
         }
@@ -372,37 +384,77 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> EditAccountPost(EditAccountViewModel model)
         {
 
+            // Get user
             var user = await _userManager.FindByIdAsync(model.Id.ToString());
 
+            // Ensure user exists
             if (user == null)
             {
                 return NotFound();
             }
 
+            // Get composed model from involved view providers
+            model = await _editAccountViewProvider.ComposeModelAsync(model, this);
+
             // Validate model state within all view providers
             if (await _editAccountViewProvider.IsModelStateValidAsync(model, this))
             {
-                var result = await _editAccountViewProvider.ProvideUpdateAsync(model, this);
+                
+                // Flags to indicate if the username or email address have changed
+                var emailChanged = model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase);
+                var usernameChanged = model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase);
 
-                // Ensure model state is still valid after view providers have executed
-                if (ModelState.IsValid)
+                // Update user
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                
+                // Update user
+                var result = await _platoUserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
+                    
+                    if (emailChanged)
+                    {
+                        // Only call SetEmailAsync if the email address changes
+                        // SetEmailAsync internally sets EmailConfirmed to "false"
+                        await _userManager.SetEmailAsync(user, model.Email);
+                    }
+
+                    if (usernameChanged)
+                    {
+                        // SetUserNameAsync internally sets a new SecurityStamp
+                        // which will invalidate the authentication cookie
+                        // This will force the user to be logged out
+                        await _userManager.SetUserNameAsync(user, model.UserName);
+                    }
+
+                    // Invoke BuildUpdateAsync within involved view providers
+                    await _editAccountViewProvider.ProvideUpdateAsync(model, this);
+
+                    // Add confirmation
                     _alerter.Success(T["Account Updated Successfully!"]);
+
+                    // Redirect back
                     return RedirectToAction(nameof(EditAccount));
+               
                 }
-
-            }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
+                else
                 {
-                    _alerter.Danger(T[error.ErrorMessage]);
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
+
             }
 
+            // If errors occur manually expire the cache otherwise our
+            // modifications made above to the object may persist as the
+            // object is not updated and the cache is not invalidated by the store
+            _platoUserStore.CancelTokens(user);
+
+            // Display errors
             return await EditAccount();
 
         }

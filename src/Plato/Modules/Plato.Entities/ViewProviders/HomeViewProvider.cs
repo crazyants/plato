@@ -23,7 +23,8 @@ namespace Plato.Entities.ViewProviders
                 {
                     Options = new EntityIndexOptions()
                     {
-                        Sort = SortBy.LastReply
+                        Sort = SortBy.LastReply,
+                        NoResultsText = "No new contributions"
                     },
                     Pager = new PagerOptions()
                     {
@@ -36,7 +37,8 @@ namespace Plato.Entities.ViewProviders
                 {
                     Options = new EntityIndexOptions()
                     {
-                        Sort = SortBy.Popular
+                        Sort = SortBy.Popular,
+                        NoResultsText = "No popular contributions"
                     },
                     Pager = new PagerOptions()
                     {

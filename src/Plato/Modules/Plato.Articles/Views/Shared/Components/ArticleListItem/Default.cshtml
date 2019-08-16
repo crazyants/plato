@@ -9,13 +9,13 @@
         <a asp-route-area="Plato.Articles.Categories" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.categoryId="@Model.Category.Id" asp-route-opts.alias="@Model.Category.Alias" data-toggle="tooltip" title="@Model.Category.Name">
             @if (!String.IsNullOrWhiteSpace(Model.Category.IconCss))
             {
-                <span class="category-icon category-icon-md" style="background-color: @Model.Category.BackColor; color: @Model.Category.ForeColor">
+                <span class="icon-wrapper icon-wrapper-md" style="background-color: @Model.Category.BackColor; color: @Model.Category.ForeColor">
                     <i class="@Model.Category.IconCss"></i>
                 </span>
             }
             else
             {
-                <span class="category-icon category-icon-md">
+                <span class="icon-wrapper icon-wrapper-md">
                     <i class="fal fa-folder"></i>
                 </span>
             }

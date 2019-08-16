@@ -422,12 +422,12 @@ a.label.active {
 /* Category Icon */
 /* ------------------- */
 
-.list-group-item-action:hover .category-icon {
+.list-group-item-action:hover .icon-wrapper {
     background-color: #222;
     color: #2A9FD6;
 }
 
-.category-icon {
+.icon-wrapper {
     background-color: #222;
     color: #2A9FD6;
 }

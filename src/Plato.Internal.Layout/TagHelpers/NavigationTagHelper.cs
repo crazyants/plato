@@ -225,15 +225,15 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
                 catch (Exception e)
                 {
-                    sb.Append("<span class=\"text-danger font-weight-bold\">");
+                    sb.Append("<p class=\"text-danger font-weight-bold\">");
                     if (item.View != null)
                     {
                         sb
                             .Append("An exception occurred whilst invoking the view \"")
                             .Append(item.View.ViewName)
-                            .Append("\" for navigation tag helper with the name \"")
+                            .Append("\" for the \"")
                             .Append(this.Name)
-                            .Append("\". ")
+                            .Append("\" navigation tag helper, Exception message: ")
                             .Append(e.Message);
 
                     }
@@ -243,11 +243,11 @@ namespace Plato.Internal.Layout.TagHelpers
                             .Append(
                                 "An exception occurred whilst building a link for the navigation tag helper with the name \"")
                             .Append(this.Name)
-                            .Append("\". ")
+                            .Append("\", Exception message: ")
                             .Append(e.Message);
                     }
 
-                    sb.Append("</span");
+                    sb.Append("</p");
 
                 }
 
