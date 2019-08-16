@@ -31,11 +31,10 @@ namespace Plato.Users.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IViewProviderManager<User> _viewProvider;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
-        private readonly IPlatoUserStore<User> _platoUserStore;
-
         private readonly IUserEmails _userEmails;
         private readonly IAlerter _alerter;
 
@@ -51,12 +50,11 @@ namespace Plato.Users.Controllers
             IPlatoUserManager<User> platoUserManager,
             IViewProviderManager<User> viewProvider,
             IBreadCrumbManager breadCrumbManager,
+            IPlatoUserStore<User> platoUserStore,
             UserManager<User> userManager,
             IContextFacade contextFacade,
             IUserEmails userEmails,
-            IAlerter alerter, 
-            IPlatoUserStore<User> platoUserStore,
-            IUserRepository<User> userRepository)
+            IAlerter alerter)
         {
 
             _authorizationService = authorizationService;
@@ -285,11 +283,10 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
 
-            var user = await _platoUserStore.GetByIdAsync(userId);
+            // Get user
+            var user = await _userManager.FindByIdAsync(id);
 
             // Ensure user exists
-            //var user = await _userManager.FindByIdAsync(id);
-            
             if (user == null)
             {
                 return NotFound();
@@ -325,13 +322,20 @@ namespace Plato.Users.Controllers
                 return Unauthorized();
             }
             
-            var user = await _platoUserStore.GetByIdAsync(model.Id);
+            // Get user
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+
+            // Ensure user exists
             if (user == null)
             {
                 return NotFound();
             }
 
-            // Update user
+            // Flags to indicate if the username or email address have changed
+            var emailChanged = model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase);
+            var usernameChanged = model.UserName != null && !model.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase);
+
+            // Update user, if update is not successful we clear cache below
             user.DisplayName = model.DisplayName;
             user.UserName = model.UserName;
             user.Email = model.Email;
@@ -341,39 +345,7 @@ namespace Plato.Users.Controllers
             user.Url = model.Url;
             
             // Validate view providers
-            var valid = await _viewProvider.IsModelStateValidAsync(user, this);
-
-            // Validate Uniqueness
-            // -------------------------
-
-            // Is this a unique email?
-            var userByEmail = await _platoUserStore.GetByEmailAsync(model.Email);
-            if (userByEmail != null)
-            {
-                // found another account with same email
-                if (userByEmail.Id != model.Id)
-                {
-                    // Add validation errors
-                    ViewData.ModelState.AddModelError(nameof(model.Email), "The email already exists");
-                    // Not valid
-                    valid = false;
-                }
-            }
-
-            // Is this a unique username?
-            var userByUserName = await _platoUserStore.GetByUserNameAsync(model.UserName.Normalize());
-            if (userByUserName != null)
-            {
-                // found another account with same username
-                if (userByUserName.Id != model.Id)
-                {
-                    ViewData.ModelState.AddModelError(nameof(model.Email), "The username already exists");
-                    valid = false;
-                }
-            }
-            
-            // Validate model state within all view providers
-            if (valid)
+            if (await _viewProvider.IsModelStateValidAsync(user, this))
             {
 
                 // Get composed model from involved view providers
@@ -384,7 +356,22 @@ namespace Plato.Users.Controllers
                 if (result.Succeeded)
                 {
 
-                    // Execute view providers ProvideUpdateAsync method
+                    if (emailChanged)
+                    {
+                        // Only call SetEmailAsync if the email address changes
+                        // SetEmailAsync internally sets EmailConfirmed to "false"
+                        await _userManager.SetEmailAsync(user, model.Email);
+                    }
+
+                    if (usernameChanged)
+                    {
+                        // SetUserNameAsync internally sets a new SecurityStamp
+                        // which will invalidate the authentication cookie
+                        // This will force the user to be logged out
+                        await _userManager.SetUserNameAsync(user, model.UserName);
+                    }
+
+                    // Execute view providers ProvideUpdateAsync methods
                     await _viewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Add confirmation
@@ -408,13 +395,11 @@ namespace Plato.Users.Controllers
 
             }
 
-            // Important to expire cache otherwise our modifications made
-            // above to the user object may persist even though validation failed
-            if (!valid)
-            {
-                _platoUserStore.CancelTokens(user);
-            }
-            
+            // If errors occur manually expire the cache otherwise our
+            // modifications made above to the object may persist as the
+            // object is not updated and the cache is not invalidated by the store
+            _platoUserStore.CancelTokens(user);
+
             // Redirect back to any errors
             return await Edit(model.Id.ToString());
 

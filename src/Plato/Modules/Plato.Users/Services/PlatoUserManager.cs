@@ -274,7 +274,7 @@ namespace Plato.Users.Services
                 // Invoke UserUpdated subscriptions
                 foreach (var handler in _broker.Pub<TUser>(this, "UserUpdated"))
                 {
-                    model = await handler.Invoke(new Message<TUser>(model, this));
+                    user = await handler.Invoke(new Message<TUser>(user, this));
                 }
 
                 return result.Success(user);

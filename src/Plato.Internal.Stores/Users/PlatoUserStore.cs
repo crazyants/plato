@@ -173,12 +173,13 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentOutOfRangeException(nameof(id));
             }
 
-            //var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
-            //return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            //{
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
                 var user = await _userRepository.SelectByIdAsync(id);
                 return await _userDataDecorator.DecorateAsync(user);
-            //});
+            });
+
         }
 
         public async Task<User> GetByUserNameNormalizedAsync(string userNameNormalized)
