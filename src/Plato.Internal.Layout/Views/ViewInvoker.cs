@@ -80,19 +80,61 @@ namespace Plato.Internal.Layout.Views
                 throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Attempting to invoke partial view \"{viewName}\".");
+            }
+
+            try
+            {
+                return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
+            }
+            catch (Exception e)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(e,
+                        $"An exception occurred whilst invoking the partial view with name \"{viewName}\". {e.Message}");
+                }
+                throw;
+            }
+            
+
         }
 
         async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object arguments)
         {
-            var helper = _viewComponentHelper as DefaultViewComponentHelper;
-            if (helper == null)
+            if (!(_viewComponentHelper is DefaultViewComponentHelper helper))
             {
                 throw new ArgumentNullException(
                     $"{_viewComponentHelper.GetType()} cannot be converted to DefaultViewComponentHelper");
             }
+
+            // Contextualize view component
             helper.Contextualize(this.ViewContext);
-            return await _viewComponentHelper.InvokeAsync(viewName, arguments);
+
+            // Log the invocation, we can't use try / catch around our view component helper :(
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Attempting to invoke view component \"{viewName}\".");
+            }
+
+            try
+            {
+                return await _viewComponentHelper.InvokeAsync(viewName, arguments);
+            }
+            catch (Exception e)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(e,
+                        $"An exception occurred whilst invoking the view component with name \"{viewName}\". {e.Message}");
+                }
+                throw;
+            }
+            
+            
         }
         
         bool IsViewModelAnonymousType(object model)

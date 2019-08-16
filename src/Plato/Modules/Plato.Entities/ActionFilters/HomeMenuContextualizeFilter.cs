@@ -17,9 +17,7 @@ namespace Plato.Entities.ActionFilters
 
     public class HomeMenuContextualizeFilter : IModularActionFilter
     {
-
-
-
+        
         private readonly IFeatureEntityCountService _featureEntityCountService;
         private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
         private readonly IAuthorizationService _authorizationService;

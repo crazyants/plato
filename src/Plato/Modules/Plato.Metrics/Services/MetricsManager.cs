@@ -11,15 +11,14 @@ namespace Plato.Metrics.Services
     public class MetricsManager : IMetricsManager<Metric>
     {
 
-        private readonly IMetricsStore<Metric> _entityRatingsStore;
-
+        private readonly IMetricsStore<Metric> _metricsStore;
         private readonly IBroker _broker;
 
         public MetricsManager(
-            IMetricsStore<Metric> entityRatingsStore,
+            IMetricsStore<Metric> metricsStore,
             IBroker broker)
         {
-            _entityRatingsStore = entityRatingsStore;
+            _metricsStore = metricsStore;
             _broker = broker;
         }
 
@@ -46,17 +45,17 @@ namespace Plato.Metrics.Services
             var result = new CommandResult<Metric>();
 
             // Attempt to persist
-            var reaction = await _entityRatingsStore.CreateAsync(model);
-            if (reaction != null)
+            var metric = await _metricsStore.CreateAsync(model);
+            if (metric != null)
             {
 
                 // Invoke MetricCreated subscriptions
-                foreach (var handler in _broker.Pub<Metric>(this, "MetricCreated", reaction))
+                foreach (var handler in _broker.Pub<Metric>(this, "MetricCreated", metric))
                 {
-                    reaction = await handler.Invoke(new Message<Metric>(reaction, this));
+                    metric = await handler.Invoke(new Message<Metric>(metric, this));
                 }
 
-                return result.Success(reaction);
+                return result.Success(metric);
 
             }
 
@@ -88,17 +87,17 @@ namespace Plato.Metrics.Services
             var result = new CommandResult<Metric>();
 
             // Attempt to persist
-            var reaction = await _entityRatingsStore.UpdateAsync(model);
-            if (reaction != null)
+            var metric = await _metricsStore.UpdateAsync(model);
+            if (metric != null)
             {
 
                 // Invoke MetricUpdated subscriptions
-                foreach (var handler in _broker.Pub<Metric>(this, "MetricUpdated", reaction))
+                foreach (var handler in _broker.Pub<Metric>(this, "MetricUpdated", metric))
                 {
-                    reaction = await handler.Invoke(new Message<Metric>(reaction, this));
+                    metric = await handler.Invoke(new Message<Metric>(metric, this));
                 }
 
-                return result.Success(reaction);
+                return result.Success(metric);
 
             }
 
@@ -123,7 +122,7 @@ namespace Plato.Metrics.Services
 
             var result = new CommandResult<Metric>();
 
-            var success = await _entityRatingsStore.DeleteAsync(model);
+            var success = await _metricsStore.DeleteAsync(model);
             if (success)
             {
 

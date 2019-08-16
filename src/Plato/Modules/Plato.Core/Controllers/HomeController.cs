@@ -20,9 +20,9 @@ namespace Plato.Core.Controllers
 
         #region "Constructor"
         
-        private readonly IAlerter _alerter;
-        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IViewProviderManager<HomeIndex> _viewProvider;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -31,10 +31,10 @@ namespace Plato.Core.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IContextFacade contextFacade,
-            IAlerter alerter,
+            IViewProviderManager<HomeIndex> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IViewProviderManager<HomeIndex> viewProvider)
+            IContextFacade contextFacade,
+            IAlerter alerter)
         {
 
             _alerter = alerter;

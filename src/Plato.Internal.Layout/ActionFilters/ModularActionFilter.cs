@@ -80,7 +80,7 @@ namespace Plato.Internal.Layout.ActionFilters
             }
 
             await next();
-
+            
             // do something after the action executes; resultContext.Result will be set
             foreach (var provider in _providers)
             {

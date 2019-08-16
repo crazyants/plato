@@ -13,7 +13,7 @@ namespace Plato.Internal.Logging.Extensions
             this IServiceCollection services)
         {
 
-            services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+            //services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
 
             return services;
 

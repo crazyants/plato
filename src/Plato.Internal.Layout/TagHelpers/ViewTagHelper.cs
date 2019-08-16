@@ -19,7 +19,7 @@ namespace Plato.Internal.Layout.TagHelpers
         [ViewContext] // inform razor to inject
         public ViewContext ViewContext { get; set; }
         
-        private readonly IViewHelperFactory _viewHelperFactory;
+
 
         private IViewDisplayHelper _viewDisplayHelper;
 
@@ -32,6 +32,8 @@ namespace Plato.Internal.Layout.TagHelpers
         /// </summary>
         public override int Order => int.MinValue;
 
+        private readonly IViewHelperFactory _viewHelperFactory;
+
         public ViewTagHelper(
             IViewHelperFactory viewHelperFactory)
         {
@@ -41,24 +43,25 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            
+
             if (this.Model == null)
             {
                 throw new ArgumentNullException(nameof(this.Model));
             }
-
+            
             var builder = await Build();
             if (builder == null)
             {
-                throw new Exception($"An error occurred whilst attempting to activate a view. The supplied model of type {Model} is not a valid type. The supplied model must implement the IView interface.");
+                throw new Exception(
+                    $"An error occurred whilst attempting to activate a view. The supplied model of type {Model} is not a valid type. The supplied model must implement the IView interface.");
             }
 
             output.TagName = "";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Content.SetHtmlContent(builder);
-
+            
         }
-        
+
         void EnsureViewHelper()
         {
             if (_viewDisplayHelper == null)
@@ -79,8 +82,16 @@ namespace Plato.Internal.Layout.TagHelpers
                 builder = new HtmlContentBuilder();
                 foreach (var view in Model)
                 {
-                    var result = await _viewDisplayHelper.DisplayAsync(view);
-                    builder.AppendHtml(result);
+                    try
+                    {
+                        var result = await _viewDisplayHelper.DisplayAsync(view);
+                        builder.AppendHtml(result);
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
+                    
                 }
             }
             else
@@ -88,8 +99,16 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (this.Model is IView)
                 {
                     builder = new HtmlContentBuilder();
-                    var result = await _viewDisplayHelper.DisplayAsync(this.Model);
-                    builder.AppendHtml(result);
+                    try
+                    {
+                        var result = await _viewDisplayHelper.DisplayAsync(this.Model);
+                        builder.AppendHtml(result);
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
+                  
                 }
             }
        

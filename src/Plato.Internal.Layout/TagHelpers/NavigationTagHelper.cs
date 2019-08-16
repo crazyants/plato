@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation;
@@ -216,9 +217,39 @@ namespace Plato.Internal.Layout.TagHelpers
                         .Append("\">");
                 }
 
-                sb.Append(item.View != null 
+                try
+                {
+                    sb.Append(item.View != null
                         ? await BuildViewAsync(item)
                         : BuildLink(item));
+                }
+                catch (Exception e)
+                {
+                    sb.Append("<span class=\"text-danger font-weight-bold\">");
+                    if (item.View != null)
+                    {
+                        sb
+                            .Append("An exception occurred whilst invoking the view \"")
+                            .Append(item.View.ViewName)
+                            .Append("\" for navigation tag helper with the name \"")
+                            .Append(this.Name)
+                            .Append("\". ")
+                            .Append(e.Message);
+
+                    }
+                    else
+                    {
+                        sb
+                            .Append(
+                                "An exception occurred whilst building a link for the navigation tag helper with the name \"")
+                            .Append(this.Name)
+                            .Append("\". ")
+                            .Append(e.Message);
+                    }
+
+                    sb.Append("</span");
+
+                }
 
                 _index++;
 
