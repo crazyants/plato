@@ -1,11 +1,11 @@
 ﻿@model ProfileDisplayViewModel
 @{
-    var badgesList = Model.Badges.ToList();
-    var text = badgesList.Count == 1
+    var badgesList = Model.Badges?.ToList();
+    var text = badgesList?.Count == 1
         ? T["badge"].Value
         : T["badges"].Value;
-    var title = $"{badgesList.Count} {text}";
-    var tooltip = T["Show all {0}"].Value.Replace("{0}", $"{badgesList.Count} {text}");
+    var title = $"{badgesList?.Count} {text}";
+    var tooltip = T["Show all {0}"].Value.Replace("{0}", $"{badgesList?.Count} {text}");
 }
 
 <card class="card card-body-flush">
@@ -22,27 +22,28 @@
         </div>
     </card-title>
     <card-body>
-        
-        @if (badgesList.Count > 0)
-        {     <div class="list-group list-group-flush list-group-hover" data-provide="badge-list">
-                  <div class="row no-gutters text-center">
-                      @foreach (var badge in badgesList.OrderByDescending(b => b.Details?.LastAwardedDate).Take(3))
-                      {
-                          @await DisplayAsync(new View("BadgeListItem", new
-                          {
-                              badge = badge
-                          }))
-                      }
-                  </div>
-              </div>
+        @if (badgesList?.Count > 0)
+        {
+            <div class="list-group list-group-flush list-group-hover" data-provide="badge-list">
+                <div class="row no-gutters text-center">
+                    @foreach (var badge in badgesList.OrderByDescending(b => b.Details?.LastAwardedDate).Take(3))
+                    {
+                        @await DisplayAsync(new View("BadgeListItem", new
+                        {
+                            badge = badge
+                        }))
+                    }
+                </div>
+            </div>
         }
         else
         {
-            <div class="text-muted">
-                @T["No badges awarded"]
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    @T["No badges awarded"]
+                </div>
             </div>
         }
-
     </card-body>
 </card>
 
