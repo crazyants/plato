@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -23,24 +24,24 @@ namespace Plato.Users.ViewProviders
         private static string _urlToImages;
         
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly UserManager<User> _userManager;
         private readonly ISitesFolder _sitesFolder;
 
         public EditProfileViewProvider(
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IPlatoUserManager<User> platoUserManager,
             IPlatoUserStore<User> platoUserStore,
             IHostingEnvironment hostEnvironment,
             IShellSettings shellSettings,
+            UserManager<User> userManager,
             ISitesFolder sitesFolder,
             IFileStore fileStore)
         {
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
             _sitesFolder = sitesFolder;
-            _platoUserManager = platoUserManager;
-
+            _userManager = userManager;
+     
             // paths
             _pathToImages = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "images");
             _urlToImages = $"/sites/{shellSettings.Location.ToLower()}/images/";
@@ -108,10 +109,10 @@ namespace Plato.Users.ViewProviders
             {
 
                 // Update user 
-                user.DisplayName = model.DisplayName.Trim();
-                user.Biography = model.Biography;
-                user.Location = model.Location;
-                user.Url = model.Url;
+                //user.DisplayName = model.DisplayName.Trim();
+                //user.Biography = model.Biography;
+                //user.Location = model.Location;
+                //user.Url = model.Url;
 
                 // Example of how to store on custom user data object
                 //var data = user.GetOrCreate<UserDetail>();
@@ -127,12 +128,14 @@ namespace Plato.Users.ViewProviders
                    user.PhotoUrl = await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
-                // Update user
-                var result = await _platoUserManager.UpdateAsync(user);
-                foreach (var error in result.Errors)
-                {
-                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                }
+                await _userManager.UpdateAsync(user);
+                
+                //// Update user
+                //var result = await _platoUserManager.UpdateAsync(user);
+                //foreach (var error in result.Errors)
+                //{
+                //    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                //}
 
             }
 

@@ -98,14 +98,14 @@ namespace Plato.Users.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
-                user.Signature = model.Signature;
+                //user.Signature = model.Signature;
              
-                // Update user
-                var result = await _platoUserManager.UpdateAsync(user);
-                foreach (var error in result.Errors)
-                {
-                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                }
+                //// Update user
+                //var result = await _platoUserManager.UpdateAsync(user);
+                //foreach (var error in result.Errors)
+                //{
+                //    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                //}
 
             }
 

@@ -77,16 +77,16 @@ namespace Plato.Users.ViewProviders
 
             if (context.Updater.ModelState.IsValid)
             {
-                user.TimeZone = model.TimeZone;
-                user.ObserveDst = model.ObserveDst;
-                user.Culture = model.Culture;
+                //user.TimeZone = model.TimeZone;
+                //user.ObserveDst = model.ObserveDst;
+                //user.Culture = model.Culture;
            
-                // Update user
-                var result = await _platoUserManager.UpdateAsync(user);
-                foreach (var error in result.Errors)
-                {
-                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
-                }
+                //// Update user
+                //var result = await _platoUserManager.UpdateAsync(user);
+                //foreach (var error in result.Errors)
+                //{
+                //    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
+                //}
 
             }
 

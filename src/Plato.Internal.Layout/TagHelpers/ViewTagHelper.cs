@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Layout.Views;
 
 namespace Plato.Internal.Layout.TagHelpers
@@ -19,8 +21,6 @@ namespace Plato.Internal.Layout.TagHelpers
         [ViewContext] // inform razor to inject
         public ViewContext ViewContext { get; set; }
         
-
-
         private IViewDisplayHelper _viewDisplayHelper;
 
         /// <summary>
@@ -32,13 +32,12 @@ namespace Plato.Internal.Layout.TagHelpers
         /// </summary>
         public override int Order => int.MinValue;
 
+   
         private readonly IViewHelperFactory _viewHelperFactory;
-
-        public ViewTagHelper(
-            IViewHelperFactory viewHelperFactory)
+      
+        public ViewTagHelper(IViewHelperFactory viewHelperFactory)
         {
             _viewHelperFactory = viewHelperFactory;
-
         }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -89,6 +88,10 @@ namespace Plato.Internal.Layout.TagHelpers
                     }
                     catch (Exception e)
                     {
+                        //if (_logger.IsEnabled(LogLevel.Error))
+                        //{
+                        //    _logger.LogError(e, $"An error occurred invoking the view \"{((IView)view).ViewName}\", Error message: {e.Message}");
+                        //}
                         throw;
                     }
                     
@@ -106,6 +109,10 @@ namespace Plato.Internal.Layout.TagHelpers
                     }
                     catch (Exception e)
                     {
+                        //if (_logger.IsEnabled(LogLevel.Error))
+                        //{
+                        //    _logger.LogError(e, $"An error occurred invoking the view \"{((IView)this.Model).ViewName}\", Error message: {e.Message}");
+                        //}
                         throw;
                     }
                   

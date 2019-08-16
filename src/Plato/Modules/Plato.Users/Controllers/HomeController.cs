@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -306,6 +307,11 @@ namespace Plato.Users.Controllers
             if (await _editProfileViewProvider.IsModelStateValidAsync(model, this))
             {
 
+                user.DisplayName = model.DisplayName;
+                user.Location = model.Location;
+                user.Url = model.Url;
+                user.Biography = model.Biography;
+
                 // Update user
                 var result = await _platoUserManager.UpdateAsync(user);
                 if (result.Succeeded)
@@ -314,11 +320,14 @@ namespace Plato.Users.Controllers
                     // Invoke BuildUpdateAsync within involved view providers
                     await _editProfileViewProvider.ProvideUpdateAsync(model, this);
 
-                    // Add confirmation
-                    _alerter.Success(T["Profile Updated Successfully!"]);
-
-                    // Redirect
-                    return RedirectToAction(nameof(EditProfile));
+                    // Ensure model state is still valid after view providers have executed
+                    if (ModelState.IsValid)
+                    {
+                        // Add confirmation
+                        _alerter.Success(T["Profile Updated Successfully!"]);
+                        // Redirect
+                        return RedirectToAction(nameof(EditProfile));
+                    }
 
                 }
                 else
@@ -431,12 +440,15 @@ namespace Plato.Users.Controllers
                     // Invoke BuildUpdateAsync within involved view providers
                     await _editAccountViewProvider.ProvideUpdateAsync(model, this);
 
-                    // Add confirmation
-                    _alerter.Success(T["Account Updated Successfully!"]);
+                    // Ensure model state is still valid after view providers have executed
+                    if (ModelState.IsValid)
+                    {
+                        // Add confirmation
+                        _alerter.Success(T["Account Updated Successfully!"]);
+                        // Redirect back
+                        return RedirectToAction(nameof(EditAccount));
+                    }
 
-                    // Redirect back
-                    return RedirectToAction(nameof(EditAccount));
-               
                 }
                 else
                 {
@@ -561,27 +573,43 @@ namespace Plato.Users.Controllers
             if (await _editSignatureViewProvider.IsModelStateValidAsync(model, this))
             {
 
-                await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
+                // Update user
+                user.Signature = model.Signature;
 
-                // Ensure model state is still valid after view providers have executed
-                if (ModelState.IsValid)
+                // Update user
+                var result = await _platoUserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    _alerter.Success(T["Signature Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditSignature));
-                }
 
+                    // Invoke BuildUpdateAsync within involved view providers
+                    await _editSignatureViewProvider.ProvideUpdateAsync(model, this);
+
+                    // Ensure model state is still valid after view providers have executed
+                    if (ModelState.IsValid)
+                    {
+                        // Add confirmation
+                        _alerter.Success(T["Signature Updated Successfully!"]);
+                        // Redirect
+                        return RedirectToAction(nameof(EditSignature));
+                    }
+
+                }
+                else
+                {
+                    // Errors that may have occurred whilst updating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
 
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    _alerter.Danger(T[error.ErrorMessage]);
-                }
-            }
+            // If errors occur manually expire the cache otherwise our
+            // modifications made above to the object may persist as the
+            // object is not updated and the cache is not invalidated by the store
+            _platoUserStore.CancelTokens(user);
 
+            // Display errors
             return await EditSignature();
 
         }
@@ -639,26 +667,36 @@ namespace Plato.Users.Controllers
             // Validate model state within all view providers
             if (await _editSettingsViewProvider.IsModelStateValidAsync(model, this))
             {
-                await _editSettingsViewProvider.ProvideUpdateAsync(model, this);
 
-                // Ensure model state is still valid after view providers have executed
-                if (ModelState.IsValid)
+                // Update user
+                user.TimeZone = model.TimeZone;
+                user.ObserveDst = model.ObserveDst;
+                user.Culture = model.Culture;
+                
+                // Update user
+                var result = await _platoUserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    _alerter.Success(T["Settings Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditSettings));
+
+                    // Invoke BuildUpdateAsync within involved view providers
+                    await _editSettingsViewProvider.ProvideUpdateAsync(model, this);
+
+                    // Ensure model state is still valid after view providers have executed
+                    if (ModelState.IsValid)
+                    {
+                        // Add confirmation
+                        _alerter.Success(T["Settings Updated Successfully!"]);
+                        // Redirect
+                        return RedirectToAction(nameof(EditSettings));
+                    }
                 }
 
             }
-
-            // if we reach this point some view model validation
-            // failed within a view provider, display model state errors
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    _alerter.Danger(T[error.ErrorMessage]);
-                }
-            }
+            
+            // If errors occur manually expire the cache otherwise our
+            // modifications made above to the object may persist as the
+            // object is not updated and the cache is not invalidated by the store
+            _platoUserStore.CancelTokens(user);
 
             return await EditSettings();
 

@@ -3,9 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
@@ -16,8 +13,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Models;
-using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -30,34 +25,27 @@ namespace Plato.Users.ViewProviders
 
         private const string BySignatureHtmlName = "Signature";
         
+
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IPlatoUserManager<User> _platoUserManager;
+        private readonly IUserRepository<User> _userRepository;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly UserManager<User> _userManager;
         private readonly ISitesFolder _sitesFolder;
-        private readonly IUrlHelper _urlHelper;
-
-        private readonly IUserRepository<User> _userRepository;
-
-
+   
         private readonly IStringLocalizer T;
 
         public AdminViewProvider(
             IShellSettings shellSettings,
             UserManager<User> userManager,
-            IActionContextAccessor actionContextAccessor,
             IStringLocalizer<AdminViewProvider> stringLocalizer,
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IPlatoUserManager<User> platoUserManager,
             IUserRepository<User> userRepository,
             IHostingEnvironment hostEnvironment,
-            IUrlHelperFactory urlHelperFactory,
             IPlatoUserStore<User> userStore,
             ISitesFolder sitesFolder,
             IFileStore fileStore)
         {
-            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
-            _platoUserManager = platoUserManager;
+    
             _userPhotoStore = userPhotoStore;
             _userRepository = userRepository;
             _userManager = userManager;
