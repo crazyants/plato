@@ -451,7 +451,9 @@ namespace Plato.Categories.Handlers
                 Columns = new string[]
                 {
                     "ParentId",
-                    "FeatureId"
+                    "FeatureId",
+                    "SortOrder",
+                    "CreatedUserId"
                 }
             });
 

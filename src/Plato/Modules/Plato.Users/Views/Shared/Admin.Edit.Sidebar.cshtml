@@ -25,14 +25,11 @@
 
 <card>
     <card-title>
-        <h6 class="card-title">
-            <i class="fal fa-user-circle mr-2"></i>
-            @T["Photo"]
-        </h6>
+        <h6 class="card-title">@T["Avatar"]</h6>
     </card-title>
     <card-body>
         <div class="profile-avatar">
-            <div class="avatar-edit">
+            <div data-toggle="tooltip" title="@T["Upload a new avatar"]"  class="avatar-edit">
                 <input type="file" id="imageUpload"
                        asp-for="AvatarFile"
                        data-upload="avatar"

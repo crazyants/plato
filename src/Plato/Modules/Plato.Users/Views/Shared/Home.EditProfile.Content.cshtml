@@ -2,14 +2,14 @@
 
 <div asp-validation-summary="All"></div>
 
-<div class="form-group edit-profile-avatar float-lg-right float-md-none">
+<div class="form-group edit-profile-avatar col-lg-5 float-lg-right float-md-none">
     <card>
         <card-title>
-            <h6 class="card-title">@T["Photo"]</h6>
+            <h6 class="card-title">@T["Avatar"]</h6>
         </card-title>
         <card-body>
             <div class="profile-avatar">
-                <div data-toggle="tooltip" title="@T["Upload new picture"]" class="avatar-edit">
+                <div data-toggle="tooltip" title="@T["Upload a new avatar"]" class="avatar-edit">
                     <input type="file" id="imageUpload"
                            asp-for="AvatarFile"
                            data-upload="avatar"
@@ -23,6 +23,9 @@
                     <avatar id="avatarPreview" class="avatar" url="@Model.Avatar.Url" />
                 </div>
             </div>
+            <p class="text-center mt-4">
+                @T["You're a lot more recognizable with an avatar."]
+            </p>
         </card-body>
     </card>
 </div>

@@ -179,52 +179,6 @@ namespace Plato.Labels.Handlers
             }
         };
 
-        // Label Roles table
-        private readonly SchemaTable _labelRoles = new SchemaTable()
-        {
-            Name = "LabelRoles",
-            Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "LabelId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "RoleId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset,
-                        Nullable = true
-                    }
-                }
-        };
-
         // Entity Labels table
         private readonly SchemaTable _entityLabels = new SchemaTable()
         {
@@ -302,10 +256,7 @@ namespace Plato.Labels.Handlers
 
                 // Label data
                 LabelData(builder);
-
-                // Label roles schema
-                LabelRoles(builder);
-
+                
                 // Entity labels schema
                 EntityLabels(builder);
                 
@@ -360,16 +311,6 @@ namespace Plato.Labels.Handlers
                     .DropDefaultProcedures(_labelData)
                     .DropProcedure(new SchemaProcedure("SelectLabelDatumByLabelId"))
                     .DropProcedure(new SchemaProcedure("SelectLabelDatumPaged"));
-                
-                // drop Label roles
-                builder.TableBuilder.DropTable(_labelRoles);
-
-                builder.ProcedureBuilder
-                    .DropDefaultProcedures(_labelRoles)
-                    .DropProcedure(new SchemaProcedure("SelectLabelRolesByLabelId"))
-                    .DropProcedure(new SchemaProcedure("SelectLabelRolesPaged"))
-                    .DropProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId"))
-                    .DropProcedure(new SchemaProcedure("DeleteLabelRolesByRoleIdAndLabelId"));
                 
                 // drop entity labels
                 builder.TableBuilder.DropTable(_entityLabels);
@@ -431,8 +372,10 @@ namespace Plato.Labels.Handlers
         void Labels(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_labels);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_labels)
 
@@ -452,13 +395,30 @@ namespace Plato.Labels.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _labels.Name,
+                Columns = new string[]
+                {
+                    "SortOrder",
+                    "TotalEntities",
+                    "TotalFollows",
+                    "TotalViews",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
         }
 
         void LabelData(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_labelData);
 
+            // Labels
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_labelData)
                 .CreateProcedure(new SchemaProcedure("SelectLabelDatumByLabelId", StoredProcedureType.SelectByKey)
@@ -477,73 +437,26 @@ namespace Plato.Labels.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _labelData.Name,
+                Columns = new string[]
+                {
+                    "LabelId",
+                    "[Key]"
+                }
+            });
+
         }
         
-        void LabelRoles(ISchemaBuilder builder)
-        {
-
-            builder.TableBuilder.CreateTable(_labelRoles);
-
-            builder.ProcedureBuilder
-                .CreateDefaultProcedures(_labelRoles)
-
-                .CreateProcedure(
-                    new SchemaProcedure(
-                            $"SelectLabelRoleById",
-                            @" SELECT cr.*, r.[Name] AS RoleName
-                                FROM {prefix}_LabelRoles cr WITH (nolock) 
-                                    INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
-                                WHERE (
-                                   cr.Id = @Id
-                                )")
-                        .ForTable(_labelRoles)
-                        .WithParameter(_labelRoles.PrimaryKeyColumn))
-
-                .CreateProcedure(
-                    new SchemaProcedure(
-                            $"SelectLabelRolesByLabelId",
-                            @" SELECT cr.*, r.[Name] AS RoleName
-                                FROM {prefix}_LabelRoles cr WITH (nolock) 
-                                    INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
-                                WHERE (
-                                   cr.LabelId = @LabelId
-                                )")
-                        .ForTable(_labelRoles)
-                        .WithParameter(new SchemaColumn() {Name = "LabelId", DbType = DbType.Int32}))
-
-                .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_labelRoles)
-                    .WithParameter(new SchemaColumn() {Name = "LabelId", DbType = DbType.Int32}))
-
-                .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByRoleIdAndLabelId",
-                        StoredProcedureType.DeleteByKey)
-                    .ForTable(_labelRoles)
-                    .WithParameters(new List<SchemaColumn>()
-                        {
-                            new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
-                            new SchemaColumn() {Name = "LabelId", DbType = DbType.Int32}
-                        }
-                    ))
-
-                .CreateProcedure(new SchemaProcedure("SelectLabelRolesPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(_labelRoles)
-                    .WithParameters(new List<SchemaColumn>()
-                    {
-                        new SchemaColumn()
-                        {
-                            Name = "Keywords",
-                            DbType = DbType.String,
-                            Length = "255"
-                        }
-                    }));
-
-        }
-
         void EntityLabels(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityLabels);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityLabels)
 
@@ -556,8 +469,8 @@ namespace Plato.Labels.Handlers
                                 WHERE (
                                    el.Id = @Id
                                 )")
-                        .ForTable(_labelRoles)
-                        .WithParameter(_labelRoles.PrimaryKeyColumn))
+                        .ForTable(_entityLabels)
+                        .WithParameter(_entityLabels.PrimaryKeyColumn))
 
                 .CreateProcedure(
                     new SchemaProcedure(
@@ -601,8 +514,19 @@ namespace Plato.Labels.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityLabels.Name,
+                Columns = new string[]
+                {
+                    "LabelId",
+                    "EntityId"
+                }
+            });
+            
         }
-        
+
         #endregion
 
     }

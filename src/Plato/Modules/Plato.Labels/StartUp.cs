@@ -36,13 +36,13 @@ namespace Plato.Labels
             // Repositories
             services.AddScoped<ILabelRepository<LabelBase>, LabelRepository<LabelBase>>();
             services.AddScoped<ILabelDataRepository<LabelData>, LabelDataRepository>();
-            services.AddScoped<ILabelRoleRepository<LabelRole>, LabelRoleRepository>();
+            //services.AddScoped<ILabelRoleRepository<LabelRole>, LabelRoleRepository>();
             services.AddScoped<IEntityLabelRepository<EntityLabel>, EntityLabelRepository>();
 
             // Stores
             services.AddScoped<ILabelStore<LabelBase>, LabelStore<LabelBase>>();
             services.AddScoped<ILabelDataStore<LabelData>, LabelDataStore>();
-            services.AddScoped<ILabelRoleStore<LabelRole>, LabelRoleStore>();
+            //services.AddScoped<ILabelRoleStore<LabelRole>, LabelRoleStore>();
             services.AddScoped<IEntityLabelStore<EntityLabel>, EntityLabelStore>();
 
             // Managers

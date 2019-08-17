@@ -190,8 +190,10 @@ namespace Plato.Entities.History.Handlers
         void EntityHistory(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityHistory);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityHistory)
 
@@ -365,6 +367,19 @@ namespace Plato.Entities.History.Handlers
                             Length = "255"
                         }
                     }));
+
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityHistory.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "EntityReplyId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
 
         }
 

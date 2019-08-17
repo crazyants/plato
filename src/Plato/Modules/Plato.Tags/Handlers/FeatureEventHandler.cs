@@ -93,8 +93,8 @@ namespace Plato.Tags.Handlers
                     }
                 }
         };
-        
-        // Entity Tags table
+
+        // EntityTags table
         private readonly SchemaTable _entityTags = new SchemaTable()
         {
             Name = "EntityTags",
@@ -272,8 +272,10 @@ namespace Plato.Tags.Handlers
         void Tags(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_tags);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_tags)
 
@@ -301,13 +303,30 @@ namespace Plato.Tags.Handlers
                     }
                 }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _tags.Name,
+                Columns = new string[]
+                {
+                    "FeatureId",
+                    "TotalEntities",
+                    "TotalFollows",
+                    "LastSeenDate",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+            
         }
-        
+
         void EntityTags(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityTags);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityTags)
 
@@ -410,8 +429,24 @@ namespace Plato.Tags.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityTags.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "EntityReplyId",
+                    "TagId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
+
+
         }
-        
+
         #endregion
 
     }

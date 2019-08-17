@@ -56,6 +56,14 @@
     </div>
 </div>
 
+<div class="form-group">
+    <input type="search" 
+           data-provide="filter-list" 
+           data-filter-list-target="#featureList"
+           data-filter-list-empty="#featureListEmpty"
+           class="form-control" placeholder="@T["Search features..."]" autofocus />
+</div>
+
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title d-inline-block">@T["Features"]</h6>
@@ -72,8 +80,14 @@
         </div>
     </card-title>
     <card-body>
+        
+        <ul id="featureListEmpty" class="list-group list-group-flush" style="display: none;">
+            <li class="list-group-item">
+                @T["No features matched your search!"]
+            </li>
+        </ul>
 
-        <ul class="list-group list-group-flush list-group-hover">
+        <ul id="featureList" class="list-group list-group-flush list-group-hover">
             @{
                 var features = Model.Features?.OrderBy(o => o.Descriptor.Name);
             }
@@ -81,7 +95,7 @@
             {
                 foreach (var feature in features)
                 {
-                    <li class="list-group-item list-group-item-action">
+                    <li  data-filter-list-value="@feature.Descriptor.Name" class="list-group-item list-group-item-action">
                         <div class="row">
                             <div class="col-lg-9">
 

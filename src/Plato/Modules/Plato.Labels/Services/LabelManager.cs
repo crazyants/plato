@@ -16,7 +16,7 @@ namespace Plato.Labels.Services
     public class LabelManager<TLabel> : ILabelManager<TLabel> where TLabel : class, ILabel
     {
         
-        private readonly ILabelRoleStore<LabelRole> _labelRoleStore;
+        //private readonly ILabelRoleStore<LabelRole> _labelRoleStore;
         private readonly ILabelDataStore<LabelData> _labelDataStore;
         private readonly ILabelStore<TLabel> _labelStore;
         private readonly IContextFacade _contextFacade;
@@ -26,7 +26,7 @@ namespace Plato.Labels.Services
 
         public LabelManager(
             ILabelStore<TLabel> labelStore,
-            ILabelRoleStore<LabelRole> labelRoleStore,
+            //ILabelRoleStore<LabelRole> labelRoleStore,
             ILabelDataStore<LabelData> labelDataStore,
             IContextFacade contextFacade,
             IAliasCreator aliasCreator,
@@ -34,7 +34,7 @@ namespace Plato.Labels.Services
             IBroker broker)
         {
             _labelStore = labelStore;
-            _labelRoleStore = labelRoleStore;
+            //_labelRoleStore = labelRoleStore;
             _roleStore = roleStore;
             _contextFacade = contextFacade;
             _labelDataStore = labelDataStore;
@@ -190,7 +190,7 @@ namespace Plato.Labels.Services
             if (await _labelStore.DeleteAsync(model))
             {
                 // Delete Label roles
-                await _labelRoleStore.DeleteByLabelIdAsync(model.Id);
+                //await _labelRoleStore.DeleteByLabelIdAsync(model.Id);
 
                 // Delete Label data
                 var data = await _labelDataStore.GetByLabelIdAsync(model.Id);
@@ -218,145 +218,145 @@ namespace Plato.Labels.Services
 
         }
 
-        public async Task<ICommandResult<TLabel>> AddToRoleAsync(TLabel model, string roleName)
-        {
+        //public async Task<ICommandResult<TLabel>> AddToRoleAsync(TLabel model, string roleName)
+        //{
 
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+        //    if (model == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(model));
+        //    }
 
-            if (String.IsNullOrEmpty(roleName))
-            {
-                throw new ArgumentNullException(nameof(roleName));
-            }
+        //    if (String.IsNullOrEmpty(roleName))
+        //    {
+        //        throw new ArgumentNullException(nameof(roleName));
+        //    }
 
-            var result = new CommandResult<TLabel>();
+        //    var result = new CommandResult<TLabel>();
 
-            // Ensure the role exists
-            var existingRole = await _roleStore.GetByNameAsync(roleName);
-            if (existingRole == null)
-            {
-                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
-            }
+        //    // Ensure the role exists
+        //    var existingRole = await _roleStore.GetByNameAsync(roleName);
+        //    if (existingRole == null)
+        //    {
+        //        return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
+        //    }
 
-            // Ensure supplied role name is not already associated with the Label
-            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
-            if (roles != null)
-            {
-                foreach (var role in roles)
-                {
-                    if (role.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return result.Failed(new CommandError($"A role with the name '{roleName}' is already associated with the Label '{model.Name}'"));
-                    }
-                }
-            }
+        //    // Ensure supplied role name is not already associated with the Label
+        //    var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
+        //    if (roles != null)
+        //    {
+        //        foreach (var role in roles)
+        //        {
+        //            if (role.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase))
+        //            {
+        //                return result.Failed(new CommandError($"A role with the name '{roleName}' is already associated with the Label '{model.Name}'"));
+        //            }
+        //        }
+        //    }
             
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+        //    var user = await _contextFacade.GetAuthenticatedUserAsync();
         
-            var labelRole = new LabelRole()
-            {
-                LabelId = model.Id,
-                RoleId = existingRole.Id,
-                CreatedUserId = user?.Id ?? 0
-            };
+        //    var labelRole = new LabelRole()
+        //    {
+        //        LabelId = model.Id,
+        //        RoleId = existingRole.Id,
+        //        CreatedUserId = user?.Id ?? 0
+        //    };
 
-            var updatedLabelRole = await _labelRoleStore.CreateAsync(labelRole);
-            if (updatedLabelRole != null)
-            {
-                return result.Success();
-            }
+        //    var updatedLabelRole = await _labelRoleStore.CreateAsync(labelRole);
+        //    if (updatedLabelRole != null)
+        //    {
+        //        return result.Success();
+        //    }
 
-            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for Label '{model.Name}'"));
+        //    return result.Failed(new CommandError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for Label '{model.Name}'"));
 
-        }
+        //}
 
-        public async Task<ICommandResult<TLabel>> RemoveFromRoleAsync(TLabel model, string roleName)
-        {
+        //public async Task<ICommandResult<TLabel>> RemoveFromRoleAsync(TLabel model, string roleName)
+        //{
 
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+        //    if (model == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(model));
+        //    }
 
-            if (String.IsNullOrEmpty(roleName))
-            {
-                throw new ArgumentNullException(nameof(roleName));
-            }
+        //    if (String.IsNullOrEmpty(roleName))
+        //    {
+        //        throw new ArgumentNullException(nameof(roleName));
+        //    }
             
-            // Our result
-            var result = new CommandResult<TLabel>();
+        //    // Our result
+        //    var result = new CommandResult<TLabel>();
             
-            // Ensure the role exists
-            var role = await _roleStore.GetByNameAsync(roleName);
-            if (role == null)
-            {
-                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
-            }
+        //    // Ensure the role exists
+        //    var role = await _roleStore.GetByNameAsync(roleName);
+        //    if (role == null)
+        //    {
+        //        return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
+        //    }
             
-            // Attempt to delete the role relationship
-            var success = await _labelRoleStore.DeleteByRoleIdAndLabelIdAsync(role.Id, model.Id);
-            if (success)
-            {
-                return result.Success();
-            }
+        //    // Attempt to delete the role relationship
+        //    var success = await _labelRoleStore.DeleteByRoleIdAndLabelIdAsync(role.Id, model.Id);
+        //    if (success)
+        //    {
+        //        return result.Success();
+        //    }
             
-            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for Label '{model.Name}'"));
+        //    return result.Failed(new CommandError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for Label '{model.Name}'"));
 
-        }
+        //}
 
-        public async Task<bool> IsInRoleAsync(TLabel model, string roleName)
-        {
+        //public async Task<bool> IsInRoleAsync(TLabel model, string roleName)
+        //{
 
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+        //    if (model == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(model));
+        //    }
 
-            if (String.IsNullOrEmpty(roleName))
-            {
-                throw new ArgumentNullException(nameof(roleName));
-            }
+        //    if (String.IsNullOrEmpty(roleName))
+        //    {
+        //        throw new ArgumentNullException(nameof(roleName));
+        //    }
 
-            var result = new CommandResult<TLabel>();
+        //    var result = new CommandResult<TLabel>();
 
-            var role = await _roleStore.GetByNameAsync(roleName);
-            if (role == null)
-            {
-                return false;
-            }
+        //    var role = await _roleStore.GetByNameAsync(roleName);
+        //    if (role == null)
+        //    {
+        //        return false;
+        //    }
             
-            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
-            if (roles == null)
-            {
-                return false;
-            }
+        //    var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
+        //    if (roles == null)
+        //    {
+        //        return false;
+        //    }
 
-            foreach (var localRole in roles)
-            {
-                if (localRole.Id == role.Id)
-                {
-                    return true;
-                }
-            }
+        //    foreach (var localRole in roles)
+        //    {
+        //        if (localRole.Id == role.Id)
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            return false;
+        //    return false;
 
-        }
+        //}
 
-        public async Task<IEnumerable<string>> GetRolesAsync(TLabel model)
-        {
+        //public async Task<IEnumerable<string>> GetRolesAsync(TLabel model)
+        //{
 
-            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
-            if (roles != null)
-            {
-                return roles.Select(s => s.RoleName).ToArray();
-            }
+        //    var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
+        //    if (roles != null)
+        //    {
+        //        return roles.Select(s => s.RoleName).ToArray();
+        //    }
 
-            return new string[] {};
+        //    return new string[] {};
 
-        }
+        //}
 
         #endregion
 

@@ -4,16 +4,16 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Labels.Stores
 {
-    public interface ILabelRoleStore<TModel> : IStore<TModel> where TModel : class
-    {
+    //public interface ILabelRoleStore<TModel> : IStore<TModel> where TModel : class
+    //{
 
-        Task<IEnumerable<TModel>> GetByLabelIdAsync(int labelId);
+    //    Task<IEnumerable<TModel>> GetByLabelIdAsync(int labelId);
 
-        Task<bool> DeleteByLabelIdAsync(int labelId);
+    //    Task<bool> DeleteByLabelIdAsync(int labelId);
         
-        Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int labelId);
+    //    Task<bool> DeleteByRoleIdAndLabelIdAsync(int roleId, int labelId);
 
-    }
+    //}
 
 
 }

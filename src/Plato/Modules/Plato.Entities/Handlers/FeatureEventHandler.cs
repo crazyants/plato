@@ -883,6 +883,7 @@ namespace Plato.Entities.Handlers
                         }
                     }));
 
+            // Indexes
             builder.IndexBuilder.CreateIndex(new SchemaIndex()
             {
                 TableName = _entityData.Name,
