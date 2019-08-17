@@ -1,11 +1,11 @@
 ﻿@using Plato.Internal.Models.Badges
 @model BadgesIndexViewModel
 @{
-    var badgesList = Model.Badges.ToList();
-    var goldBadges = @badgesList.Where(b => b.Level == BadgeLevel.Gold).ToList().Count;
-    var silverBadges = @badgesList.Where(b => b.Level == BadgeLevel.Silver).ToList().Count;
-    var bronzeBadges = @badgesList.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count;
-    var badgesText = badgesList.Count == 1
+    var badgesList = Model.Badges?.ToList();
+    var goldBadges = @badgesList?.Where(b => b.Level == BadgeLevel.Gold).ToList().Count;
+    var silverBadges = @badgesList?.Where(b => b.Level == BadgeLevel.Silver).ToList().Count;
+    var bronzeBadges = @badgesList?.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count;
+    var badgesText = badgesList?.Count == 1
         ? "Badge"
         : "Badges";
 }
@@ -25,7 +25,7 @@
         </span>
     </card-title>
     <card-body>
-        @if (badgesList.Count > 0)
+        @if (badgesList?.Count > 0)
         {
             <div class="list-group list-group-flush list-group-hover" data-provide="badge-list">
                 <div class="row no-gutters text-center">

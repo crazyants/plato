@@ -1,5 +1,7 @@
 ﻿@model ProfileDisplayViewModel
 @{
+    throw new Exception("Example Exception");
+
     var badgesList = Model.Badges?.ToList();
     var text = badgesList?.Count == 1
         ? T["badge"].Value

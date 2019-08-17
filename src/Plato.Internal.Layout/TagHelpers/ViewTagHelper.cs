@@ -47,18 +47,33 @@ namespace Plato.Internal.Layout.TagHelpers
             {
                 throw new ArgumentNullException(nameof(this.Model));
             }
-            
-            var builder = await Build();
-            if (builder == null)
+
+            IHtmlContent builder = null;
+            try
             {
-                throw new Exception(
-                    $"An error occurred whilst attempting to activate a view. The supplied model of type {Model} is not a valid type. The supplied model must implement the IView interface.");
+                builder = await Build();
+                if (builder == null)
+                {
+                    throw new Exception(
+                        $"An error occurred whilst attempting to activate a view. The supplied model of type {Model} is not a valid type. The supplied model must implement the IView interface.");
+                }
+            }
+            catch (Exception e)
+            {
+                builder = new HtmlContentBuilder()
+                    .AppendHtml("An error occurred whilst attempting to invoke a view. ")
+                    .AppendHtml("Details follow...<hr/><strong>Exception message:</strong> ")
+                    .Append(e.Message)
+                    .AppendHtml("<br/><strong>Stack trace:</strong> ")
+                    .Append(Environment.NewLine)
+                    .Append(Environment.NewLine)
+                    .Append(e.StackTrace);
             }
 
             output.TagName = "";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Content.SetHtmlContent(builder);
-            
+
         }
 
         void EnsureViewHelper()
@@ -88,10 +103,6 @@ namespace Plato.Internal.Layout.TagHelpers
                     }
                     catch (Exception e)
                     {
-                        //if (_logger.IsEnabled(LogLevel.Error))
-                        //{
-                        //    _logger.LogError(e, $"An error occurred invoking the view \"{((IView)view).ViewName}\", Error message: {e.Message}");
-                        //}
                         throw;
                     }
                     
