@@ -110,7 +110,7 @@ namespace Plato.Entities.Reactions.Handlers
                 Configure(builder);
 
                 // Reactions schema
-                Reactions(builder);
+                EntityReactions(builder);
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -193,11 +193,13 @@ namespace Plato.Entities.Reactions.Handlers
                 });
         }
         
-        void Reactions(ISchemaBuilder builder)
+        void EntityReactions(ISchemaBuilder builder)
         {
             
+            // Tables
             builder.TableBuilder.CreateTable(_entityReactions);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityReactions)
 
@@ -302,8 +304,23 @@ namespace Plato.Entities.Reactions.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityReactions.Name,
+                Columns = new string[]
+                {
+                    "ReactionName",
+                    "FeatureId",
+                    "EntityId",
+                    "EntityReplyId",
+                    "CreatedUserId"
+                }
+            });
+
+
         }
-        
+
     }
 
 }

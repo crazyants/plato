@@ -78,11 +78,11 @@ namespace Plato.Stars.Handlers
             using (var builder = _schemaBuilder)
             {
 
-                // configure
+                // Configure
                 Configure(builder);
 
-                // Entity follows
-                Follows(builder);
+                // Stars
+                Stars(builder);
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -172,11 +172,13 @@ namespace Plato.Stars.Handlers
 
         }
 
-        void Follows(ISchemaBuilder builder)
+        void Stars(ISchemaBuilder builder)
         {
             
+            // Tables
             builder.TableBuilder.CreateTable(_stars);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_stars)
 
@@ -273,10 +275,22 @@ namespace Plato.Stars.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _stars.Name,
+                Columns = new string[]
+                {
+                    "[Name]",
+                    "ThingsId",
+                    "CreatedUserId"
+                }
+            });
+            
         }
-        
+
         #endregion
-        
+
     }
 
 }
