@@ -254,8 +254,20 @@ namespace Plato.Metrics.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _metrics.Name,
+                Columns = new string[]
+                {
+                    "FeatureId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+            
         }
-        
+
         #endregion
 
     }

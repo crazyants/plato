@@ -192,8 +192,10 @@ namespace Plato.Notifications.Handlers
         void UserNotifications(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_userNotifications);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_userNotifications)
 
@@ -255,7 +257,20 @@ namespace Plato.Notifications.Handlers
                                 Nullable = true
                             }
                         }));
-            
+
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _userNotifications.Name,
+                Columns = new string[]
+                {
+                    "UserId",
+                    "NotificationName",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
         }
 
         #endregion

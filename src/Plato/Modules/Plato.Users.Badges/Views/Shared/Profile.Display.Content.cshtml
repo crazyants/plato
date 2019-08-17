@@ -1,7 +1,5 @@
 ﻿@model ProfileDisplayViewModel
 @{
-    throw new Exception("Example Exception");
-
     var badgesList = Model.Badges?.ToList();
     var text = badgesList?.Count == 1
         ? T["badge"].Value
@@ -12,9 +10,7 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title float-left">
-            @title
-        </h6>
+        <h6 class="card-title float-left">@title</h6>
         <div class="nav navbar p-0 float-right">
             <div class="nav-item">
                 <a asp-route-area="Plato.Users.Badges" asp-route-controller="Profile" asp-route-action="Index" asp-route-opts.id="@Model.User.Id" asp-route-opts.alias="@Model.User.Alias" class="nav-link text-muted" data-toggle="tooltip" title="@tooltip">

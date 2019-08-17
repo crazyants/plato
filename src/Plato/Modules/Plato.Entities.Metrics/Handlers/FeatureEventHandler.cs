@@ -181,8 +181,10 @@ namespace Plato.Entities.Metrics.Handlers
         void EntityMetrics(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityMetrics);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityMetrics)
 
@@ -236,8 +238,21 @@ namespace Plato.Entities.Metrics.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityMetrics.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
+
         }
-        
+
         #endregion
 
     }

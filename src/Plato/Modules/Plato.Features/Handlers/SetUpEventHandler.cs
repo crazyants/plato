@@ -100,8 +100,10 @@ namespace Plato.Features.Handlers
         void Features(ISchemaBuilder builder)
         {
          
+            // Tables
             builder.TableBuilder.CreateTable(_shellFeatures);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_shellFeatures)
                 .CreateProcedure(new SchemaProcedure("SelectShellFeaturesPaged", StoredProcedureType.SelectPaged)
@@ -120,6 +122,16 @@ namespace Plato.Features.Handlers
                             Length = "255"
                         }
                     }));
+
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _shellFeatures.Name,
+                Columns = new string[]
+                {
+                    "ModuleId"
+                }
+            });
 
         }
         

@@ -174,8 +174,10 @@ namespace Plato.Follows.Handlers
         void Follows(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_follows);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_follows)
 
@@ -270,6 +272,20 @@ namespace Plato.Follows.Handlers
                             Length = "255"
                         }
                     }));
+
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _follows.Name,
+                Columns = new string[]
+                {
+                    "Name",
+                    "ThingId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
 
         }
 

@@ -405,8 +405,10 @@ namespace Plato.Categories.Handlers
         void Categories(ISchemaBuilder builder)
         {
 
+            // tables
             builder.TableBuilder.CreateTable(_categories);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_categories)
 
@@ -442,13 +444,27 @@ namespace Plato.Categories.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _categories.Name,
+                Columns = new string[]
+                {
+                    "ParentId",
+                    "FeatureId"
+                }
+            });
+
+
         }
 
         void CategoryData(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_categoryData);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_categoryData)
                 .CreateProcedure(new SchemaProcedure("SelectCategoryDatumBycategoryId", StoredProcedureType.SelectByKey)
@@ -466,14 +482,27 @@ namespace Plato.Categories.Handlers
                             Length = "255"
                         }
                     }));
-
+            
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _categoryData.Name,
+                Columns = new string[]
+                {
+                    "CategoryId",
+                    "[Key]"
+                }
+            });
+            
         }
-        
+
         void CategoryRoles(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_categoryRoles);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_categoryRoles)
 
@@ -527,13 +556,26 @@ namespace Plato.Categories.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _categoryRoles.Name,
+                Columns = new string[]
+                {
+                    "CategoryId",
+                    "RoleId"
+                }
+            });
+
         }
 
         void EntityCategories(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityCategories);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityCategories)
 
@@ -613,6 +655,17 @@ namespace Plato.Categories.Handlers
                             Length = "255"
                         }
                     }));
+            
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityCategories.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "CategoryId"
+                }
+            });
 
         }
         

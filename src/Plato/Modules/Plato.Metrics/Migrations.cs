@@ -100,18 +100,10 @@ namespace Plato.Metrics
                         options.ModuleName = ModuleId;
                         options.Version = "1.0.1";
                     });
-                
-                // TODO: Add to FeatureEventHandlers
-                builder.IndexBuilder.CreateIndex(new SchemaIndex()
-                {
-                    TableName = metrics.Name,
-                    Columns = new string[]
-                    {
-                        "FeatureId",
-                        "CreatedUserId",
-                        "CreatedDate"
-                    }
-                });
+
+                // -------------------
+                // placeholder
+                // -------------------
 
                 // Add builder results to output
                 output.AddRange(builder.Statements);

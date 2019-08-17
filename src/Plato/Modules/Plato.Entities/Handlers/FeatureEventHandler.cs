@@ -710,8 +710,10 @@ namespace Plato.Entities.Handlers
         {
 
 
+            // Tables
             builder.TableBuilder.CreateTable(_entities);
-
+            
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entities)
                 
@@ -834,13 +836,34 @@ namespace Plato.Entities.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entities.Name,
+                Columns = new string[]
+                {
+                    "ParentId",
+                    "FeatureId",
+                    "CategoryId",
+                    "CreatedUserId",
+                    "CreatedDate",
+                    "ModifiedUserId",
+                    "ModifiedDate",
+                    "LastReplyUserId",
+                    "LastReplyDate"
+                }
+            });
+
+
         }
 
         void EntityData(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityData);
-
+            
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityData)
 
@@ -860,13 +883,26 @@ namespace Plato.Entities.Handlers
                         }
                     }));
 
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityData.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
         }
         
         void EntityReplies(ISchemaBuilder builder)
         {
             
+            // Tables
             builder.TableBuilder.CreateTable(_entityReplies);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityReplies)
 
@@ -921,13 +957,27 @@ namespace Plato.Entities.Handlers
                         }
                     }));
 
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityReplies.Name,
+                Columns = new string[]
+                {
+                    "EntityId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
+
         }
 
         void EntityReplyData(ISchemaBuilder builder)
         {
 
+            // Tables
             builder.TableBuilder.CreateTable(_entityReplyData);
 
+            // Procedures
             builder.ProcedureBuilder
                 .CreateDefaultProcedures(_entityReplyData)
 
@@ -946,6 +996,18 @@ namespace Plato.Entities.Handlers
                             Length = "255"
                         }
                     }));
+
+            // Indexes
+            builder.IndexBuilder.CreateIndex(new SchemaIndex()
+            {
+                TableName = _entityReplyData.Name,
+                Columns = new string[]
+                {
+                    "ReplyId",
+                    "CreatedUserId",
+                    "CreatedDate"
+                }
+            });
 
         }
 

@@ -102,18 +102,7 @@ namespace Plato.Notifications
                         options.DropIndexesBeforeCreate = true;
                     });
 
-                // TODO: Add to FeatureEventHandlers
-                builder.IndexBuilder.CreateIndex(new SchemaIndex()
-                {
-                    TableName = userNotifications.Name,
-                    Columns = new string[]
-                    {
-                        "UserId",
-                        "NotificationName",
-                        "CreatedUserId",
-                        "CreatedDate"
-                    }
-                });
+                // Placeholder
 
                 // Add builder results to output
                 output.AddRange(builder.Statements);
