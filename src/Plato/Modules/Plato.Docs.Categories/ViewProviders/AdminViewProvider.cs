@@ -90,7 +90,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     ChannelIcons = defaultIcons,
                     IsNewChannel = true,
                     ParentId = categoryBase.ParentId,
-                    AvailableChannels = await GetAvailableChannels()
+                    AvailableChannels = await GetAvailableCategories()
                 };
             }
             else
@@ -106,7 +106,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     IconCss = categoryBase.IconCss,
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
-                    AvailableChannels = await GetAvailableChannels()
+                    AvailableChannels = await GetAvailableCategories()
                 };
             }
             
@@ -168,7 +168,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
         #region "Private Methods"
 
-        async Task<IEnumerable<SelectListItem>> GetAvailableChannels()
+        async Task<IEnumerable<SelectListItem>> GetAvailableCategories()
         {
 
             var output = new List<SelectListItem>
@@ -237,4 +237,5 @@ namespace Plato.Docs.Categories.ViewProviders
         #endregion
 
     }
+
 }

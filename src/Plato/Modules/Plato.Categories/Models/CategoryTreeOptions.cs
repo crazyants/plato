@@ -4,13 +4,14 @@ using Plato.Categories.ViewModels;
 
 namespace Plato.Categories.Models
 {
+
     public class CategoryTreeOptions
     {
 
         public CategoryIndexOptions IndexOptions { get; set; } = new CategoryIndexOptions();
 
         public IEnumerable<int> SelectedCategories { get; set; }
-
+        
         public string HtmlName { get; set; }
 
         public bool EnableCheckBoxes { get; set; }

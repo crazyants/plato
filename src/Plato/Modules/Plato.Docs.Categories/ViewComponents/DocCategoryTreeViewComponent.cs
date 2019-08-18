@@ -5,16 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
+using Plato.Docs.Categories.Models;
 using Plato.Internal.Navigation.Abstractions;
 
-namespace Plato.Categories.ViewComponents
+namespace Plato.Docs.Categories.ViewComponents
 {
-    public class CategoryTreeViewComponent : ViewComponent
+
+    public class DocCategoryTreeViewComponent : ViewComponent
     {
 
-        private readonly ICategoryService<CategoryBase> _categoryService;
-
-        public CategoryTreeViewComponent(ICategoryService<CategoryBase> categoryService)
+        private readonly ICategoryService<Category> _categoryService;
+     
+        public DocCategoryTreeViewComponent(ICategoryService<Category> categoryService)
         {
             _categoryService = categoryService;
         }
@@ -32,32 +34,31 @@ namespace Plato.Categories.ViewComponents
                 options.SelectedCategories = new int[0];
             }
 
-            var selected = await BuildSelectionsAsync(options);
             return View(new CategoryTreeViewModel
             {
                 HtmlName = options.HtmlName,
                 EnableCheckBoxes = options.EnableCheckBoxes,
                 EditMenuViewName = options.EditMenuViewName,
-                SelectedCategories = selected,
+                SelectedCategories = await BuildCategories(options),
                 CssClass = options.CssClass,
                 RouteValues = options.RouteValues
             });
 
         }
+        
 
-        private async Task<IList<Selection<CategoryBase>>> BuildSelectionsAsync(CategoryTreeOptions options)
+        private async Task<IList<Selection<CategoryBase>>> BuildCategories(CategoryTreeOptions options)
         {
-            
+
             // Get categories
             var categories = await _categoryService
-                .GetResultsAsync(
-                    options.IndexOptions, new PagerOptions()
-                    {
-                        Page = 1,
-                        Size = int.MaxValue
-                    });
+                .GetResultsAsync(options.IndexOptions, new PagerOptions()
+                {
+                    Page = 1,
+                    Size = int.MaxValue
+                });
 
-            return categories?.Data?.Select(c => new Selection<CategoryBase>
+            return categories?.Data.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = options.SelectedCategories.Any(v => v == c.Id),
                     Value = c
@@ -65,6 +66,7 @@ namespace Plato.Categories.ViewComponents
                 .ToList();
 
         }
-    }
 
+    }
+    
 }

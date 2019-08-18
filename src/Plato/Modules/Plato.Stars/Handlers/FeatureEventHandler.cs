@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -118,14 +117,15 @@ namespace Plato.Stars.Handlers
             using (var builder = _schemaBuilder)
             {
 
-                // drop entity follows
+                // Drop tables
                 builder.TableBuilder.DropTable(_stars);
 
+                // Drop procedures
                 builder.ProcedureBuilder
                     .DropDefaultProcedures(_stars)
-                    .DropProcedure(new SchemaProcedure("SelectFollowsPaged"))
-                    .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
-                    .DropProcedure(new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId"));
+                    .DropProcedure(new SchemaProcedure("SelectStarsPaged"))
+                    .DropProcedure(new SchemaProcedure("SelectStarsByNameAndThingId"))
+                    .DropProcedure(new SchemaProcedure("SelectStarByNameThingIdAndCreatedUserId"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -281,7 +281,7 @@ namespace Plato.Stars.Handlers
                 TableName = _stars.Name,
                 Columns = new string[]
                 {
-                    "[Name]",
+                    "Name",
                     "ThingsId",
                     "CreatedUserId"
                 }

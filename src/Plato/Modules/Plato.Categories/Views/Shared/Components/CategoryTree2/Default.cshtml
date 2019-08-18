@@ -1,0 +1,191 @@
+﻿@model CategoryTreeViewModel
+@functions {
+
+    async Task<string> BuildCategories(CategoryTreeViewModel model)
+    {
+        return await BuildCategoriesRecursively(model.SelectedCategories, model.HtmlName); ;
+    }
+
+    async Task<string> BuildCategoriesRecursively(
+        IList<Selection<CategoryBase>> channels,
+        string htmlName,
+        System.Text.StringBuilder sb = null,
+        int id = 0)
+    {
+
+        if (sb == null)
+        {
+            sb = new System.Text.StringBuilder();
+        }
+
+        var style = id == 0 ? "display:block" : "display:none";
+        sb.Append("<ul style=\"")
+            .Append(style)
+            .Append("\" class=\"list-group list-group-flush\">");
+
+        if (Model.SelectedCategories != null)
+        {
+
+            foreach (var category in Model.SelectedCategories)
+            {
+                var nodeId = htmlName + "-node-" + category.Value.Id;
+                var checkId = htmlName + "-check-" + category.Value.Id;
+                var css = category.IsSelected ? "list-group-item list-group-item-action active checked" : "list-group-item list-group-item-action";
+                var check = category.IsSelected ? " checked" : string.Empty;
+
+                var url = "";
+                if (Model.RouteValues != null)
+                {
+                    Model.RouteValues["opts.categoryId"] = category.Value.Id;
+                    Model.RouteValues["opts.alias"] = category.Value.Alias;
+                    url = base.GetRouteUrl(Model.RouteValues);
+                }
+
+                if (category.Value.ParentId == id)
+                {
+                    sb.Append("<li id=\"")
+                        .Append(nodeId)
+                        .Append("\" class=\"")
+                        .Append(css)
+                        .Append("\" data-filter-list-value=\"")
+                        .Append(category.Value.Name)
+                        .Append("\">");
+
+                    sb.Append("<div class=\"p-2\"");
+                    if (category.Value.Depth > 0)
+                    {
+                        sb.Append(" style=\"margin-left: ")
+                            .Append(category.Value.Depth)
+                            .Append("rem;\"");
+                    }
+                    sb.Append("\">");
+
+                    if (category.Value.Children.Any())
+                    {
+                        sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
+                            .Append(nodeId)
+                            .Append("\" data-toggle=\"tree\" href=\"#\">");
+                        sb.Append("<i class=\"fal fa-chevron-right\"></i>");
+                        sb.Append("</a>");
+                    }
+                    else
+                    {
+                        sb.Append("<span class=\"btn cursor-default mr-2\">")
+                            .Append("<i class=\"fal\"></i>")
+                            .Append("</span>");
+                    }
+
+                    if (@Model.EnableCheckBoxes)
+                    {
+                        sb.Append("<input type=\"radio\" id=\"")
+                            .Append(checkId)
+                            .Append("\" name=\"")
+                            .Append(htmlName)
+                            .Append("\" value=\"")
+                            .Append(category.Value.Id)
+                            .Append("\" data-node-id=\"")
+                            .Append(nodeId)
+                            .Append("\"")
+                            .Append(check)
+                            .Append("/>");
+                    }
+
+                    sb.Append("<label for=\"")
+                        .Append(checkId)
+                        .Append("\" data-category-id=\"")
+                        .Append(category.Value.Id)
+                        .Append("\">");
+
+                    if (@Model.EnableCheckBoxes)
+                    {
+                        sb.Append("<i class=\"fal mr-2 check-icon\"></i>");
+                    }
+
+                    sb.Append("<span class=\"icon-wrapper icon-wrapper-sm mr-2\" style=\"");
+
+                    if (!String.IsNullOrEmpty(category.Value.BackColor))
+                    {
+                        sb.Append("background-color: ")
+                            .Append(category.Value.BackColor)
+                            .Append(";");
+                    }
+                    if (!String.IsNullOrEmpty(category.Value.ForeColor))
+                    {
+                        sb.Append("color: ")
+                            .Append(category.Value.ForeColor)
+                            .Append(";");
+                    }
+
+                    sb.Append("\">");
+
+                    if (!String.IsNullOrEmpty(category.Value.IconCss))
+                    {
+                        sb.Append("<i class=\"")
+                            .Append(category.Value.IconCss)
+                            .Append("\"></i>");
+                    }
+                    else
+                    {
+                        sb.Append("<i class=\"fal fa-folder\"></i>");
+                    }
+
+                    sb.Append("</span>");
+
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        sb.Append("<a href=\"")
+                            .Append(url)
+                            .Append("\">");
+                    }
+
+                    sb.Append(category.Value.Name);
+
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        sb.Append("</a>");
+                    }
+                    
+                    sb.Append("</label>");
+
+                    if (!String.IsNullOrEmpty(Model.EditMenuViewName))
+                    {
+                        var view = await DisplayAsync(new View(Model.EditMenuViewName, new
+                        {
+                            categoryId = category.Value.Id
+                        }));
+                        sb.Append(view.ToHtmlString());
+                    }
+
+                    sb.Append("</div>");
+
+                    // Recurse
+                    await BuildCategoriesRecursively(channels, htmlName, sb, category.Value.Id);
+
+                    sb.Append("</li>");
+
+                }
+
+            }
+        }
+        else
+        {
+            sb.Append("<li>");
+            sb.Append(T["No results found"].Value);
+            sb.Append("</li>");
+        }
+        sb.Append("</ul>");
+
+        return sb.ToString();
+
+    }
+
+}
+@{
+    var css = string.IsNullOrEmpty(Model.CssClass)
+        ? "tree"
+        : "tree " + Model.CssClass;
+}
+
+<div class="@css" data-provide="tree">
+    @Html.Raw(await BuildCategories(Model))
+</div>

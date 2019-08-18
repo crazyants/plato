@@ -1,11 +1,14 @@
 ﻿@model CategoryListViewModel<Category>
 @{
-    var selectedCategory = Model.Categories.FirstOrDefault(c => c.Id == Model.Options.CategoryId);
+    var selectedCategory = Model.Categories?.FirstOrDefault(c => c.Id == Model.Options.CategoryId);
     Category parentCategory = null;
     if (selectedCategory != null)
     {
-        parentCategory = Model.Categories.FirstOrDefault(c => c.Id == selectedCategory.ParentId);
+        parentCategory = Model.Categories?.FirstOrDefault(c => c.Id == selectedCategory.ParentId);
     }
+    var childCategories = Model.Categories?
+        .Where(c => c.ParentId == Model.Options.CategoryId)
+        .ToList();
     var allText = "All Categories";
 }
 
@@ -42,13 +45,7 @@
            
                 }
 
-                @{
-                    var childCategories = Model.Categories
-                        .Where(c => c.ParentId == Model.Options.CategoryId)
-                        .ToList();
-                }
-
-                @if (childCategories.Any())
+                @if (childCategories != null && childCategories.Any())
                 {
 
                     @foreach (var category in childCategories)
@@ -80,7 +77,13 @@
                      }
 
                 }
-             
+                else
+                {
+                    <div class="list-group-item">
+                        @T["No categories found"]
+                    </div>
+                }
+
             </div>
             
         </div>

@@ -14,7 +14,8 @@ namespace Plato.Docs.Categories.ViewComponents
 
         private readonly ICategoryService<Category> _categoryService;
         
-        public DocCategoryListSidebarViewComponent(ICategoryService<Category> categoryService)
+        public DocCategoryListSidebarViewComponent(
+            ICategoryService<Category> categoryService)
         {
             _categoryService = categoryService;
         }

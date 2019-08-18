@@ -1,6 +1,9 @@
 ﻿@model Plato.Entities.Models.FeatureEntityCounts
 @{
     var featureMetrics = Model?.Features?.FirstOrDefault(m => m.ModuleId.Equals("Plato.Issues", StringComparison.OrdinalIgnoreCase));
+    var text = featureMetrics?.Count == 1
+        ? "{0} issue"
+        : "{0} issues";
 }
 
 <a asp-route-area="Plato.Issues" asp-route-controller="Home" asp-route-action="Index" class="float-left list-group-item list-group-item-action col-lg-4 col-md-6 col-sm-12 border-0 m-0 p-0 text-center">
@@ -18,16 +21,10 @@
                 @T["Report an issue or browse known issues."]
             </span>
         </psna>
-        @if (featureMetrics != null)
-        {
-            var text = featureMetrics.Count == 1
-                ? "{0} issue"
-                : "{0} issues";
-            <span class="d-block">
-                <span class="btn btn-secondary">
-                    @T[text].Value.Replace("{0}", featureMetrics.Count.ToPrettyInt())
-                </span>
+        <span class="d-block">
+            <span class="btn btn-secondary">
+                @T[text].Value.Replace("{0}", featureMetrics?.Count.ToPrettyInt() ?? "0")
             </span>
-        }
+        </span>
     </span>
 </a>

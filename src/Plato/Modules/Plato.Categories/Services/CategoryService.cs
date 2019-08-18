@@ -16,12 +16,12 @@ namespace Plato.Categories.Services
         private Action<QueryOptions> _configureDb = null;
         private Action<CategoryQueryParams> _configureParams = null;
 
-        private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<TModel> _categoryStore;
-
+        private readonly IContextFacade _contextFacade;
+        
         public CategoryService(
-            IContextFacade contextFacade,
-            ICategoryStore<TModel> categoryStore)
+            ICategoryStore<TModel> categoryStore,
+            IContextFacade contextFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
