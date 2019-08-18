@@ -356,9 +356,12 @@ namespace Plato.Categories.Stores
 
             // Clear current type
             _cacheManager.CancelTokens(this.GetType());
-            _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
-            _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
-            
+            if (model != null)
+            {
+                _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
+                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
+            }
+
             // If we instantiate the CategoryStore via a derived type
             // of ICategory i.e. CategoryStore<SomeCategory> ensures we clear
             // the cache for the base category store. We don't want our
@@ -366,8 +369,11 @@ namespace Plato.Categories.Stores
             if (this.GetType() != typeof(CategoryStore<CategoryBase>))
             {
                 _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>));
-                _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ById, model.Id);
-                _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ByFeatureId, model.FeatureId);
+                if (model != null)
+                {
+                    _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ById, model.Id);
+                    _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ByFeatureId, model.FeatureId);
+                }
             }
 
             // Clear category data

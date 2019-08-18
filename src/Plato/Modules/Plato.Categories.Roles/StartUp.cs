@@ -30,7 +30,7 @@ namespace Plato.Categories.Roles
             services.AddScoped<IQueryAdapterProvider<CategoryBase>, CategoryQueryAdapter>();
 
             // Services
-            services.AddScoped<IDefaultCategoryRolesManager, DefaultCategoryRolesManager>();
+            services.AddScoped<IDefaultCategoryRolesManager<CategoryBase>, DefaultCategoryRolesManager<CategoryBase>>();
             
         }
 

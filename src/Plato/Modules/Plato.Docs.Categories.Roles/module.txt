@@ -1,0 +1,19 @@
+Name: Plato Docs Categories Roles
+Description: Adds the ability to restrict access to categories by role within Plato.Docs.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Docs
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.docs.categories.roles/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Docs.Categories",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.Categories.Roles",
+		Version: "1.0.0"
+	}	
+]
