@@ -1,0 +1,87 @@
+﻿@model CategoryDropDownViewModel
+
+<div class="card" data-provide="category-dropdown">
+    
+    <div class="dropdown list-group-flush">
+        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="categoryDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+            <i class="fal fa-cog float-right"></i>
+            @T["Category"]
+        </a>
+        <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in p-0" style="width: 450px;" aria-labelledby="categoryDropdown">
+            <div class="dropdown-header my-2">
+                <a href="#" class="text-muted float-right" data-toggle="dropdown">
+                    <i class="fal fa-times"></i>
+                </a>
+                @T["Select a category..."]
+            </div>
+            <div class="my-2 mx-3">
+                <input type="search" class="form-control" 
+                       data-filter-list-empty=".no-channel-results"
+                       placeholder="@T["Search categories..."]" />
+            </div>
+            <div class="dropdown-header hidden">
+                @T["No categories found"]
+            </div>
+            @if (Model.Categories != null)
+            {
+                @await DisplayAsync(new View("ArticleCategoryTree", new
+                {
+                    options = new CategoryTreeOptions()
+                    {
+                        IndexOptions = Model.Options,
+                        SelectedCategories = Model.SelectedCategories,
+                        HtmlName = Model.HtmlName,
+                        EnableCheckBoxes = true,
+                        CssClass = "max-h-350 overflow-auto"
+                    }
+                }))
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        @T["No results."]
+                    </li>
+                </ul>
+            }
+
+        </div>
+    </div>
+  
+    @{
+        // get selected categories for preview
+        var selectedCategories = Model.Categories?.Where(c => c.IsSelected == true).ToList();
+    }
+    @if (selectedCategories != null && selectedCategories.Count > 0)
+    {
+        <ul data-empty-preview-text="@T["No category selected."]" class="list-group list-group-flush select-dropdown-preview">
+            @foreach (var channel in selectedCategories)
+            {
+                <li class="list-group-item">
+                    @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
+                    {
+                        <span class="icon-wrapper icon-wrapper-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
+                            <i class="@channel.Value.IconCss"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="icon-wrapper icon-wrapper-sm mr-2">
+                            <i class="fal fa-folder"></i>
+                        </span>
+                    }
+                    @channel.Value.Name
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <ul data-empty-preview-text="@T["No category selected."]" class="list-group list-group-flush select-dropdown-preview">
+            <li class="list-group-item">
+                @T["No category selected."]
+            </li>
+        </ul>
+    }
+
+</div>
