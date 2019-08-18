@@ -42,6 +42,15 @@
             <div class="avatar-preview">
                 <avatar id="avatarPreview" class="avatar" url="@Model.Avatar.Url" />
             </div>
+            @if (Model.Avatar.HasAvatar)
+            {
+                <div class="text-center mt-4">
+                    <button type="submit" asp-route-controller="Admin" asp-route-action="DeleteAvatar" asp-route-id="@Model.Id" data-provide="confirm" class="btn btn-block btn-secondary">
+                        @T["Reset Avatar"]
+                    </button>
+                </div>
+            }
+        
         </div>
     </card-body>
 </card>

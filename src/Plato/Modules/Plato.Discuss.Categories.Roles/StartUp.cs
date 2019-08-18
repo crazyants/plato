@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Categories.Roles.Services;
 using Plato.Discuss.Categories.Models;
 using Plato.Discuss.Categories.Roles.QueryAdapters;
 using Plato.Discuss.Categories.Roles.ViewProviders;
@@ -10,6 +11,8 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
+using Plato.Discuss.Categories.Roles.Handlers;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Discuss.Categories.Roles
 {
@@ -25,6 +28,10 @@ namespace Plato.Discuss.Categories.Roles
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Category role view providers
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
@@ -33,6 +40,9 @@ namespace Plato.Discuss.Categories.Roles
 
             services.AddScoped<IQueryAdapterProvider<Topic>, TopicQueryAdapter>();
             services.AddScoped<IQueryAdapterProvider<Category>, CategoryQueryAdapter>();
+
+            // Services
+            services.AddScoped<IDefaultCategoryRolesManager<Category>, DefaultCategoryRolesManager<Category>>();
 
         }
 

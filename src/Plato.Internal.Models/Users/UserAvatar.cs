@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace Plato.Internal.Models.Users
 {
@@ -8,6 +9,8 @@ namespace Plato.Internal.Models.Users
 
         [DataMember(Name = "url")]
         public string Url { get; }
+
+        public bool HasAvatar { get; }
 
         public UserAvatar()
         {
@@ -26,6 +29,7 @@ namespace Plato.Internal.Models.Users
             if (!string.IsNullOrEmpty(user.PhotoUrl))
             {
                 Url = user.PhotoUrl;
+                HasAvatar = true;
                 return;
             }
 

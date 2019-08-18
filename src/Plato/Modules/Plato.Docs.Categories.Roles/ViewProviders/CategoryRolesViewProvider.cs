@@ -16,8 +16,7 @@ namespace Plato.Docs.Categories.Roles.ViewProviders
         private const string HtmlName = "CategoryRoles";
 
         private readonly ICategoryManager<CategoryBase> _categoryManager;
-
-
+        
 
         private readonly HttpRequest _request;
 

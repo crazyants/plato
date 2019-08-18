@@ -60,6 +60,8 @@ namespace Plato.Users.ViewModels
 
         public bool IsNewUser { get; set; }
         
+        public UserType UserType { get; set; }
+
         public bool DisplayPasswordFields { get; set; }
 
         public bool EmailConfirmed { get; set; }

@@ -19,7 +19,7 @@
 }
 else
 {
-    if (!Model.IsNewUser)
+    if (!Model.IsNewUser && Model.UserType != UserType.Bot)
      {
          <authorize asp-permission="@Plato.Users.Permissions.DeleteUsers.Name">
              <authorize-success>

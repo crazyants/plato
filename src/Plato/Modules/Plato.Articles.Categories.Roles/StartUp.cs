@@ -6,10 +6,13 @@ using Plato.Articles.Categories.Models;
 using Plato.Articles.Categories.Roles.QueryAdapters;
 using Plato.Articles.Categories.Roles.ViewProviders;
 using Plato.Articles.Models;
+using Plato.Categories.Roles.Services;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
+using Plato.Articles.Categories.Roles.Handlers;
 
 namespace Plato.Articles.Categories.Roles
 {
@@ -26,6 +29,9 @@ namespace Plato.Articles.Categories.Roles
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
             // Category role view providers
             services.AddScoped<IViewProviderManager<CategoryAdmin>, ViewProviderManager<CategoryAdmin>>();
             services.AddScoped<IViewProvider<CategoryAdmin>, CategoryRolesViewProvider>();
@@ -33,6 +39,9 @@ namespace Plato.Articles.Categories.Roles
             // Query adapters to limit access by role
             services.AddScoped<IQueryAdapterProvider<Article>, ArticleQueryAdapter>();
             services.AddScoped<IQueryAdapterProvider<Category>, CategoryQueryAdapter>();
+
+            // Services
+            services.AddScoped<IDefaultCategoryRolesManager<Category>, DefaultCategoryRolesManager<Category>>();
 
         }
 

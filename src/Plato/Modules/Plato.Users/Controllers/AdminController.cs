@@ -446,6 +446,53 @@ namespace Plato.Users.Controllers
         }
 
         // --------------
+        // Delete Avatar / Photo
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAvatar(string id)
+        {
+
+            // Ensure we have permission 
+            if (!await _authorizationService.AuthorizeAsync(User,
+                Permissions.EditUsers))
+            {
+                return Unauthorized();
+            }
+
+            // Ensure the user exists
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Clear photo url
+            user.PhotoUrl = "";
+
+            // Delete
+            var result = await _platoUserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Avatar Reset Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
+
+        }
+        
+        // --------------
         // Edit Password
         // --------------
 
@@ -1114,6 +1161,7 @@ namespace Plato.Users.Controllers
 
         }
         
+
         #endregion
 
     }

@@ -139,6 +139,7 @@ namespace Plato.Users.ViewProviders
                 CreatedDate = user.CreatedDate,
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
+                UserType = user.UserType,
                 DisplayPasswordFields = user.Id == 0,
                 EmailConfirmed = user.EmailConfirmed,
                 IsSpam = user.IsSpam,
