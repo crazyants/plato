@@ -1,22 +1,21 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Services;
 using Plato.Categories.ViewModels;
 using Plato.Discuss.Categories.Models;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Discuss.Categories.ViewComponents
 {
 
-    public class ChannelListSidebarViewComponent : ViewComponent
+    public class DiscussCategoryListViewComponent : ViewComponent
     {
-
-        private readonly ICategoryService<Category> _categoryService;
         
-        public ChannelListSidebarViewComponent(ICategoryService<Category> categoryService)
+        private readonly ICategoryService<Category> _categoryService;
+
+        public DiscussCategoryListViewComponent(ICategoryService<Category> categoryService)
         {
             _categoryService = categoryService;
         }
@@ -35,14 +34,10 @@ namespace Plato.Discuss.Categories.ViewComponents
         
         async Task<CategoryListViewModel<Category>> GetIndexModel(CategoryIndexOptions options)
         {
-
+           
             // Get categories
             var categories = await _categoryService
-                .GetResultsAsync(new CategoryIndexOptions()
-                {
-                    FeatureId = options.FeatureId,
-                    CategoryId = 0
-                }, new PagerOptions()
+                .GetResultsAsync(options, new PagerOptions()
                 {
                     Page = 1,
                     Size = int.MaxValue
@@ -51,12 +46,11 @@ namespace Plato.Discuss.Categories.ViewComponents
             return new CategoryListViewModel<Category>()
             {
                 Options = options,
-                Categories = categories?.Data?.Where(c => c.ParentId == 0)
+                Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId) ?? new List<Category>()
             };
+
         }
-
-
+        
     }
-
 
 }

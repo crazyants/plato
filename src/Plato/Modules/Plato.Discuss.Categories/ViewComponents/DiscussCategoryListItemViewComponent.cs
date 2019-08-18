@@ -2,16 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.ViewModels;
 using Plato.Discuss.Categories.Models;
-using Plato.Discuss.Categories.ViewModels;
-using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss.Categories.ViewComponents
 {
 
-    public class ChannelListItemViewComponent : ViewComponent
+    public class DiscussCategoryListItemViewComponent : ViewComponent
     {
  
-        public ChannelListItemViewComponent()
+        public DiscussCategoryListItemViewComponent()
         {
         }
 

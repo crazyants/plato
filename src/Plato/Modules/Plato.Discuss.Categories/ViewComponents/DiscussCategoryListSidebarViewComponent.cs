@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Services;
@@ -10,12 +9,12 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Discuss.Categories.ViewComponents
 {
 
-    public class ChannelListViewComponent : ViewComponent
+    public class DiscussCategoryListSidebarViewComponent : ViewComponent
     {
-        
-        private readonly ICategoryService<Category> _categoryService;
 
-        public ChannelListViewComponent(ICategoryService<Category> categoryService)
+        private readonly ICategoryService<Category> _categoryService;
+        
+        public DiscussCategoryListSidebarViewComponent(ICategoryService<Category> categoryService)
         {
             _categoryService = categoryService;
         }
@@ -34,10 +33,14 @@ namespace Plato.Discuss.Categories.ViewComponents
         
         async Task<CategoryListViewModel<Category>> GetIndexModel(CategoryIndexOptions options)
         {
-           
+
             // Get categories
             var categories = await _categoryService
-                .GetResultsAsync(options, new PagerOptions()
+                .GetResultsAsync(new CategoryIndexOptions()
+                {
+                    FeatureId = options.FeatureId,
+                    CategoryId = 0
+                }, new PagerOptions()
                 {
                     Page = 1,
                     Size = int.MaxValue
@@ -46,11 +49,12 @@ namespace Plato.Discuss.Categories.ViewComponents
             return new CategoryListViewModel<Category>()
             {
                 Options = options,
-                Categories = categories?.Data?.Where(c => c.ParentId == options.CategoryId) ?? new List<Category>()
+                Categories = categories?.Data?.Where(c => c.ParentId == 0)
             };
-
         }
-        
+
+
     }
+
 
 }

@@ -43,7 +43,7 @@
                              @foreach (var child in category.Children)
                              {
                                  <li class="list-group-item list-group-item-action">
-                                     @await DisplayAsync(new View("ChannelListItem", new
+                                     @await DisplayAsync(new View("DiscussCategoryListItem", new
                                      {
                                          category = child,
                                          options = Model.Options
