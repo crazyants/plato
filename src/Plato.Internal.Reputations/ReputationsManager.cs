@@ -49,7 +49,7 @@ namespace Plato.Internal.Reputations
                     catch (Exception e)
                     {
                         _logger.LogError(e,
-                            $"An exception occurred within the reputation provider '{this.GetType()}'. Please review your reputation provider and try again. {e.Message}");
+                            $"An exception occurred within the reputation provider '{provider.GetType()}'. Please review your reputation provider and try again. {e.Message}");
                         throw;
                     }
                 }

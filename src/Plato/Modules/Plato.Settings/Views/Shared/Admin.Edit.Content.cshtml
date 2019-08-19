@@ -27,6 +27,20 @@
                         asp-items="@Model.AvailableThemes"></select>
             </div>
 
+
+            <div class="form-group" asp-validation-class-for="HomePageRoute">
+                <label asp-for="Theme">
+                    <strong>@T["Default Page"]</strong>
+                    <span asp-validation-for="HomePageRoute" class="text-danger"></span>
+                    <br />
+                    <span class="text-muted">@T["The default homepage for Plato."]</span>
+                </label>
+                <select class="form-control"
+                        asp-for="HomePageRoute"
+                        asp-items="@Model.AvailableHomePageRoutes"></select>
+            </div>
+
+
             <div class="form-group" asp-validation-class-for="TimeZone">
                 <label asp-for="TimeZone">
                     <strong>@T["Time Zone"]</strong>

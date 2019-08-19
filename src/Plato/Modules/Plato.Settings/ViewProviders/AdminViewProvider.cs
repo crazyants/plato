@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -23,6 +24,7 @@ namespace Plato.Settings.ViewProviders
         private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly ISiteThemeLoader _themeLoader;
         private readonly ILocaleProvider _localeProvider;
+        private readonly IHomeRouteManager _homeRouteManager;
         private readonly IPlatoHost _platoHost;
         private readonly IShellSettings _shellSettings;
 
@@ -38,7 +40,8 @@ namespace Plato.Settings.ViewProviders
             ILocaleProvider localeProvider,
             ISiteSettingsStore siteSettingsStore,
             IPlatoHost platoHost,
-            IShellSettings shellSettings)
+            IShellSettings shellSettings,
+            IHomeRouteManager homeRouteManager)
         {
 
             _timeZoneProvider = timeZoneProvider;
@@ -46,6 +49,7 @@ namespace Plato.Settings.ViewProviders
             _localeProvider = localeProvider;
             _siteSettingsStore = siteSettingsStore;
             _shellSettings = shellSettings;
+            _homeRouteManager = homeRouteManager;
             _platoHost = platoHost;
 
             T = htmlLocalizer;
@@ -143,10 +147,12 @@ namespace Plato.Settings.ViewProviders
                     DateTimeFormat = settings.DateTimeFormat,
                     Culture = settings.Culture,
                     Theme = settings.Theme,
+                    HomePageRoute = settings.HomeRoute.Id,
                     AvailableTimeZones = await GetAvailableTimeZonesAsync(),
                     AvailableDateTimeFormat = GetAvailableDateTimeFormats(),
                     AvailableCultures = await GetAvailableCulturesAsync(),
                     AvailableThemes = GetAvailableThemes(),
+                    AvailableHomePageRoutes = GetAvailableHomePageRoutes()
                 };
             }
 
@@ -265,7 +271,28 @@ namespace Plato.Settings.ViewProviders
 
             return themes;
         }
-        
+
+        IEnumerable<SelectListItem> GetAvailableHomePageRoutes()
+        {
+            // Build routes 
+            var output = new List<SelectListItem>();
+            var routes = _homeRouteManager.GetDefaultRoutes();
+            if (routes != null)
+            {
+                foreach (var route in routes)
+                {
+                    output.Add(new SelectListItem
+                    {
+                        Text = route.Id,
+                        Value = route.Id
+                    });
+                }
+            }
+
+            return output;
+
+        }
+
     }
 
 }

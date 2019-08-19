@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Routing;
 
 namespace Plato.Internal.Abstractions.Settings
 {
@@ -31,7 +32,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         string BaseUrl { get; set; }
 
-        RouteValueDictionary HomeRoute { get; set; }
+        HomeRoute HomeRoute { get; set; }
 
         string Theme { get; set; }
 

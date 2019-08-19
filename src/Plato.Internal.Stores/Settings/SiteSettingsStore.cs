@@ -53,7 +53,7 @@ namespace Plato.Internal.Stores.Settings
             // Use default homepage route if a default route is not explicitly specified
             if (siteSettings.HomeRoute == null)
             {
-                siteSettings.HomeRoute = new DefaultHomePageRoute();
+                siteSettings.HomeRoute = new HomeRoute();
             }
             
             // Update settings

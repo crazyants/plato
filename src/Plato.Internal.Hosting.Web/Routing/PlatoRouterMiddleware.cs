@@ -138,7 +138,7 @@ namespace Plato.Internal.Hosting.Web.Routing
                     prefixedRouteBuilder.DefaultHandler,
                     "PlatoHome",
                     "",
-                    new DefaultHomePageRoute(),
+                    new HomeRoute(),
                     null,
                     null,
                     inlineConstraintResolver)

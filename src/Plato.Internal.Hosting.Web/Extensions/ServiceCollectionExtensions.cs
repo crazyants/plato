@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
@@ -72,13 +73,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-            
+
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoSecurity();
             services.AddPlatoAuth();
             services.AddPlatoMvc();
-            
+
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -91,19 +92,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
 
                 services.AddHttpContextAccessor();
+                internalServices.AddLogging();
 
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-                internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-                internalServices.AddSingleton<ICapturedHttpContext, CapturedHttpContext>();
-                internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
-                internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
-                internalServices.AddTransient<IContextFacade, ContextFacade>();
+                internalServices.AddPlatoContextAccessor();
+                internalServices.AddPlatoRouting();
                 
-                internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-
+                
                 internalServices.AddPlatoOptions();
                 internalServices.AddPlatoLocalization();
                 internalServices.AddPlatoCaching();
@@ -128,16 +126,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoDrawing();
                 internalServices.AddPlatoTasks();
                 internalServices.AddPlatoSearch();
-             
+
             });
 
         }
-        
+
         public static IServiceCollection AddHPlatoTennetHost(
             this IServiceCollection services,
             Action<IServiceCollection> configure)
         {
-            
+
             // Add host
             services.AddPlatoDefaultHost();
 
@@ -156,9 +154,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoAuth(this IServiceCollection services)
         {
-            
+
             // Configure antiForgery options
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
+            services.TryAddEnumerable(ServiceDescriptor
+                .Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
 
             // Configure authentication services
             services.AddAuthentication(options =>
@@ -167,10 +166,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
                 })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.LoginPath = new PathString("/login");
-                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                    options => { options.LoginPath = new PathString("/login"); })
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
                     options.LoginPath = new PathString("/login");
@@ -203,17 +200,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
 
             // Configure site options
-            services.Configure<SiteOptions>(options =>
-            {
-                options.SiteName = "Plato";
-            });
-            
+            services.Configure<SiteOptions>(options => { options.SiteName = "Plato"; });
+
             // Add mvc core services
             // --------------
 
             // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            
+
             // Razor & Views
             var builder = services
                 .AddMvcCore()
@@ -229,17 +223,17 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
-            
+
             // Add json formatter
             builder.AddJsonFormatters();
-            
+
             return services;
 
         }
 
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
-            
+
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -250,7 +244,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
                 }
-                
+
                 // view location expander for theme
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
@@ -270,7 +264,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 }
 
             });
-            
+
             // add modules as application parts
             var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
             var modules = moduleManager.LoadModulesAsync().Result;
@@ -282,11 +276,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
             }
-            
+
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ModuleApplicationModelProvider>());
-            
+            services.TryAddEnumerable(ServiceDescriptor
+                .Transient<IApplicationModelProvider, ModuleApplicationModelProvider>());
+
             return services;
 
         }
@@ -294,6 +289,22 @@ namespace Plato.Internal.Hosting.Web.Extensions
         public static IServiceCollection AddPlatoOptions(this IServiceCollection services)
         {
             services.AddSingleton<IConfigureOptions<PlatoOptions>, PlatoOptionsConfiguration>();
+            return services;
+        }
+
+        public static IServiceCollection AddPlatoRouting(this IServiceCollection services)
+        {
+            services.AddSingleton<ICapturedRouter, CapturedRouter>();
+            services.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
+            services.AddScoped<IHomeRouteManager, HomeRouteManager>();
+            return services;
+        }
+
+        public static IServiceCollection AddPlatoContextAccessor(this IServiceCollection services)
+        {
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<ICapturedHttpContext, CapturedHttpContext>();
+            services.AddTransient<IContextFacade, ContextFacade>();
             return services;
         }
 
@@ -316,7 +327,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 ListAllRegisteredServices(app);
             }
             else
-            {   
+            {
                 app.UseExceptionHandler("/error");
             }
 
@@ -335,12 +346,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
                         context.HttpContext.Response.Redirect("/moved");
                         break;
                 }
+
                 return Task.CompletedTask;
             });
 
             // Add authentication middleware
             app.UseAuthentication();
-            
+
             // Load static files
             app.UseStaticFiles();
 
@@ -364,7 +376,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // Create unique pipeline for each shell
             app.UseMiddleware<PlatoRouterMiddleware>();
-            
+
             return app;
 
         }
@@ -374,7 +386,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
             // adds ThemingViewsFeatureProvider application part
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            var themingViewsFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
+            var themingViewsFeatureProvider =
+                app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
         }
 
@@ -391,7 +404,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
-            
+
         }
 
         private static void ListAllRegisteredServices(IApplicationBuilder app)
@@ -418,5 +431,5 @@ namespace Plato.Internal.Hosting.Web.Extensions
         }
 
     }
-    
+
 }

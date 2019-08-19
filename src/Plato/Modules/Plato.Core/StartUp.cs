@@ -10,6 +10,7 @@ using Plato.Core.Handlers;
 using Plato.Core.Middleware;
 using Plato.Core.Models;
 using Plato.Core.ViewProviders;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -55,6 +56,9 @@ namespace Plato.Core
                 options.Culture = contextFacade.GetCurrentCultureAsync().Result;
             });
             
+            // Homepage route providers
+            services.AddSingleton<IHomeRouteProvider, HomeRouteProvider>();
+
         }
 
         public override void Configure(

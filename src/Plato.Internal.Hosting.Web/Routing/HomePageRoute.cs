@@ -34,7 +34,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             // In this instance to avoid a 404 use default homepage route
             if (siteSettings != null && siteSettings.HomeRoute == null)
             {
-                siteSettings.HomeRoute = new DefaultHomePageRoute();
+                siteSettings.HomeRoute = new HomeRoute();
             }
 
             // Use specified homepage route

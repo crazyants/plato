@@ -40,7 +40,7 @@ namespace Plato.Settings.Handlers
                 siteSettings.SiteName = context.SiteName;
                 siteSettings.SuperUser = context.AdminUsername;
                 siteSettings.ApiKey = _keyGenerator.GenerateKey();
-                siteSettings.HomeRoute = new DefaultHomePageRoute();
+                siteSettings.HomeRoute = new HomeRoute();
 
                 await _siteSettingsStore.SaveAsync(siteSettings);
             }
