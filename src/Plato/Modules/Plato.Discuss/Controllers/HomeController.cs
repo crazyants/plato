@@ -33,6 +33,7 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
+
     public class HomeController : Controller, IUpdateModel
     {
 

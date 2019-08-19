@@ -55,6 +55,18 @@ namespace Plato.Admin.ActionFilters
                 return;
             }
             
+            // We need route values to check
+            if (context.RouteData?.Values == null)
+            {
+                return;
+            }
+
+            // We need a controller name to check
+            if (!context.RouteData.Values.ContainsKey("controller"))
+            {
+                return;
+            }
+
             // If we are accessing an Admin controller check standard permissions
             var controllerName = context.RouteData.Values["controller"].ToString();
             switch (controllerName)

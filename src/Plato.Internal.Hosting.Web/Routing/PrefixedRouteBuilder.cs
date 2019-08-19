@@ -8,10 +8,11 @@ namespace Plato.Internal.Hosting.Web.Routing
 {
     public class PrefixedRouteBuilder : IRouteBuilder
     {
-        private readonly IRouteBuilder _baseRouteBuilder;
-        private readonly List<IRouter> _routes = new List<IRouter>();
-        private readonly string _routePrefix;
+       
         private readonly IInlineConstraintResolver _constraintResolver;
+        private readonly List<IRouter> _routes = new List<IRouter>();
+        private readonly IRouteBuilder _baseRouteBuilder;
+        private readonly string _routePrefix;
 
         public PrefixedRouteBuilder(
             string routePrefix, 
@@ -40,8 +41,8 @@ namespace Plato.Internal.Hosting.Web.Routing
       
             foreach (var route in Routes.OfType<Route>())
             {
-                var constraints = new Dictionary<string, object>();
 
+                var constraints = new Dictionary<string, object>();
                 foreach (var kv in route.Constraints)
                 {
                     constraints.Add(kv.Key, kv.Value);
@@ -60,6 +61,9 @@ namespace Plato.Internal.Hosting.Web.Routing
             }
 
             return _baseRouteBuilder.Build();
+
         }
+
     }
+
 }

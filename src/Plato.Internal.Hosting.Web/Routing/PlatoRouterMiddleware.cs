@@ -9,8 +9,10 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Internal.Hosting.Web.Routing
 {
@@ -109,16 +111,6 @@ namespace Plato.Internal.Hosting.Web.Routing
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
             }
             
-            //// Activate message broker subscriptions
-            //foreach (var subscriber in subscribers)
-            //{
-            //    subscriber.Subscribe();
-            //}
-
-            //// Activate tasks 
-            //var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
-            //backgroundTaskManager?.StartTasks();
-            
             //// Add the default template route to each shell 
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
@@ -137,28 +129,34 @@ namespace Plato.Internal.Hosting.Web.Routing
             // Attempt to get homepage route for tenant from site settings store
             // If the tenant has not been created yet siteService will return null
             // if siteService returns null users will be presented with the SetUp module
-            //var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
-            //if (siteService != null)
-            //{
+            var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
+            if (siteService != null)
+            {
 
-                ////// Add the default template route to each shell 
-                //prefixedRouteBuilder.Routes.Add(new Route(
-                //    prefixedRouteBuilder.DefaultHandler,
-                //    "PlatoHome",
-                //    "", new DefaultHomePageRoute(), 
-                //    null,
-                //    null,
-                //    inlineConstraintResolver)
-                //);
+                //// Add the default template route to each shell 
+                prefixedRouteBuilder.Routes.Add(new Route(
+                    prefixedRouteBuilder.DefaultHandler,
+                    "PlatoHome",
+                    "",
+                    new DefaultHomePageRoute(),
+                    null,
+                    null,
+                    inlineConstraintResolver)
+                );
 
-                //// Add home page route
-                //routeBuilder.Routes.Add(new HomePageRoute(
-                //    shellSettings.RequestedUrlPrefix,
-                //    siteService,
-                //    routeBuilder,
-                //    inlineConstraintResolver));
-            //}
-            
+                // Add home page route matching
+                var homeRoute = new HomePageRoute(
+                    shellSettings.RequestedUrlPrefix,
+                    siteService,
+                    routeBuilder,
+                    inlineConstraintResolver);
+
+                routeBuilder.Routes.Add(homeRoute);
+
+            }
+
+            // ------------------
+
             // Build router
             var router = prefixedRouteBuilder.Build();
 

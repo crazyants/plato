@@ -12,7 +12,8 @@ namespace Plato.Internal.Tasks
        /// <summary>
        /// Globally enable or disable background tasks. Should remain enabled or true unless debugging.
        /// </summary>
-        public bool Enabled { get; set; }= true;
+       // TODO: Set back to true
+        public bool Enabled { get; set; }= false;
 
         private readonly ISafeTimerFactory _safeTimerFactory;
         private readonly IEnumerable<IBackgroundTaskProvider> _providers;

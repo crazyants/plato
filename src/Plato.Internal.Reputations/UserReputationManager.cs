@@ -14,8 +14,8 @@ namespace Plato.Internal.Reputations
     {
 
         private readonly IUserReputationsStore<UserReputation> _userReputationStore;
-        private readonly IBroker _broker;
         private readonly IContextFacade _contextFacade;
+        private readonly IBroker _broker;
 
         public UserReputationManager(
             IUserReputationsStore<UserReputation> userReputationStore, 

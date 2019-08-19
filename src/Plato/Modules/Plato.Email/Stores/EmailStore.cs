@@ -96,18 +96,7 @@ namespace Plato.Email.Stores
         public async Task<IPagedResults<EmailMessage>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Selecting emails for key '{0}' with the following parameters: {1}",
-                        token.ToString(), dbParams.Select(p => p.Value));
-                }
-
-                return await _emailRepository.SelectAsync(dbParams);
-              
-            });
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _emailRepository.SelectAsync(dbParams));
         }
 
         public void CancelTokens(EmailMessage model = null)

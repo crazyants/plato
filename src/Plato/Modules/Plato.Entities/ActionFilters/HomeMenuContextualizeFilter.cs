@@ -56,11 +56,36 @@ namespace Plato.Entities.ActionFilters
             {
                 return;
             }
+            
+            // We need route values to check
+            if (context.RouteData?.Values == null)
+            {
+                return;
+            }
+            
+            // We need an area
+            if (!context.RouteData.Values.ContainsKey("area"))
+            {
+                return;
+            }
+
+            // We need a controller
+            if (!context.RouteData.Values.ContainsKey("controller"))
+            {
+                return;
+            }
+
+            // We need an action
+            if (!context.RouteData.Values.ContainsKey("action"))
+            {
+                return;
+            }
 
             // Plato.Core?
             var isArea = context.RouteData.Values["area"].ToString()
                 .Equals("Plato.Core", StringComparison.OrdinalIgnoreCase);
 
+            // Not area
             if (!isArea)
             {
                 return;
@@ -70,6 +95,7 @@ namespace Plato.Entities.ActionFilters
             var isController = context.RouteData.Values["controller"].ToString()
                 .Equals("Home", StringComparison.OrdinalIgnoreCase);
 
+            // Not controller
             if (!isController)
             {
                 return;
@@ -79,6 +105,7 @@ namespace Plato.Entities.ActionFilters
             var isAction = context.RouteData.Values["action"].ToString()
                 .Equals("Index", StringComparison.OrdinalIgnoreCase);
             
+            // Not action
             if (!isAction)
             {
                 return;

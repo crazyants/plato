@@ -70,7 +70,7 @@ namespace Plato.Core
             routes.MapAreaRoute(
                 name: "Homepage",
                 areaName: "Plato.Core",
-                template: "",
+                template: "home",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

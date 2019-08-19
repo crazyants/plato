@@ -13,23 +13,20 @@ namespace Plato.Internal.Reputations
 
     public class ReputationsManager<TReputation> : IReputationsManager<TReputation> where TReputation : class, IReputation
     {
-
-        private IEnumerable<TReputation> _reputations;
-        private readonly IAuthorizationService _authorizationService;
+        
         private readonly IEnumerable<IReputationsProvider<TReputation>> _providers;
         private readonly ILogger<ReputationsManager<TReputation>> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
-        
+        private IEnumerable<TReputation> _reputations;
+
         public ReputationsManager(
-            IAuthorizationService authorizationService, 
             IEnumerable<IReputationsProvider<TReputation>> providers, 
             ILogger<ReputationsManager<TReputation>> logger,
             ITypedModuleProvider typedModuleProvider)
         {
-            _authorizationService = authorizationService;
+            _typedModuleProvider = typedModuleProvider;
             _providers = providers;
             _logger = logger;
-            _typedModuleProvider = typedModuleProvider;
         }
 
         public async Task<IEnumerable<TReputation>> GetReputationsAsync()
