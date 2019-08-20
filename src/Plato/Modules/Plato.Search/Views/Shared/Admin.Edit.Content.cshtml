@@ -24,10 +24,13 @@
                     <strong>@T["You need to create a catalog"]</strong>
                 </p>
                 <p>
-                    @T["Full text search has been enabled but no catalog has been created yet. You will likely see errors when searching. If you have full text search installed & enabled within your SQL Server database use the link below to create your catalog and all necessary indexes..."]
+                    @T["Full text search has been enabled within Plato but no full text catalog has been created yet. You will see errors when searching if full text is enabled but no catalog is created."]
                 </p>
                 <p>
-                    <a asp-route-action="CreateCatalog" class="btn btn-sm btn-primary">@T["Create catalog & indexes"]</a>
+                    @T["If you have full text search installed & enabled within your SQL Server database use the \"Create Catalog\" button below to create your catalog and all necessary indexes. If full text search is not enabled for your SQL Server database you will be notified when you click the \"Create Catalog\" button."]
+                </p>
+                <p>
+                    <a asp-route-action="CreateCatalog" class="btn btn-primary">@T["Create Catalog"]</a>
                 </p>
             </div>
         }

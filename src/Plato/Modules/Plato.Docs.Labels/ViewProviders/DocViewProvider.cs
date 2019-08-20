@@ -65,26 +65,28 @@ namespace Plato.Docs.Labels.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Doc viewModel, IViewProviderContext updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Doc viewModel, IViewProviderContext updater)
         {
+
+            return Task.FromResult(default(IViewProviderResult));
+
+            //// Get entity labels
+            //var labels = await _labelStore.QueryAsync()
+            //    .Take(1, 10)
+            //    .Select<LabelQueryParams>(q =>
+            //    {
+            //        q.EntityId.Equals(viewModel.Id);
+            //    })
+            //    .OrderBy("Name", OrderBy.Desc)
+            //    .ToList();
             
-            // Get entity labels
-            var labels = await _labelStore.QueryAsync()
-                .Take(1, 10)
-                .Select<LabelQueryParams>(q =>
-                {
-                    q.EntityId.Equals(viewModel.Id);
-                })
-                .OrderBy("Name", OrderBy.Desc)
-                .ToList();
-            
-            return Views(
-                View<LabelsViewModel<Label>>("Doc.Labels.Display.Sidebar", model =>
-                {
-                    model.Labels = labels?.Data;
-                    return model;
-                }).Zone("sidebar").Order(3)
-            );
+            //return Views(
+            //    View<LabelsViewModel<Label>>("Doc.Labels.Display.Sidebar", model =>
+            //    {
+            //        model.Labels = labels?.Data;
+            //        return model;
+            //    }).Zone("sidebar").Order(3)
+            //);
 
         }
         

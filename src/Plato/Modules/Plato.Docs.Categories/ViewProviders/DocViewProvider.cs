@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
@@ -111,11 +110,16 @@ namespace Plato.Docs.Categories.ViewProviders
             }
 
             // Override breadcrumb configuration within base controller 
-            IEnumerable<CategoryAdmin> parents = null;
+            IEnumerable<CategoryAdmin> parentCategories = null;
             if (doc.CategoryId > 0)
             {
-                parents = await _categoryStore.GetParentsByIdAsync(doc.CategoryId);
+                parentCategories = await _categoryStore.GetParentsByIdAsync(doc.CategoryId);
             }
+
+            // Get parent entities
+            var parentEntities = await _entityStore.GetParentsByIdAsync(doc.Id);
+
+
 
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
@@ -129,7 +133,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     .LocalNav()
                 );
 
-                if (parents != null)
+                if (parentCategories != null)
                 {
                     builder.Add(S["Categories"], c => c
                         .Action("Index", "Home", "Plato.Docs.Categories", new RouteValueDictionary()
@@ -139,7 +143,7 @@ namespace Plato.Docs.Categories.ViewProviders
                         })
                         .LocalNav()
                     );
-                    foreach (var parent in parents)
+                    foreach (var parent in parentCategories)
                     {
                         builder.Add(S[parent.Name], channel => channel
                             .Action("Index", "Home", "Plato.Docs.Categories", new RouteValueDictionary
@@ -151,6 +155,26 @@ namespace Plato.Docs.Categories.ViewProviders
                         );
                     }
                 }
+                
+                if (parentEntities != null)
+                {
+                    foreach (var parent in parentEntities)
+                    {
+                        if (parent.Id != doc.Id)
+                        {
+                            builder.Add(S[parent.Title], channel => channel
+                                .Action("Display", "Home", "Plato.Docs", new RouteValueDictionary
+                                {
+                                    ["opts.id"] = parent.Id,
+                                    ["opts.alias"] = parent.Alias,
+                                })
+                                .LocalNav()
+                            );
+                        }
+
+                    }
+                }
+
 
                 builder.Add(S[doc.Title]);
 
@@ -351,14 +375,6 @@ namespace Plato.Docs.Categories.ViewProviders
                         }
                     }
                     
-                    //// Update entity with first found category 
-                    //foreach (var id in categoriesToAdd)
-                    //{
-                    //    doc.CategoryId = id;
-                    //    await _entityStore.UpdateAsync(doc);
-                    //    break;
-                    //}
-                    
                     // Update added category meta data
                     foreach (var id in categoriesToAdd)
                     {
@@ -385,16 +401,15 @@ namespace Plato.Docs.Categories.ViewProviders
         
         List<int> GetCategoriesToAdd()
         {
-            // Build selected categories
-            List<int> categoriesToAdd = null;
+     
+            // IMPORTANT: We always return a list here as the CategoryInputViewModel.SelectedCategories
+            // property is [Required] but we don't always need to add docs to categories, for this
+            // reason return an empty list to ensure ModelState validation passes even if no category is selected
+            var categoriesToAdd = new List<int>();
             foreach (var key in _request.Form.Keys)
             {
                 if (key.StartsWith(CategoryHtmlName))
                 {
-                    if (categoriesToAdd == null)
-                    {
-                        categoriesToAdd = new List<int>();
-                    }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
