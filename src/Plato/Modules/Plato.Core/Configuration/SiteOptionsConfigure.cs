@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -39,6 +40,7 @@ namespace Plato.Core.Configuration
                     options.DateTimeFormat = settings.DateTimeFormat;
                     options.Theme = settings.Theme;
                     options.TimeZone = settings.TimeZone;
+                    options.HomeRoute = settings.HomeRoute ?? new HomeRoute();
                 }
             
             }

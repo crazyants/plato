@@ -22,7 +22,7 @@ namespace Plato.Settings.ViewModels
 
         public string Theme { get; set; }
         
-        public string HomePageRoute { get; set; }
+        public string HomeRoute { get; set; }
 
         public IEnumerable<SelectListItem> AvailableTimeZones { get; set; }
 
@@ -32,7 +32,7 @@ namespace Plato.Settings.ViewModels
 
         public IEnumerable<SelectListItem> AvailableThemes { get; set; }
 
-        public IEnumerable<SelectListItem> AvailableHomePageRoutes { get; set; }
+        public IEnumerable<SelectListItem> AvailableHomeRoutes { get; set; }
 
     }
 

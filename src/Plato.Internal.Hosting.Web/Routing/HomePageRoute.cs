@@ -84,7 +84,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             // Remove the values that should not be rendered in the queryResult string
             foreach (var key in _tokens.Keys)
             {
-                //context.Values.Remove(key);
+                context.Values.Remove(key);
             }
 
             var result = base.GetVirtualPath(context);

@@ -129,31 +129,31 @@ namespace Plato.Internal.Hosting.Web.Routing
             // Attempt to get homepage route for tenant from site settings store
             // If the tenant has not been created yet siteService will return null
             // if siteService returns null users will be presented with the SetUp module
-            var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
-            if (siteService != null)
-            {
+            ////var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
+            ////if (siteService != null)
+            ////{
+            
+            ////    //// Add the default template route to each shell 
+            ////    prefixedRouteBuilder.Routes.Add(new Route(
+            ////        prefixedRouteBuilder.DefaultHandler,
+            ////        "PlatoHome",
+            ////        "",
+            ////        new HomeRoute(),
+            ////        null,
+            ////        null,
+            ////        inlineConstraintResolver)
+            ////    );
 
-                //// Add the default template route to each shell 
-                prefixedRouteBuilder.Routes.Add(new Route(
-                    prefixedRouteBuilder.DefaultHandler,
-                    "PlatoHome",
-                    "",
-                    new HomeRoute(),
-                    null,
-                    null,
-                    inlineConstraintResolver)
-                );
+            ////    // Add home page route matching
+            ////    var homeRoute = new HomePageRoute(
+            ////        shellSettings.RequestedUrlPrefix,
+            ////        siteService,
+            ////        routeBuilder,
+            ////        inlineConstraintResolver);
 
-                // Add home page route matching
-                var homeRoute = new HomePageRoute(
-                    shellSettings.RequestedUrlPrefix,
-                    siteService,
-                    routeBuilder,
-                    inlineConstraintResolver);
-
-                routeBuilder.Routes.Add(homeRoute);
-
-            }
+            ////    routeBuilder.Routes.Add(homeRoute);
+                
+            ////}
 
             // ------------------
 

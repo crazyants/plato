@@ -1,4 +1,6 @@
-﻿namespace Plato.Internal.Abstractions.Settings
+﻿using Plato.Internal.Abstractions.Routing;
+
+namespace Plato.Internal.Abstractions.Settings
 {
 
     /// <summary>
@@ -16,6 +18,8 @@
         public string Theme { get; set; }
 
         public string TimeZone { get; set; }
+
+        public HomeRoute HomeRoute { get; set; }
 
     }
 }

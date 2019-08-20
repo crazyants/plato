@@ -54,7 +54,7 @@ namespace Plato.Internal.Localization.Locales
             {
                 return null;
             }
-
+            
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Composing locale file found at '{0}', attempting to load.", resource.Path);
@@ -73,33 +73,34 @@ namespace Plato.Internal.Localization.Locales
                 LocaleResource = resource
             };
 
+
             switch (fileNameWithoutExtension.ToLower())
             {
                 case EmailsFileName:
-                {
-                    composedLocaleResource.Configure<LocaleEmail>(model => new LocalizedValues<LocaleEmail>
                     {
-                        Resource = resource,
-                        Values = EmailsSerializer.Parse(config)
-                    });
-                    break;
-                }
+                        composedLocaleResource.Configure<LocaleEmail>(model => new LocalizedValues<LocaleEmail>
+                        {
+                            Resource = resource,
+                            Values = EmailsSerializer.Parse(config)
+                        });
+                        break;
+                    }
                 default:
-                {
-                    composedLocaleResource.Configure<LocaleString>(model => new LocalizedValues<LocaleString>
                     {
-                        Resource = resource,
-                        Values = StringSerializer.Parse(config)
-                    });
-                    break;
-                }
+                        composedLocaleResource.Configure<LocaleString>(model => new LocalizedValues<LocaleString>
+                        {
+                            Resource = resource,
+                            Values = StringSerializer.Parse(config)
+                        });
+                        break;
+                    }
             }
-            
+
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Completed composing locale files found in '{0}'.", resource.Path);
             }
-            
+
             return Task.FromResult(composedLocaleResource);
 
         }

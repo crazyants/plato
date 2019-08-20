@@ -31,13 +31,13 @@
             <div class="form-group" asp-validation-class-for="HomePageRoute">
                 <label asp-for="Theme">
                     <strong>@T["Default Page"]</strong>
-                    <span asp-validation-for="HomePageRoute" class="text-danger"></span>
+                    <span asp-validation-for="HomeRoute" class="text-danger"></span>
                     <br />
-                    <span class="text-muted">@T["The default homepage for Plato."]</span>
+                    <span class="text-muted">@T["The default page for Plato when loaded with no suffix or path information, i.e. https://support.company.com/"]</span>
                 </label>
                 <select class="form-control"
-                        asp-for="HomePageRoute"
-                        asp-items="@Model.AvailableHomePageRoutes"></select>
+                        asp-for="HomeRoute"
+                        asp-items="@Model.AvailableHomeRoutes"></select>
             </div>
 
 

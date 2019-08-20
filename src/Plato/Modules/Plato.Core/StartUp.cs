@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,10 +70,30 @@ namespace Plato.Core
 
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
-            
+
+
+            var homeRoute = new HomeRoute();
+            var siteOptions = serviceProvider.GetRequiredService<IOptions<SiteOptions>>();
+            if (siteOptions != null)
+            {
+                homeRoute = siteOptions.Value.HomeRoute;
+            }
+
+            var area = homeRoute["area"].ToString();
+            var controller = homeRoute["controller"].ToString();
+            var action = homeRoute["action"].ToString();
+
             // Homepage
             routes.MapAreaRoute(
                 name: "Homepage",
+                areaName: area,
+                template: "",
+                defaults: new { controller = controller, action = action }
+            );
+
+            // Homepage
+            routes.MapAreaRoute(
+                name: "CoreHome",
                 areaName: "Plato.Core",
                 template: "home",
                 defaults: new { controller = "Home", action = "Index" }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -95,6 +96,7 @@ namespace Plato.Settings.ViewProviders
             if (context.Updater.ModelState.IsValid)
             {
 
+                var homeRoutes = _homeRouteManager.GetDefaultRoutes();
 
                 var settings = await _siteSettingsStore.GetAsync();
                 if (settings != null)
@@ -104,6 +106,7 @@ namespace Plato.Settings.ViewProviders
                     settings.DateTimeFormat = model.DateTimeFormat;
                     settings.Culture = model.Culture;
                     settings.Theme = model.Theme;
+                    settings.HomeRoute = homeRoutes?.FirstOrDefault(r => r.Id.Equals(model.HomeRoute, StringComparison.InvariantCultureIgnoreCase));
                 }
                 else
                 {
@@ -114,8 +117,10 @@ namespace Plato.Settings.ViewProviders
                         TimeZone = model.TimeZone,
                         DateTimeFormat = model.DateTimeFormat,
                         Culture = model.Culture,
-                        Theme = model.Theme
+                        Theme = model.Theme,
+                        HomeRoute = homeRoutes?.FirstOrDefault(r => r.Id.Equals(model.HomeRoute, StringComparison.InvariantCultureIgnoreCase))
                     };
+
                 }
 
                 // Update settings
@@ -147,12 +152,12 @@ namespace Plato.Settings.ViewProviders
                     DateTimeFormat = settings.DateTimeFormat,
                     Culture = settings.Culture,
                     Theme = settings.Theme,
-                    HomePageRoute = settings.HomeRoute.Id,
+                    HomeRoute = settings.HomeRoute.Id,
                     AvailableTimeZones = await GetAvailableTimeZonesAsync(),
                     AvailableDateTimeFormat = GetAvailableDateTimeFormats(),
                     AvailableCultures = await GetAvailableCulturesAsync(),
                     AvailableThemes = GetAvailableThemes(),
-                    AvailableHomePageRoutes = GetAvailableHomePageRoutes()
+                    AvailableHomeRoutes = GetAvailableHomeRoutes()
                 };
             }
 
@@ -272,9 +277,9 @@ namespace Plato.Settings.ViewProviders
             return themes;
         }
 
-        IEnumerable<SelectListItem> GetAvailableHomePageRoutes()
+        IEnumerable<SelectListItem> GetAvailableHomeRoutes()
         {
-            // Build routes 
+      
             var output = new List<SelectListItem>();
             var routes = _homeRouteManager.GetDefaultRoutes();
             if (routes != null)
