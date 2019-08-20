@@ -28,15 +28,14 @@ using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
 using Plato.Discuss.NotificationTypes;
 using Plato.Discuss.Notifications;
-using Plato.Entities;
 using Plato.Entities.Models;
 using Plato.Entities.Search;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.FederatedQueries;
 using Plato.Internal.Stores.Abstractions.QueryAdapters;
 
@@ -151,7 +150,10 @@ namespace Plato.Discuss
 
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Topic>, QueryAdapterManager<Topic>>();
-            
+           
+            // Homepage route providers
+            services.AddSingleton<IHomeRouteProvider, HomeRoutes>();
+
         }
 
         public override void Configure(

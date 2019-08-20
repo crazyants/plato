@@ -31,6 +31,7 @@ using Plato.Entities.Search;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.Subscribers;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Models.Reputations;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
@@ -147,6 +148,9 @@ namespace Plato.Issues
         
             // Query adapters
             services.AddScoped<IQueryAdapterManager<Issue>, QueryAdapterManager<Issue>>();
+            
+            // Homepage route providers
+            services.AddSingleton<IHomeRouteProvider, HomeRoutes>();
 
         }
 

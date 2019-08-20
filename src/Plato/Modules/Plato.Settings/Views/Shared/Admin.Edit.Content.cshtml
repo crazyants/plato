@@ -26,8 +26,6 @@
                         asp-for="Theme"
                         asp-items="@Model.AvailableThemes"></select>
             </div>
-
-
             <div class="form-group" asp-validation-class-for="HomePageRoute">
                 <label asp-for="Theme">
                     <strong>@T["Default Page"]</strong>
@@ -39,8 +37,6 @@
                         asp-for="HomeRoute"
                         asp-items="@Model.AvailableHomeRoutes"></select>
             </div>
-
-
             <div class="form-group" asp-validation-class-for="TimeZone">
                 <label asp-for="TimeZone">
                     <strong>@T["Time Zone"]</strong>

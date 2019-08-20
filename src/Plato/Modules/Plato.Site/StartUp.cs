@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Assets.Abstractions;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Site.Assets;
 
@@ -26,6 +24,9 @@ namespace Plato.Site
 
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
+
+            // Homepage route providers
+            services.AddSingleton<IHomeRouteProvider, HomeRoutes>();
 
         }
 

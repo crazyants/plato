@@ -23,12 +23,12 @@ namespace Plato.Discuss.Tags.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IContextFacade _contextFacade;
-        private readonly ITagStore<Tag> _tagStore;
-        private readonly ITagManager<Tag> _tagManager;
         private readonly IViewProviderManager<TagAdmin> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IContextFacade _contextFacade;
+        private readonly ITagManager<Tag> _tagManager;
+        private readonly ITagStore<Tag> _tagStore;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -46,14 +46,14 @@ namespace Plato.Discuss.Tags.Controllers
             IFeatureFacade featureFacade,
             IAlerter alerter)
         {
-            _contextFacade = contextFacade;
-            _tagStore = tagStore;
-            _viewProvider = viewProvider;
-            _alerter = alerter;
-            _tagManager = tagManager;
-            _featureFacade = featureFacade;
             _breadCrumbManager = breadCrumbManager;
-
+            _featureFacade = featureFacade;
+            _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
+            _tagManager = tagManager;
+            _tagStore = tagStore;
+            _alerter = alerter;
+        
             T = htmlLocalizer;
             S = stringLocalizer;
         }
@@ -221,6 +221,13 @@ namespace Plato.Discuss.Tags.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            
+            var tag = await _tagStore.GetByIdAsync(id);
+
+            if (tag == null)
+            {
+                return NotFound();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -235,9 +242,8 @@ namespace Plato.Discuss.Tags.Controllers
                         .LocalNav())
                     .Add(S["Edit Tag"]);
             });
-            
-            var tag = await _tagStore.GetByIdAsync(id);
-            
+
+
             return View((LayoutViewModel) await _viewProvider.ProvideEditAsync(tag, this));
 
         }

@@ -22,13 +22,13 @@ namespace Plato.Settings.ViewProviders
     {
 
         private readonly ISiteSettingsStore _siteSettingsStore;
+        private readonly IHomeRouteManager _homeRouteManager;
         private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly ISiteThemeLoader _themeLoader;
         private readonly ILocaleProvider _localeProvider;
-        private readonly IHomeRouteManager _homeRouteManager;
-        private readonly IPlatoHost _platoHost;
         private readonly IShellSettings _shellSettings;
-
+        private readonly IPlatoHost _platoHost;
+    
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -36,23 +36,22 @@ namespace Plato.Settings.ViewProviders
         public AdminViewProvider(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            ITimeZoneProvider timeZoneProvider,
-            ISiteThemeLoader themeLoader,
-            ILocaleProvider localeProvider,
             ISiteSettingsStore siteSettingsStore,
-            IPlatoHost platoHost,
+            ITimeZoneProvider timeZoneProvider,
+            IHomeRouteManager homeRouteManager,
+            ILocaleProvider localeProvider,
             IShellSettings shellSettings,
-            IHomeRouteManager homeRouteManager)
+            ISiteThemeLoader themeLoader,
+            IPlatoHost platoHost)
         {
-
-            _timeZoneProvider = timeZoneProvider;
-            _themeLoader = themeLoader;
-            _localeProvider = localeProvider;
             _siteSettingsStore = siteSettingsStore;
-            _shellSettings = shellSettings;
+            _timeZoneProvider = timeZoneProvider;
             _homeRouteManager = homeRouteManager;
+            _localeProvider = localeProvider;
+            _shellSettings = shellSettings;
+            _themeLoader = themeLoader;
             _platoHost = platoHost;
-
+         
             T = htmlLocalizer;
             S = stringLocalizer;
 

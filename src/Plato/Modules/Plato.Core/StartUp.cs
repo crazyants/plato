@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,10 +15,8 @@ using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Hosting.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Core
 {
@@ -58,7 +55,7 @@ namespace Plato.Core
             });
             
             // Homepage route providers
-            services.AddSingleton<IHomeRouteProvider, HomeRouteProvider>();
+            services.AddSingleton<IHomeRouteProvider, HomeRoutes>();
 
         }
 
@@ -71,6 +68,7 @@ namespace Plato.Core
             // Register client options middleware 
             app.UseMiddleware<SettingsClientOptionsMiddleware>();
 
+            // Routes
 
             var homeRoute = new HomeRoute();
             var siteOptions = serviceProvider.GetRequiredService<IOptions<SiteOptions>>();
