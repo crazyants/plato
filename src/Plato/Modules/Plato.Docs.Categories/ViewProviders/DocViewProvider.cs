@@ -282,9 +282,8 @@ namespace Plato.Docs.Categories.ViewProviders
         
         public override Task<bool> ValidateModelAsync(Doc doc, IUpdateModel updater)
         {
-            // For docs categories are optional, we may have docs at the root not within any category
+            // For docs, categories are optional, we may have docs at the root not within any category
             return Task.FromResult(true);
-
         }
 
         public override async Task ComposeModelAsync(Doc doc, IUpdateModel updater)

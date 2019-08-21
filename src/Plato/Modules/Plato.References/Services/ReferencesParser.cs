@@ -9,6 +9,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Text.Abstractions;
+using Plato.Internal.Text.Extensions;
 
 namespace Plato.References.Services
 {
@@ -16,21 +17,48 @@ namespace Plato.References.Services
     {
 
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly IReferencesTokenizer _tokenizer;
+        private readonly IHashTokenizer _hashTokenizer;
         private readonly IContextFacade _contextFacade;
         
         public ReferencesParser(
             IEntityStore<Entity> entityStore,
-            IReferencesTokenizer tokenizer,
+            IHashTokenizer hashTokenizer,
             IContextFacade contextFacade)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-            _tokenizer = tokenizer;
+            _hashTokenizer = hashTokenizer;
         }
 
         public async Task<string> ParseAsync(string input)
         {
+
+            return await ParseHashTokensAsync(input);
+
+        }
+
+
+        public async Task<IEnumerable<Entity>> GetEntitiesAsync(string input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            var tokens = _hashTokenizer.Tokenize(input);
+            if (tokens != null)
+            {
+                return await GetEntitiesAsync(tokens);
+            }
+
+            return null;
+        }
+
+        // ------------
+
+        async Task<string> ParseHashTokensAsync(string input)
+        {
+
 
             // We need input to parse
             if (string.IsNullOrEmpty(input))
@@ -39,7 +67,7 @@ namespace Plato.References.Services
             }
 
             // Build tokens
-            var tokens = _tokenizer.Tokenize(input);
+            var tokens = _hashTokenizer.Tokenize(input);
 
             // Ensure we have tokens to parse
             if (tokens == null)
@@ -58,16 +86,28 @@ namespace Plato.References.Services
                 var entityList = entities.ToList();
                 var sb = new StringBuilder();
 
-                IToken currentToken = null;
+                var insideHtmlTag = false;
+
                 for (var i = 0; i < input.Length; i++)
                 {
+                    if (input[i] == '<')
+                    {
+                        insideHtmlTag = true;
+                    }
+
+                    if (input[i] == '>')
+                    {
+                        insideHtmlTag = false;
+                    }
+
                     foreach (var token in tokenList)
                     {
                         // Token start
                         if (i == token.Start)
                         {
-                            currentToken = token;
-                            var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+
+                            var entity = entityList.FirstOrDefault(e =>
+                                e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
                             {
                                 var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -86,36 +126,38 @@ namespace Plato.References.Services
                                     ["opts.id"] = entity.Id,
                                     ["opts.alias"] = entity.Alias
                                 });
-                                sb.Append("<a href=\"")
-                                    .Append(url)
-                                    .Append("\" ")
-                                    .Append("data-provide=\"popper\" ")
-                                    .Append("data-popper-url=\"")
-                                    .Append(popperUrl)
-                                    .Append("\" class=\"reference-link\">")
-                                    .Append(entity.Title);
+                                if (!insideHtmlTag)
+                                {
+                                    sb.Append("<a href=\"")
+                                        .Append(url)
+                                        .Append("\" ")
+                                        .Append("data-provide=\"popper\" ")
+                                        .Append("data-popper-url=\"")
+                                        .Append(popperUrl)
+                                        .Append("\" class=\"reference-link\">");
+                                }
+                           
                             }
                         }
                     }
 
-                    if (currentToken == null)
-                    {
-                        sb.Append(input[i]);
-                    }
-             
-             
+                    sb.Append(input[i]);
+
                     foreach (var token in tokenList)
                     {
                         if (i == token.End)
                         {
-                            var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
+                            var entity = entityList.FirstOrDefault(e =>
+                                e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
                             {
-                                sb.Append("</a>");
-                                currentToken = null;
+                                if (!insideHtmlTag)
+                                {
+                                    sb.Append("</a>");
+                                }
                             }
                         }
-                        
+
                     }
 
                 }
@@ -126,24 +168,6 @@ namespace Plato.References.Services
             return input;
 
         }
-
-        public async Task<IEnumerable<Entity>> GetEntitiesAsync(string input)
-        {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            var tokens = _tokenizer.Tokenize(input);
-            if (tokens != null)
-            {
-                return await GetEntitiesAsync(tokens);
-            }
-
-            return null;
-        }
-
-        // ------------
 
         async Task<IEnumerable<Entity>> GetEntitiesAsync(IEnumerable<IToken> tokens)
         {

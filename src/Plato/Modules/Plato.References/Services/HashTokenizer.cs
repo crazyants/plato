@@ -4,8 +4,17 @@ using Plato.Internal.Text.Abstractions;
 
 namespace Plato.References.Services
 {
-    
-    public class ReferencesTokenizer : IReferencesTokenizer
+
+    /// <summary>
+    /// Creates tokens to identify the position of all hash references within text.
+    /// A hash reference is identified with a hash (#) character followed by any number of
+    /// digits representing the unique entity id until a terminating character or end of line is reached.
+    /// Example text...
+    /// Take a look at #1 and #12, or #123
+    /// -----------------
+    /// Where #1, #12, and #123 will be represented as tokens.
+    /// </summary>
+    public class HashTokenizer : IHashTokenizer
     {
         
         private const char StartChar = '#';

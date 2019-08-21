@@ -2,7 +2,7 @@
 
 namespace Plato.References.Services
 {
-    public interface IReferencesTokenizer : ITokenizer
+    public interface IHashTokenizer : ITokenizer
     {
     }
 
