@@ -7,16 +7,16 @@ namespace Plato.References.Subscribers
 
     public class ParseEntityHtmlSubscriber : IBrokerSubscriber
     {
-
-        private readonly IBroker _broker;
+        
         private readonly IReferencesParser _referencesParser;
+        private readonly IBroker _broker;
 
         public ParseEntityHtmlSubscriber(
-            IBroker broker,
-            IReferencesParser referencesParser)
+            IReferencesParser referencesParser,
+            IBroker broker)
         {
-            _broker = broker;
             _referencesParser = referencesParser;
+            _broker = broker;
         }
 
         public void Subscribe()

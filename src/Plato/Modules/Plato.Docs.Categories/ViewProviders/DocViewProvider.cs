@@ -118,9 +118,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
             // Get parent entities
             var parentEntities = await _entityStore.GetParentsByIdAsync(doc.Id);
-
-
-
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -133,6 +131,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     .LocalNav()
                 );
 
+                // Parent categories
                 if (parentCategories != null)
                 {
                     builder.Add(S["Categories"], c => c
@@ -156,6 +155,7 @@ namespace Plato.Docs.Categories.ViewProviders
                     }
                 }
                 
+                // Parent entities
                 if (parentEntities != null)
                 {
                     foreach (var parent in parentEntities)
@@ -174,8 +174,7 @@ namespace Plato.Docs.Categories.ViewProviders
 
                     }
                 }
-
-
+                
                 builder.Add(S[doc.Title]);
 
             });

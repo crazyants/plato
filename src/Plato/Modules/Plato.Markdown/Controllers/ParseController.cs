@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Markdown.Services;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Markdown.Controllers
@@ -15,15 +15,15 @@ namespace Plato.Markdown.Controllers
     
     public class ParseController : BaseWebApiController
     {
-        private readonly IMarkdownParserFactory _markdownParserFactory;
+  
+        private readonly IBroker _broker;
 
-        public ParseController(IMarkdownParserFactory markdownParserFactory)
+        public ParseController(IBroker broker)
         {
-            _markdownParserFactory = markdownParserFactory;
+            _broker = broker;
         }
 
-        [HttpPost]
-        [ResponseCache(NoStore = true)]
+        [HttpPost, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Post([FromBody] MarkDownInput markdownInput)
         {
             if (String.IsNullOrEmpty(markdownInput.Markdown))
@@ -36,9 +36,13 @@ namespace Plato.Markdown.Controllers
                 });
             }
 
-            var parser = _markdownParserFactory.GetParser();
-            var html = await parser.ParseAsync(markdownInput.Markdown);
-
+            // Parse Html via ParseEntityHtml message broker subscriptions
+            var html = markdownInput.Markdown;
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
+            {
+                html = await handler.Invoke(new Message<string>(html, this));
+            }
+            
             return base.Result(html);
 
         }

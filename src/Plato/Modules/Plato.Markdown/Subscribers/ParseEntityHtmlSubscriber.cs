@@ -9,15 +9,15 @@ namespace Plato.Markdown.Subscribers
     public class ParseEntityHtmlSubscriber : IBrokerSubscriber
     {
 
-        private readonly IBroker _broker;
         private readonly IMarkdownParserFactory _markdownParserFactory;
+        private readonly IBroker _broker;
 
         public ParseEntityHtmlSubscriber(
-            IBroker broker, 
-            IMarkdownParserFactory markdownParserFactory)
+            IMarkdownParserFactory markdownParserFactory,
+            IBroker broker)
         {
-            _broker = broker;
             _markdownParserFactory = markdownParserFactory;
+            _broker = broker;
         }
         
         public void Subscribe()

@@ -1,6 +1,7 @@
 ﻿@model Entity
 @{
     Layout = null;
+    var updatedDate = Model.ModifiedDate ?? Model.CreatedDate;
 }
 @if (Model != null)
 {
@@ -13,7 +14,7 @@
         </div>
         <hr class="m-0 p-0"/>
         <div class="p-3">
-            @T["Posted"] <date utc="@Model.CreatedDate"></date>
+            @T["Updated"] <date utc="@updatedDate"></date>
         </div>
     </div>
 }

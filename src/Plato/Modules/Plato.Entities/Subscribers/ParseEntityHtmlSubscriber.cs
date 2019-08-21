@@ -10,17 +10,14 @@ namespace Plato.Entities.Subscribers
     {
 
         private readonly IBroker _broker;
-        private readonly IShellDescriptor _shellDescriptor;
         private readonly IDefaultHtmlEncoder _defaultHtmlEncoder;
 
         public ParseEntityHtmlSubscriber(
-            IBroker broker, 
-            IShellDescriptor shellDescriptor, 
-            IDefaultHtmlEncoder defaultHtmlEncoder)
+            IDefaultHtmlEncoder defaultHtmlEncoder,
+            IBroker broker)
         {
-            _broker = broker;
-            _shellDescriptor = shellDescriptor;
             _defaultHtmlEncoder = defaultHtmlEncoder;
+            _broker = broker;
         }
         
         public void Subscribe()

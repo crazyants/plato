@@ -22,21 +22,16 @@ namespace Plato.Entities.Services
         public event EntityEvents<TEntity>.Handler Deleting;
         public event EntityEvents<TEntity>.Handler Deleted;
         
-
         #region "Constructor"
-
-        private readonly IBroker _broker;
+        
         private readonly IEntityStore<TEntity> _entityStore;
-        private readonly IContextFacade _contextFacade;
+        private readonly IBroker _broker;
 
-  
         public EntityManager(
             IEntityStore<TEntity> entityStore,
-            IContextFacade contextFacade,
             IBroker broker)
         {
             _entityStore = entityStore;
-            _contextFacade = contextFacade;
             _broker = broker;
         }
 

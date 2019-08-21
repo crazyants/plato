@@ -58,15 +58,15 @@ namespace Plato.References.Services
                 var entityList = entities.ToList();
                 var sb = new StringBuilder();
 
+                IToken currentToken = null;
                 for (var i = 0; i < input.Length; i++)
                 {
-
                     foreach (var token in tokenList)
                     {
-
                         // Token start
                         if (i == token.Start)
                         {
+                            currentToken = token;
                             var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
                             {
@@ -86,24 +86,36 @@ namespace Plato.References.Services
                                     ["opts.id"] = entity.Id,
                                     ["opts.alias"] = entity.Alias
                                 });
-                                sb.Append("<a href=\"").Append(url).Append("\" ")
+                                sb.Append("<a href=\"")
+                                    .Append(url)
+                                    .Append("\" ")
                                     .Append("data-provide=\"popper\" ")
-                                    .Append("data-popper-url=\"").Append(popperUrl).Append("\" ")
-                                    .Append("class=\"reference-link\">");
+                                    .Append("data-popper-url=\"")
+                                    .Append(popperUrl)
+                                    .Append("\" class=\"reference-link\">")
+                                    .Append(entity.Title);
                             }
                         }
                     }
 
-                    sb.Append(input[i]);
-
+                    if (currentToken == null)
+                    {
+                        sb.Append(input[i]);
+                    }
+             
+             
                     foreach (var token in tokenList)
                     {
                         if (i == token.End)
                         {
                             var entity = entityList.FirstOrDefault(e => e.Id.ToString().Equals(token.Value, StringComparison.Ordinal));
                             if (entity != null)
+                            {
                                 sb.Append("</a>");
+                                currentToken = null;
+                            }
                         }
+                        
                     }
 
                 }
