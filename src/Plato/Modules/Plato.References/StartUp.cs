@@ -24,8 +24,11 @@ namespace Plato.References
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // Parsers
+            // Tokenizers
             services.AddScoped<IHashTokenizer, HashTokenizer>();
+            services.AddScoped<ILinkTokenizer, LinkTokenizer>();
+
+            // Parser
             services.AddScoped<IReferencesParser, ReferencesParser>();
 
             // Register broker subscribers

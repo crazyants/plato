@@ -45,7 +45,7 @@ namespace Plato.References.Services
             '0'
         };
 
-        public IEnumerable<IToken> Tokenize(string input)
+        public IEnumerable<Token> Tokenize(string input)
         {
 
             var start = 0;
@@ -102,6 +102,5 @@ namespace Plato.References.Services
         }
         
     }
-
-
+    
 }

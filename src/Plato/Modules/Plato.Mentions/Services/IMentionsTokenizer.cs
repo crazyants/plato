@@ -2,7 +2,7 @@
 
 namespace Plato.Mentions.Services
 {
-    public interface IMentionsTokenizer : ITokenizer
+    public interface IMentionsTokenizer : ITokenizer<Token>
     {
     }
 

@@ -21,7 +21,7 @@ namespace Plato.Mentions.Services
             '<'
         };
 
-        public IEnumerable<IToken> Tokenize(string input)
+        public IEnumerable<Token> Tokenize(string input)
         {
 
             var start = 0;

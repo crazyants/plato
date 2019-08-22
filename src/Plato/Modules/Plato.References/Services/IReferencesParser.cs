@@ -9,8 +9,6 @@ namespace Plato.References.Services
         
         Task<string> ParseAsync(string input);
 
-        Task<IEnumerable<Entity>> GetEntitiesAsync(string input);
-
     }
 
 }

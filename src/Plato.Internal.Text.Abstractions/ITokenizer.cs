@@ -2,10 +2,10 @@
 
 namespace Plato.Internal.Text.Abstractions
 {
-    public interface ITokenizer
+    public interface ITokenizer<TToken> where TToken : class, IToken
     {
 
-        IEnumerable<IToken> Tokenize(string input);
+        IEnumerable<TToken> Tokenize(string input);
 
     }
 
