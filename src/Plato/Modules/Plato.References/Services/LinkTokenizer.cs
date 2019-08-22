@@ -1,25 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using Plato.Internal.Text.Abstractions;
 using Plato.References.Models;
 
 namespace Plato.References.Services
 {
 
     /// <summary>
-    /// Parse [#123(link text)] references into link tokens.
+    /// Simple tokenizer to convert #123(title here) or #123 string values into tokens.
+    /// We avoid RegEx intentionally and instead use tokens to represent what we need to parse. 
     /// </summary>
     public class LinkTokenizer : ILinkTokenizer
     {
 
-        private const char StartChar = '#';
-        private const char EndChar = ')';
+        /// #123(text)
+        /// ^ StartChar
+        /// #123(text)
+        ///  ^^^ Value
+        /// #123(text)
+        ///     ^ TextStart
+        /// #123(text)
+        ///      ^^^^ Text
+        /// #123(text)
+        ///          ^ TextEnd
 
+        private const char StartChar = '#';
         private const char TextStart = '(';
         private const char TextEnd= ')';
 
-        private readonly IList<char> _validIdChars = new List<char>()
+        /// <summary>
+        /// The value can only be a number. I.e. an entity Id.
+        /// </summary>
+        private readonly IList<char> _validValueChars = new List<char>()
         {
             '1',
             '2',
@@ -33,18 +44,15 @@ namespace Plato.References.Services
             '0'
         };
 
+        /// <summary>
+        /// Ensure text delimiters don't appear within text value. 
+        /// </summary>
         private readonly IList<char> _invalidTextChars = new List<char>()
         {
             TextStart,
             TextEnd
         };
 
-        /// <summary>
-        /// Parse #123(title here) or #123 into tokens.
-        /// We avoid RegEx intentionally and instead use simple tokens to assist with parsing.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         public IEnumerable<LinkToken> Tokenize(string input)
         {
 
@@ -63,14 +71,15 @@ namespace Plato.References.Services
                     sb = new StringBuilder();
                 }
 
+                // We are within a token
                 if (sb != null)
                 {
-
-                    // Not the start character or a terminator
+               
+                    // Add tokens contents
                     sb.Append(c);
                 
-                    // We've reached a terminator or the end of the input
-                    if (c == EndChar || i == input.Length - 1)
+                    // We've reached the end character or the end of the input
+                    if (c == TextEnd || i == input.Length - 1)
                     {
                         var token = ParseToken(start, sb.ToString());
                         // The token can be null if parsing failed
@@ -82,6 +91,8 @@ namespace Plato.References.Services
                             }
                             output.Add(token);
                         }
+
+                        // Exit out of token
                         start = 0;
                         sb = null;
                     }
@@ -108,28 +119,29 @@ namespace Plato.References.Services
                 return null;
             }
 
-            if (!token.StartsWith("#"))
+            if (!token.StartsWith(StartChar.ToString()))
             {
                 return null;
             }
             
-            
+            // Holds out text & value
             var text = new StringBuilder();
             var value = new StringBuilder();
 
-            var inId = false;
+            // Flags to indicate we are inside of text or value
+            var inValue = false;
             var inText = false;
 
             foreach (var c in token)
             {
 
                 // Keep track of our location within the token
-                if (c == '#' && !inText) { inId = true; }
-                if (c == TextStart) { inId = false; inText = true; }
-                if (c == TextEnd) { inId = false; inText = false; }
+                if (c == StartChar && !inText) { inValue = true; }
+                if (c == TextStart) { inValue = false; inText = true; }
+                if (c == TextEnd) { inValue = false; inText = false; }
 
                 // Extract digits #123
-                if (inId && _validIdChars.Contains(c))
+                if (inValue && _validValueChars.Contains(c))
                 {
                     value.Append(c);
                 }
@@ -142,6 +154,8 @@ namespace Plato.References.Services
 
             }
 
+            // Return an object representing our found token
+            // We'll use this within the references parser 
             return new LinkToken()
             {
                 Start = start,

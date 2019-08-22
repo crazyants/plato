@@ -137,12 +137,12 @@ $(function (win, doc, $) {
                         });
                 if ($(selector).length === 0) {
                     // Bind close click
-                    $el.on("click",
-                        function (e) {
-                            if ($(e.target).is("[data-lightbox-close]") || $(e.target).is(".lightbox-container")) {
-                                methods.close();
-                            }
-                        });
+                    var closeClick = function (e) {
+                        if ($(e.target).is("[data-lightbox-close]") || $(e.target).is(".lightbox-content")) {
+                            methods.close();
+                        }
+                    };
+                    $el.on("click", closeClick);
                     // Bind escape key
                     if ($caller.data(dataKey).esc) {
                         $(win).on("keyup", function (e) {

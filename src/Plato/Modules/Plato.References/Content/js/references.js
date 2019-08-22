@@ -127,7 +127,7 @@ $(function (win, doc, $) {
                                             url: 'api/search/get?page={page}&size={pageSize}&keywords=' +
                                                 encodeURIComponent(keywords),
                                             data: {
-                                                sort: "CreatedDate",
+                                                sort: "ModifiedDate",
                                                 order: "Desc"
                                             }
                                         },
@@ -220,14 +220,14 @@ $(function (win, doc, $) {
                                             // Prevent default event
                                             e.preventDefault();
 
-                                            // Focus input, hide suggest menu & insert result
+                                            // Focus input, hide suggest & insert result
                                             $caller
                                                 .focus()
                                                 .suggester("hide")
                                                 .suggester({
                                                     insertData: {
                                                         index: searchResult.startIndex,
-                                                        value: result.id
+                                                        value: result.id + "(" + result.title + ")"
                                                     }
                                                 },
                                                     "insert");
