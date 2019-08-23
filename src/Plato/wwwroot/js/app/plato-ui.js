@@ -263,7 +263,7 @@ $(function (win, doc, $) {
                         e.stopPropagation();
 
                         $().dialog({
-                                id: "dialogSpy",
+                                id: $(this).data("dialogId") || "dialogSpy",
                                 body: {
                                     url: $(this).attr("href")
                                 },

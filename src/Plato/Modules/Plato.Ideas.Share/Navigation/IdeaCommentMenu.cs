@@ -7,6 +7,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Ideas.Share.Navigation
 {
+
     public class IdeaCommentMenu : INavigationProvider
     {
 
@@ -59,6 +60,7 @@ namespace Plato.Ideas.Share.Navigation
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
+                                {"data-dialog-id", "shareDialog"},
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })

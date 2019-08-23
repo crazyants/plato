@@ -233,22 +233,31 @@ a.label:hover, .label.active {
     background: #f8f8f8;
 }
 
-.btn-outline-secondary {
-    border-color: #ccc;
-    color: #000;
-}
 
-.btn-secondary:hover {
-    background: #f2f2f2;
-    border-color: #aaa;
+.btn-outline-secondary {
+    border-color: #ddd;
     color: #000;
 }
 
 .btn-outline-secondary:hover {
-    background: #aaa;
-    border-color: #aaa;
     color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
+
+
+.btn-secondary:hover {
+    background: white;
+    border-color: #aaa;
+    color: 000;
+}
+
+.btn-outline-secondary:hover {
+    background: white;
+    border-color: #007bff;
+    color: #007bff;
+}
+
 
 /* ------------------- */
 /* Badges */

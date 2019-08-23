@@ -1,4 +1,5 @@
-﻿@model EntityViewModel<Doc, DocComment>
+﻿@using Microsoft.Extensions.Logging.Abstractions
+@model EntityViewModel<Doc, DocComment>
 @{
     var wordsPerMinute = 200;
     var totalWords = Model.Entity.TotalWords;
@@ -73,6 +74,42 @@
                 <div class="markdown-body p-3" data-provide="markdownBody">
                     @Html.Raw(@Model.Entity.Html)
                 </div>
+                
+                @if (Model.Entity.PreviousDoc != null || Model.Entity.NextDoc != null)
+                {
+                    var css = Model.Entity.PreviousDoc != null && Model.Entity.NextDoc != null ? "col-6" : "col-12";
+                    <div class="row p-3">
+                
+                        @if (Model.Entity.PreviousDoc != null)
+                        {
+                            <div class="@css">
+                                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.PreviousDoc.Id" asp-route-opts.alias="@Model.Entity.PreviousDoc.Alias" class="btn btn-block btn-outline-secondary text-right">
+                                    <i class="fal fa-arrow-left float-left mt-3"></i>
+                                    <span class="small text-muted">
+                                        @T["Previous"]
+                                    </span><br/>
+                                    @Model.Entity.PreviousDoc.Title
+                                </a>
+                            </div>
+                        }
+                        @if (Model.Entity.NextDoc != null)
+                        {
+                            <div class="@css">
+                                <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.NextDoc.Id" asp-route-opts.alias="@Model.Entity.NextDoc.Alias" class="btn btn-block btn-outline-secondary text-left">
+                                    <i class="fal fa-arrow-right float-right mt-3"></i>
+                                    <span class="small text-muted">
+                                        @T["Next"]
+                                    </span><br/>
+                                    @Model.Entity.NextDoc.Title
+
+                                </a>
+                            </div>
+                        }
+                    
+                    </div>
+                }
+         
+
                 <navigation name="doc-footer"
                             model="Model.Entity"
                             enable-list="false" />

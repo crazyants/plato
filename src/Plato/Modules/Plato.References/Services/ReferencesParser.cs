@@ -9,8 +9,6 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Text.Abstractions;
-using Plato.Internal.Text.Extensions;
-using Plato.References.Models;
 
 namespace Plato.References.Services
 {

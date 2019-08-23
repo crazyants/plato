@@ -12,6 +12,10 @@ namespace Plato.Entities.Services
     public interface IEntityService<TModel> where TModel : class, IEntity
     {
 
+        Task<IPagedResults<TModel>> GetResultsAsync();
+
+        Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options);
+
         Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager);
         
         IEntityService<TModel> ConfigureDb(Action<IQueryOptions> configure);

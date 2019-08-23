@@ -69,6 +69,7 @@ namespace Plato.Entities.Stores
 
         private WhereInt _id;
         private WhereInt _userId;
+        private WhereInt _parentId;
         private WhereInt _featureId;
         private WhereInt _categoryId;
         private WhereInt _roleId;
@@ -112,6 +113,12 @@ namespace Plato.Entities.Stores
         {
             get => _userId ?? (_userId = new WhereInt());
             set => _userId = value;
+        }
+
+        public WhereInt ParentId
+        {
+            get => _parentId ?? (_parentId = new WhereInt());
+            set => _parentId = value;
         }
         
         public WhereInt FeatureId
@@ -592,6 +599,17 @@ namespace Plato.Entities.Stores
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.FeatureId.Operator);
                 sb.Append(_query.Params.FeatureId.ToSqlString("e.FeatureId"));
+            }
+
+            // -----------------
+            // ParentId
+            // -----------------
+
+            if (_query.Params.ParentId.Value > -1)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ParentId.Operator);
+                sb.Append(_query.Params.ParentId.ToSqlString("e.ParentId"));
             }
 
             // -----------------

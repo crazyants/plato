@@ -59,6 +59,7 @@ namespace Plato.Issues.Share.Navigation
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
+                                {"data-dialog-id", "shareDialog"},
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })

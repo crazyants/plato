@@ -6,5 +6,9 @@ namespace Plato.Docs.Models
     {
         public bool IsNew { get; set; }
         
+        public Doc PreviousDoc { get; set; }
+
+        public Doc NextDoc { get; set; }
+
     }
 }

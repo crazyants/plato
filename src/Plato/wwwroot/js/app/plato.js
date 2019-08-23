@@ -450,6 +450,10 @@ $(function (win, doc, $) {
         },
         facebook: {
             init: function (appId) {
+                // We may not have a facebook app id
+                if (appId === null || typeof appId === "undefined" || appId === "") {
+                    return null;
+                }
                 // Initialize facebook API
                 win.fbAsyncInit = function () {
                     win.FB.init({

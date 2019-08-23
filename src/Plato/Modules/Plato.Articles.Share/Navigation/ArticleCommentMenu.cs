@@ -9,8 +9,7 @@ namespace Plato.Articles.Share.Navigation
 {
     public class ArticleCommentMenu : INavigationProvider
     {
-
-
+        
         public IStringLocalizer T { get; set; }
 
         public ArticleCommentMenu(IStringLocalizer localizer)
@@ -59,6 +58,7 @@ namespace Plato.Articles.Share.Navigation
                             .Attributes(new Dictionary<string, object>()
                             {
                                 {"data-provide", "dialog"},
+                                {"data-dialog-id", "shareDialog"},
                                 {"data-dialog-modal-css", "modal fade"},
                                 {"data-dialog-css", "modal-dialog modal-lg"}
                             })

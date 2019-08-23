@@ -43,7 +43,17 @@ namespace Plato.Entities.Services
             _configureParams = configure;
             return this;
         }
-        
+
+        public Task<IPagedResults<TModel>> GetResultsAsync()
+        {
+            return GetResultsAsync(new EntityIndexOptions(), new PagerOptions());
+        }
+
+        public Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options)
+        {
+            return GetResultsAsync(options, new PagerOptions());
+        }
+
         public async Task<IPagedResults<TModel>> GetResultsAsync(EntityIndexOptions options, PagerOptions pager)
         {
 
