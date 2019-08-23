@@ -66,17 +66,17 @@ namespace Plato.Docs.ViewComponents
                     q.FeatureId.Equals(entity.FeatureId);
                     q.ParentId.Equals(entity.ParentId);
                 })
-                .GetResultsAsync(new EntityIndexOptions()
-                {
-                    Sort = SortBy.SortOrder,
-                    Order = OrderBy.Asc
-                });
+                .GetResultsAsync();
 
             // Get the previous and next entities via the sort order
             if (entities != null)
             {
-                entity.PreviousDoc = entities.Data?.FirstOrDefault(e => e.SortOrder < entity.SortOrder); ;
-                entity.NextDoc = entities.Data?.FirstOrDefault(e => e.SortOrder > entity.SortOrder);
+                entity.PreviousDoc = entities.Data?
+                    .OrderByDescending(e => e.SortOrder)
+                    .FirstOrDefault(e => e.SortOrder < entity.SortOrder); ;
+                entity.NextDoc = entities.Data?
+                    .OrderBy(e => e.SortOrder)
+                    .FirstOrDefault(e => e.SortOrder > entity.SortOrder);
             }
             
             // Return view model
