@@ -75,6 +75,25 @@
                     @Html.Raw(@Model.Entity.Html)
                 </div>
                 
+                @if (Model.Entity.ChildEntities != null)
+                {
+                    <div cass="row p-3">
+                        <div class="col-12">
+                            <h5>@T["In this section"]</h5>
+                            <ul>
+                                @foreach (var child in Model.Entity.ChildEntities)
+                                {
+                                    <li>
+                                        <a asp-route-area="Plato.Docs" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@child.Id" asp-route-opts.alias="@child.Alias">
+                                            @child.Title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+
                 @if (Model.Entity.PreviousDoc != null || Model.Entity.NextDoc != null)
                 {
                     var css = Model.Entity.PreviousDoc != null && Model.Entity.NextDoc != null ? "col-6" : "col-12";
@@ -105,11 +124,8 @@
                                 </a>
                             </div>
                         }
-                    
                     </div>
                 }
-         
-
                 <navigation name="doc-footer"
                             model="Model.Entity"
                             enable-list="false" />

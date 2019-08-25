@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Docs.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Docs.ViewComponents
 {
@@ -18,16 +18,16 @@ namespace Plato.Docs.ViewComponents
 
         private readonly IEntityService<Doc> _entityService;
         private readonly IEntityStore<Doc> _entityStore;
-        private readonly IEntityReplyStore<DocComment> _entityReplyStore;
+        private readonly IAuthorizationService _authorizationService;
 
         public DocViewComponent(
-            IEntityReplyStore<DocComment> entityReplyStore,
             IEntityStore<Doc> entityStore,
-            IEntityService<Doc> entityService)
+            IEntityService<Doc> entityService,
+            IAuthorizationService authorizationService)
         {
-            _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
             _entityService = entityService;
+            _authorizationService = authorizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(EntityOptions options)
@@ -58,13 +58,67 @@ namespace Plato.Docs.ViewComponents
             {
                 throw new ArgumentNullException();
             }
-            
+
+            // Populate previous and next entity
+            await PopulatePreviousAndNextAsync(entity);
+
+            // Populate child entities
+            await PopulateChildEntitiesAsync(entity);
+
+            // Return view model
+            return new EntityViewModel<Doc, DocComment>
+            {
+                Options = options,
+                Entity = entity
+            };
+
+        }
+
+        async Task PopulatePreviousAndNextAsync(Doc entity)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             // Get all other entities at the same level as our current entity
             var entities = await _entityService
-                .ConfigureQuery(q =>
+                .ConfigureQuery(async q =>
                 {
+
                     q.FeatureId.Equals(entity.FeatureId);
                     q.ParentId.Equals(entity.ParentId);
+                    
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateDocs))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenDocs))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewSpamDocs))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewDeletedDocs))
+                    {
+                        q.HideDeleted.True();
+                    }
+
+
                 })
                 .GetResultsAsync();
 
@@ -78,13 +132,60 @@ namespace Plato.Docs.ViewComponents
                     .OrderBy(e => e.SortOrder)
                     .FirstOrDefault(e => e.SortOrder > entity.SortOrder);
             }
-            
-            // Return view model
-            return new EntityViewModel<Doc, DocComment>
+
+        }
+
+        async Task PopulateChildEntitiesAsync(Doc entity)
+        {
+
+            if (entity == null)
             {
-                Options = options,
-                Entity = entity
-            };
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            // Get all child entities
+            var entities = await _entityService
+                .ConfigureQuery(async q =>
+                {
+                    q.ParentId.Equals(entity.Id);
+
+                    // Hide private?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewPrivateDocs))
+                    {
+                        q.HidePrivate.True();
+                    }
+
+                    // Hide hidden?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewHiddenDocs))
+                    {
+                        q.HideHidden.True();
+                    }
+
+                    // Hide spam?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewSpamDocs))
+                    {
+                        q.HideSpam.True();
+                    }
+
+                    // Hide deleted?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewDeletedDocs))
+                    {
+                        q.HideDeleted.True();
+                    }
+                    
+                })
+                .GetResultsAsync(new EntityIndexOptions()
+                {
+                    Sort = SortBy.SortOrder,
+                    Order = OrderBy.Asc
+                });
+
+            // Get the previous and next entities via the sort order
+            entity.ChildEntities = entities?.Data;
 
         }
 

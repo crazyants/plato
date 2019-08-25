@@ -1,4 +1,5 @@
-﻿using Plato.Entities.Models;
+﻿using System.Collections.Generic;
+using Plato.Entities.Models;
 
 namespace Plato.Docs.Models
 {
@@ -10,5 +11,8 @@ namespace Plato.Docs.Models
 
         public Doc NextDoc { get; set; }
 
+        public IEnumerable<IEntity> ChildEntities { get; set; }
+
     }
+
 }
