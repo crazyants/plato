@@ -5325,22 +5325,25 @@ $(function (win, doc, $) {
                     start = $caller.data(dataKey).start,
                     prefix = $caller.val().substring(0, start),
                     suffix = $caller.val().substring(start, $caller.val().length - 1),
-                    marker = '<span class="text-field-mirror-marker position-relative">@</span>',
-                    markerHtml = prefix + marker + suffix,
-                    html = markerHtml.replace(/\n/gi, '<br/>');
+                    marker = '_@_',
+                    html = prefix + marker + suffix;
 
                 var $mirror = methods.getOrCreateMirror($caller);
                 if ($mirror) {
+                    
+                    // Populate & show mirror, ensure HTML is encoded for display
+                    $mirror.html(html
+                        .replace(/</gi, '&lt;')
+                        .replace(/>/gi, '&gt;')
+                        .replace(/_@_/gi, '<span class="text-field-mirror-marker position-relative">@</span>')
+                        .replace(/\n/gi, '<br/>')).show();
 
-                    // Populate & show mirror
-                    $mirror.html(html).show();
-
-                    // Ensure mirror is always same height as called
+                    // Ensure mirror is always same height as caller
                     $mirror.css({
                         "height": $caller.outerHeight()
                     });
 
-                    // Ensure mirror is always scrolled to same position as calller
+                    // Ensure mirror is always scrolled to same position as caller
                     $mirror[0].scrollTop = $caller.scrollTop();
 
                     // Marker added raise ready event
@@ -5488,10 +5491,16 @@ $(function (win, doc, $) {
                 $caller.textFieldMirror({
                     start: cursor.start,
                     ready: function ($mirror) {
-
+                        
                         // Get position from mirrored marker
-                        var $marker = $mirror.find(".text-field-mirror-marker"),
-                            position = $marker.position(),
+                        var $marker = $mirror.find(".text-field-mirror-marker");
+
+                        // We always need a marker to position the suggester menu
+                        if ($marker.length === 0) {
+                            return false;
+                        }
+
+                        var position = $marker.position(),
                             left = Math.floor(position.left),
                             top = Math.floor(position.top + 26);
 
@@ -5504,7 +5513,7 @@ $(function (win, doc, $) {
                             }).show();
 
                             // Hide mirror after positioning menu
-                            $caller.textFieldMirror("hide");
+                            //$caller.textFieldMirror("hide");
 
                             // Invoke paged list
                             $menu.pagedList($.extend($caller.data(dataKey),
