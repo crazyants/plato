@@ -611,6 +611,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     margin-bottom: 1em;
 }
 
+.markdown-body ol p:first-child,
+.markdown-body ul p:first-child,
+.markdown-body dl  p:first-child {
+    margin: 0;
+    padding: 0;
+}
+
 /* table */
 
 .markdown-body table {

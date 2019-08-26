@@ -104,7 +104,7 @@ namespace Plato.Users
                 options.LoginPath = new PathString("/Plato.Users/Account/Login/");
                 options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
                 options.AccessDeniedPath = options.LoginPath;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.SlidingExpiration = true;
             });
 
