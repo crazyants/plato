@@ -1,0 +1,19 @@
+Name: Plato Docs Reactions
+Description: Adds the ability for users to react to docs & doc comments using emoji.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Docs
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.docs.reactions/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities.Reactions",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Docs",
+		Version: "1.0.0"
+	}
+]

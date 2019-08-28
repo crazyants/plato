@@ -72,7 +72,7 @@ namespace Plato.Entities.Reactions.Stores
                 sb.Append(" ")
                     .Append(text1)
                     .Append(" ")
-                    .Append(reaction.Value.Name.ToLower())
+                    .Append(reaction.Value.Description.ToLower())
                     .Append(" ")
                     .Append(text2);
 

@@ -5331,7 +5331,8 @@ $(function (win, doc, $) {
                 var $mirror = methods.getOrCreateMirror($caller);
                 if ($mirror) {
                     
-                    // Populate & show mirror, ensure HTML is encoded for display
+                    // Populate & show mirror, ensure the mirrored fields input
+                    // is encoded for safe display
                     $mirror.html(html
                         .replace(/</gi, '&lt;')
                         .replace(/>/gi, '&gt;')
@@ -5513,7 +5514,7 @@ $(function (win, doc, $) {
                             }).show();
 
                             // Hide mirror after positioning menu
-                            //$caller.textFieldMirror("hide");
+                            $caller.textFieldMirror("hide");
 
                             // Invoke paged list
                             $menu.pagedList($.extend($caller.data(dataKey),

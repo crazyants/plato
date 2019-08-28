@@ -249,7 +249,7 @@ a.label:hover, .label.active {
 .btn-secondary:hover {
     background: white;
     border-color: #aaa;
-    color: 000;
+    color: #000;
 }
 
 .btn-outline-secondary:hover {
