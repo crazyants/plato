@@ -9,7 +9,7 @@ namespace Plato.Docs.Reactions
     {
         
         public static readonly Reaction Useful =
-            new Reaction("DocsUseful", "Useful +1", "😄", 1, Sentiment.Positive);
+            new Reaction("DocsUseful", "Useful", "😄", 1, Sentiment.Positive);
    
         public static readonly Reaction Ok =
             new Reaction("DocsOk", "Ok", "😐", 0, Sentiment.Neutral);

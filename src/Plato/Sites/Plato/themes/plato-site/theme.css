@@ -239,13 +239,6 @@ a.label:hover, .label.active {
     color: #000;
 }
 
-.btn-outline-secondary:hover {
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-
 .btn-secondary:hover {
     background: white;
     border-color: #aaa;
@@ -253,15 +246,19 @@ a.label:hover, .label.active {
 }
 
 .btn-outline-secondary:hover {
-    background: white;
+    background: #007BFF;
     border-color: #007bff;
-    color: #007bff;
+    color: #fff;
+}
+
+.btn-outline-secondary:hover .text-muted {
+    color: #fff !important;
 }
 
 .btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-secondary.dropdown-toggle {
-    color: #007bff;
-    background-color: white;
+    color: #fff;
+    background-color: #007bff;
     border-color: #007bff;
 }
 

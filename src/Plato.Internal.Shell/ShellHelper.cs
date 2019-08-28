@@ -1,5 +1,4 @@
 ﻿using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {

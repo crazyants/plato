@@ -107,7 +107,9 @@
                                     <span class="small text-muted">
                                         @T["Previous"]
                                     </span><br/>
-                                    @Model.Entity.PreviousDoc.Title
+                                    <span class="font-weight-bold">
+                                        @Model.Entity.PreviousDoc.Title
+                                    </span>
                                 </a>
                             </div>
                         }
@@ -118,9 +120,10 @@
                                     <i class="fal fa-arrow-right float-right mt-3"></i>
                                     <span class="small text-muted">
                                         @T["Next"]
-                                    </span><br/>
-                                    @Model.Entity.NextDoc.Title
-
+                                    </span><br />
+                                    <span class="font-weight-bold">
+                                        @Model.Entity.NextDoc.Title
+                                    </span>
                                 </a>
                             </div>
                         }

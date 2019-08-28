@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.References.Models;
 
 namespace Plato.References.Services
@@ -141,9 +142,21 @@ namespace Plato.References.Services
                 if (c == TextEnd) { inValue = false; inText = false; }
 
                 // Extract digits #123
-                if (inValue && _validValueChars.Contains(c))
+                if (inValue)
                 {
-                    value.Append(c);
+                    if (_validValueChars.Contains(c))
+                    {
+                        value.Append(c);
+                    } 
+                    else
+                    {
+                        // Not a valid value character or the value start character
+                        if (c != StartChar)
+                        {
+                            // Exit value
+                            inValue = false;
+                        }
+                    }
                 }
 
                 // Extract text (text)
@@ -152,6 +165,12 @@ namespace Plato.References.Services
                     text.Append(c);
                 }
 
+            }
+
+            // We could not parse a valid entity id
+            if (string.IsNullOrEmpty(value.ToString()))
+            {
+                return null;
             }
 
             // Return an object representing our found token

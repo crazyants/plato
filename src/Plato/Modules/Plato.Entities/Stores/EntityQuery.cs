@@ -1004,9 +1004,9 @@ namespace Plato.Entities.Stores
                 case "modifieddate":
                     return "IsNull(e.ModifiedDate, e.CreatedDate)";
                 case "lastreply":
-                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
+                    return "IsNull(e.LastReplyDate, IsNull(e.ModifiedDate, e.CreatedDate))";
                 case "lastreplydate":
-                    return "IsNull(e.LastReplyDate, e.CreatedDate)";
+                    return "IsNull(e.LastReplyDate, IsNull(e.ModifiedDate, e.CreatedDate))";
                 case "rank":
                     return "[Rank]";
             }

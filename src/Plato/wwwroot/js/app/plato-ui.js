@@ -402,9 +402,7 @@ $(function (win, doc, $) {
 
             },
             go: function($caller) {
-
-          
-
+                
                 var $body = $("body,html");
                 var $target = null,
                     href = $caller.prop("tagName") === "A" && $caller.attr("href");

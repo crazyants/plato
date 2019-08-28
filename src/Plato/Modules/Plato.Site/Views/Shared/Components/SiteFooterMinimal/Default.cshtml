@@ -1,0 +1,54 @@
+﻿@using Plato.Internal.Abstractions.Settings
+@{
+    var platoOpts = GetOptions<PlatoOptions>();
+}
+
+<a href="#top" data-provide="scroll" class="d-block text-muted text-center" title="Scroll to Top">
+    <i class="fal fa-chevron-up py-2 d-inline-block"></i>
+</a>
+
+<div class="row no-gutters bg-black text-muted text-center text-lg-left">
+    <div class="container-fluid container-fluid-1280">
+        <div class="my-4">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" class="plato-brand mr-3" data-toggle="tooltip" title="Support powered by Plato @platoOpts.Version @platoOpts.ReleaseType"></a>
+                    <ul class="list-inline d-inline-block">
+                        <li class="list-inline-item">
+                            &copy; <a class="text-muted" href="https://www.instantasp.co.uk/">InstantASP</a> @DateTime.Now.Year
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-lg-6  mt-2 mt-lg-0">
+                    <ul class="list-inline float-lg-right">
+                        <li class="list-inline-item">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Index" class="text-muted">
+                                Home
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="text-muted">
+                                Support
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Contact" class="text-muted">
+                                Contact Us
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Terms" class="text-muted">
+                                Terms of Use
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Privacy" class="text-muted">
+                                Privacy Policy
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,13 +7,13 @@ using Plato.Internal.Stores.Abstractions.Shell;
 namespace Plato.Internal.Shell
 {
 
-    public class SetShellDescriptorManager : IShellDescriptorStore
+    public class ShellDescriptorManager : IShellDescriptorStore
 
     {
         private readonly IEnumerable<ShellModule> _shellFeatures;
         private IShellDescriptor _shellDescriptor;
         
-        public SetShellDescriptorManager(IEnumerable<ShellModule> shellFeatures)
+        public ShellDescriptorManager(IEnumerable<ShellModule> shellFeatures)
         {
             _shellFeatures = shellFeatures;
         }

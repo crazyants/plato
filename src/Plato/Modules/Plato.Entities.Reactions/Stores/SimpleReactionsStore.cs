@@ -81,6 +81,7 @@ namespace Plato.Entities.Reactions.Stores
                 {
                     Emoji = reaction.Value.Emoji,
                     Name = reaction.Value.Name,
+                    Description = reaction.Value.Description,
                     Total = reaction.Value.Users.Count.ToPrettyInt(),
                     ToolTip = sb.ToString()
                 });
