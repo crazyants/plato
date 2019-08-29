@@ -29,8 +29,8 @@ $(function (win, doc, $) {
             this.bind();
             app.logger.logInfo(featureId + " initialized");
         },
-        bind: function() {
-            // implementation
+        bind: function () {
+            // Placeholder
         }
     };
     

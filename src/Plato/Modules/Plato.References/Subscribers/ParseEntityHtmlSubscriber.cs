@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.References.Services;
 
@@ -21,13 +22,20 @@ namespace Plato.References.Subscribers
 
         public void Subscribe()
         {
-            // Add a subscription to convert @mentions to hyperlinks to user profiles
+        
             _broker.Sub<string>(new MessageOptions()
             {
                 Key = "ParseEntityHtml",
-                Order = short.MaxValue // @mentions should be parsed towards the very end
+                Order = short.MaxValue // should be parsed towards the very end
             }, async message => await ParseEntityHtmlAsync(message.What));
-            
+
+     
+            _broker.Sub<string>(new MessageOptions()
+            {
+                Key = "ParseEntityAbstract",
+                Order = short.MaxValue // should be parsed towards the very end
+            }, async message => await ParseEntityAbstractAsync(message.What));
+
         }
 
         public void Unsubscribe()
@@ -37,11 +45,22 @@ namespace Plato.References.Subscribers
                 Key = "ParseEntityHtml"
             }, async message => await ParseEntityHtmlAsync(message.What));
 
+            _broker.Unsub<string>(new MessageOptions()
+            {
+                Key = "ParseEntityAbstract"
+            }, async message => await ParseEntityAbstractAsync(message.What));
+
         }
 
         private async Task<string> ParseEntityHtmlAsync(string input)
         {
             return await _referencesParser.ParseAsync(input);
+        }
+
+        private async Task<string> ParseEntityAbstractAsync(string input)
+        {
+            var html = await ParseEntityHtmlAsync(input);
+            return html.PlainTextulize().TrimToAround(225);
         }
 
     }

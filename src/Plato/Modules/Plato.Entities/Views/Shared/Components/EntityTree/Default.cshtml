@@ -69,34 +69,28 @@
 
                     sb.Append("<div class=\"tree-row\">");
 
+                    sb.Append("<div class=\"tree-left\">");
                     if (entity.Value.Children.Any())
                     {
-                        sb.Append("<div class=\"tree-left\"");
-                        if (entity.Value.Depth > 0)
+                        for (var x = 0; x < entity.Value.Depth; x++)
                         {
-                            sb.Append(" style=\"padding-left: ")
-                                .Append(entity.Value.Depth)
-                                .Append("rem;\"");
+                            sb.Append("<div class=\"toggler\"><i class=\"fal\"></i></div>");
                         }
-                        sb.Append(">");
-                        sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
+                        sb.Append("<a class=\"toggler\" data-node-id=\"")
                             .Append(nodeId)
                             .Append("\" data-toggle=\"tree\" href=\"#\">");
                         sb.Append("<i class=\"fal fa-chevron-right\"></i>");
                         sb.Append("</a>");
-                        sb.Append("</div>");
                     }
                     else
                     {
-                        sb.Append("<div class=\"tree-left\"");
-                        if (entity.Value.Depth > 0)
+                        for (var x = 0; x < entity.Value.Depth; x++)
                         {
-                            sb.Append(" style=\"padding-left: ")
-                                .Append(entity.Value.Depth)
-                                .Append("rem;\"");
+                            sb.Append("<div class=\"toggler\"><i class=\"fal\"></i></div>");
                         }
-                        sb.Append("></div>");
                     }
+
+                    sb.Append("</div>");
 
                     sb.Append("<div class=\"tree-body\">");
 

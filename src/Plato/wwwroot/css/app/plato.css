@@ -1512,11 +1512,17 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .tree li.list-group-item.active { z-index: initial !important; }
 
 /* animate expand / collapse */
-.tree li > div > div > a.toggler,
-.tree li > div > a.toggler { color: inherit; width: 22px; padding: 0; margin-right: 0.25rem; transform: rotate(0); text-align: center; vertical-align: middle; transition: transform .15s ease-in; }
+.tree li > div > div > .toggler,
+.tree li > div > .toggler { display: inline-block; color: inherit; transform: rotate(0); text-align: center; line-height: 22px; vertical-align: middle; transition: transform .15s ease-in; }
 
-.tree li.show > div > div > a.toggler,
-.tree li.show > div > a.toggler { transform: rotate(90deg); }
+.tree li > div > div > .toggler i ,
+.tree li > div > .toggler i {  width: 22px; height: 22px; }
+
+.tree li > div > div > .toggler:last-child,
+.tree li > div > .toggler:last-child { margin-right: 0.25rem;  }
+
+.tree li.show > div > div > .toggler,
+.tree li.show > div > .toggler { transform: rotate(90deg); }
 
 /* checkbox / radio button */
 .tree input { display: none; }
@@ -1544,7 +1550,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 
 .tree .tree-row { display: table; width: 100%; padding: 0.50rem 1rem; }
-.tree .tree-left { width: 5%; display: table-cell; vertical-align: top; }
+.tree .tree-left { white-space: nowrap; display: table-cell; vertical-align: top; }
 .tree .tree-body { width: 90%; display: table-cell; vertical-align: middle; }
 .tree .tree-right { width: 5%; display: table-cell; vertical-align: top; }
 
@@ -1923,6 +1929,30 @@ i.is-banned:before { margin-right: 0 !important; }
 .is-banned:before {
     background-image: url(/images/banned.png);
 }
+
+
+/* --------------------------- */
+/* slide spy */
+/* --------------------------- */
+
+.slide-out { 
+    position: fixed;
+    z-index: 1;
+    display: inline-block;
+    transition: bottom 0.3s ease-out;
+}
+
+.slide-out-top-left { top: -200px; left: 24px; }
+.slide-out-top-right { top: -200px; right: 24px; }
+
+.slide-out-button-left { bottom: -200px; left: 24px; }
+.slide-out-button-right { bottom: -200px; right: 24px; }
+
+.slide-out-top-left.active,
+.slide-out-top-right.active { top: 24px; }
+
+.slide-out-button-left.active,
+.slide-out-button-right.active { bottom: 24px; }
 
 /* --------------------------- */
 /* animations */

@@ -6483,7 +6483,80 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* slideSpy */
+    var slideSpy = function () {
+
+        var dataKey = "slideSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            breakPoint: null,
+            activeCss: "active"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var breakPoint = parseInt($caller.data("breakPoint") || $caller.data(dataKey).breakPoint),
+                    activeCss = $caller.data("activeCss") || $caller.data(dataKey).activeCss;
+                
+                if (breakPoint === null ||
+                    typeof breakPoint === "undefined" ||
+                    isNaN(breakPoint)) {
+                    breakPoint = $(win).height() / 3;
+                }
+
+                console.log(breakPoint);
+                $(win).scrollSpy({
+                    onScroll: function(spy) {
+                        if (spy.scrollTop > breakPoint) {
+                            if (!$caller.hasClass(activeCss)) {
+                                $caller.addClass(activeCss);
+                            }
+                        }
+                        if (spy.scrollTop < breakPoint) {
+                            if ($caller.hasClass(activeCss)) {
+                                $caller.removeClass(activeCss);
+                            }
+                        }
+                    }
+                });
+
+            },
+            unbind: function ($caller) {
+            
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+
+                if (this.length > 0) {
+                    // $(selector).loaderSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this));
+                    });
+                }
+            }
+        };
+
+    }();
+
+
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
@@ -6515,7 +6588,8 @@ $(function (win, doc, $) {
         popper: popper.init,
         password: password.init,
         loader: loader.init,
-        loaderSpy: loaderSpy.init
+        loaderSpy: loaderSpy.init,
+        slideSpy: slideSpy.init
     });
 
     // ---------------------------
@@ -6586,6 +6660,9 @@ $(function (win, doc, $) {
 
         /* loaderSpy */
         this.find('[data-provide="loader-spy"]').loaderSpy();
+
+        /* slideSpy */
+        this.find('[data-provide="slide-spy"]').slideSpy();
 
         // Bind scroll events
         $(win).scrollSpy({
