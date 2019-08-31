@@ -1,5 +1,5 @@
 Name: Plato Questions Labels
-Description: Adds the ability to label quesitons.
+Description: Adds the ability to label questions.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Questions

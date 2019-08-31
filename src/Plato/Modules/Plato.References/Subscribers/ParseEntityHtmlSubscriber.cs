@@ -28,8 +28,7 @@ namespace Plato.References.Subscribers
                 Key = "ParseEntityHtml",
                 Order = short.MaxValue // should be parsed towards the very end
             }, async message => await ParseEntityHtmlAsync(message.What));
-
-     
+            
             _broker.Sub<string>(new MessageOptions()
             {
                 Key = "ParseEntityAbstract",

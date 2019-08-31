@@ -1,5 +1,5 @@
 Name: Plato Docs StopForumSpam
-Description: Adds StopForumSpam checks when posting new docs or psting doc comments.
+Description: Adds StopForumSpam checks when posting docs or comments.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Docs

@@ -13,12 +13,13 @@
                 </h1>
                 <hr class="divider border-primary" />
                 <h2 class="font-weight-light my-4 mx-auto w-70">
-                    Plato is 100% free, open source software. Forever. If you prefer we can host & manage things for you.
+                    Plato is free, open source software. We support Plato through hosting & premium support.
                 </h2>
             </div>
         </div>
     </div>
 </section>
+
 <!-- Plans -->
 <section class="page">
     <div class="container">
@@ -44,13 +45,15 @@
                                 All standard modules
                             </li>
                             <li class="d-block p-3">
-                                MIT License
+                                <a href="/docs/d/46/licensing">GNU General Public License</a>
                             </li>
                             <li class="d-block p-3">
-                                Documentation
+                                <a href="/docs/">Documentation</a>
                             </li>
                             <li class="d-block p-3">
-                                Community support
+                                <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">
+                                    Community support
+                                </a>
                             </li>
                         </ol>
                         <a href="#" class="btn btn-lg btn-primary mt-2">
@@ -158,8 +161,51 @@
     </div>
 </section>
 
-
+<!-- Premium Support -->
 <section class="page bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-radius-0 border-0 box-shadow">
+                    <div class="card-header bg-primary border-0">
+                        <h5 class="text-white">Self Hosted</h5>
+                        <h3 class="text-white">Premium Support</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            If your hosting Plato on your own infrastructure but require the piece of mind of receiving priority technical support direct from the Plato devs our optional premium support package may assist.
+                            Our premium support package offers additional priority email & telephone based technical support 365 days a year for a single Plato installation. You can use your premium support entitlements for any purpose related to Plato.
+                        </p>
+                        <ol class="list-inline">
+                            <li class="d-block">
+                                <i class="fal fa-check text-primary mr-2"></i> Priority email & telephone technical support for Plato from Plato devs
+                            </li>
+                            <li class="d-block">
+                                <i class="fal fa-check text-primary mr-2"></i> Instant premium support status within our <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index">community</a> guaranteeing a response from Plato devs
+                            </li>
+                            <li class="d-block">
+                                <i class="fal fa-check text-primary mr-2"></i> Access to our private Slack channel for real-time support during GMT business hours
+                            </li>
+                            <li class="d-block">
+                                <i class="fal fa-check text-primary mr-2"></i> Priority support for anything related to Plato (installation, upgrades, customization, integrations etc)
+                            </li>
+                            <li class="d-block">
+                                <i class="fal fa-check text-primary mr-2"></i> No contracts. Cancel or renew your premium support anytime and continue to use Plato
+                            </li>
+                        </ol>
+                        <h3 class="text-primary">$400 / year</h3>
+                        <a href="#" class="btn btn-lg btn-primary mt-4">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="page">
     <div class="container">
 
         <!-- Security -->
@@ -169,7 +215,7 @@
                     Security you can trust
                 </h1>
                 <h3 class="font-weight-light">
-                    Backed by <a href="https://www.iso.org/isoiec-27001-information-security.html" target="_blank">ISO/IEC 27001</a> standards for security and reliability
+                    Our hosted services are backed by <a href="https://www.iso.org/isoiec-27001-information-security.html" target="_blank">ISO/IEC 27001</a> standards for security and reliability
                 </h3>
                 <hr class="divider border-primary" />
             </div>
@@ -233,7 +279,7 @@
                     Reliability you can trust
                 </h1>
                 <h3 class="font-weight-light">
-                    Backed by our 99.99% guaranteed up-time
+                    Our hosted services are backed by our 99.99% up-time guarantee
                 </h3>
                 <hr class="divider border-primary" />
             </div>
@@ -549,19 +595,18 @@
     </div>
 </section>
 
+
 <!-- Call to action -->
 <section class="page bg-primary">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
                 <h1 class="text-uppercase font-weight-bold text-white">
-                    Enterprise Support
+                    Questions? We would love to help
                 </h1>
-                <h3 class="font-weight-light text-white">
-                    If your self hosting Plato and need dedicated, priority support we would love to assist.
-                </h3>
-                <hr class="divider border-light" />
-                <a class="btn btn-light text-primary btn-lg mt-4" asp-route-action="Contact">Contact Us</a>
+                <a class="btn btn-light text-primary btn-lg mt-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Contact">
+                    Contact Us
+                </a>
             </div>
         </div>
     </div>
