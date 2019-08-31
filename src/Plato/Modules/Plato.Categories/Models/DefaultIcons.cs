@@ -422,7 +422,6 @@
             "folder",
             "folder-open",
             "font",
-            "font-awesome-logo-full",
             "football-ball",
             "football-helmet",
             "forklift",
