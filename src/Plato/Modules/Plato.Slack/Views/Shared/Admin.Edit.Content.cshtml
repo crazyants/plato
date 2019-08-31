@@ -1,0 +1,34 @@
+﻿@model SlackSettingsViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Webhook URL"]</h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DefaultFrom">
+                        <label asp-for="WebHookUrl">
+                            <strong>@T["Webhook URL"]</strong>
+                            <span asp-validation-for="WebHookUrl" class="text-danger"></span>
+                            <br />
+                            <span class="text-muted">@T["Your Slack incoming web hook URL."]</span>
+                            <a href="https://api.slack.com/apps/AMWA1G012/incoming-webhooks?success=1" target="_blank">@T["Get your Webhook URL"]</a>
+                        </label>
+                        <input placeholder="@T["your Slack web hook url..."]" asp-for="WebHookUrl" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+           
+            </div>
+        </div>
+
+    </card-body>
+</card>
+
+<card class="card mt-4">
+    <card-footer>
+        <button class="btn btn-primary" type="submit">@T["Save"]</button>
+    </card-footer>
+</card>

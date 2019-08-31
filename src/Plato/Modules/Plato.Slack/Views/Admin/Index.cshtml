@@ -1,0 +1,81 @@
+﻿@model LayoutViewModel
+@{
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Settings"]);
+    AddTitleSegment(T["Slack"]);
+}
+
+<form asp-route-action="Index" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
+    <div class="layout">
+        <div class="layout-header">
+            <div class="layout-header-content">
+                @if (Model.Alerts != null)
+                {
+                    <div class="layout-alerts">
+                        <view model="@Model.Alerts"></view>
+                    </div>
+                }
+                @if (Model.Tools != null)
+                {
+                    <div class="float-right layout-tools">
+                        <view model="@Model.Tools" />
+                    </div>
+                }
+                @if (Model.Header != null)
+                {
+                    <div class="layout-header-item">
+                        <view model="@Model.Header" />
+                    </div>
+                }
+                @if (Model.Meta != null)
+                {
+                    <div class="layout-meta">
+                        <view model="@Model.Meta"></view>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="layout-body">
+            @if (Model.SideBar != null)
+            {
+                <div class="row">
+                    <div class="col-lg-8 layout-content">
+                        @if (Model.Content != null)
+                        {
+                            <view model="@Model.Content"></view>
+                        }
+                    </div>
+                    <div class="col-lg-4 layout-sidebar">
+                        @if (Model.SideBar != null)
+                        {
+                            <view model="@Model.SideBar"></view>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                @if (Model.Content != null)
+                 {
+                     <div class="layout-content">
+                         <view model="@Model.Content"></view>
+                     </div>
+                 }
+            }
+        </div>
+        <div class="layout-footer">
+            @if (Model.Actions != null)
+            {
+                <div class="float-right layout-actions">
+                    <view model="@Model.Actions" />
+                </div>
+            }
+            @if (Model.Footer != null)
+            {
+                <div class="layout-footer-item">
+                    <view model="@Model.Footer"></view>
+                </div>
+            }
+        </div>
+    </div>
+</form>
