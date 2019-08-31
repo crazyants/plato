@@ -1,18 +1,25 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Extensions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Slack.Services;
 
 namespace Plato.Slack.Subscribers
 {
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
+        
+        private readonly ISlackService _slackService;
         private readonly IBroker _broker;
 
-        public EntitySubscriber(IBroker broker)
+        public EntitySubscriber(
+            ISlackService slackService,
+            IBroker broker)
         {
+           
+            _slackService = slackService;
             _broker = broker;
         }
 
@@ -20,7 +27,7 @@ namespace Plato.Slack.Subscribers
 
         public void Subscribe()
         {
-            // Created
+            // Subscribe to the EntityCreated event
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
@@ -30,7 +37,7 @@ namespace Plato.Slack.Subscribers
 
         public void Unsubscribe()
         {
-            // Created
+            // Unsubscribe from the EntityCreated event
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
@@ -40,16 +47,30 @@ namespace Plato.Slack.Subscribers
 
         // Private Methods
 
-        Task<TEntity> EntityCreated(TEntity entity)
+        async Task<TEntity> EntityCreated(TEntity entity)
         {
             
-            // If the entity is hidden, no need to send notifications
+            // If the created entity is hidden, no need to send notifications
+            // Entities can be hidden automatically, for example if they are detected as SPAM
             if (entity.IsHidden())
             {
-                return Task.FromResult(entity); ;
+                return entity; ;
+            }
+            
+            // Build our message to post to our Slack channel
+            var sb = new StringBuilder();
+            sb.Append(entity.Title);
+
+            // Finally post our message to Slack
+            var response = await _slackService.PostAsync(sb.ToString());
+
+            if (response.Success)
+            {
+
             }
 
-            return Task.FromResult(entity);
+            // Continue processing the broker pipeline
+            return entity;
 
         }
 

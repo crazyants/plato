@@ -19,6 +19,9 @@ namespace Plato.Internal.Net.Abstractions
         Task<HttpClientResponse> PostAsync(Uri url, IDictionary<string, string> parameters);
 
         Task<HttpClientResponse> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters);
+
+        Task<HttpClientResponse> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters, string contentType);
+
     }
 
     public class HttpClientResponse

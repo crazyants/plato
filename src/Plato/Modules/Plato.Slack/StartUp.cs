@@ -15,6 +15,7 @@ using Plato.Slack.Configuration;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Security.Abstractions;
+using Plato.Slack.Services;
 
 namespace Plato.Slack
 {
@@ -49,9 +50,12 @@ namespace Plato.Slack
 
             // Permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
+
+            // Services
+            services.AddScoped<ISlackService, SlackService>();
             
         }
-
+        
         public override void Configure(
             IApplicationBuilder app,
             IRouteBuilder routes,

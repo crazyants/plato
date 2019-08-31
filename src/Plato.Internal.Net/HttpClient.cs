@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Net.Abstractions;
 
 namespace Plato.Internal.Net
@@ -44,8 +45,20 @@ namespace Plato.Internal.Net
         {
             return await RequestAsync(HttpMethod.Post, url, parameters);
         }
-        
-        public async Task<HttpClientResponse> RequestAsync(HttpMethod method, Uri url, IDictionary<string, string> parameters)
+
+        public async Task<HttpClientResponse> RequestAsync(
+            HttpMethod method,
+            Uri url,
+            IDictionary<string, string> parameters)
+        {
+            return await RequestAsync(method, url, parameters, "application/x-www-form-urlencoded");
+        }
+
+        public async Task<HttpClientResponse> RequestAsync(
+            HttpMethod method, 
+            Uri url, 
+            IDictionary<string, string> parameters,
+            string contentType)
         {
 
             var result = new HttpClientResponse();
@@ -54,7 +67,9 @@ namespace Plato.Internal.Net
             var data = string.Empty;
             if (parameters != null)
             {
-                data = BuildParameterString(parameters);
+                data = contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase) ?
+                    BuildParameterString(parameters) :
+                    BuildParameterJsonString(parameters);
             }
 
             if (method == HttpMethod.Get)
@@ -70,13 +85,15 @@ namespace Plato.Internal.Net
             if (method == HttpMethod.Post)
             {
 
-                request.ContentType = "application/x-www-form-urlencoded";
-
+                request.ContentType = contentType;
+                
                 var byteData = encoding.GetBytes(data);
                 request.ContentLength = byteData.Length;
                 var stream = await request.GetRequestStreamAsync();
                 stream.Write(byteData, 0, byteData.Length);
                 stream.Close();
+              
+        
             }
 
             WebResponse response = null;
@@ -119,6 +136,11 @@ namespace Plato.Internal.Net
         #endregion
 
         #region "Private Methods"
+
+        string BuildParameterJsonString(IDictionary<string, string> parameters)
+        {
+            return parameters.Serialize();
+        }
 
         string BuildParameterString(IDictionary<string, string> parameters)
         {
