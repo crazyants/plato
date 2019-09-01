@@ -21,7 +21,7 @@
 </section>
 
 <!-- Plans -->
-<section class="page">
+@*<section class="page">
     <div class="container">
         <div class="row mt-4">
             <div class="col-12 col-lg-4 mb-5 mb-lg-0">
@@ -156,12 +156,11 @@
             </div>
         </div>
     </div>
-</section>
+</section>*@
 
 <!-- Self Hosted -->
 <section class="page">
     <div class="container">
-     
         <div class="row mt-4">
             <div class="col-12 col-lg-4 mb-5 mb-lg-0">
                 <div class="card text-center border-radius-0 border-0 box-shadow">
@@ -230,9 +229,9 @@
                             </li>
                             <li class="d-block p-3">
                                 <a asp-route-action="SupportOptions">
-                                Priority Support
+                                    Priority Support
                                 </a>
-                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Priority email & telephone technical support for one Plato installation direct from Plato devs. A response is guaranteed within 48 hours."></i>
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Priority email & telephone technical support for one Plato installation direct from Plato devs. A response is guaranteed within 48 hours."></i>
                             </li>
                         </ol>
                         <h3 class="text-primary">$1,299</h3>
@@ -250,7 +249,7 @@
                     </div>
                     <div class="card-body">
                         <p>
-                            For enterprises hosting Plato who require on-boarding, training & guaranteed priority technical support.
+                            For enterprises hosting Plato who require on-boarding, personal training & guaranteed priority technical support.
                         </p>
                         <ol class="list-inline">
                             <li class="d-block p-3 pt-0">
@@ -275,7 +274,7 @@
                                 <i class="fal fa-info-circle" data-toggle="tooltip" title="Priority email & telephone technical support for one Plato installation direct from Plato devs. A response is guaranteed within 48 hours."></i>
                             </li>
                         </ol>
-                        <h3 class="text-primary">$2,199</h3>
+                        <h3 class="text-primary">$2,499</h3>
                         <a href="#" class="btn btn-lg btn-primary mt-4">
                             Buy Now
                         </a>
@@ -292,17 +291,17 @@
         <div class="row">
             <div class="col-12 text-center">
                 <h1 class="text-uppercase font-weight-bold mt-4 text-primary">
-                    We host Plato
+                    We can host Plato for you
                 </h1>
                 <h3 class="font-weight-light">
-                    We can host and manage your Plato site for you within our Azure environment
+                    We can monitor & manage your Plato site within our Microsoft Azure environment
                 </h3>
                 <hr class="divider border-primary" />
             </div>
         </div>
         <div class="row mt-4">
 
-            <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
                 <div class="card border-radius-0 border-0 box-shadow text-center">
                     <div class="card-header bg-primary border-0">
                         <h5 class="text-white">Fully Managed</h5>
@@ -335,7 +334,9 @@
                                 <i class="fal fa-info-circle" data-toggle="tooltip" title="Your Plato installation will be protected by SSL by default."></i>
                             </li>
                             <li class="d-block p-3">
-                                Email + Phone support
+                                <a asp-route-action="SupportOptions">
+                                    Priority Support
+                                </a>
                                 <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
                             </li>
                         </ol>
@@ -346,7 +347,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
                 <div class="card border-radius-0 border-0 box-shadow text-center">
                     <div class="card-header bg-primary border-0">
                         <h5 class="text-white">Fully Managed</h5>
@@ -354,7 +355,7 @@
                     </div>
                     <div class="card-body">
                         <p>
-                            For businesses needing all standard features plus single sign on, remote access and high availability.
+                            For businesses needing all standard features plus branding, remote access and high availability.
                         </p>
                         <ol class="list-inline">
                             <li class="d-block p-3 pt-0">
@@ -380,7 +381,9 @@
                                 <i class="fal fa-info-circle" data-toggle="tooltip" title="Your data is replicated in real-time across two geographically distinct data centers with near real-time fail-over"></i>
                             </li>
                             <li class="d-block p-3">
-                                Email + Phone support
+                                <a asp-route-action="SupportOptions">
+                                    Priority Support
+                                </a>
                                 <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
                             </li>
                         </ol>
@@ -388,31 +391,55 @@
                         <a href="#" class="btn btn-lg btn-primary mt-4">
                             Buy Now
                         </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4 mb-5 mb-lg-0">
+                <div class="card border-radius-0 border-0 box-shadow text-center">
+                    <div class="card-header bg-primary border-0">
+                        <h5 class="text-white">Fully Managed</h5>
+                        <h3 class="text-white">Enterprise</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            For enterprises needing all business features plus massive scale and high availability.
+                        </p>
+                        <ol class="list-inline">
+                            <li class="d-block p-3 pt-0">
+                                Managed hosting within Azure
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="We will host & manage your Plato site. Your site will be hosted upon highly resilient Azure infrastructure within Microsoft operated data centers."></i>
+                            </li>
+                            <li class="d-block p-3">
+                                <strong>1M+</strong> page views per month
+                            </li>
+                            <li class="d-block p-3">
+                                <strong>100GB+</strong> of storage
+                            </li>
+                            <li class="d-block p-3">
+                                Professional Branding
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="We will work with you to develop a unique theme for your hosted Plato installation to perfectly match your brand or web site"></i>
+                            </li>
+                            <li class="d-block p-3">
+                                Remote Data Access
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Provide full access to your Plato database to assist with reporting and compliance requirements."></i>
+                            </li>
+                            <li class="d-block p-3">
+                                Dedicated Availability Set
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Your installation will run in it's own dedicated high availability set within Azure ensuring underlying operating system or host updates don't impact your up-time."></i>
+                            </li>
+                            <li class="d-block p-3">
+                                <a asp-route-action="SupportOptions">
+                                    Concierge Service 
+                                </a>
+                                <i class="fal fa-info-circle" data-toggle="tooltip" title="Alongside our standard support resources you will also receive priority email & phone support from Plato developers."></i>
+                            </li>
+                        </ol>
+                        <h3 class="text-primary">Contact</h3>
+                        <a asp-route-action="Contact" class="btn btn-lg btn-primary mt-4">
+                            Email Sales
+                        </a>
 
                     </div>
-                    @*<div class="card-body">
-                            <p>
-                                For businesses hosting Plato on their own infrastructure who require guaranteed priority technical support from Plato.
-                            </p>
-                            <ol class="list-inline">
-                                <li class="d-block p-3 pt-0">
-                                    Self hosted
-                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="You host Plato on your own servers"></i>
-                                </li>
-                                <li class="d-block p-3">
-                                    Full source code
-                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Complete access to over 200 Visual Studio C# .NET Core projects that make up Plato"></i>
-                                </li>
-                                <li class="d-block p-3">
-                                    Priority Support
-                                    <i class="fal fa-info-circle" data-toggle="tooltip" title="Priority email & telephone technical support for one Plato installation direct from Plato devs. A response is guaranteed within 48 hours."></i>
-                                </li>
-                            </ol>
-                            <h3 class="text-primary">$100 / mo</h3>
-                            <a href="#" class="btn btn-lg btn-primary mt-4">
-                                Buy Now
-                            </a>
-                        </div>*@
                 </div>
             </div>
         </div>
@@ -550,7 +577,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- Brand -->
         <div class="row mt-5">
