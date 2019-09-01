@@ -1,0 +1,135 @@
+﻿@model ContactFormViewModel
+@{
+    AddTitleSegment(T["Support Options"]);
+}
+
+<!-- Jumbotron -->
+<section class="page" style="background: url(/plato.site/content/images/bg10.png) top right no-repeat;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-uppercase display-4 text-primary font-weight-bold">
+                    Need Support
+                </h1>
+                <h2 class="font-weight-light">
+                    The Plato support options explained
+                </h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <!-- Community Support -->
+                <a name="community-support"></a>
+                <h3 class="font-weight-bold text-uppercase text-primary">Community Support</h3>
+                <hr />
+                <p>
+                    We will always do our best to assist but unfortunately whilst we would love to help everyone, we are only a small team and as such cannot guarantee official support for Plato if your using a free version of Plato.
+                    If your using the free version of Plato the best place to obtain support is through our own installation of Plato. Use the button below to browse our support resources or post your questions.
+                </p>
+                <p>
+                    <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="btn btn-primary">
+                        Plato Support
+                    </a>
+                </p>
+
+                <!-- Priority Support -->
+                <a name="concierge-service"></a>
+                <h3 class="font-weight-bold text-uppercase text-primary mt-5">Priority Support</h3>
+                <hr />
+                <p>
+                    If you require guaranteed priority technical support for your self-hosted Plato installation our priority support package lets you connect directly to lead Plato product developers to obtain in-depth technical support through email or in real-time through Slack or GotoMeeting calls. 
+                </p>
+                <p>
+                    Our priority support service includes: -
+                </p>
+                <ol>
+                    <li class="d-block p-0">
+                        <i class="fal fa-check text-primary mr-2"></i>
+                        Priority support from Plato devs for a single Plato installation for one year
+                    </li>
+                    <li class="d-block p-0">
+                        <i class="fal fa-check text-primary mr-2"></i>
+                        A guaranteed response via email within 48 hours (usually quicker)
+                    </li>
+                    <li class="d-block p-0">
+                        <i class="fal fa-check text-primary mr-2"></i>
+                        Customer status within our community guaranteeing a response within 48 hours
+                    </li>
+                    <li class="d-block p-0">
+                        <i class="fal fa-check text-primary mr-2"></i>
+                        Escalation to real-time assistance within 72 hours
+                    </li>
+                </ol>
+                <p>
+                    Our Plato <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">business licenses</a> come with priority support included.
+                </p>
+               
+
+                <!-- Concierge Service -->
+                <a name="concierge-service"></a>
+                <h3 class="font-weight-bold text-uppercase text-primary mt-5">Concierge Service</h3>
+                <hr />
+                <p>
+                    Our concierge service is the highest level of support we offer. Our concierge service includes all the benefits of our priority support package ensuring you receive guaranteed priority technical support and includes the following benefits…
+                </p>
+                <ol>
+                    <li class="d-block p-0">
+                        <div class="list-left list-left-24">
+                            <i class="fal fa-check text-primary mt-1"></i>
+                        </div>
+                        <div class="list-body">
+                            Up to 4 hours of personal training from Plato product developers via GotoMeeting or Microsoft Teams to assist with on-boarding, content creation or anything you need
+                        </div>
+                    </li>
+                    <li class="d-block p-0">
+                        <div class="list-left list-left-24">
+                            <i class="fal fa-check text-primary mt-1"></i>
+                        </div>
+                        <div class="list-body">
+                            Up to 4 hours of real-time technical assistance via GotoMeeting or Microsoft Teams to assist with 3rd party integrations, module development or single sign-on requirements
+                        </div>
+                    </li>
+                    <li class="d-block p-0">
+                        <div class="list-left list-left-24">
+                            <i class="fal fa-check text-primary mt-1"></i>
+                        </div>
+                        <div class="list-body">
+                            We will work with you to develop & deliver a unique theme or visual design for your Plato installation to perfectly match your brand or existing web site.
+                        </div>
+                    
+                    </li>
+                </ol>
+                <p>
+                    Our Plato enterprise licenses come with our concierge service included.
+                </p>
+                <p>
+                    <a asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing" class="btn btn-primary">
+                        Enterprise Pricing
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to action -->
+<section class="page bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-uppercase font-weight-bold text-white">
+                    Ready to make Plato your support hub?
+                </h1>
+                <a class="btn btn-light text-primary btn-lg mt-4" asp-route-area="Plato.Site" asp-route-controller="Home" asp-route-action="Pricing">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

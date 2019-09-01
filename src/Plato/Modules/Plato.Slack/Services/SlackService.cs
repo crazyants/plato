@@ -32,7 +32,7 @@ namespace Plato.Slack.Services
             {
                 return new FailResponse(string.Empty, string.Empty)
                 {
-                    Error = "No Slack Webhoot URL has been configured."
+                    Error = "No Slack Webhoot URL has been configured. Ensure IOptions<SlackOptions> is registered."
                 };
             }
 

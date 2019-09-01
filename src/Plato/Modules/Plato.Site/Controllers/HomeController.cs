@@ -83,8 +83,7 @@ namespace Plato.Site.Controllers
             return Task.FromResult((IActionResult) View());
 
         }
-
-
+        
         // ---------------------
         // Pricing
         // ---------------------
@@ -96,6 +95,44 @@ namespace Plato.Site.Controllers
             return Task.FromResult((IActionResult) View());
 
         }
+
+        // ---------------------
+        // Support Options
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> SupportOptions()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+        // ---------------------
+        // Terms
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Terms()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+
+        // ---------------------
+        // Privacy
+        // ---------------------
+
+        [HttpGet, AllowAnonymous]
+        public Task<IActionResult> Privacy()
+        {
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
 
 
         // ---------------------
