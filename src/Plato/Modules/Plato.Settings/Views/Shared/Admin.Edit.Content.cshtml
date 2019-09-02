@@ -31,12 +31,23 @@
                     <strong>@T["Default Page"]</strong>
                     <span asp-validation-for="HomeRoute" class="text-danger"></span>
                     <br />
-                    <span class="text-muted">@T["The default page for Plato when loaded with no suffix or path information, i.e. https://support.company.com/"]</span>
+                    <span class="text-muted">@T["The default page for Plato when loaded with no alias or path information, i.e. https://plato.company.com/"]</span>
                 </label>
                 <select class="form-control"
                         asp-for="HomeRoute"
                         asp-items="@Model.AvailableHomeRoutes"></select>
             </div>
+            
+            <div class="form-group" asp-validation-class-for="SiteName">
+                <label asp-for="HomeAlias">
+                    <strong>@T["Default Alias"]</strong>
+                    <span asp-validation-for="HomeAlias" class="text-danger"></span>
+                    <br />
+                    <span class="text-muted">@T["If Plato.Core is not your default page provide an alias for Plato.Core. For example home, support, community"]</span>
+                </label>
+                <input asp-for="HomeAlias" class="form-control" />
+            </div>
+
             <div class="form-group" asp-validation-class-for="TimeZone">
                 <label asp-for="TimeZone">
                     <strong>@T["Time Zone"]</strong>

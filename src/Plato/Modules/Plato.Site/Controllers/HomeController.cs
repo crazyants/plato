@@ -1,13 +1,8 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Site.ViewModels;
@@ -155,7 +150,7 @@ namespace Plato.Site.Controllers
             var message = new MailMessage
             {
                 From = new MailAddress(viewModel.Email),
-                Subject = viewModel.Subject,
+                Subject = "Plato Feedback - " + viewModel.Subject,
                 Body = viewModel.Message,
                 IsBodyHtml = true,
             };

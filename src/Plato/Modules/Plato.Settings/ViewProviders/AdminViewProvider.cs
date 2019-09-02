@@ -152,6 +152,7 @@ namespace Plato.Settings.ViewProviders
                     Culture = settings.Culture,
                     Theme = settings.Theme,
                     HomeRoute = settings.HomeRoute.Id,
+                    HomeAlias = settings.HomeAlias,
                     AvailableTimeZones = await GetAvailableTimeZonesAsync(),
                     AvailableDateTimeFormat = GetAvailableDateTimeFormats(),
                     AvailableCultures = await GetAvailableCulturesAsync(),

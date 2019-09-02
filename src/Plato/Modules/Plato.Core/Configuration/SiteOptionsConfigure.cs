@@ -41,6 +41,7 @@ namespace Plato.Core.Configuration
                     options.Theme = settings.Theme;
                     options.TimeZone = settings.TimeZone;
                     options.HomeRoute = settings.HomeRoute ?? new HomeRoute();
+                    options.HomeAlias = settings.HomeAlias;
                 }
             
             }

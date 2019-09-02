@@ -70,13 +70,22 @@ namespace Plato.Core
 
             // Routes
 
+            // Defaults
             var homeRoute = new HomeRoute();
+            var homeAlias = "home";
+
+            // Configure defaults from site options
             var siteOptions = serviceProvider.GetRequiredService<IOptions<SiteOptions>>();
             if (siteOptions != null)
             {
                 homeRoute = siteOptions.Value.HomeRoute;
+                if (!string.IsNullOrEmpty(siteOptions.Value.HomeAlias))
+                {
+                    homeAlias = siteOptions.Value.HomeAlias;
+                }
             }
 
+            // Get home page route parts
             var area = homeRoute["area"].ToString();
             var controller = homeRoute["controller"].ToString();
             var action = homeRoute["action"].ToString();
@@ -93,7 +102,7 @@ namespace Plato.Core
             routes.MapAreaRoute(
                 name: "CoreHome",
                 areaName: "Plato.Core",
-                template: "home",
+                template: homeAlias,
                 defaults: new { controller = "Home", action = "Index" }
             );
 

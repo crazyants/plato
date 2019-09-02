@@ -34,6 +34,8 @@ namespace Plato.Internal.Abstractions.Settings
 
         HomeRoute HomeRoute { get; set; }
 
+        string HomeAlias { get; set; }
+
         string Theme { get; set; }
 
         string ApiKey { get; set; }
