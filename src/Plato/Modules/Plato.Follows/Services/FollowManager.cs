@@ -9,17 +9,17 @@ using Plato.Internal.Text.Abstractions;
 namespace Plato.Follows.Services
 {
 
-    public class FollowManager : IFollowManager<Follow>
+    public class FollowManager : IFollowManager<Models.Follow>
     {
 
-        private readonly IFollowStore<Follow> _followStore;
+        private readonly IFollowStore<Models.Follow> _followStore;
         private readonly IAliasCreator _aliasCreator;
         private readonly IBroker _broker;
 
         public FollowManager(
             IAliasCreator aliasCreator,
             IBroker broker,
-            IFollowStore<Follow> followStore)
+            IFollowStore<Models.Follow> followStore)
         {
             _broker = broker;
             _followStore = followStore;
@@ -28,7 +28,7 @@ namespace Plato.Follows.Services
 
         #region "Implementation"
 
-        public async Task<ICommandResult<Follow>> CreateAsync(Follow model)
+        public async Task<ICommandResult<Models.Follow>> CreateAsync(Models.Follow model)
         {
 
             // Validate
@@ -61,21 +61,21 @@ namespace Plato.Follows.Services
             }
             
             // Invoke FollowCreating subscriptions
-            foreach (var handler in _broker.Pub<Follow>(this, "FollowCreating"))
+            foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowCreating"))
             {
-                model = await handler.Invoke(new Message<Follow>(model, this));
+                model = await handler.Invoke(new Message<Models.Follow>(model, this));
             }
 
-            var result = new CommandResult<Follow>();
+            var result = new CommandResult<Models.Follow>();
 
             var newFollow = await _followStore.CreateAsync(model);
             if (newFollow != null)
             {
 
                 // Invoke FollowCreated subscriptions
-                foreach (var handler in _broker.Pub<Follow>(this, "FollowCreated"))
+                foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowCreated"))
                 {
-                    newFollow = await handler.Invoke(new Message<Follow>(newFollow, this));
+                    newFollow = await handler.Invoke(new Message<Models.Follow>(newFollow, this));
                 }
 
                 // Return success
@@ -87,7 +87,7 @@ namespace Plato.Follows.Services
             
         }
 
-        public async Task<ICommandResult<Follow>> UpdateAsync(Follow model)
+        public async Task<ICommandResult<Models.Follow>> UpdateAsync(Models.Follow model)
         {
             
             // Validate
@@ -119,21 +119,21 @@ namespace Plato.Follows.Services
             }
             
             // Invoke FollowUpdating subscriptions
-            foreach (var handler in _broker.Pub<Follow>(this, "FollowUpdating"))
+            foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowUpdating"))
             {
-                model = await handler.Invoke(new Message<Follow>(model, this));
+                model = await handler.Invoke(new Message<Models.Follow>(model, this));
             }
 
-            var result = new CommandResult<Follow>();
+            var result = new CommandResult<Models.Follow>();
 
             var follow = await _followStore.UpdateAsync(model);
             if (follow != null)
             {
 
                 // Invoke FollowUpdated subscriptions
-                foreach (var handler in _broker.Pub<Follow>(this, "FollowUpdated"))
+                foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowUpdated"))
                 {
-                    follow = await handler.Invoke(new Message<Follow>(follow, this));
+                    follow = await handler.Invoke(new Message<Models.Follow>(follow, this));
                 }
 
                 // Return success
@@ -144,7 +144,7 @@ namespace Plato.Follows.Services
             
         }
 
-        public async Task<ICommandResult<Follow>> DeleteAsync(Follow model)
+        public async Task<ICommandResult<Models.Follow>> DeleteAsync(Models.Follow model)
         {
 
             // Validate
@@ -154,20 +154,20 @@ namespace Plato.Follows.Services
             }
             
             // Invoke FollowDeleting subscriptions
-            foreach (var handler in _broker.Pub<Follow>(this, "FollowDeleting"))
+            foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowDeleting"))
             {
-                model = await handler.Invoke(new Message<Follow>(model, this));
+                model = await handler.Invoke(new Message<Models.Follow>(model, this));
             }
             
-            var result = new CommandResult<Follow>();
+            var result = new CommandResult<Models.Follow>();
 
             if (await _followStore.DeleteAsync(model))
             {
 
                 // Invoke FollowDeleted subscriptions
-                foreach (var handler in _broker.Pub<Follow>(this, "FollowDeleted"))
+                foreach (var handler in _broker.Pub<Models.Follow>(this, "FollowDeleted"))
                 {
-                    model = await handler.Invoke(new Message<Follow>(model, this));
+                    model = await handler.Invoke(new Message<Models.Follow>(model, this));
                 }
 
                 // Return success

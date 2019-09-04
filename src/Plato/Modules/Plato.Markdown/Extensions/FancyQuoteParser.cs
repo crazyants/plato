@@ -6,6 +6,7 @@ using Markdig.Syntax;
 
 namespace Plato.Markdown.Extensions
 {
+
     public class FancyQuoteParser : BlockParser
     {
 

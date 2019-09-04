@@ -79,6 +79,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             services.AddPlatoSecurity();
             services.AddPlatoAuth();
             services.AddPlatoMvc();
+            //services.AddUserSecrets<Startup>();
 
             // allows us to display all registered services in development mode
             _services = services;
@@ -93,7 +94,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
                 services.AddHttpContextAccessor();
                 internalServices.AddLogging();
-
+             
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddPlatoContextAccessor();

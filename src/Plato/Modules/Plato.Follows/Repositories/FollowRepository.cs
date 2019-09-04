@@ -10,7 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Follows.Repositories
 {
 
-    class FollowRepository : IFollowRepository<Follow>
+    class FollowRepository : IFollowRepository<Models.Follow>
     {
 
         private readonly IDbContext _dbContext;
@@ -26,7 +26,7 @@ namespace Plato.Follows.Repositories
         
         #region "Implementation"
 
-        public async Task<Follow> InsertUpdateAsync(Follow follow)
+        public async Task<Models.Follow> InsertUpdateAsync(Models.Follow follow)
         {
             if (follow == null)
             {
@@ -50,9 +50,9 @@ namespace Plato.Follows.Repositories
             return null;
         }
 
-        public async Task<Follow> SelectByIdAsync(int id)
+        public async Task<Models.Follow> SelectByIdAsync(int id)
         {
-            Follow follow = null;
+            Models.Follow follow = null;
             using (var context = _dbContext)
             {
                 follow = await context.ExecuteReaderAsync(
@@ -63,12 +63,12 @@ namespace Plato.Follows.Repositories
                         if ((reader != null) && (reader.HasRows))
                         {
                             await reader.ReadAsync();
-                            follow = new Follow();
+                            follow = new Models.Follow();
                             follow.PopulateModel(reader);
                         }
 
                         return follow;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -78,9 +78,9 @@ namespace Plato.Follows.Repositories
             return follow;
         }
 
-        public async Task<IPagedResults<Follow>> SelectAsync(IDbDataParameter[] dbParams)
+        public async Task<IPagedResults<Models.Follow>> SelectAsync(IDbDataParameter[] dbParams)
         {
-            IPagedResults<Follow> output = null;
+            IPagedResults<Models.Follow> output = null;
             using (var context = _dbContext)
             {
 
@@ -91,10 +91,10 @@ namespace Plato.Follows.Repositories
                     {
                         if ((reader != null) && (reader.HasRows))
                         {
-                            output = new PagedResults<Follow>();
+                            output = new PagedResults<Models.Follow>();
                             while (await reader.ReadAsync())
                             {
-                                var entity = new Follow();
+                                var entity = new Models.Follow();
                                 entity.PopulateModel(reader);
                                 output.Data.Add(entity);
                             }
@@ -134,7 +134,7 @@ namespace Plato.Follows.Repositories
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteFollowById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -143,9 +143,9 @@ namespace Plato.Follows.Repositories
             return success > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<Follow>> SelectByNameAndThingId(string name, int thingId)
+        public async Task<IEnumerable<Models.Follow>> SelectByNameAndThingId(string name, int thingId)
         {
-            IList<Follow> output = null;
+            IList<Models.Follow> output = null;
             using (var context = _dbContext)
             {
                 output = await context.ExecuteReaderAsync(
@@ -155,10 +155,10 @@ namespace Plato.Follows.Repositories
                     {
                         if ((reader != null) && (reader.HasRows))
                         {
-                            output = new List<Follow>();
+                            output = new List<Models.Follow>();
                             while (await reader.ReadAsync())
                             {
-                                var entity = new Follow();
+                                var entity = new Models.Follow();
                                 entity.PopulateModel(reader);
                                 output.Add(entity);
                             }
@@ -166,7 +166,7 @@ namespace Plato.Follows.Repositories
                         }
 
                         return output;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Name", DbType.String, 255, name),
                         new DbParam("ThingId", DbType.Int32, thingId)
@@ -177,9 +177,9 @@ namespace Plato.Follows.Repositories
             return output;
         }
 
-        public async Task<Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
+        public async Task<Models.Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
-            Follow follow = null;
+            Models.Follow follow = null;
             using (var context = _dbContext)
             {
                 follow = await context.ExecuteReaderAsync(
@@ -190,13 +190,13 @@ namespace Plato.Follows.Repositories
                         if ((reader != null) && (reader.HasRows))
                         {
                             await reader.ReadAsync();
-                            follow = new Follow();
+                            follow = new Models.Follow();
                             follow.PopulateModel(reader);
                         }
 
                         return follow;
 
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Name", DbType.String, 255, name),
                         new DbParam("ThingId", DbType.Int32, thingId),

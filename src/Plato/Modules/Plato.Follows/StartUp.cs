@@ -36,8 +36,8 @@ namespace Plato.Follows
             services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Data access
-            services.AddScoped<IFollowRepository<Follow>, FollowRepository>();
-            services.AddScoped<IFollowStore<Follow>, FollowStore>();
+            services.AddScoped<IFollowRepository<Models.Follow>, FollowRepository>();
+            services.AddScoped<IFollowStore<Models.Follow>, FollowStore>();
             
             // Follow Type Manager
             services.AddScoped<IFollowTypesManager, FollowTypesManager>();
@@ -46,7 +46,7 @@ namespace Plato.Follows
             services.AddScoped<IFollowTypeProvider, DefaultFollowTypes>();
 
             // Follow managers
-            services.AddScoped<IFollowManager<Follow>, FollowManager>();
+            services.AddScoped<IFollowManager<Models.Follow>, FollowManager>();
          
             // Migrations
             services.AddSingleton<IMigrationProvider, Migrations>();

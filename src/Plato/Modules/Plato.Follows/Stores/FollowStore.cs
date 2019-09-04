@@ -14,17 +14,17 @@ using Plato.Internal.Text.Abstractions;
 namespace Plato.Follows.Stores
 {
 
-    public class FollowStore : IFollowStore<Follow>
+    public class FollowStore : IFollowStore<Models.Follow>
     {
         
-        private readonly IFollowRepository<Follow> _followRepository;
+        private readonly IFollowRepository<Models.Follow> _followRepository;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ILogger<FollowStore> _logger;
         private readonly ICacheManager _cacheManager;
         private readonly IKeyGenerator _keyGenerator;
         
         public FollowStore(
-            IFollowRepository<Follow> followRepository,
+            IFollowRepository<Models.Follow> followRepository,
             IDbQueryConfiguration dbQuery,
             ILogger<FollowStore> logger,
             ICacheManager cacheManager,
@@ -39,7 +39,7 @@ namespace Plato.Follows.Stores
 
         #region "Implementation"
 
-        public async Task<Follow> CreateAsync(Follow model)
+        public async Task<Models.Follow> CreateAsync(Models.Follow model)
         {
 
             if (model == null)
@@ -74,7 +74,7 @@ namespace Plato.Follows.Stores
             return result;
         }
 
-        public async Task<Follow> UpdateAsync(Follow model)
+        public async Task<Models.Follow> UpdateAsync(Models.Follow model)
         {
 
             if (model == null)
@@ -109,7 +109,7 @@ namespace Plato.Follows.Stores
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Follow model)
+        public async Task<bool> DeleteAsync(Models.Follow model)
         {
             
             if (model == null)
@@ -138,18 +138,18 @@ namespace Plato.Follows.Stores
             return success;
         }
 
-        public async Task<Follow> GetByIdAsync(int id)
+        public async Task<Models.Follow> GetByIdAsync(int id)
         {
             return await _followRepository.SelectByIdAsync(id);
         }
 
-        public IQuery<Follow> QueryAsync()
+        public IQuery<Models.Follow> QueryAsync()
         {
             var query = new FollowQuery(this);
-            return _dbQuery.ConfigureQuery<Follow>(query); ;
+            return _dbQuery.ConfigureQuery<Models.Follow>(query); ;
         }
 
-        public async Task<IPagedResults<Follow>> SelectAsync(IDbDataParameter[] dbParams)
+        public async Task<IPagedResults<Models.Follow>> SelectAsync(IDbDataParameter[] dbParams)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), dbParams.Select(p => p.Value).ToArray());
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -166,7 +166,7 @@ namespace Plato.Follows.Stores
             });
         }
 
-        public async Task<IEnumerable<Follow>> SelectByNameAndThingId(string name, int thingId)
+        public async Task<IEnumerable<Models.Follow>> SelectByNameAndThingId(string name, int thingId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -183,7 +183,7 @@ namespace Plato.Follows.Stores
             });
         }
 
-        public async Task<Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
+        public async Task<Models.Follow> SelectByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId, createdUserId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -200,7 +200,7 @@ namespace Plato.Follows.Stores
             });
         }
 
-        public void CancelTokens(Follow model = null)
+        public void CancelTokens(Models.Follow model = null)
         {
             _cacheManager.CancelTokens(this.GetType());
         }

@@ -14,12 +14,12 @@ namespace Plato.Follows.Controllers
     public class FollowController : BaseWebApiController
     {
 
-        private readonly IFollowStore<Follow> _followStore;
-        private readonly IFollowManager<Follow> _followManager;
+        private readonly IFollowStore<Models.Follow> _followStore;
+        private readonly IFollowManager<Models.Follow> _followManager;
 
         public FollowController(
-            IFollowStore<Follow> followStore,
-            IFollowManager<Follow> followManager)
+            IFollowStore<Models.Follow> followStore,
+            IFollowManager<Models.Follow> followManager)
         {
             _followStore = followStore;
             _followManager = followManager;
@@ -37,7 +37,7 @@ namespace Plato.Follows.Controllers
         }
         
         [HttpPost, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Post([FromBody] Follow follow)
+        public async Task<IActionResult> Post([FromBody] Models.Follow follow)
         {
      
             // We need a user to subscribe to the thing
@@ -59,7 +59,7 @@ namespace Plato.Follows.Controllers
             }
 
             // Build a new subscription
-            var followToAdd = new Follow()
+            var followToAdd = new Models.Follow()
             {
                 Name = follow.Name,
                 ThingId = follow.ThingId,
@@ -80,13 +80,13 @@ namespace Plato.Follows.Controllers
         }
 
         [HttpPut, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(Follow follow)
+        public Task<IActionResult> Put(Models.Follow follow)
         {
             throw new NotImplementedException();
         }
         
         [HttpDelete, ValidateClientAntiForgeryToken, ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete([FromBody] Follow follow)
+        public async Task<IActionResult> Delete([FromBody] Models.Follow follow)
         {
 
             var user = await base.GetAuthenticatedUserAsync();

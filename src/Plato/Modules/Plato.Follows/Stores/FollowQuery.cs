@@ -11,19 +11,19 @@ namespace Plato.Follows.Stores
 
     #region "FollowQuery"
 
-    public class FollowQuery : DefaultQuery<Follow>
+    public class FollowQuery : DefaultQuery<Models.Follow>
     {
 
-        private readonly IStore<Follow> _store;
+        private readonly IStore<Models.Follow> _store;
 
-        public FollowQuery(IStore<Follow> store)
+        public FollowQuery(IStore<Models.Follow> store)
         {
             _store = store;
         }
 
         public FollowQueryParams Params { get; set; }
 
-        public override IQuery<Follow> Select<T>(Action<T> configure)
+        public override IQuery<Models.Follow> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -31,7 +31,7 @@ namespace Plato.Follows.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<Follow>> ToList()
+        public override async Task<IPagedResults<Models.Follow>> ToList()
         {
 
             var builder = new FollowQueryBuilder(this);
@@ -39,14 +39,15 @@ namespace Plato.Follows.Stores
             var countSql = builder.BuildSqlCount();
             var name = Params.Name.Value ?? string.Empty;
 
-            return await _store.SelectAsync(new[]
-            {
-                new DbParam("PageIndex", DbType.Int32, PageIndex),
-                new DbParam("PageSize", DbType.Int32, PageSize),
-                new DbParam("SqlPopulate", DbType.String, populateSql),
-                new DbParam("SqlCount", DbType.String, countSql),
-                new DbParam("Name", DbType.String, name)
-            });
+            return await _store.SelectAsync(
+                new IDbDataParameter[]
+                {
+                    new DbParam("PageIndex", DbType.Int32, PageIndex),
+                    new DbParam("PageSize", DbType.Int32, PageSize),
+                    new DbParam("SqlPopulate", DbType.String, populateSql),
+                    new DbParam("SqlCount", DbType.String, countSql),
+                    new DbParam("Name", DbType.String, name)
+                });
 
         }
         
