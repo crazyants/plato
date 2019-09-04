@@ -1,5 +1,5 @@
 Name: Plato Discuss Mentions
-Description: Adds the ability to @mention users within discussions.
+Description: Adds @mention support & @mention notifications for Plato.Discuss.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Discuss.Models;
+using Plato.Questions.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -12,13 +12,13 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Questions.Mentions.NotificationTypes;
 using Plato.Entities.Extensions;
 
-namespace Plato.Discuss.Mentions.Notifications
+namespace Plato.Questions.Mentions.Notifications
 {
 
-    public class NewEntityMentionEmail : INotificationProvider<Topic>
+    public class NewEntityMentionEmail : INotificationProvider<Question>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -35,7 +35,7 @@ namespace Plato.Discuss.Mentions.Notifications
             _emailManager = emailManager;
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<Question>> SendAsync(INotificationContext<Question> context)
         {
             
             // Ensure correct notification provider
@@ -57,10 +57,10 @@ namespace Plato.Discuss.Mentions.Notifications
             }
             
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<Question>();
 
             // Get email template
-            const string templateId = "NewDiscussMention";
+            const string templateId = "NewQuestionsMention";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
@@ -70,7 +70,7 @@ namespace Plato.Discuss.Mentions.Notifications
                 var baseUri = await _contextFacade.GetBaseUrlAsync();
                 var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Discuss",
+                    ["area"] = "Plato.Questions",
                     ["controller"] = "Home",
                     ["action"] = "Display",
                     ["opts.id"] = context.Model.Id,

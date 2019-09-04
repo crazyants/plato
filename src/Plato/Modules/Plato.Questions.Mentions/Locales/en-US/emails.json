@@ -1,13 +1,13 @@
 {
   "Emails": [
     {
-      "Id": "NewDiscussMention",
+      "Id": "NewQuestionsMention",
       "To": "",
       "Cc": "",
       "Bcc": "",
       "From": "",
       "Subject": "[SiteName] - New Mention",
-      "Message": "Hi {0},\n\nYou've been mentioned within a topic.\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+      "Message": "Hi {0},\n\nYou've been mentioned within a question.\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

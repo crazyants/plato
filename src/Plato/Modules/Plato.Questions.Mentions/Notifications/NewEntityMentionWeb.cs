@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
+using Plato.Questions.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Questions.Mentions.NotificationTypes;
 using Plato.Entities.Extensions;
 
-namespace Plato.Discuss.Mentions.Notifications
+namespace Plato.Questions.Mentions.Notifications
 {
 
-    public class NewEntityMentionWeb : INotificationProvider<Topic>
+    public class NewEntityMentionWeb : INotificationProvider<Question>
     {
                 
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
@@ -39,7 +39,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
+        public async Task<ICommandResult<Question>> SendAsync(INotificationContext<Question> context)
         {
             
             // Ensure correct notification provider
@@ -61,7 +61,7 @@ namespace Plato.Discuss.Mentions.Notifications
             }
 
             // Create result
-            var result = new CommandResult<Topic>();
+            var result = new CommandResult<Question>();
             
             // Build user notification
             var userNotification = new UserNotification()
@@ -73,7 +73,7 @@ namespace Plato.Discuss.Mentions.Notifications
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Discuss",
+                    ["area"] = "Plato.Questions",
                     ["controller"] = "Home",
                     ["action"] = "Display",
                     ["opts.id"] = context.Model.Id,

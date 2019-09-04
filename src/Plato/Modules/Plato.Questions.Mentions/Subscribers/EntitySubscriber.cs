@@ -10,13 +10,13 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Mentions.Models;
-using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Questions.Mentions.NotificationTypes;
 using Plato.Internal.Notifications.Extensions;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
 using Plato.Entities.Extensions;
 
-namespace Plato.Discuss.Mentions.Subscribers
+namespace Plato.Questions.Mentions.Subscribers
 {
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity

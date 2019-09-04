@@ -34,5 +34,7 @@ namespace Plato.Issues.Slack
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }

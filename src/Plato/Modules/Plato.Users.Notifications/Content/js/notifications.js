@@ -48,7 +48,7 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                var deleteText = app.T("Delete");
+                var deleteText = app.T("Delete Notification");
 
                 // Invoke paged list
                 $caller.pagedList({
@@ -72,7 +72,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" title="{Delete}" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
+                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" title="{Delete}" data-toggle="tooltip" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         html = html.replace(/\{Delete}/g, deleteText);
@@ -189,12 +189,14 @@ $(function (win, doc, $) {
                         $caller.find('[data-toggle="tooltip"]')
                             .tooltip({ trigger: "hover" });
 
-                        // Bind dismiss click event
+                        // Bind dismiss / delete click event
                         $dismiss.each(function() {
                             $(this).click(function(e) {
 
                                 e.preventDefault();
                                 e.stopPropagation();
+
+                                $(this).tooltip("hide");
 
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);

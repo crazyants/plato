@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Discuss.Mentions.NotificationTypes;
-using Plato.Discuss.Models;
+using Plato.Questions.Mentions.NotificationTypes;
+using Plato.Questions.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
@@ -16,20 +16,20 @@ using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.Mentions.Notifications
+namespace Plato.Questions.Mentions.Notifications
 {
 
 
-    public class NewReplyMentionEmail : INotificationProvider<Reply>
+    public class NewReplyMentionEmail : INotificationProvider<Answer>
     { 
 
-        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityStore<Question> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
     
         public NewReplyMentionEmail(
-            IEntityStore<Topic> entityStore,
+            IEntityStore<Question> entityStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Mentions.Notifications
             _entityStore = entityStore;
         }
 
-        public async Task<ICommandResult<Reply>> SendAsync(INotificationContext<Reply> context)
+        public async Task<ICommandResult<Answer>> SendAsync(INotificationContext<Answer> context)
         {
 
             // Ensure correct notification provider
@@ -60,8 +60,7 @@ namespace Plato.Discuss.Mentions.Notifications
             {
                 return null;
             }
-
-
+            
             // Get entity for reply
             var entity = await _entityStore.GetByIdAsync(context.Model.EntityId);
 
@@ -78,10 +77,10 @@ namespace Plato.Discuss.Mentions.Notifications
             }
             
             // Create result
-            var result = new CommandResult<Reply>();
+            var result = new CommandResult<Answer>();
 
             // Get email template
-            const string templateId = "NewDiscussMention";
+            const string templateId = "NewQuestionsMention";
             var culture = await _contextFacade.GetCurrentCultureAsync();
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
@@ -91,7 +90,7 @@ namespace Plato.Discuss.Mentions.Notifications
                 var baseUri = await _contextFacade.GetBaseUrlAsync();
                 var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
-                    ["area"] = "Plato.Discuss",
+                    ["area"] = "Plato.Questions",
                     ["controller"] = "Home",
                     ["action"] = "Reply",
                     ["opts.id"] = entity.Id,

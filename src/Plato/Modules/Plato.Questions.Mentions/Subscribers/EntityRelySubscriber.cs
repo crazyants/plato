@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Discuss.Mentions.NotificationTypes;
+using Plato.Questions.Mentions.NotificationTypes;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -16,7 +16,7 @@ using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
 using Plato.Entities.Extensions;
 
-namespace Plato.Discuss.Mentions.Subscribers
+namespace Plato.Questions.Mentions.Subscribers
 {
     
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
