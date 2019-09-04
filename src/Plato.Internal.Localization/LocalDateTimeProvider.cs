@@ -15,8 +15,7 @@ namespace Plato.Internal.Localization
 
         public LocalDateTimeProvider(
             ITimeZoneProvider timeZoneProvider,
-            ILogger<LocalDateTimeProvider> logger,
-            IHttpContextAccessor httpContextAccessor)
+            ILogger<LocalDateTimeProvider> logger)
         {
             _timeZoneProvider = timeZoneProvider;
             _logger = logger;

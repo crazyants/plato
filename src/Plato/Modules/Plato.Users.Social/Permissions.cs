@@ -7,10 +7,10 @@ namespace Plato.Users.Social
     {
 
         public static readonly Permission EditSocial = 
-            new Permission("EditSocialUserFields", "Can edit social user fields?");
+            new Permission("EditSocialUserFields", "Edit social fields");
 
         public static readonly Permission ViewSocial =
-            new Permission("ViewSocialUserFields", "Can view social user fields?");
+            new Permission("ViewSocialUserFields", "View social fields");
         
         public IEnumerable<Permission> GetPermissions()
         {

@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Plato.Discuss.Models;
 using Plato.Entities.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Issues.Models;
 using Plato.Slack.Services;
 
-namespace Plato.Discuss.Slack.Subscribers
+namespace Plato.Issues.Slack.Subscribers
 {
 
     public class EntitySubscriber : IBrokerSubscriber
@@ -36,7 +36,7 @@ namespace Plato.Discuss.Slack.Subscribers
         public void Subscribe()
         {
             // Subscribe to the EntityCreated event
-            _broker.Sub<Topic>(new MessageOptions()
+            _broker.Sub<Issue>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
@@ -46,7 +46,7 @@ namespace Plato.Discuss.Slack.Subscribers
         public void Unsubscribe()
         {
             // Unsubscribe from the EntityCreated event
-            _broker.Unsub<Topic>(new MessageOptions()
+            _broker.Unsub<Issue>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
@@ -55,7 +55,7 @@ namespace Plato.Discuss.Slack.Subscribers
 
         // Private Methods
 
-        async Task<Topic> EntityCreated(Topic entity)
+        async Task<Issue> EntityCreated(Issue entity)
         {
             
             // If the created entity is hidden, no need to send notifications
@@ -69,7 +69,7 @@ namespace Plato.Discuss.Slack.Subscribers
             var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
             var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
-                ["area"] = "Plato.Discuss",
+                ["area"] = "Plato.Issues",
                 ["controller"] = "Home",
                 ["action"] = "Display",
                 ["opts.id"] = entity.Id,

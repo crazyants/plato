@@ -1,0 +1,19 @@
+Name: Plato Ideas Slack
+Description: Get notified via Slack when new ideas or replies to ideas are posted.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Ideas
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.ideas.slack/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Ideas",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Slack",
+		Version: "1.0.0"
+	}
+]

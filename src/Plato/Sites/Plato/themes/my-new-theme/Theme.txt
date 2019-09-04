@@ -1,0 +1,5 @@
+Name: My New Theme
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/

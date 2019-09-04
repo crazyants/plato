@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Models;
-using Plato.Discuss.Slack.Subscribers;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Questions.Slack.Subscribers;
 
-namespace Plato.Discuss.Slack
+namespace Plato.Questions.Slack
 {
+
     public class Startup : StartupBase
     {
         private readonly IShellSettings _shellSettings;

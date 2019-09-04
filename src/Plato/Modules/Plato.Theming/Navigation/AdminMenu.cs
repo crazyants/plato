@@ -23,19 +23,18 @@ namespace Plato.Theming.Navigation
             builder
                 .Add(T["Theming"], int.MaxValue - 2, theming => theming
                     .IconCss("fal fa-palette fa-flip-y")
-                    .Add(T["Manage Themes"], 1, themes => themes
+                    .Add(T["Manage"], 1, themes => themes
                         .Action("Index", "Admin", "Plato.Theming")
-                        //.Permission(Permissions.ManageRoles)
+                        .Permission(Permissions.ManageThemes)
                         .LocalNav())
-                    //.Add(T["Theme Gallery"], 1, create => create
-                    //    .Action("Index", "Admin", "Plato.Theming")
-                    //    //.Permission(Permissions.ManageRoles)
-                    //    .LocalNav())
+                    .Add(T["Add"], 1, themes => themes
+                        .Action("Create", "Admin", "Plato.Theming")
+                        .Permission(Permissions.CreateThemes)
+                        .LocalNav())
                 );
-
-
-
+            
         }
+
     }
 
 }

@@ -1,10 +1,6 @@
 ﻿@model User
 
-
-
-
 <h4 class="d-inline-block">@Model.DisplayName</h4>
-
 
 @if (Model.IsVerified)
 {
@@ -25,8 +21,6 @@
 {
     <i title="@T["Banned"]" class="is-banned d-inline-block" data-provide="tooltip"></i>
 }
-
-
 
 <div class="text-muted">
     @T["Joined "] <date utc="@Model.CreatedDate"></date>,

@@ -1951,14 +1951,14 @@ i.is-banned:before { margin-right: 0 !important; }
 .slide-out-top-left { top: -200px; left: 24px; }
 .slide-out-top-right { top: -200px; right: 24px; }
 
-.slide-out-button-left { bottom: -200px; left: 24px; }
-.slide-out-button-right { bottom: -200px; right: 24px; }
+.slide-out-bottom-left { bottom: -200px; left: 24px; }
+.slide-out-bottom-right { bottom: -200px; right: 24px; }
 
 .slide-out-top-left.active,
 .slide-out-top-right.active { top: 24px; }
 
-.slide-out-button-left.active,
-.slide-out-button-right.active { bottom: 24px; }
+.slide-out-bottom-left.active,
+.slide-out-bottom-right.active { bottom: 24px; }
 
 /* --------------------------- */
 /* animations */

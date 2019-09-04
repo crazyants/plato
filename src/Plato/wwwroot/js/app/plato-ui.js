@@ -5506,6 +5506,17 @@ $(function (win, doc, $) {
                         // Build & position menu
                         var $menu = methods.getOrCreateMenu($caller);
                         if ($menu) {
+
+                            var menuWidth = $menu.outerWidth(),
+                                winWidth = $(win).outerWidth(),
+                                right = left + menuWidth;
+
+                            // Check bounds
+                            if (right > winWidth) {
+                                left = winWidth - menuWidth;
+                            }
+
+                            // Position
                             $menu.css({
                                 "left": left + "px",
                                 "top": top + "px"
@@ -5517,8 +5528,8 @@ $(function (win, doc, $) {
                             // Invoke paged list
                             $menu.pagedList($.extend($caller.data(dataKey),
                                 {
-
                                 }));
+
                         }
 
 

@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -146,12 +147,16 @@ namespace Plato.Site.Controllers
         public async Task<IActionResult> Contact(ContactFormViewModel viewModel)
         {
 
+            var body = !string.IsNullOrEmpty(viewModel.Message)
+                ? WebUtility.HtmlDecode(viewModel.Message)
+                : viewModel.Message;
+
             // Build message
             var message = new MailMessage
             {
                 From = new MailAddress(viewModel.Email),
                 Subject = "Plato Feedback - " + viewModel.Subject,
-                Body = viewModel.Message,
+                Body  = body,
                 IsBodyHtml = true,
             };
 

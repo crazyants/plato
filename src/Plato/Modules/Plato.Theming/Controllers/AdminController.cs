@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout;
@@ -15,6 +15,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Theming.Abstractions;
 using Plato.Theming.ViewModels;
@@ -26,16 +27,17 @@ namespace Plato.Theming.Controllers
     {
 
         private readonly IViewProviderManager<ThemeAdmin> _viewProvider;
+        private readonly IAuthorizationService _authorizationService;
         private readonly ISiteThemeFileManager _themeFileManager;
+        private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ISiteThemeLoader _siteThemeLoader;
+        private readonly IShellSettings _shellSettings;
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoFileSystem _fileSystem;
         private readonly IThemeCreator _themeCreator;
-        private readonly ISiteSettingsStore _siteSettingsStore;
-        private readonly IAlerter _alerter;
         private readonly IPlatoHost _platoHost;
-        private readonly IShellSettings _shellSettings;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -43,31 +45,32 @@ namespace Plato.Theming.Controllers
         
         public AdminController(
             IHtmlLocalizer htmlLocalizer,
-            IStringLocalizer stringLocalizer,           
+            IStringLocalizer stringLocalizer,    
             IViewProviderManager<ThemeAdmin> viewProvider,
-            IThemeCreator themeCreator,
-            IBreadCrumbManager breadCrumbManager,
-            IContextFacade contextFacade,
+            IAuthorizationService authorizationService,
             ISiteThemeFileManager themeFileManager,
-            ISiteThemeLoader siteThemeLoader,
-            IAlerter alerter,
-            ISitesFolder sitesFolder, 
-            IPlatoFileSystem fileSystem,
             ISiteSettingsStore siteSettingsStore,
+            IBreadCrumbManager breadCrumbManager,
+            ISiteThemeLoader siteThemeLoader,
+            IContextFacade contextFacade,
+            IShellSettings shellSettings,
+            IPlatoFileSystem fileSystem,
+            IThemeCreator themeCreator,
+            ISitesFolder sitesFolder,
             IPlatoHost platoHost,
-            IShellSettings shellSettings)
+            IAlerter alerter)
         {
-
+            _authorizationService = authorizationService;
+            _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
             _themeFileManager = themeFileManager;
             _siteThemeLoader = siteThemeLoader;
-            _themeCreator = themeCreator;
+            _shellSettings = shellSettings;
             _contextFacade = contextFacade;
+            _themeCreator = themeCreator;
             _viewProvider = viewProvider;
             _fileSystem = fileSystem;
-            _siteSettingsStore = siteSettingsStore;
             _platoHost = platoHost;
-            _shellSettings = shellSettings;
             _alerter = alerter;
 
             T = htmlLocalizer;
@@ -82,6 +85,12 @@ namespace Plato.Theming.Controllers
         public async Task<IActionResult> Index()
         {
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageThemes))
+            {
+                return Unauthorized();
+            }
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -100,6 +109,12 @@ namespace Plato.Theming.Controllers
 
         public async Task<IActionResult> Create()
         {
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.CreateThemes))
+            {
+                return Unauthorized();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -121,6 +136,12 @@ namespace Plato.Theming.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(CreateThemeViewModel viewModel)
         {
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.CreateThemes))
+            {
+                return Unauthorized();
+            }
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -184,6 +205,12 @@ namespace Plato.Theming.Controllers
 
         public async Task<IActionResult> Edit(string id, string path)
         {
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.EditThemes))
+            {
+                return Unauthorized();
+            }
 
             // Get theme
             var theme = _siteThemeLoader
@@ -266,6 +293,13 @@ namespace Plato.Theming.Controllers
         [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditThemeViewModel model)
         {
+
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.EditThemes))
+            {
+                return Unauthorized();
+            }
             
             var result = await _viewProvider.ProvideUpdateAsync(new ThemeAdmin(), this);
 
@@ -319,6 +353,12 @@ namespace Plato.Theming.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
+            
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.DeleteThemes))
+            {
+                return Unauthorized();
+            }
             
             // Get theme
             var theme = _siteThemeLoader

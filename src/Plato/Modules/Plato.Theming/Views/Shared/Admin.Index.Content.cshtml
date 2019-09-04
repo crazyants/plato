@@ -1,4 +1,8 @@
 ﻿@model ThemingIndexViewModel
+@{
+    var editPermission = Plato.Theming.Permissions.EditThemes;
+    var deletePermission = Plato.Theming.Permissions.EditThemes;
+}
 
 <card class="card card-body-flush">
     <card-title>
@@ -22,13 +26,21 @@
                                 @T["Edit"]
                             </a>
                             <div class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" aria-labelledby="@dropdownId">
-                                <a asp-route-area="Plato.Theming" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@theme.Id" class="dropdown-item">
-                                    @T["Edit Theme"]
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@theme.Id" data-provide="confirm" class="dropdown-item dropdown-item-danger">
-                                    @T["Delete Theme"]
-                                </button>
+                                <authorize asp-permission="@editPermission.Name">
+                                    <authorize-success>
+                                        <a asp-route-area="Plato.Theming" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@theme.Id" class="dropdown-item">
+                                            @T["Edit Theme"]
+                                        </a>
+                                    </authorize-success>
+                                </authorize>
+                                <authorize asp-permission="@deletePermission.Name">
+                                    <authorize-success>
+                                        <div class="dropdown-divider"></div>
+                                        <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@theme.Id" data-provide="confirm" class="dropdown-item dropdown-item-danger">
+                                            @T["Delete Theme"]
+                                        </button>
+                                    </authorize-success>
+                                </authorize>
                             </div>
                         </div>
 

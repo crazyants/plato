@@ -1,0 +1,19 @@
+Name: Plato Issues Slack
+Description: Get notified via Slack when new issues or replies to issues are posted.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Issues
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.issues.slack/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Issues",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Slack",
+		Version: "1.0.0"
+	}
+]

@@ -662,6 +662,14 @@ namespace Plato.Users.Controllers
                         isValidResetToken = true;
                     }
                 }
+                else
+                {
+                    var user = await _platoUserStore.GetByResetToken(code);
+                    if (user != null)
+                    {
+                        isValidResetToken = true;
+                    }
+                }
             }
 
             // Return view

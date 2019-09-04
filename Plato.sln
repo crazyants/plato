@@ -423,6 +423,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Slack", "src\Plato\Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Slack", "src\Plato\Modules\Plato.Discuss.Slack\Plato.Discuss.Slack.csproj", "{E4BBDDDB-4CB1-4841-9853-7D43A4F1B89E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Questions.Slack", "src\Plato\Modules\Plato.Questions.Slack\Plato.Questions.Slack.csproj", "{283B4208-0CC3-4A18-8EC8-4CC503792FCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Ideas.Slack", "src\Plato\Modules\Plato.Ideas.Slack\Plato.Ideas.Slack.csproj", "{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Issues.Slack", "src\Plato\Modules\Plato.Issues.Slack\Plato.Issues.Slack.csproj", "{5A635389-2EF4-4A09-A489-74E95CAC3828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1253,6 +1259,18 @@ Global
 		{E4BBDDDB-4CB1-4841-9853-7D43A4F1B89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4BBDDDB-4CB1-4841-9853-7D43A4F1B89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4BBDDDB-4CB1-4841-9853-7D43A4F1B89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{283B4208-0CC3-4A18-8EC8-4CC503792FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{283B4208-0CC3-4A18-8EC8-4CC503792FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{283B4208-0CC3-4A18-8EC8-4CC503792FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{283B4208-0CC3-4A18-8EC8-4CC503792FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A635389-2EF4-4A09-A489-74E95CAC3828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A635389-2EF4-4A09-A489-74E95CAC3828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A635389-2EF4-4A09-A489-74E95CAC3828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A635389-2EF4-4A09-A489-74E95CAC3828}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1465,6 +1483,9 @@ Global
 		{A1385B3B-3D18-4896-9527-594F4A482A77} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{F4CDDD04-F6F2-4FC6-9B93-4F20002AB585} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{E4BBDDDB-4CB1-4841-9853-7D43A4F1B89E} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{283B4208-0CC3-4A18-8EC8-4CC503792FCC} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{6BDE1B12-AE1D-49FC-BDDA-28BD9B28592B} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{5A635389-2EF4-4A09-A489-74E95CAC3828} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}
