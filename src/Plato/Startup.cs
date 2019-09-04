@@ -44,6 +44,6 @@ namespace Plato
             app.UsePlato(env, loggerFactory);
         }
         
-
     }
+
 }
