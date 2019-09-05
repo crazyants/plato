@@ -32,8 +32,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
   
-  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="bower install" />
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">    
     <Exec Command="dotnet bundle" />
   </Target>
 
