@@ -3,44 +3,45 @@
   <PropertyGroup>
       <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> 
+     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Assets\**" />
-    <Compile Remove="Modules\**" />
-    <Compile Remove="node_modules\**\*" />
-    <Compile Remove="Themes\Default\Content\**" />
-    <Content Remove="Assets\**" />
-    <Content Remove="Modules\**" />
-    <Content Remove="Themes\Default\Content\**" />
-    <EmbeddedResource Remove="Assets\**" />
+  <ItemGroup> 
+
+    <Compile Remove="Modules\**" />     
+    <Content Remove="Modules\**" />    
     <EmbeddedResource Remove="Modules\**" />
-    <EmbeddedResource Remove="Themes\Default\Content\**" />
-    <None Remove="Assets\**" />
-    <None Remove="Modules\**" />
-    <None Remove="Themes\Default\Content\**" />
-    <Content Remove="wwwroot\css\vendors\bootstrap-slider.css" />
-    <Content Remove="wwwroot\js\vendors\bootstrap-slider.js" />
-    <Content Include="Themes\Default\theme.css" />
+
+    <None Update="App_Data\**\*">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="Modules\**\*">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+
+    <None Update="Sites\**\*">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="Themes\**\*">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>    
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
+
   </ItemGroup>
+
+  <ItemGroup>
+    <_CustomFiles Include="$(MSBuildProjectDirectory)/Modules/**/*" />
+    <DotNetPublishFiles Include="@(_CustomFiles)">
+      <DestinationRelativePath>Modules/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotNetPublishFiles>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-  </ItemGroup>
-  
-  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">    
-    <Exec Command="dotnet bundle" />
-  </Target>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.301" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />  
     <ProjectReference Include="..\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj" />
   </ItemGroup>
 
