@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Plato
@@ -9,13 +10,8 @@ namespace Plato
         {
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/web-host?view=aspnetcore-2.2#set-up-a-host
-            // We create our own minimal host builder, not calling WebHost.CreateDefaultBuilder(args)
-
-            var host = new WebHostBuilder()
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseContentRoot(Directory.GetCurrentDirectory())
-
-                .UseIISIntegration()
-                .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
 
