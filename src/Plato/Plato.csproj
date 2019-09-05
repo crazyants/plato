@@ -2,9 +2,8 @@
 
   <PropertyGroup>
       <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> 
   </PropertyGroup>
-
 
   <ItemGroup>
     <Compile Remove="Assets\**" />
@@ -45,6 +44,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj" />
   </ItemGroup>
-
 
 </Project>
