@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -29,24 +28,21 @@ namespace Plato.Internal.Security.Extensions
             this IServiceCollection services)
         {
 
-            var platoOptions = services.BuildServiceProvider().GetService<IOptions<PlatoOptions>>();
-
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Secrets");
-
-            if (platoOptions != null)
+            // Attempt to get secrets path from appsettings.json file
+            // If found register file system storage of private keys
+            var opts = services.BuildServiceProvider().GetService<IOptions<PlatoOptions>>();
+            if (opts != null)
             {
-                if (!string.IsNullOrEmpty(platoOptions.Value.SecretsPath))
+                if (!string.IsNullOrEmpty(opts.Value.SecretsPath))
                 {
-                    path = platoOptions.Value.SecretsPath;
+                    services.AddDataProtection()
+                        .PersistKeysToFileSystem(new DirectoryInfo(opts.Value.SecretsPath));
                 }
             }
 
-            services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(path));
-
             return services;
-        }
 
+        }
 
     }
 
