@@ -251,11 +251,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
                 }
 
-                // view location expander for theme
+                // View location expander for theme
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
-                // ensure loaded modules are aware of current context
-
+                // Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
                 var moduleReferences = assemblies
                     .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
@@ -266,8 +265,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // https://github.com/aspnet/Razor/issues/834
                 foreach (var moduleReference in moduleReferences)
                 {
-
-                    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences marked obsolete in 2.2.1
+                    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences is marked obsolete in 2.2.1
                     // Apps using these APIs to add assembly references to the 
                     // compilation context for runtime compilation should instead
                     // use ApplicationPartManager.AddApplicationPart to add application
@@ -334,11 +332,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             
             if (env.IsDevelopment())
             {
-                // Obsolete
-                // logger.AddConsole();
-                // logger.AddDebug();
-                                
-
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);

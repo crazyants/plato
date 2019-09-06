@@ -33,6 +33,8 @@ namespace Plato.Email.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        public bool RequireCredentials { get; set; }
+
         [Required]
         public SmtpDeliveryMethod DeliveryMethod { get; set; } 
 

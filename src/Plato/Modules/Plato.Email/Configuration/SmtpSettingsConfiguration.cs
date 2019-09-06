@@ -53,12 +53,12 @@ namespace Plato.Email.Configuration
                 {
                     try
                     {
-                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettings));
                         options.Password = protector.Unprotect(smtpSettings.Password);
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        _logger.LogError("There was a problem decrypting the SMTP password.");
+                        _logger.LogError(e, $"There was a problem decrypting the SMTP password. {e.Message}");
                     }
                 }
 

@@ -1,0 +1,26 @@
+﻿@model LayoutViewModel
+@{
+    AddTitleSegment(T["Admin"]);
+    AddTitleSegment(T["Settings"]);
+    AddTitleSegment(T["Email"]);
+    AddTitleSegment(T["Email Test"]);
+}
+
+<div class="layout">
+    <div class="layout-header">
+        <div class="layout-header-content">
+
+            <div class="layout-header-item">
+                <h4>@T["Test Results"]</h4>
+                <span class="text-muted">@T["Errors that occurred when sending email."]</span>
+                <hr />
+            </div>
+
+        </div>
+
+        <div class="layout-body">
+            <div asp-validation-summary="All"></div>
+        </div>
+
+    </div>
+</div>

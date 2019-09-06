@@ -20,6 +20,8 @@ namespace Plato.Internal.Emails.Abstractions
 
         public string Password { get; set; }
 
+        public bool RequireCredentials { get; set; }
+
         public int SendAttempts { get; set; } = 3;
 
         public int PollingInterval { get; set; } = 120;
@@ -29,9 +31,7 @@ namespace Plato.Internal.Emails.Abstractions
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 
         public string PickupDirectoryLocation { get; set; }
-
-        public bool RequireCredentials { get; set; }
-
+              
         public bool UseDefaultCredentials { get; set; }
 
         

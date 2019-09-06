@@ -69,14 +69,15 @@ namespace Plato.Email.ViewProviders
             // Update settings
             if (context.Updater.ModelState.IsValid)
             {
-                
+
                 // Encrypt the password
+                var username = model.SmtpSettings.UserName;
                 var password = string.Empty;
                 if (!string.IsNullOrWhiteSpace(model.SmtpSettings.Password))
                 {
                     try
                     {
-                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettings));
                         password = protector.Protect(model.SmtpSettings.Password);
                     }
                     catch (Exception e)
@@ -92,8 +93,9 @@ namespace Plato.Email.ViewProviders
                         DefaultFrom = model.SmtpSettings.DefaultFrom,
                         Host = model.SmtpSettings.Host,
                         Port = model.SmtpSettings.Port,
-                        UserName = model.SmtpSettings.UserName,
+                        UserName = username,
                         Password = password,
+                        RequireCredentials = model.SmtpSettings.RequireCredentials,
                         EnableSsl = model.SmtpSettings.EnableSsl,
                         PollingInterval = model.SmtpSettings.PollInterval,
                         BatchSize = model.SmtpSettings.BatchSize,
@@ -130,6 +132,7 @@ namespace Plato.Email.ViewProviders
                         Port = settings.SmtpSettings.Port,
                         UserName = settings.SmtpSettings.UserName,
                         Password = settings.SmtpSettings.Password,
+                        RequireCredentials = settings.SmtpSettings.RequireCredentials,
                         EnableSsl = settings.SmtpSettings.EnableSsl,
                         PollInterval = settings.SmtpSettings.PollingInterval,
                         BatchSize = settings.SmtpSettings.BatchSize,
