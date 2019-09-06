@@ -31,12 +31,8 @@ namespace Plato
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
-            services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo("F:\\Files\\wwwroot_test\\Plato2\\secrets\\"));
-
             services.AddPlato();
             
-
             return services.BuildServiceProvider();
         }
 
@@ -46,8 +42,7 @@ namespace Plato
             IApplicationBuilder app,
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory)
-        {
-           
+        {           
             app.UsePlato(env, loggerFactory);
         }
         

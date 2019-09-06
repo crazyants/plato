@@ -51,12 +51,12 @@ namespace Plato.Internal.Data.Abstractions.Extensions
                     return "uniqueidentifier";
                 case DbType.Xml:
                     return "xml";
-                default:
-                    return "sql_variant";
-
             }
 
-            return string.Empty;
+            return "sql_variant";
+
         }
+
     }
+
 }

@@ -43,6 +43,12 @@ namespace Plato.Internal.Hosting.Web.Configuration
                             options.ReleaseType = child.Value;
                         }
 
+                        // SecretsPath
+                        if (child.Key.Contains("SecretsPath"))
+                        {
+                            options.SecretsPath = child.Value;
+                        }
+                        
                         // DemoMode
                         if (child.Key.Contains("DemoMode"))
                         {

@@ -6,11 +6,14 @@
     /// </summary>
     public class PlatoOptions
     {
+
         public string Version { get; set; }
 
         public string ReleaseType { get; set; }
 
         public bool DemoMode { get; set; }
+
+        public string SecretsPath { get; set; }
 
     }
 

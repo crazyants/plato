@@ -76,11 +76,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
-            services.AddPlatoSecurity();
-            services.AddPlatoAuth();
+            services.AddPlatoDataProtection();
+            services.AddPlatoAuthorization();
+            services.AddPlatoAuthentication();
             services.AddPlatoMvc();
-            //services.AddUserSecrets<Startup>();
-
+          
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -94,7 +94,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
                 services.AddHttpContextAccessor();
                 internalServices.AddLogging();
-             
+                internalServices.AddLogging(loggingBuilder =>
+                {
+                    //loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                    loggingBuilder.AddConsole();
+                    loggingBuilder.AddDebug();
+                });
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddPlatoContextAccessor();
@@ -102,7 +108,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-                
+               
+
                 internalServices.AddPlatoOptions();
                 internalServices.AddPlatoLocalization();
                 internalServices.AddPlatoCaching();
@@ -153,7 +160,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddPlatoAuth(this IServiceCollection services)
+        public static IServiceCollection AddPlatoAuthentication(this IServiceCollection services)
         {
 
             // Configure antiForgery options
@@ -261,6 +268,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // https://github.com/aspnet/Razor/issues/834
                 foreach (var moduleReference in moduleReferences)
                 {
+
+                    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences marked obsolete in 2.2.1
+                    // Apps using these APIs to add assembly references to the 
+                    // compilation context for runtime compilation should instead
+                    // use ApplicationPartManager.AddApplicationPart to add application
+                    // parts for each assembly reference, or switch to a built-time compilation model(see Create reusable UI using the Razor Class Library project).
+                    // https://github.com/aspnet/Announcements/issues/312
                     options.AdditionalCompilationReferences.Add(moduleReference);
                 }
 
@@ -319,10 +333,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
             ILoggerFactory logger)
         {
 
+            
             if (env.IsDevelopment())
             {
-                logger.AddConsole();
-                logger.AddDebug();
+                // Obsolete
+                // logger.AddConsole();
+                // logger.AddDebug();
+                                
+
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);

@@ -57,7 +57,7 @@ namespace Plato.Entities.ViewProviders
             var featureEntityMetrics = new FeatureEntityCounts()
             {
                 Features = await _featureEntityCountService
-                    .ConfigureQuery(async q =>
+                    .ConfigureQuery(q =>
                     {
 
                         q.CreatedUserId.Equals(user.Id);

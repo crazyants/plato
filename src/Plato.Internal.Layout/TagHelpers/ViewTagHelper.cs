@@ -101,7 +101,7 @@ namespace Plato.Internal.Layout.TagHelpers
                         var result = await _viewDisplayHelper.DisplayAsync(view);
                         builder.AppendHtml(result);
                     }
-                    catch (Exception e)
+                    catch 
                     {
                         throw;
                     }
@@ -118,15 +118,10 @@ namespace Plato.Internal.Layout.TagHelpers
                         var result = await _viewDisplayHelper.DisplayAsync(this.Model);
                         builder.AppendHtml(result);
                     }
-                    catch (Exception e)
-                    {
-                        //if (_logger.IsEnabled(LogLevel.Error))
-                        //{
-                        //    _logger.LogError(e, $"An error occurred invoking the view \"{((IView)this.Model).ViewName}\", Error message: {e.Message}");
-                        //}
+                    catch 
+                    {                    
                         throw;
-                    }
-                  
+                    }                  
                 }
             }
        
