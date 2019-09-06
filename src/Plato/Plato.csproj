@@ -31,11 +31,33 @@
 
   </ItemGroup>
 
+  <!-- 
+      Ensure 
+      \Modules\Bin\**
+      \Modules\Content\**
+      \Modules\Views\**
+      \Themes\** 
+      \Sites\** 
+      Are all published for all publishing profiles
+  -->
+
   <ItemGroup>
-    <_CustomFiles Include="$(MSBuildProjectDirectory)/Modules/**/*" />
-    <DotNetPublishFiles Include="@(_CustomFiles)">
+    <_moduleFiles Include="$(MSBuildProjectDirectory)/Modules/**/Bin/**;$(MSBuildProjectDirectory)/Modules/**/Views/**;$(MSBuildProjectDirectory)/Modules/**/Content/**" />
+    <_themeFiles Include="$(MSBuildProjectDirectory)/Themes/**/*" />
+    <_siteFiles Include="$(MSBuildProjectDirectory)/Sites/**/*" />
+
+    <DotNetPublishFiles Include="@(_moduleFiles)">
       <DestinationRelativePath>Modules/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
     </DotNetPublishFiles>
+     
+    <DotNetPublishFiles Include="@(_themeFiles)">
+      <DestinationRelativePath>Themes/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotNetPublishFiles>
+    
+    <DotNetPublishFiles Include="@(_siteFiles)">
+      <DestinationRelativePath>Sites/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotNetPublishFiles>
+
   </ItemGroup>
 
 

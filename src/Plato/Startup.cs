@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Hosting.Web.Extensions;
 using System;
+using System.IO;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace Plato
 {
@@ -29,9 +31,11 @@ namespace Plato
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
-            services.AddPlato();
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo("F:\\Files\\wwwroot_test\\Plato2\\secrets\\"));
 
-          
+            services.AddPlato();
+            
 
             return services.BuildServiceProvider();
         }
