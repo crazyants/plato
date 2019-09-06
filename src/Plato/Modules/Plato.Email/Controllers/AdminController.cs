@@ -134,23 +134,21 @@ namespace Plato.Email.Controllers
                 return await Index();
             }
 
-            // Build email
+            // Build message
             var message = new MailMessage(
                 new MailAddress(_smtpSettings.DefaultFrom), 
                 new MailAddress(_smtpSettings.DefaultFrom))
             {
                 Subject = "Test email from Plato",
-                Body = WebUtility.HtmlDecode(GetTestMessage()),
-                IsBodyHtml = true
+                Body = WebUtility.HtmlDecode(GetTestMessage())
             };
-            //message.ReplyToList.Add(new MailAddress(_smtpSettings.DefaultFrom));
-
-            // Send email test
+          
+            // Send test message
             var result = await _emailManager.SendAsync(message);
 
             // Success?
             if (result.Succeeded)
-            {           
+            {
                 _alerter.Success(T["Email Sent Successfully!"]);
                 return RedirectToAction(nameof(Index));
             }
@@ -171,17 +169,14 @@ namespace Plato.Email.Controllers
 
             return @"Hi There,
 
-This is just a test from your Plato installation. 
+Congratulations outbound emails witin Plato are configured and working correctly.
 
-You are receiving this email because someone used the test email button on the Plato email settings page. 
+You are receiving this email because you or someone used the test email button on the Plato email settings page. 
 
-If you receive this congratulations your emails are configured and working correctly.
-
-Thank you for using Plato, The Plato Team";
+Thank you for using Plato.";
 
         }
 
     }
-
-
+    
 }

@@ -4,6 +4,7 @@
         ? "row collapse"
         : "row show";
 }
+
 <div asp-validation-summary="All"></div>
 
 @if (String.IsNullOrEmpty(Model.SmtpSettings.DefaultFrom) || String.IsNullOrEmpty(Model.SmtpSettings.Host))
