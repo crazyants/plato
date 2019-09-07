@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Questions.Mentions.NotificationTypes;
 using Plato.Questions.Models;
@@ -14,30 +15,35 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Questions.Mentions.Notifications
 {
 
 
     public class NewReplyMentionEmail : INotificationProvider<Answer>
-    { 
+    {
 
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly IEntityStore<Question> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
     
         public NewReplyMentionEmail(
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             IEntityStore<Question> entityStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
         {
+            _claimsPrincipalFactory = claimsPrincipalFactory;
             _contextFacade = contextFacade;
             _emailManager = emailManager;
-            _localeStore = localeStore;
             _entityStore = entityStore;
+            _localeStore = localeStore;
         }
 
         public async Task<ICommandResult<Answer>> SendAsync(INotificationContext<Answer> context)
@@ -81,7 +87,12 @@ namespace Plato.Questions.Mentions.Notifications
 
             // Get email template
             const string templateId = "NewQuestionsMention";
-            var culture = await _contextFacade.GetCurrentCultureAsync();
+
+            // Tasks run in a background thread and don't have access to HttpContext
+            // Create a dummy principal to represent the user so we can still obtain
+            // the current culture for the email
+            var principal = await _claimsPrincipalFactory.CreateAsync((User)context.Notification.To);
+            var culture = await _contextFacade.GetCurrentCultureAsync(principal.Identity);
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {

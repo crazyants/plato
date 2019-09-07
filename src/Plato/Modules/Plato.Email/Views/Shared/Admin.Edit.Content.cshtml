@@ -213,7 +213,7 @@
         @if (!string.IsNullOrEmpty(Model.SmtpSettings.DefaultFrom))
         {
             <button type="submit" asp-route-controller="Admin" asp-route-action="SendTest" class="btn btn-primary float-right">
-                @T["Send test to"] @Model.SmtpSettings.DefaultFrom
+                @T["Send test email to"] @Model.SmtpSettings.DefaultFrom
             </button>
         }
     </card-footer>

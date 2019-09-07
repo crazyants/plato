@@ -106,11 +106,31 @@ namespace Plato.Internal.Hosting.Web
             return _urlHelper.RouteUrl(new UrlRouteContext {Values = routeValues});
         }
 
+
         public async Task<string> GetCurrentCultureAsync()
         {
 
+            // Get application culture
+            var settings = await GetSiteSettingsAsync();
+            if (settings != null)
+            {
+                if (!String.IsNullOrEmpty(settings.Culture))
+                {
+                    return settings.Culture;
+                }
+            }
+
+            // Return our default culture
+            return DefaultCulture;
+
+        }
+
+
+        public async Task<string> GetCurrentCultureAsync(IIdentity identity)
+        {
+
             // Get users culture
-            var user = await GetAuthenticatedUserAsync();
+            var user = await GetAuthenticatedUserAsync(identity);
             if (user != null)
             {
                 if (!String.IsNullOrEmpty(user.Culture))

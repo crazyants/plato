@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -17,16 +18,19 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Articles.NotificationTypes;
 using Plato.Entities;
 using Plato.Entities.Models;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Articles.Notifications
 {
     public class ArticleReportEmail : INotificationProvider<ReportSubmission<Article>>
     {
-        
-        private readonly IContextFacade _contextFacade;
-        private readonly ILocaleStore _localeStore;
-        private readonly IEmailManager _emailManager;
+
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
+        private readonly IContextFacade _contextFacade;
+        private readonly IEmailManager _emailManager;
+        private readonly ILocaleStore _localeStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -35,15 +39,18 @@ namespace Plato.Articles.Notifications
         public ArticleReportEmail(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
             ILocaleStore localeStore, 
-            IEmailManager emailManager,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper)
+            IEmailManager emailManager)
         {
-            _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
+
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _contextFacade = contextFacade;
+            _emailManager = emailManager;
+            _localeStore = localeStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -63,7 +70,12 @@ namespace Plato.Articles.Notifications
 
             // Get email template
             const string templateId = "NewArticleReport";
-            var culture = await _contextFacade.GetCurrentCultureAsync();
+
+            // Tasks run in a background thread and don't have access to HttpContext
+            // Create a dummy principal to represent the user so we can still obtain
+            // the current culture for the email
+            var principal = await _claimsPrincipalFactory.CreateAsync((User)context.Notification.To);
+            var culture = await _contextFacade.GetCurrentCultureAsync(principal.Identity);
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
             {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Issues.Models;
 using Plato.Internal.Abstractions;
@@ -11,29 +12,34 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Issues.StopForumSpam.NotificationTypes;
 
 namespace Plato.Issues.StopForumSpam.Notifications
 {
     public class IssueSpamEmail : INotificationProvider<Issue>
     {
-        
+
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
-        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-
+        
         public IssueSpamEmail(
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
-            ILocaleStore localeStore, 
             IEmailManager emailManager,
-            ICapturedRouterUrlHelper capturedRouterUrlHelper)
+            ILocaleStore localeStore)
         {
-            _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _contextFacade = contextFacade;
+            _emailManager = emailManager;
+            _localeStore = localeStore;
         }
 
         public async Task<ICommandResult<Issue>> SendAsync(INotificationContext<Issue> context)
@@ -49,7 +55,12 @@ namespace Plato.Issues.StopForumSpam.Notifications
 
             // Get email template
             const string templateId = "NewIssueSpam";
-            var culture = await _contextFacade.GetCurrentCultureAsync();
+
+            // Tasks run in a background thread and don't have access to HttpContext
+            // Create a dummy principal to represent the user so we can still obtain
+            // the current culture for the email
+            var principal = await _claimsPrincipalFactory.CreateAsync((User)context.Notification.To);
+            var culture = await _contextFacade.GetCurrentCultureAsync(principal.Identity);
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email == null)
             {

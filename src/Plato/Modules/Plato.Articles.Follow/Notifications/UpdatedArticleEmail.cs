@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Articles.Follow.NotificationTypes;
 using Plato.Articles.Models;
@@ -13,7 +14,9 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Articles.Follow.Notifications
 {
@@ -21,19 +24,21 @@ namespace Plato.Articles.Follow.Notifications
     public class UpdatedArticleEmail : INotificationProvider<Article>
     {
 
+        private readonly IDummyClaimsPrincipalFactory<User> _claimsPrincipalFactory;
         private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
-  
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
         private readonly ILocaleStore _localeStore;
 
         public UpdatedArticleEmail(
+            IDummyClaimsPrincipalFactory<User> claimsPrincipalFactory,
             ICapturedRouterUrlHelper capturedRouterUrlHelper,
             IContextFacade contextFacade,
             IEmailManager emailManager,
             ILocaleStore localeStore)
         {
             _capturedRouterUrlHelper = capturedRouterUrlHelper;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
             _contextFacade = contextFacade;
             _emailManager = emailManager;
             _localeStore = localeStore;
@@ -53,7 +58,12 @@ namespace Plato.Articles.Follow.Notifications
             
             // Get email template
             const string templateId = "UpdatedArticle";
-            var culture = await _contextFacade.GetCurrentCultureAsync();
+
+            // Tasks run in a background thread and don't have access to HttpContext
+            // Create a dummy principal to represent the user so we can still obtain
+            // the current culture for the email
+            var principal = await _claimsPrincipalFactory.CreateAsync((User)context.Notification.To);
+            var culture = await _contextFacade.GetCurrentCultureAsync(principal.Identity);
             var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateId);
             if (email != null)
             {

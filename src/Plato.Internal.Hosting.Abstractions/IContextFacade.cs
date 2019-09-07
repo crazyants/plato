@@ -24,6 +24,8 @@ namespace Plato.Internal.Hosting.Abstractions
 
         Task<string> GetCurrentCultureAsync();
 
+        Task<string> GetCurrentCultureAsync(IIdentity identity);
+
         Task<string> GetCurrentThemeAsync();
         
     }
