@@ -30,24 +30,23 @@
 
                     <form asp-action="Contact" method="post" enctype="multipart/form-data" data-disable-submit="true" role="form">
 
-                        <h3 class="font-weight-bold text-primary text-uppercase">Send us a message</h3>
-                        <hr class="my-4" />
 
-                        <div class="form-group">
+                        <h3 class="font-weight-bold text-primary text-uppercase">Send us a message</h3>
+                        <p>
+                            To benefit everyone please consider posting your questions via <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-action="Index" data-provide="loader-spy">our support site</a>.
+                        </p>
+                        <hr class="my-2" />
+                      
+                        <div class="form-group mt-4">
                             <span asp-validation-for="Name" class="text-danger"></span>
                             <input asp-for="Name" placeholder="@T["your name"]" class="form-control" autofocus />
                         </div>
 
                         <div class="form-group">
                             <span asp-validation-for="Email" class="text-danger"></span>
-                            <input asp-for="Email" placeholder="@T["your email address"]" class="form-control" />
+                            <input asp-for="Email" placeholder="@T["your email"]" class="form-control" />
                         </div>
-
-                        <div class="form-group">
-                            <span asp-validation-for="Subject" class="text-danger"></span>
-                            <input asp-for="Subject" placeholder="@T["subject"]" class="form-control" />
-                        </div>
-
+                     
                         <div class="form-group">
                             <span asp-validation-for="Message" class="text-danger"></span>
                             <textarea asp-for="Message" rows="9" placeholder="@T["your message"]" class="form-control"></textarea>

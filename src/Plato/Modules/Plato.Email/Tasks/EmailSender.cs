@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Email.Stores;
@@ -36,11 +38,11 @@ namespace Plato.Email.Tasks
         {
 
             _smtpSettings = smtpSettings.Value;
+            _cacheManager = cacheManager;
             _emailManager = emailManager;
             _emailStore = emailStore;
-            _logger = logger;
             _dbHelper = dbHelper;
-            _cacheManager = cacheManager;
+            _logger = logger;
 
             // Set polling interval
             IntervalInSeconds = _smtpSettings.PollingInterval;
@@ -64,7 +66,7 @@ namespace Plato.Email.Tasks
             {
                 return;
             }
-            
+
             // Holds results to increment or delete emails
             var toDelete = new List<int>();
             var toIncrement = new List<int>();
@@ -109,8 +111,10 @@ namespace Plato.Email.Tasks
 
             }
 
-            // Delete successfully sent or increment send attempts for failures
+            // Delete successfully sent 
             await ProcessToDelete(toDelete.ToArray());
+
+            // Increment send attempts for failures
             await ProcessToIncrement(toIncrement.ToArray());
 
         }

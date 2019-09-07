@@ -155,7 +155,7 @@ namespace Plato.Site.Controllers
             var message = new MailMessage
             {
                 From = new MailAddress(viewModel.Email),
-                Subject = "Plato Feedback - " + viewModel.Subject,
+                Subject = "Plato Feedback Form",
                 Body  = body,
                 IsBodyHtml = true,
             };

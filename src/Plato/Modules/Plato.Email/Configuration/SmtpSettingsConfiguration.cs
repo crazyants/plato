@@ -7,6 +7,7 @@ using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email.Configuration
 {
+
     public class SmtpSettingsConfiguration : IConfigureOptions<SmtpSettings>
     {
         
