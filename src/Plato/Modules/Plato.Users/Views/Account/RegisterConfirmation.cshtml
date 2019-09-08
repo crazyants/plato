@@ -17,7 +17,13 @@
                     <p>
                         @T["We've sent you an email with a unique account activation link. You'll need to click this link before you can login."]
                         @T["If you don't receive the email you can "] <a asp-route-controller="Account" asp-route-action="ConfirmEmail">@T["send this again"]</a>.
-                        <br/><br />
+                    </p>
+                    <p>
+                        <div class="alert alert-danger">
+                            <strong>@T["IMPORTANT"]</strong> @T["You must first confirm & activate your email address before you can login. Check your email for the unique confirmation link."]
+                        </div>
+                    </p>
+                    <p>
                         <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" class="btn btn-primary">
                             @T["Login"]
                         </a>

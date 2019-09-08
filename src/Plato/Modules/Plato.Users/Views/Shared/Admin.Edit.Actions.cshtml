@@ -1,15 +1,28 @@
 ﻿@using Plato.Internal.Abstractions.Settings
+@using Plato.Internal.Security.Abstractions
 @model EditUserViewModel
 @{
     var platoOpts = GetOptions<PlatoOptions>();
+    var isDemo = platoOpts?.DemoMode ?? false;
+    var isBot = Model.UserType == UserType.Bot;
+    var isNew = Model.IsNewUser;
+    var isCurrent = Model.Id == base.CurrentUser?.Id;
     var isAdmin = false;
-    if (!string.IsNullOrEmpty(Model.UserName))
+    if (Model.RoleNames != null)
     {
-        isAdmin = Model.UserName.Equals("admin", StringComparison.OrdinalIgnoreCase);
+        foreach (var roleName in Model.RoleNames)
+        {
+            if (roleName.Equals(DefaultRoles.Administrator, StringComparison.OrdinalIgnoreCase))
+            {
+                isAdmin = true;
+                break;
+            }
+        }
     }
+  
 }
 
-@if (isAdmin && platoOpts.DemoMode)
+@if (isAdmin && isDemo)
 {
     <span class="d-inline-block disabled" data-toggle="tooltip" title="@T["This option is disabled within the demo"]">
         <a href="#" class="btn btn-danger disabled">
@@ -19,7 +32,7 @@
 }
 else
 {
-    if (!Model.IsNewUser && Model.UserType != UserType.Bot)
+    if (!isNew && !isBot && !isCurrent)
      {
          <authorize asp-permission="@Plato.Users.Permissions.DeleteUsers.Name">
              <authorize-success>

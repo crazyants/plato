@@ -34,7 +34,7 @@ namespace Plato.Users.Badges.Tasks
                     UserId int NOT NULL
                 );
                 DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
-                WHERE (u.Visits >= @threshold)
+                WHERE (u.Visits >= @threshold AND u.EmailConfirmed = 1)
                 AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName

@@ -1,5 +1,6 @@
 ﻿@using Plato.Internal.Abstractions.Extensions
 @model User
+
 <card>
     <card-title>
 
@@ -61,4 +62,18 @@
         </div>
     </card-body>
 </card>
+
+@if (!string.IsNullOrWhiteSpace(Model.Biography))
+{
+    <card>
+        <card-title>
+            <h6 class="card-title">
+                @T["A bit about me"]
+            </h6>
+        </card-title>
+        <card-body>
+            @Model.Biography
+        </card-body>
+    </card>
+}
 
