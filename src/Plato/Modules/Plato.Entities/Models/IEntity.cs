@@ -95,23 +95,7 @@ namespace Plato.Entities.Models
         int TotalImages { get; set; }
 
         int TotalWords { get; set; }
-
-        double DailyViews { get; set; }
-
-        double DailyReplies { get; set; }
-
-        double DailyAnswers { get; set; }
-
-        double DailyReactions { get; set; }
-
-        double DailyFollows { get; set; }
-
-        double DailyReports { get; set; }
-
-        double DailyStars { get; set; }
-
-        double DailyRatings { get; set; }
-
+              
         string IpV4Address { get; set; }
 
         string IpV6Address { get; set; }

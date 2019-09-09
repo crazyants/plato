@@ -180,47 +180,7 @@ namespace Plato.Entities.Handlers
                     {
                         Name = "TotalWords",
                         DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyViews",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyReplies",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyAnswers",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyReactions",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyFollows",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyReports",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyStars",
-                        DbType = DbType.Double
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DailyRatings",
-                        DbType = DbType.Double
-                    },
+                    },                  
                     new SchemaColumn()
                     {
                         Name = "SortOrder",
@@ -770,7 +730,53 @@ namespace Plato.Entities.Handlers
 
                 // SelectEntitiesByFeatureId
                 .CreateProcedure(new SchemaProcedure("SelectEntitiesByFeatureId",
-                        @"SELECT e.*, f.ModuleId, 0 AS Rank, 0 AS MaxRank,
+                        @"SELECT 
+                                    e.Id,
+                                    e.ParentId,
+                                    e.FeatureId,
+                                    e.CategoryId,
+                                    e.Title,
+                                    e.Alias,                                    
+                                    e.Abstract,                                    
+                                    e.IsHidden,
+                                    e.IsPrivate,
+                                    e.IsSpam,
+                                    e.IsPinned,
+                                    e.IsDeleted,
+                                    e.IsLocked,
+                                    e.IsClosed,
+                                    e.TotalViews,
+                                    e.TotalReplies,
+                                    e.TotalAnswers,
+                                    e.TotalParticipants,
+                                    e.TotalReactions,
+                                    e.TotalFollows,
+                                    e.TotalReports,
+                                    e.TotalStars,
+                                    e.TotalRatings,
+                                    e.SummedRating,
+                                    e.MeanRating,
+                                    e.TotalLinks,
+                                    e.TotalImages,
+                                    e.TotalWords,          
+                                    e.SortOrder,                                    
+                                    e.CreatedUserId,
+                                    e.CreatedDate,
+                                    e.EditedUserId,
+                                    e.EditedDate,
+                                    e.ModifiedUserId,
+                                    e.ModifiedDate,
+                                    e.LastReplyId,
+                                    e.LastReplyUserId,
+                                    e.LastReplyDate,                                    
+                                    0 AS [Message], -- not returned for performance reasons
+                                    0 AS Html,
+                                    0 AS Urls,
+                                    0 AS IpV4Address,
+                                    0 AS IpV6Address,
+                                    0 AS Rank,
+                                    0 AS MaxRank,
+                                    f.ModuleId, 
                                     c.UserName AS CreatedUserName,                              
                                     c.DisplayName AS CreatedDisplayName,                                  
                                     c.Alias AS CreatedAlias,

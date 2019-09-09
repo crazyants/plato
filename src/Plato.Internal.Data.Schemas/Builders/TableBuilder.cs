@@ -97,7 +97,7 @@ namespace Plato.Internal.Data.Schemas.Builders
             AddStatement(sb.ToString());
             return this;
         }
-        
+
         public virtual ITableBuilder CreateTableColumns(SchemaTable table)
         {
 
@@ -143,7 +143,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                     AddStatement(sb.ToString());
 
                 }
-                
+
             }
 
             return this;
@@ -205,25 +205,60 @@ namespace Plato.Internal.Data.Schemas.Builders
 
         public virtual ITableBuilder DropTableColumns(SchemaTable table)
         {
+
             var tableName = PrependTablePrefix(table.Name);
             var sb = new StringBuilder();
+
             if (table.Columns.Count > 0)
             {
+
+                // -------------
+                // Drop contraints for each column first
+                // --------------
                 foreach (var column in table.Columns)
                 {
+                    AddStatement(BuildDropColumnConstraints(tableName, column.Name));
+                }
+
+                // -------------
+                // Next actually drop the columns
+                // --------------
+
+                foreach (var column in table.Columns)
+                {
+
+
+                    // Ensure column exists before attempting to drop
+                    sb.Append("IF EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'")
+                        .Append(column.Name)
+                        .Append("' AND Object_ID = Object_ID(N'")
+                        .Append(tableName)
+                        .Append("'))")
+                        .Append(NewLine)
+                        .Append("BEGIN")
+                        .Append(NewLine);
+
+
+                    // Drop the column
                     sb.Append("ALTER TABLE ")
                         .Append(tableName)
-                        .Append(" DROP ")
+                        .Append(" DROP COLUMN ")
                         .Append(column.Name)
-                        .Append(";");
+                        .Append(";")
+                        .Append(NewLine);
+
+                    sb.Append("END")
+                        .Append(NewLine);
+
                 }
 
                 AddStatement(sb.ToString());
 
             }
+
             return this;
         }
-        
+
         // ---------------
 
         private string BuildCreateColumn(SchemaColumn column)
@@ -253,6 +288,74 @@ namespace Plato.Internal.Data.Schemas.Builders
             var sb = new StringBuilder();
             sb.Append(column.Name).Append(" ").Append(column.DbTypeNormalized)
                 .Append(column.Nullable ? " NULL" : " NOT NULL");
+            return sb.ToString();
+
+        }
+
+
+        string BuildDropColumnConstraints(string tableName, string columnName)
+        {
+
+            /*              
+                DECLARE @sql NVARCHAR(MAX)
+                WHILE 1=1
+                BEGIN
+                    SELECT TOP 1 @sql = N'alter table tbloffers drop constraint ['+dc.NAME+N']'
+                    from sys.default_constraints dc
+                    JOIN sys.columns c
+                        ON c.default_object_id = dc.object_id
+                    WHERE 
+                        dc.parent_object_id = OBJECT_ID('tbloffers')
+                    AND c.name = N'checkin'
+                    IF @@ROWCOUNT = 0 BREAK
+                    EXEC (@sql)
+                END
+            */
+
+            var sb = new StringBuilder();
+
+            // Ensure column exists before attempting to drop
+            sb
+                .Append("IF EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'")
+                .Append(columnName)
+                .Append("' AND Object_ID = Object_ID(N'")
+                .Append(tableName)
+                .Append("'))")
+                .Append(NewLine)
+                .Append("BEGIN")
+                .Append(NewLine);
+
+            // Drop all contraints for the given table and column
+            sb
+                .Append("DECLARE @sql NVARCHAR(MAX);")
+                .Append(NewLine)
+                .Append("WHILE 1 = 1")
+                .Append(NewLine)
+                .Append("BEGIN")
+                .Append(NewLine)
+                .Append("SELECT TOP 1 @sql = N'ALTER TABLE ")
+                .Append(tableName)
+                .Append(" DROP CONSTRAINT [' + dc.NAME + N']' ")
+                .Append("FROM sys.default_constraints dc ")
+                .Append("JOIN sys.columns c ")
+                .Append("ON c.default_object_id = dc.object_id ")
+                .Append("WHERE ")
+                .Append("dc.parent_object_id = OBJECT_ID('")
+                .Append(tableName)
+                .Append("') AND c.name = N'")
+                .Append(columnName)
+                .Append("';")
+                .Append(NewLine)
+                .Append("IF @@ROWCOUNT = 0 BREAK;")
+                .Append(NewLine)
+                .Append("EXEC(@sql);")
+                .Append(NewLine)
+                .Append("END")
+                .Append(NewLine);
+            
+            sb.Append("END")
+                 .Append(NewLine);
+
             return sb.ToString();
 
         }

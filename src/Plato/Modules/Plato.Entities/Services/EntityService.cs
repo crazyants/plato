@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -10,7 +9,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    
+
     public class EntityService<TModel> : IEntityService<TModel> where TModel : class, IEntity
     {
 

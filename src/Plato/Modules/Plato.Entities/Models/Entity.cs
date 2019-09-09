@@ -80,22 +80,6 @@ namespace Plato.Entities.Models
 
         public int TotalWords { get; set; }
         
-        public double DailyViews { get; set; }
-
-        public double DailyReplies { get; set; }
-
-        public double DailyAnswers { get; set; }
-
-        public double DailyReactions { get; set; }
-
-        public double DailyFollows { get; set; }
-
-        public double DailyReports { get; set; }
-
-        public double DailyStars { get; set; }
-
-        public double DailyRatings { get; set; }
-
         public string IpV4Address { get; set; }
 
         public string IpV6Address { get; set; }
@@ -297,30 +281,6 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("TotalWords"))
                 TotalWords = Convert.ToInt32(dr["TotalWords"]);
             
-            if (dr.ColumnIsNotNull("DailyViews"))
-                DailyViews = Convert.ToDouble(dr["DailyViews"]);
-            
-            if (dr.ColumnIsNotNull("DailyReplies"))
-                DailyReplies = Convert.ToDouble(dr["DailyReplies"]);
-
-            if (dr.ColumnIsNotNull("DailyAnswers"))
-                DailyAnswers = Convert.ToDouble(dr["DailyAnswers"]);
-            
-            if (dr.ColumnIsNotNull("DailyReactions"))
-                DailyReactions = Convert.ToDouble(dr["DailyReactions"]);
-
-            if (dr.ColumnIsNotNull("DailyFollows"))
-                DailyFollows = Convert.ToDouble(dr["DailyFollows"]);
-
-            if (dr.ColumnIsNotNull("DailyReports"))
-                DailyReports = Convert.ToDouble(dr["DailyReports"]);
-            
-            if (dr.ColumnIsNotNull("DailyStars"))
-                DailyStars = Convert.ToDouble(dr["DailyStars"]);
-
-            if (dr.ColumnIsNotNull("DailyRatings"))
-                DailyRatings = Convert.ToDouble(dr["DailyRatings"]);
-
             if (dr.ColumnIsNotNull("SortOrder"))
                 SortOrder = Convert.ToInt32(dr["SortOrder"]);
 

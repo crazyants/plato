@@ -207,8 +207,7 @@ namespace Plato.Questions.Votes.Controllers
             {
                 TotalRatings = updatedEntity?.TotalRatings ?? 0,
                 SummedRating = updatedEntity?.SummedRating ?? 0,
-                MeanRating = updatedEntity?.MeanRating ?? 0,
-                DailyRatings = updatedEntity?.DailyRatings ?? 0
+                MeanRating = updatedEntity?.MeanRating ?? 0                
             };
 
         }

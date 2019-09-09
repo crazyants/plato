@@ -220,8 +220,7 @@ namespace Plato.Questions.Answers.Controllers
             
             // Update answer details on entity 
             entity.TotalAnswers = answers?.Total ?? 0;
-            entity.DailyAnswers = entity.TotalAnswers.ToSafeDivision(DateTimeOffset.Now.DayDifference(entity.CreatedDate));
-
+            
             // Update entity
             return await _entityStore.UpdateAsync(entity);
 

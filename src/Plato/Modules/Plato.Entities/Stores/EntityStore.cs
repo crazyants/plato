@@ -161,7 +161,7 @@ namespace Plato.Entities.Stores
             });
 
         }
-        
+
         public async Task<IEnumerable<TEntity>> GetByFeatureIdAsync(int featureId)
         {
 

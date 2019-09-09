@@ -30,8 +30,7 @@ namespace Plato.Entities.Ratings.Services
             entity.TotalRatings = aggregateRating?.TotalRatings ?? 0;
             entity.SummedRating = aggregateRating?.SummedRating ?? 0;
             entity.MeanRating = aggregateRating?.MeanRating ?? 0;
-            entity.DailyRatings = aggregateRating?.DailyRatings ?? 0;
-            
+                        
             // Update and return updated entity
             return await _entityStore.UpdateAsync(entity);
 

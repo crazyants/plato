@@ -63,7 +63,7 @@ namespace Plato.Entities.Services
 
             // Increment counts for view
             entity.TotalViews = entity.TotalViews + 1;
-            entity.DailyViews = entity.TotalViews.ToSafeDivision(DateTimeOffset.Now.DayDifference(entity.CreatedDate));
+            
             var result = await _entityStore.UpdateAsync(entity);
             
             if (result != null)

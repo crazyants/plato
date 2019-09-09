@@ -453,43 +453,92 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
 
+        private string[] _columns = new string[]
+        {
+            "e.Id",
+            "e.ParentId",
+            "e.FeatureId",
+            "e.CategoryId",
+            "e.Title",
+            "e.Alias",
+            "e.Abstract",      
+            "e.IsHidden",
+            "e.IsPrivate",
+            "e.IsSpam",
+            "e.IsPinned",
+            "e.IsDeleted",
+            "e.IsLocked",
+            "e.IsClosed",
+            "e.TotalViews",
+            "e.TotalReplies",
+            "e.TotalAnswers",
+            "e.TotalParticipants",
+            "e.TotalReactions",
+            "e.TotalFollows",
+            "e.TotalReports",
+            "e.TotalStars",
+            "e.TotalRatings",
+            "e.SummedRating",
+            "e.MeanRating",
+            "e.TotalLinks",
+            "e.TotalImages",
+            "e.TotalWords",          
+            "e.SortOrder",
+            "e.CreatedUserId",
+            "e.CreatedDate",
+            "e.EditedUserId",
+            "e.EditedDate",
+            "e.ModifiedUserId",
+            "e.ModifiedDate",
+            "e.LastReplyId",
+            "e.LastReplyUserId",
+            "e.LastReplyDate",
+            "0 AS [Message]",  // not returned with a list for performance reasons
+            "0 AS Html", 
+            "0 AS Urls", 
+            "0 AS IpV4Address",
+            "0 AS IpV6Address", 
+            "f.ModuleId",
+            "c.UserName AS CreatedUserName",
+            "c.DisplayName AS CreatedDisplayName",
+            "c.Alias AS CreatedAlias",
+            "c.PhotoUrl AS CreatedPhotoUrl",
+            "c.PhotoColor AS CreatedPhotoColor",
+            "c.SignatureHtml AS CreatedSignatureHtml",
+            "c.IsVerified AS CreatedIsVerified",
+            "c.IsStaff AS CreatedIsStaff",
+            "c.IsSpam AS CreatedIsSpam",
+            "c.IsBanned AS CreatedIsBanned",
+            "m.UserName AS ModifiedUserName",
+            "m.DisplayName AS ModifiedDisplayName",
+            "m.Alias AS ModifiedAlias",
+            "m.PhotoUrl AS ModifiedPhotoUrl",
+            "m.PhotoColor AS ModifiedPhotoColor",
+            "m.SignatureHtml AS ModifiedSignatureHtml",
+            "m.IsVerified AS ModifiedIsVerified",
+            "m.IsStaff AS ModifiedIsStaff",
+            "m.IsSpam AS ModifiedIsSpam",
+            "m.IsBanned AS ModifiedIsBanned",
+            "l.UserName AS LastReplyUserName",
+            "l.DisplayName AS LastReplyDisplayName",
+            "l.Alias AS LastReplyAlias",
+            "l.PhotoUrl AS LastReplyPhotoUrl",
+            "l.PhotoColor AS LastReplyPhotoColor",
+            "l.SignatureHtml AS LastReplySignatureHtml",
+            "l.IsVerified AS LastReplyIsVerified",
+            "l.IsStaff AS LastReplyIsStaff",
+            "l.IsSpam AS LastReplyIsSpam",
+            "l.IsBanned AS LastReplyIsBanned",
+            "@MaxRank AS MaxRank"
+        };
+
         string BuildSelect()
         {
             var sb = new StringBuilder();
             sb
-                .Append("e.*, f.ModuleId, ")
-                .Append("c.UserName AS CreatedUserName, ")
-                .Append("c.DisplayName AS CreatedDisplayName,")
-                .Append("c.Alias AS CreatedAlias,")
-                .Append("c.PhotoUrl AS CreatedPhotoUrl,")
-                .Append("c.PhotoColor AS CreatedPhotoColor,")
-                .Append("c.SignatureHtml AS CreatedSignatureHtml,")
-                .Append("c.IsVerified AS CreatedIsVerified,")
-                .Append("c.IsStaff AS CreatedIsStaff,")
-                .Append("c.IsSpam AS CreatedIsSpam,")
-                .Append("c.IsBanned AS CreatedIsBanned,")
-                .Append("m.UserName AS ModifiedUserName, ")
-                .Append("m.DisplayName AS ModifiedDisplayName,")
-                .Append("m.Alias AS ModifiedAlias, ")
-                .Append("m.PhotoUrl AS ModifiedPhotoUrl, ")
-                .Append("m.PhotoColor AS ModifiedPhotoColor, ")
-                .Append("m.SignatureHtml AS ModifiedSignatureHtml,")
-                .Append("m.IsVerified AS ModifiedIsVerified,")
-                .Append("m.IsStaff AS ModifiedIsStaff,")
-                .Append("m.IsSpam AS ModifiedIsSpam,")
-                .Append("m.IsBanned AS ModifiedIsBanned,")
-                .Append("l.UserName AS LastReplyUserName, ")
-                .Append("l.DisplayName AS LastReplyDisplayName,")
-                .Append("l.Alias AS LastReplyAlias, ")
-                .Append("l.PhotoUrl AS LastReplyPhotoUrl, ")
-                .Append("l.PhotoColor AS LastReplyPhotoColor, ")
-                .Append("l.SignatureHtml AS LastReplySignatureHtml, ")
-                .Append("l.IsVerified AS LastReplyIsVerified,")
-                .Append("l.IsStaff AS LastReplyIsStaff,")
-                .Append("l.IsSpam AS LastReplyIsSpam,")
-                .Append("l.IsBanned AS LastReplyIsBanned,")
-                .Append(HasKeywords() ? "r.[Rank] AS [Rank], " : "0 AS [Rank],")
-                .Append("@MaxRank AS MaxRank");
+                .Append(_columns.ToDelimitedString())
+                .Append(", ")            
+                .Append(HasKeywords() ? "r.[Rank] AS [Rank] " : "0 AS [Rank]");                
 
             // -----------------
             // Apply any select query adapters
