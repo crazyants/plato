@@ -10,8 +10,7 @@ namespace Plato.Internal.Layout.ViewAdapters
     public class ViewAdapterManager : IViewAdapterManager
     {
 
-        private readonly ConcurrentDictionary<string, IList<IViewAdapterResult>> _viewAdapterResults
-            = new ConcurrentDictionary<string, IList<IViewAdapterResult>>();
+        private ConcurrentDictionary<string, IList<IViewAdapterResult>> _viewAdapterResults;
 
         private readonly IEnumerable<IViewAdapterProvider> _viewAdapterProviders;
         private readonly ILogger<ViewAdapterManager> _logger;
@@ -31,13 +30,18 @@ namespace Plato.Internal.Layout.ViewAdapters
             await EnsureConfiguredProviders();
 
             // Find providers matching our view name
-            var matchingAdapterResults = new List<IViewAdapterResult>();
-            foreach (var viewAdapterResult in _viewAdapterResults)
+            List<IViewAdapterResult> matchingAdapterResults = null;
+            if (_viewAdapterResults != null)
             {
-                if (viewAdapterResult.Key.Equals(viewName))
+                matchingAdapterResults = new List<IViewAdapterResult>();
+                foreach (var viewAdapterResult in _viewAdapterResults)
                 {
-                    matchingAdapterResults.AddRange(viewAdapterResult.Value);
+                    if (viewAdapterResult.Key.Equals(viewName))
+                    {
+                        matchingAdapterResults.AddRange(viewAdapterResult.Value);
+                    }
                 }
+
             }
 
             return matchingAdapterResults;
@@ -47,17 +51,21 @@ namespace Plato.Internal.Layout.ViewAdapters
         async Task EnsureConfiguredProviders()
         {
 
-            if (_viewAdapterResults.Count == 0)
+            if (_viewAdapterResults == null)
             {
                 if (_viewAdapterProviders != null)
                 {
                     foreach (var provider in _viewAdapterProviders)
                     {
                         try
-                        {
+                        {                       
                             var viewAdapterResult = await provider.ConfigureAsync();
                             if (viewAdapterResult != null)
                             {
+                                if (_viewAdapterResults == null)
+                                {
+                                    _viewAdapterResults = new ConcurrentDictionary<string, IList<IViewAdapterResult>>();
+                                }
                                 _viewAdapterResults.AddOrUpdate(viewAdapterResult.Builder.ViewName,
                                     new List<IViewAdapterResult>()
                                     {

@@ -226,8 +226,7 @@ namespace Plato.Internal.Data.Schemas.Builders
 
                 foreach (var column in table.Columns)
                 {
-
-
+                    
                     // Ensure column exists before attempting to drop
                     sb.Append("IF EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'")
                         .Append(column.Name)
@@ -237,8 +236,7 @@ namespace Plato.Internal.Data.Schemas.Builders
                         .Append(NewLine)
                         .Append("BEGIN")
                         .Append(NewLine);
-
-
+                    
                     // Drop the column
                     sb.Append("ALTER TABLE ")
                         .Append(tableName)
@@ -300,13 +298,13 @@ namespace Plato.Internal.Data.Schemas.Builders
                 DECLARE @sql NVARCHAR(MAX)
                 WHILE 1=1
                 BEGIN
-                    SELECT TOP 1 @sql = N'alter table tbloffers drop constraint ['+dc.NAME+N']'
+                    SELECT TOP 1 @sql = N'alter table tableName drop constraint ['+dc.NAME+N']'
                     from sys.default_constraints dc
                     JOIN sys.columns c
                         ON c.default_object_id = dc.object_id
                     WHERE 
-                        dc.parent_object_id = OBJECT_ID('tbloffers')
-                    AND c.name = N'checkin'
+                        dc.parent_object_id = OBJECT_ID('tableName')
+                    AND c.name = N'columnName'
                     IF @@ROWCOUNT = 0 BREAK
                     EXEC (@sql)
                 END

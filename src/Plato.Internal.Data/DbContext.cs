@@ -33,13 +33,13 @@ namespace Plato.Internal.Data
             Configuration = cfg;
         }
   
-        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<CachedDbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
             if (_provider == null)
                 return null;
             if (commandType == CommandType.StoredProcedure)
                 commandText = GetProcedureName(commandText);
-            return await _provider.ExecuteReaderAsync2<T>(commandType, commandText, populate, dbParams);
+            return await _provider.ExecuteReaderAsync<T>(commandType, commandText, populate, dbParams);
         }
 
         public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams)
@@ -48,7 +48,7 @@ namespace Plato.Internal.Data
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
                 commandText = GetProcedureName(commandText);
-            return await _provider.ExecuteScalarAsync2<T>(commandType, commandText, dbParams);
+            return await _provider.ExecuteScalarAsync<T>(commandType, commandText, dbParams);
         }
 
         public async Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams)
@@ -57,7 +57,7 @@ namespace Plato.Internal.Data
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
                 commandText = GetProcedureName(commandText);
-            return await _provider.ExecuteNonQueryAsync2<T>(commandType, commandText, dbParams);
+            return await _provider.ExecuteNonQueryAsync<T>(commandType, commandText, dbParams);
         }
 
         public void Dispose()

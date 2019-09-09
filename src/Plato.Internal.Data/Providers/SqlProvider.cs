@@ -26,7 +26,7 @@ namespace Plato.Internal.Data.Providers
             _connectionString = dbContextOptions.Value.ConnectionString;
         }
 
-        public async Task<T> ExecuteReaderAsync2<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<CachedDbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -46,7 +46,7 @@ namespace Plato.Internal.Data.Providers
                         using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                         {
                             OnExecutedCommand(command);
-                            output = await populate(reader);
+                            output = await populate(new CachedDbDataReader(reader));
                         }
                     }
                 }
@@ -64,7 +64,7 @@ namespace Plato.Internal.Data.Providers
             return output;
         }
 
-        public async Task<T> ExecuteScalarAsync2<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
+        public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -126,7 +126,7 @@ namespace Plato.Internal.Data.Providers
             
         }
 
-        public async Task<T> ExecuteNonQueryAsync2<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
+        public async Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string commandText, IDbDataParameter[] dbParams = null)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {

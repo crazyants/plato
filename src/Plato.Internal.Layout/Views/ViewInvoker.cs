@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
@@ -40,6 +39,9 @@ namespace Plato.Internal.Layout.Views
 
         public async Task<IHtmlContent> InvokeAsync(IView view)
         {
+
+            // Hot code path, please modify carefully
+
             if (this.ViewContext == null)
             {
                 throw new Exception(
@@ -100,7 +102,6 @@ namespace Plato.Internal.Layout.Views
                 throw;
             }
             
-
         }
 
         async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object arguments)
@@ -146,11 +147,13 @@ namespace Plato.Internal.Layout.Views
                 return false;
             }
 
-            return model
+            object[] attrs = model
                 .GetType()
-                .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+                .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true);
+            return attrs != null && attrs.Length > 0;
 
         }
 
     }
+
 }

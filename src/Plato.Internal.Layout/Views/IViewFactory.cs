@@ -5,7 +5,7 @@ namespace Plato.Internal.Layout.Views
 {
     public interface IViewFactory
     {
-        ViewDescriptor Create(IView view);
+        //ViewDescriptor Create(IView view);
 
         Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext);
 

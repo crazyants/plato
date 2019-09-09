@@ -10,7 +10,6 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.Tasks;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
@@ -38,8 +37,8 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
             
             // Generic views
-            services.AddScoped<IViewFactory, ViewFactory>();
-            services.AddScoped<IViewTableManager, ViewTableManager>();
+            // These need to be scoped and cannot be singletons
+            services.AddScoped<IViewFactory, ViewFactory>();            
             services.AddScoped<IViewInvoker, ViewInvoker>();
             services.AddScoped<IViewHelperFactory, ViewDisplayHelperFactory>();
 

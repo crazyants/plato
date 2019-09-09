@@ -9,11 +9,8 @@ namespace Plato.Internal.Layout.Views
         public string Name { get; set; }
 
         public IView View { get; set; }
-        
-        public IEnumerable<IViewAdapterResult> ViewAdaptorResults { get; set; }
-
-        public int Priority { get; set; }
-        
+      
+        public bool IsAnonymousType { get; set; }
     }
 
 }

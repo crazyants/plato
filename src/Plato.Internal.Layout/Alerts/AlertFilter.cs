@@ -17,11 +17,11 @@ namespace Plato.Internal.Layout.Alerts
     public class AlertFilter : IActionFilter, IAsyncResultFilter
     {
 
-        private readonly string _tenantPath;
+        private IList<AlertInfo> _alerts = new List<AlertInfo>();        
         internal const string CookieName = "plato_alerts";
+        private readonly string _tenantPath;
         private bool _deleteCookie = false;
-        private IList<AlertInfo> _alerts = new List<AlertInfo>();
-
+        
         readonly HtmlEncoder _htmlEncoder;
         readonly ILayoutUpdater _layoutUpdater;
         readonly ILogger<AlertFilter> _logger;
