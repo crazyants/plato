@@ -26,10 +26,12 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                @await DisplayAsync(new View("SiteModuleList", new
-                {
-                    options = new FeatureIndexOptions()
-                }))
+                <cache expires-after="@TimeSpan.FromMinutes(10)">
+                    @await DisplayAsync(new View("SiteModuleList", new
+                    {
+                        options = new FeatureIndexOptions()
+                    }))
+                </cache>
             </div>
         </div>
     </div>

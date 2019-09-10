@@ -1,17 +1,17 @@
 ﻿
-<card class="card card-body-flush">
-    <card-title>
-        <h6>
-            @T["Browse"]
-        </h6>
-    </card-title>
-    <card-body>
-        <div class="list-group list-group-flush list-group-hover home-page-tiles">
-            <div class="row no-gutters">
-                <navigation name="home" enable-list="false"/>
+<cache vary-by-user="true" expires-after="@TimeSpan.FromSeconds(60)">
+    <card class="card card-body-flush">
+        <card-title>
+            <h6>
+                @T["Browse"]
+            </h6>
+        </card-title>
+        <card-body>
+            <div class="list-group list-group-flush list-group-hover home-page-tiles">
+                <div class="row no-gutters">
+                    <navigation name="home" enable-list="false" />
+                </div>
             </div>
-        </div>
-    </card-body>
-</card>
-
-
+        </card-body>
+    </card>
+</cache>

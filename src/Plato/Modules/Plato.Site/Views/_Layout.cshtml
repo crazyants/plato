@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title asp-separator=" - ">Plato</title>
-    <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
-    <link rel="stylesheet" href="~/css/app/plato.css" />
-    <link rel="stylesheet" href="~/plato.site/content/css/site.css" />
+    <link rel="stylesheet" href="/css/vendors/bootstrap.css" />
+    <link rel="stylesheet" href="/css/vendors/font-awesome.css" />
+    <link rel="stylesheet" href="/css/app/plato.css" />
+    <link rel="stylesheet" href="/plato.site/content/css/site.css" />
     <link rel="stylesheet" href="/sites/plato/themes/plato-site/theme.css" />
     @await RenderSectionAsync("Header", required: false)
 </head>
@@ -23,27 +23,28 @@
             <div class="cube bg-danger"></div>
         </div>
     </div>
+        <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(10)">
+            @await DisplayAsync(new View("SiteHeader", new
+            {
+                sticky = true
+            }))
+        </cache>
+        <main class="d-flex flex-column" role="main">
+            @RenderBody()
+        </main>
 
-    @await DisplayAsync(new View("SiteHeader", new
-    {
-        sticky = true
-    }))
+        <cache expires-after="@TimeSpan.FromMinutes(10)">
+            @await DisplayAsync(new View("SiteFooter", new
+            {
+                options = new FeatureIndexOptions()
+            }))
+        </cache>
 
-    <main class="d-flex flex-column" role="main">
-        @RenderBody()
-    </main>
-
-    @await DisplayAsync(new View("SiteFooter", new
-    {
-        options = new FeatureIndexOptions()
-    }))
-
-
-    <script src="~/js/vendors/jquery.js"></script>
-    <script src="~/js/vendors/bootstrap.js"></script>
-    <script src="~/js/app/plato.js" asp-append-version="true"></script>
-    <script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+        <script src="~/js/vendors/jquery.js"></script>
+        <script src="~/js/vendors/bootstrap.js"></script>
+        <script src="~/js/app/plato.js" asp-append-version="true"></script>
+        <script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
+        @RenderSection("Scripts", required: false)
 
 </body>
 </html>
