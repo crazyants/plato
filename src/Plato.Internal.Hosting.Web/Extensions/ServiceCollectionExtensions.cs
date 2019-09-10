@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.TagHelpers.Internal;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -219,17 +220,18 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
+                .AddCacheTagHelper()
                 .AddRazorViewEngine();
+            
+            // Add default framework parts
+            AddDefaultFrameworkParts(builder.PartManager);
 
             // view adapters
             services.AddPlatoViewAdapters();
 
             // Add module mvc
             services.AddPlatoModuleMvc();
-
-            // Add default framework parts
-            AddDefaultFrameworkParts(builder.PartManager);
-
+                   
             // Add json formatter
             builder.AddJsonFormatters();
 
@@ -409,12 +411,21 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersAssembly));
             }
 
+            var mvcTagHelpersInternalAssembly = typeof(CacheTagHelperMemoryCacheFactory).Assembly;
+            if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcTagHelpersInternalAssembly))
+            {
+                partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersInternalAssembly));
+            }
+         
             var mvcRazorAssembly = typeof(UrlResolutionTagHelper).Assembly;
             if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcRazorAssembly))
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
 
+
+
+                   
         }
 
         private static void ListAllRegisteredServices(IApplicationBuilder app)

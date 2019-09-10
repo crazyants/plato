@@ -80,10 +80,16 @@ namespace Plato.Roles.Services
                     foreach (var claim in role.RoleClaims)
                     {
 
-                        if (!String.Equals(claim.ClaimType, Permission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
+                        // Simple case-sensitive comparison for performance 
+                        if (claim.ClaimType != Permission.ClaimTypeName)
                         {
                             continue;
                         }
+
+                        //if (!String.Equals(claim.ClaimType, Permission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
+                        //{
+                        //    continue;
+                        //}
                         
                         var permissionName = claim.ClaimValue;
                         if (grantingNames.Contains(permissionName))
