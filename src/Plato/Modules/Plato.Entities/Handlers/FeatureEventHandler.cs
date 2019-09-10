@@ -814,7 +814,7 @@ namespace Plato.Entities.Handlers
                                     INNER JOIN {prefix}_ShellFeatures f ON e.FeatureId = f.Id
                                 WHERE (
                                    e.FeatureId = @FeatureId
-                                ) ORDER BY e.SortOrder")
+                                )")
                     .ForTable(_entities)
                     .WithParameter(new SchemaColumn() { Name = "FeatureId", DbType = DbType.Int32 }))
                     

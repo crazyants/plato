@@ -334,8 +334,7 @@ namespace Plato.Entities
                 {
                     TableName = entities.Name,
                     Columns = new string[]
-                    {
-                    "SortOrder",
+                    {                
                     "IsHidden",
                     "IsPrivate",
                     "IsSpam",
@@ -403,99 +402,6 @@ namespace Plato.Entities
                 ////                );")
                 ////        .ForTable(entities)
                 ////        .WithParameter(entities.PrimaryKeyColumn))
-
-                builder.ProcedureBuilder
-
-                    // SelectEntitiesByFeatureId
-                    .CreateProcedure(new SchemaProcedure("SelectEntitiesByFeatureId",
-                            @"SELECT 
-                                        e.Id,
-                                        e.ParentId,
-                                        e.FeatureId,
-                                        e.CategoryId,
-                                        e.Title,
-                                        e.Alias,
-                                        e.Abstract,                                        
-                                        e.IsHidden,
-                                        e.IsPrivate,
-                                        e.IsSpam,
-                                        e.IsPinned,
-                                        e.IsDeleted,
-                                        e.IsLocked,
-                                        e.IsClosed,
-                                        e.TotalViews,
-                                        e.TotalReplies,
-                                        e.TotalAnswers,
-                                        e.TotalParticipants,
-                                        e.TotalReactions,
-                                        e.TotalFollows,
-                                        e.TotalReports,
-                                        e.TotalStars,
-                                        e.TotalRatings,
-                                        e.SummedRating,
-                                        e.MeanRating,
-                                        e.TotalLinks,
-                                        e.TotalImages,
-                                        e.TotalWords,          
-                                        e.SortOrder,                                        
-                                        e.CreatedUserId,
-                                        e.CreatedDate,
-                                        e.EditedUserId,
-                                        e.EditedDate,
-                                        e.ModifiedUserId,
-                                        e.ModifiedDate,
-                                        e.LastReplyId,
-                                        e.LastReplyUserId,
-                                        e.LastReplyDate,
-                                        0 AS [Message], -- not returned for performance reasons
-                                        0 AS Html,
-                                        0 AS Urls,
-                                        0 AS IpV4Address,
-                                        0 AS IpV6Address,
-                                        0 AS Rank,
-                                        0 AS MaxRank,
-                                        f.ModuleId, 
-                                        c.UserName AS CreatedUserName,                              
-                                        c.DisplayName AS CreatedDisplayName,                                  
-                                        c.Alias AS CreatedAlias,
-                                        c.PhotoUrl AS CreatedPhotoUrl,
-                                        c.PhotoColor AS CreatedPhotoColor,
-                                        c.SignatureHtml AS CreatedSignatureHtml,
-                                        c.IsVerified AS CreatedIsVerified,
-                                        c.IsStaff AS CreatedIsStaff,
-                                        c.IsSpam AS CreatedIsSpam,
-                                        c.IsBanned AS CreatedIsBanned,
-                                        m.UserName AS ModifiedUserName,                                 
-                                        m.DisplayName AS ModifiedDisplayName,                                
-                                        m.Alias AS ModifiedAlias,
-                                        m.PhotoUrl AS ModifiedPhotoUrl,
-                                        m.PhotoColor AS ModifiedPhotoColor,
-                                        m.SignatureHtml AS ModifiedSignatureHtml,
-                                        m.IsVerified AS ModifiedIsVerified,
-                                        m.IsStaff AS ModifiedIsStaff,
-                                        m.IsSpam AS ModifiedIsSpam,
-                                        m.IsBanned AS ModifiedIsBanned,
-                                        l.UserName AS LastReplyUserName,                                
-                                        l.DisplayName AS LastReplyDisplayName,                                  
-                                        l.Alias AS LastReplyAlias,
-                                        l.PhotoUrl AS LastReplyPhotoUrl,
-                                        l.PhotoColor AS LastReplyPhotoColor,
-                                        l.SignatureHtml AS LastReplySignatureHtml,
-                                        l.IsVerified AS LastReplyIsVerified,
-                                        l.IsStaff AS LastReplyIsStaff,
-                                        l.IsSpam AS LastReplyIsSpam,
-                                        l.IsBanned AS LastReplyIsBanned
-                                    FROM {prefix}_Entities e WITH (nolock) 
-                                        LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
-                                        LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
-                                        LEFT OUTER JOIN {prefix}_Users l ON e.LastReplyUserId = l.Id
-                                        INNER JOIN {prefix}_ShellFeatures f ON e.FeatureId = f.Id
-                                    WHERE (
-                                       e.FeatureId = @FeatureId
-                                    ) ORDER BY e.SortOrder")
-                        .ForTable(entities)
-                        .WithParameter(new SchemaColumn() { Name = "FeatureId", DbType = DbType.Int32 })
-                    );
 
                 // Add builder results to output
                 output.AddRange(builder.Statements);

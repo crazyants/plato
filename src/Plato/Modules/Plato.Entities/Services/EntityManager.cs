@@ -256,13 +256,31 @@ namespace Plato.Entities.Services
 
                     // Find entity above the supplied entity at the same level
                     TEntity above = null;
-                    foreach (var entity in entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId))
+                    //foreach (var entity in entities
+                    //    .Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId)
+                    //    .OrderBy(e => e.SortOrder))
+                    //{
+                    //    if (entity.SortOrder < sortOrder)
+                    //    {
+                    //        // Ensure we get the full entity as "above" will be updated
+                    //        above = await _entityStore.GetByIdAsync(((TEntity)entity).Id);
+                    //        break;
+                    //    }
+                    //}
+
+                    children = entities
+                        .Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId)
+                        .OrderBy(e => e.SortOrder)
+                        .ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        if (entity.SortOrder < sortOrder)
+                        if (children[i].SortOrder < sortOrder)
                         {
-                            above = (TEntity)entity;
+                            above = await _entityStore.GetByIdAsync(children[i].Id);
+                            break;
                         }
                     }
+
 
                     // Swap sort orders
                     if (above != null)
@@ -304,16 +322,18 @@ namespace Plato.Entities.Services
                 case MoveDirection.Down:
 
                     // Find entity below the supplied entity at the same level
-                    TEntity below = null;
-                    children = entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId).ToList();
-                    for (var i = children.Count - 1; i >= 0; i--)
+                    TEntity below = null;                
+                    foreach (var entity in entities
+                        .Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId)
+                        .OrderBy(e => e.SortOrder))
                     {
-                        if (children[i].SortOrder > sortOrder)
+                        if (entity.SortOrder > sortOrder)
                         {
-                            below = (TEntity)children[i];
+                            below = await _entityStore.GetByIdAsync(entity.Id);
+                            break;
                         }
                     }
-
+                  
                     // Swap sort orders
                     if (below != null)
                     {
@@ -356,11 +376,13 @@ namespace Plato.Entities.Services
                 case MoveDirection.ToTop:
 
                     // Find entity at the top of the current level
-                    TEntity top = null;
-                    children = entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId).ToList();
-                    for (var i = children.Count - 1; i >= 0; i--)
+                    TEntity top = null;                    
+                    foreach (var entity in entities
+                        .Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId)
+                        .OrderBy(e => e.SortOrder))
                     {
-                        top = (TEntity)children[i];
+                        top = await _entityStore.GetByIdAsync(((TEntity)entity).Id);
+                        break;
                     }
 
                     // Ensure we found the entity and we are not attempting to move
@@ -380,10 +402,19 @@ namespace Plato.Entities.Services
 
                     // Find entity at the bottom of the current level
                     TEntity bottom = null;
-                    foreach (var entity in entities.Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId))
+                    children = entities
+                        .Where(e => e.CategoryId == model.CategoryId && e.ParentId == model.ParentId)
+                        .OrderBy(e => e.SortOrder)
+                        .ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
                     {
-                        bottom = (TEntity)entity;
+                        bottom = await _entityStore.GetByIdAsync(((TEntity)children[i]).Id);
+                        if (bottom != null)
+                        {
+                            break;
+                        }                   
                     }
+                  
 
                     // Ensure we found the entity and we are not attempting to move
                     // the entity if it's already the bottom most entity

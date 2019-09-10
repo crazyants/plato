@@ -171,10 +171,12 @@ namespace Plato.Entities.Stores
                 var results = await _entityRepository.SelectByFeatureIdAsync(featureId);
                 if (results != null)
                 {
-                    return await MergeEntityData(results.ToList());
+                    results = await MergeEntityData(results.ToList());
+                    results = results.BuildHierarchy<TEntity>();
+                    results = results.OrderBy(e => e.SortOrder);
                 }
 
-                return null;
+                return results;
 
             });
 
@@ -200,8 +202,7 @@ namespace Plato.Entities.Stores
             }
 
             var entities = await GetByFeatureIdAsync(entity.FeatureId);
-            return entities?.BuildHierarchy<TEntity>()
-                .RecurseParents<TEntity>(entity.Id).Reverse();
+            return entities?.RecurseParents<TEntity>(entity.Id).Reverse();
 
         }
 
@@ -215,8 +216,7 @@ namespace Plato.Entities.Stores
             }
 
             var entities = await GetByFeatureIdAsync(entity.FeatureId);
-            return entities?.BuildHierarchy<TEntity>()
-                .RecurseChildren<TEntity>(entity.Id).Reverse();
+            return entities?.RecurseChildren<TEntity>(entity.Id).Reverse();
         }
         
         public void CancelTokens(TEntity model)

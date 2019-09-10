@@ -17,126 +17,128 @@
 </head>
 <body>
 
-<div id="top"></div>
+    <div id="top"></div>
 
-<div class="page-loader" data-provide="loader">
-    <div class="plato-loader position-absolute-center">
-        <div class="cube"></div>
-        <div class="cube bg-primary"></div>
-        <div class="cube bg-success"></div>
-        <div class="cube bg-warning"></div>
-        <div class="cube bg-danger"></div>
-    </div>
-</div>
-
-<assets section="Body"/>
-<scripts section="Body"/>
-
-<!-- Site Nav  -->
-@await DisplayAsync(new View("SiteHeader", new
-{
-    sticky = false
-}))
-
-<!-- Plato Nav  -->
-<nav class="nav-site bg-white">
-    <div class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid container-fluid-1280">
-            <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand text-primary">
-                @siteOpts.SiteName
-            </a>
-            <div class="navbar-mobile">
-                <div class="navbar-nav w-100">
-                    <ul class="nav nav-pills align-self-end">
-                        <li class="nav-item nav-item-bars">
-                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]" data-provide="tooltip" title="@T["Navigation"]">
-                                <i class="fal fa-bars"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item nav-item-search">
-                            <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]" data-provide="tooltip" title="@T["Search"]">
-                                <i class="fal fa-search"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="navbar-search d-lg-none collapse mr-4" id="search-collapse">
-                <navigation name="site-search" class="nav nav-search"/>
-            </div>
-            <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
-                <div class="navbar-nav">
-
-                    <navigation name="site"
-                                class="nav nav-pills"
-                                child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in"/>
-
-                </div>
-            </div>
+    <div class="page-loader" data-provide="loader">
+        <div class="plato-loader position-absolute-center">
+            <div class="cube"></div>
+            <div class="cube bg-primary"></div>
+            <div class="cube bg-success"></div>
+            <div class="cube bg-warning"></div>
+            <div class="cube bg-danger"></div>
         </div>
     </div>
-</nav>
 
-@if (RouteEquals("Plato.Core", "Home", "Index"))
-{
-    <div class="bg-light mb-4">
-        <div class="container-fluid container-fluid-1280">
-            <div class="row">
-                <div class="col-12  my-6 text-center">
-                    <h1 class="font-weight-bold text-primary text-uppercase">
-                        @T["How can we help?"]
-                    </h1>
-                    <form class="form-inline mt-4" asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
-                        <div class="w-80 mx-auto position-relative min-w-250">
-                            <div class="search-input-group">
-                                <input data-provide="searchAutoComplete" type="search" class="form-control" autocomplete="off" placeholder="Search for keywords..." id="Search" name="Search" value=""/>
-                                <div id="searchResults" class="dropdown-menu dropdown-menu-no-arrow w-100" role="menu">
-                                    <p class="text-center">
-                                        <i class="fal fa-spinner fa-spin"></i>
-                                    </p>
-                                </div>
-                                <button type="submit" class="btn btn-primary" role="button">
-                                    <i class="fal fa-search"></i>
-                                </button>
-                            </div>
+    <assets section="Body" />
+    <scripts section="Body" />
+
+    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(10)">
+        <!-- Site Nav  -->
+        @await DisplayAsync(new View("SiteHeader", new
+        {
+            sticky = false
+        }))
+    </cache>
+
+        <!-- Plato Nav  -->
+        <nav class="nav-site bg-white">
+            <div class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid container-fluid-1280">
+                    <a asp-route-area="Plato.Core" asp-route-controller="Home" asp-route-action="Index" class="navbar-brand text-primary">
+                        @siteOpts.SiteName
+                    </a>
+                    <div class="navbar-mobile">
+                        <div class="navbar-nav w-100">
+                            <ul class="nav nav-pills align-self-end">
+                                <li class="nav-item nav-item-bars">
+                                    <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="@T["Navigation"]" data-provide="tooltip" title="@T["Navigation"]">
+                                        <i class="fal fa-bars"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-item-search">
+                                    <a href="#" class="nav-link dropdown-toggle-no-caret" data-toggle="collapse" data-target="#search-collapse" aria-controls="search-collapse" aria-expanded="false" aria-label="@T["Search"]" data-provide="tooltip" title="@T["Search"]">
+                                        <i class="fal fa-search"></i>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                    </form>
+                    </div>
+                    <div class="navbar-search d-lg-none collapse mr-4" id="search-collapse">
+                        <navigation name="site-search" class="nav nav-search" />
+                    </div>
+                    <div class="navbar-collapse collapse" id="navbar-collapse" role="navigation">
+                        <div class="navbar-nav">
 
+                            <navigation name="site"
+                                        class="nav nav-pills"
+                                        child-ul-css-class="dropdown-menu dropdown-menu-right anim anim-2x anim-scale-in" />
 
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-}
-
-<div class="container-fluid container-fluid-1280 pt-2">
-    @if (platoOpts.DemoMode)
-    {
-        <div class="mt-3">
-            <div class="p-3 border border-danger text-danger text-center">
-                @T["This is a demo. Please kick the tires but note data may be periodically deleted and some features may be disabled. Enjoy"]
-            </div>
-        </div>
-    }
-    @if (!RouteEquals("Plato.Core", "Home", "Index"))
-    {
-        <nav aria-label="breadcrumb" class="mt-3">
-            <breadcrumb class="breadcrumb p-0 m-0 bg-transparent col-12"/>
         </nav>
-    }
-    @RenderBody()
-</div>
 
-<footer>
+        @if (RouteEquals("Plato.Core", "Home", "Index"))
+        {
+            <div class="bg-light mb-4">
+                <div class="container-fluid container-fluid-1280">
+                    <div class="row">
+                        <div class="col-12  my-6 text-center">
+                            <h1 class="font-weight-bold text-primary text-uppercase">
+                                @T["How can we help?"]
+                            </h1>
+                            <form class="form-inline mt-4" asp-route-area="Plato.Search" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+                                <div class="w-80 mx-auto position-relative min-w-250">
+                                    <div class="search-input-group">
+                                        <input data-provide="searchAutoComplete" type="search" class="form-control" autocomplete="off" placeholder="Search for keywords..." id="Search" name="Search" value="" />
+                                        <div id="searchResults" class="dropdown-menu dropdown-menu-no-arrow w-100" role="menu">
+                                            <p class="text-center">
+                                                <i class="fal fa-spinner fa-spin"></i>
+                                            </p>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" role="button">
+                                            <i class="fal fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
 
-    @await DisplayAsync(new View("SiteFooterMinimal", new
-    {
-    }))
 
-</footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
-<assets section="Footer"/>
-<scripts section="Footer"/>
+        <div class="container-fluid container-fluid-1280 pt-2">
+            @if (platoOpts.DemoMode)
+            {
+                <div class="mt-3">
+                    <div class="p-3 border border-danger text-danger text-center">
+                        @T["This is a demo. Please kick the tires but note data may be periodically deleted and some features may be disabled. Enjoy"]
+                    </div>
+                </div>
+            }
+            @if (!RouteEquals("Plato.Core", "Home", "Index"))
+            {
+                <nav aria-label="breadcrumb" class="mt-3">
+                    <breadcrumb class="breadcrumb p-0 m-0 bg-transparent col-12" />
+                </nav>
+            }
+            @RenderBody()
+        </div>
+
+        <footer>
+
+            @await DisplayAsync(new View("SiteFooterMinimal", new
+            {
+            }))
+
+        </footer>
+
+        <assets section="Footer" />
+        <scripts section="Footer" />
 
 </body>
 </html>

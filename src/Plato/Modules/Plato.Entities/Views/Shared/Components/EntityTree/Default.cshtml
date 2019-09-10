@@ -135,7 +135,7 @@
 
                     sb.Append("</div>");
 
-                    if (!String.IsNullOrEmpty(Model.EditMenuViewName))
+                    if (!String.IsNullOrEmpty(Model.EditMenuViewName) && entity.IsSelected)
                     {
                         var view = await DisplayAsync(new View(Model.EditMenuViewName, new
                         {
