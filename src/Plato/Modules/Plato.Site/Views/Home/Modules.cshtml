@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <cache expires-after="@TimeSpan.FromMinutes(10)">
+                <cache expires-after="@TimeSpan.FromMinutes(30)">
                     @await DisplayAsync(new View("SiteModuleList", new
                     {
                         options = new FeatureIndexOptions()

@@ -29,12 +29,12 @@
         </div>
     </div>
 
-    <cache expires-after="@TimeSpan.FromMinutes(10)">
+    <cache expires-after="@TimeSpan.FromMinutes(30)">
         <assets section="Body" />
         <scripts section="Body" />
     </cache>
 
-    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(10)">
+    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(30)">
         <!-- Site Nav  -->
         @await DisplayAsync(new View("SiteHeader", new
         {
@@ -123,7 +123,7 @@
         @RenderBody()
     </div>
         
-    <cache expires-after="@TimeSpan.FromMinutes(10)">
+    <cache expires-after="@TimeSpan.FromMinutes(30)">
         <footer>
             @await DisplayAsync(new View("SiteFooterMinimal", new
             {
@@ -131,7 +131,7 @@
         </footer>
     </cache>
     
-    <cache expires-after="@TimeSpan.FromMinutes(10)">
+    <cache expires-after="@TimeSpan.FromMinutes(30)">
         <assets section="Footer" />
         <scripts section="Footer" />
     </cache>

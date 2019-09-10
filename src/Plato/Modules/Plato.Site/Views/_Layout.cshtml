@@ -13,7 +13,6 @@
     @await RenderSectionAsync("Header", required: false)
 </head>
 <body>
-
     <div class="page-loader" data-provide="loader">
         <div class="plato-loader position-absolute-center">
             <div class="cube"></div>
@@ -23,28 +22,25 @@
             <div class="cube bg-danger"></div>
         </div>
     </div>
-        <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(10)">
-            @await DisplayAsync(new View("SiteHeader", new
-            {
-                sticky = true
-            }))
-        </cache>
-        <main class="d-flex flex-column" role="main">
-            @RenderBody()
-        </main>
-
-        <cache expires-after="@TimeSpan.FromMinutes(10)">
-            @await DisplayAsync(new View("SiteFooter", new
-            {
-                options = new FeatureIndexOptions()
-            }))
-        </cache>
-
-        <script src="~/js/vendors/jquery.js"></script>
-        <script src="~/js/vendors/bootstrap.js"></script>
-        <script src="~/js/app/plato.js" asp-append-version="true"></script>
-        <script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
-        @RenderSection("Scripts", required: false)
-
+    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(30)">
+        @await DisplayAsync(new View("SiteHeader", new
+        {
+            sticky = true
+        }))
+    </cache>
+    <main class="d-flex flex-column" role="main">
+        @RenderBody()
+    </main>
+    <cache expires-after="@TimeSpan.FromMinutes(30)">
+        @await DisplayAsync(new View("SiteFooter", new
+        {
+            options = new FeatureIndexOptions()
+        }))
+    </cache>
+    <script src="~/js/vendors/jquery.js"></script>
+    <script src="~/js/vendors/bootstrap.js"></script>
+    <script src="~/js/app/plato.js" asp-append-version="true"></script>
+    <script src="~/js/app/plato-ui.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
