@@ -15,18 +15,18 @@ namespace Plato.Internal.Layout.Views
     {
 
         public ViewContext ViewContext { get; set; }
-
-        private readonly IHtmlHelper _htmlHelper;
+                
         private readonly IViewComponentHelper _viewComponentHelper;
         private readonly ILogger<ViewInvoker> _logger;
+        private readonly IHtmlHelper _htmlHelper;
 
-        public ViewInvoker(
-            IHtmlHelper htmlHelper,
+        public ViewInvoker(            
             IViewComponentHelper viewComponentHelper,
-            ILogger<ViewInvoker> logger)
-        {
-            _htmlHelper = htmlHelper;
+            ILogger<ViewInvoker> logger,
+            IHtmlHelper htmlHelper)
+        {            
             _viewComponentHelper = viewComponentHelper;
+            _htmlHelper = htmlHelper;
             _logger = logger;
         }
 
@@ -40,7 +40,7 @@ namespace Plato.Internal.Layout.Views
         public async Task<IHtmlContent> InvokeAsync(IView view)
         {
 
-            // Hot code path, please modify carefully
+            // ** Hot code path ** - please modify carefully
 
             if (this.ViewContext == null)
             {
@@ -134,8 +134,7 @@ namespace Plato.Internal.Layout.Views
                 }
                 throw;
             }
-            
-            
+                        
         }
         
         bool IsViewModelAnonymousType(object model)

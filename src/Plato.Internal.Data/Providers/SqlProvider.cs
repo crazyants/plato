@@ -26,7 +26,7 @@ namespace Plato.Internal.Data.Providers
             _connectionString = dbContextOptions.Value.ConnectionString;
         }
 
-        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<CachedDbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
 
             if (_logger.IsEnabled(LogLevel.Information))

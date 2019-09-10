@@ -33,7 +33,7 @@ namespace Plato.Internal.Data
             Configuration = cfg;
         }
   
-        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<CachedDbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
+        public async Task<T> ExecuteReaderAsync<T>(CommandType commandType, string commandText, Func<DbDataReader, Task<T>> populate, IDbDataParameter[] dbParams = null) where T : class
         {
             if (_provider == null)
                 return null;
