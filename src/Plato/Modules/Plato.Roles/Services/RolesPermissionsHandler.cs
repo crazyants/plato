@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Models.Roles;
 
 namespace Plato.Roles.Services
 {
@@ -42,41 +43,43 @@ namespace Plato.Roles.Services
             PermissionNames(requirement.Permission, grantingNames);
 
             // Determine what set of roles should be examined by the access check
-            var rolesToExamine = new List<string>();
+            var rolesToExamine = new List<Role>();
 
-            // Search specific roles within supplied identity
-            var roleClaims = context.User
-                .Claims
-                .Where(c => c.Type == ClaimTypes.Role)
-                .ToList();
+            // Removed for performance reasons but left in place for easy fallback if needed
+            //// Search specific roles within supplied identity
+            //var roleClaims = context.User
+            //    .Claims
+            //    .Where(c => c.Type == ClaimTypes.Role)
+            //    .ToList();
 
-            if (roleClaims.Count > 0)
-            {
-                rolesToExamine.AddRange(roleClaims.Select(r => r.Value));
-            }
-            else
-            {
-                // Get supplied user
+            //if (roleClaims.Count > 0)
+            //{
+            //    rolesToExamine.AddRange(roleClaims.Select(r => r.Value));
+            //}
+            //else
+            //{
+                // Get authenticated user
                 var user = await _contextFacade.GetAuthenticatedUserAsync(context.User.Identity);
                 if (user != null)
                 {
-                    rolesToExamine.AddRange(user.RoleNames);
+                    rolesToExamine.AddRange(await _platoRoleStore.GetRolesByUserIdAsync(user.Id));
                 }
                 else
                 {
-                    rolesToExamine.Add(DefaultRoles.Anonymous);
+                rolesToExamine.Add(await _platoRoleStore.GetByNameAsync(DefaultRoles.Anonymous));
                 }
 
-            }
+            //}
             
             // Iterate roles checking claims
-            foreach (var roleName in rolesToExamine)
+            foreach (var role in rolesToExamine)
             {
-                var role = await _platoRoleStore.GetByNameAsync(roleName);
-                if (role != null)
-                {
+                //Role role = await _platoRoleStore.GetByNameAsync(roleName);
+                //if (role != null)
+                //{
                     foreach (var claim in role.RoleClaims)
                     {
+
                         if (!String.Equals(claim.ClaimType, Permission.ClaimTypeName, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
@@ -89,7 +92,7 @@ namespace Plato.Roles.Services
                             return;
                         }
                     }
-                }
+                //}
             }
         }
 

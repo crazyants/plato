@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Collections;
-using System.Data;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Plato.Internal.Data.Abstractions
 {
@@ -60,7 +57,7 @@ namespace Plato.Internal.Data.Abstractions
 
         public override IEnumerator GetEnumerator()
         {
-            return new DbEnumerator(this, false);
+            return new DbEnumerator(this, true);
         }
 
         public override Type GetFieldType(int i) => _proxy.GetFieldType(i);
