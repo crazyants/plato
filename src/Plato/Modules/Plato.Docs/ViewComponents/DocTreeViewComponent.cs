@@ -23,6 +23,8 @@ namespace Plato.Docs.ViewComponents
         private readonly IEntityService<Doc> _entityService;
         private readonly IFeatureFacade _featureFacade;
 
+        private bool? _displayMenu;
+
         public DocTreeViewComponent(
         
             IAuthorizationService authorizationService,
@@ -52,8 +54,12 @@ namespace Plato.Docs.ViewComponents
             if (!string.IsNullOrEmpty(options.EditMenuViewName))
             {
                 // Ensure we have permission to at least 1 of the menu options
-                var displayMenu = await DisplayMenu();
-                if (!displayMenu)
+                if (!_displayMenu.HasValue)
+                {
+                    await DisplayMenu();
+                }
+                 
+                if (!_displayMenu.Value)
                 {
                     // If we don't have permission disable menu
                     options.EditMenuViewName = string.Empty;
@@ -127,9 +133,9 @@ namespace Plato.Docs.ViewComponents
 
         }
 
-        private async Task<bool> DisplayMenu()
+        private async Task DisplayMenu()
         {
-
+                       
             // Permissions needed for the menu
             var permissions = new List<IPermission>
             {
@@ -144,12 +150,13 @@ namespace Plato.Docs.ViewComponents
             {
                 if (await _authorizationService.AuthorizeAsync(ViewContext.HttpContext.User, permission))
                 {
-                    return true;
+                    _displayMenu = true;                    
+                    return;
                 }
             }
 
-            return false;
-
+            _displayMenu = false;
+                
         }
 
     }

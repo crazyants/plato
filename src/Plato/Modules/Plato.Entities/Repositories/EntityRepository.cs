@@ -159,8 +159,7 @@ namespace Plato.Entities.Repositories
 
             return results;
         }
-
-
+        
         public async Task<bool> DeleteAsync(int id)
         {
 
@@ -182,6 +181,40 @@ namespace Plato.Entities.Repositories
             }
 
             return success > 0 ? true : false;
+
+        }
+
+        public async Task<IEnumerable<TModel>> SelectByFeatureIdAsync(int featureId)
+        {
+            IList<TModel> output = null;
+            using (var context = _dbContext)
+            {
+                output = await context.ExecuteReaderAsync<IList<TModel>>(
+                    CommandType.StoredProcedure,
+                    "SelectEntitiesByFeatureId",
+                    async reader =>
+                    {
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            output = new List<TModel>();
+                            while (await reader.ReadAsync())
+                            {
+                                var entity = ActivateInstanceOf<TModel>.Instance();
+                                entity.PopulateModel(reader);
+                                output.Add(entity);
+                            }
+                        }
+
+                        return output;
+
+                    }, new[]
+                    {
+                        new DbParam("FeatureId", DbType.Int32, featureId)
+                    });
+
+            }
+
+            return output;
 
         }
 
@@ -345,40 +378,7 @@ namespace Plato.Entities.Repositories
         }
         
         #endregion
-
-        public async Task<IEnumerable<TModel>> SelectByFeatureIdAsync(int featureId)
-        {
-            IList<TModel> output = null;
-            using (var context = _dbContext)
-            {
-                output = await context.ExecuteReaderAsync<IList<TModel>>(
-                    CommandType.StoredProcedure,
-                    "SelectEntitiesByFeatureId",
-                    async reader =>
-                    {
-                        if ((reader != null) && (reader.HasRows))
-                        {
-                            output = new List<TModel>();
-                            while (await reader.ReadAsync())
-                            {
-                                var entity = ActivateInstanceOf<TModel>.Instance();
-                                entity.PopulateModel(reader);
-                                output.Add(entity);
-                            }
-                        }
-
-                        return output;
-
-                    }, new[]
-                    {
-                        new DbParam("FeatureId", DbType.Int32, featureId)
-                    });
-
-            }
-
-            return output;
-
-        }
+                
     }
 
 }

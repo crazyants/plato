@@ -171,11 +171,10 @@ namespace Plato.Entities.Stores
                 var results = await _entityRepository.SelectByFeatureIdAsync(featureId);
                 if (results != null)
                 {
-                    results = await MergeEntityData(results.ToList());
-                    results = results.OrderBy(r => r.SortOrder);
+                    return await MergeEntityData(results.ToList());
                 }
 
-                return results;
+                return null;
 
             });
 
