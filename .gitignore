@@ -28,7 +28,7 @@ bld/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 src/Plato/wwwroot/**
-src/[Aa]pp_[Dd]ata/
+src/Plato/[Aa]pp_[Dd]ata/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
