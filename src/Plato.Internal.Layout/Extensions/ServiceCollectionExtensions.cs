@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
@@ -16,6 +13,8 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
+using Plato.Internal.Layout.Razor;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Plato.Internal.Layout.Extensions
 {
@@ -40,9 +39,11 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
 
             // Cache for view engine results
-            services.AddSingleton<ISingletonCache<ViewEngineResult>, SingletonCache<ViewEngineResult>>();
-            services.AddSingleton<ISingletonCache<HtmlContentBuilder>, SingletonCache<HtmlContentBuilder>>();
-            
+            //services.AddSingleton<ISingletonCache<ViewEngineResult>, SingletonCache<ViewEngineResult>>();
+            //services.AddSingleton<ISingletonCache<HtmlContentBuilder>, SingletonCache<HtmlContentBuilder>>();
+                        
+            services.AddScoped<IRazorViewEngine, PlatoViewEngine>();
+
             // Views - these need to be scoped
             services.AddScoped<IViewFactory, ViewFactory>(); 
             services.AddScoped<IPartialInvoker, PartialInvoker>();

@@ -57,6 +57,7 @@ using Plato.Internal.Search.Extensions;
 using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
+using Plato.Internal.Layout.Razor;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -222,6 +223,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddViews()
                 .AddCacheTagHelper()
                 .AddRazorViewEngine();
+
+            // Override default view engine implementation
+            services.AddScoped<IRazorViewEngine, PlatoViewEngine>();
             
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);

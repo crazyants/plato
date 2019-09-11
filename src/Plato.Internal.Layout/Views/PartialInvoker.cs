@@ -216,22 +216,33 @@ namespace Plato.Internal.Layout.Views
 
         public async Task<IHtmlContent> InvokeAsync(string viewName, object model, ViewDataDictionary viewData)
         {
-                     
-            var viewToken = new ViewCacheKey(viewName, model, ViewContext);
-            var key = viewToken.Token.ToString();
 
-            IHtmlContent content;
-            if (_memoryCache.TryGetValue(key, out Task<IHtmlContent> cachedResult))
+
+            var builder = new HtmlContentBuilder();
+            var result = FindView(viewName);
+            var viewBuffer = new ViewBuffer(_viewBufferScope, result.ViewName, ViewBuffer.PartialViewPageSize);
+            using (var writer = new ViewBufferTextWriter(viewBuffer, Encoding.UTF8))
             {
-                // There is either some value already cached (as a Task) or a worker processing the output.
-                content = await cachedResult;
-            }
-            else
-            {
-                content = await CreateCacheEntry(key, viewName, model, viewData);
+                await RenderPartialViewAsync(writer, model, viewData, result.View);
             }
 
-            return content;
+            return builder.SetHtmlContent(viewBuffer);
+            
+            //var viewToken = new ViewCacheKey(viewName, model, ViewContext);
+            //var key = viewToken.Token.ToString();
+
+            //IHtmlContent content;
+            //if (_memoryCache.TryGetValue(key, out Task<IHtmlContent> cachedResult))
+            //{
+            //    // There is either some value already cached (as a Task) or a worker processing the output.
+            //    content = await cachedResult;
+            //}
+            //else
+            //{
+            //    content = await CreateCacheEntry(key, viewName, model, viewData);
+            //}
+
+            //return content;
             
         }
 
@@ -257,7 +268,7 @@ namespace Plato.Internal.Layout.Views
         }
 
         async Task RenderPartialViewAsync(
-            TextWriter writer, 
+            TextWriter writer,
             object model,
             ViewDataDictionary viewData,
             Microsoft.AspNetCore.Mvc.ViewEngines.IView view)
@@ -273,158 +284,158 @@ namespace Plato.Internal.Layout.Views
             }
         }
 
-        private async Task<IHtmlContent> CreateCacheEntry(
-            string key,
-            string viewName,
-            object model,
-            ViewDataDictionary viewData)
-        {
+        //private async Task<IHtmlContent> CreateCacheEntry(
+        //    string key,
+        //    string viewName,
+        //    object model,
+        //    ViewDataDictionary viewData)
+        //{
 
-            var tokenSource = new CancellationTokenSource();
+        //    var tokenSource = new CancellationTokenSource();
 
-            var options = GetMemoryCacheEntryOptions();
-            options.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
+        //    var options = GetMemoryCacheEntryOptions();
+        //    options.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
 
-            var tcs = new TaskCompletionSource<IHtmlContent>(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
+        //    var tcs = new TaskCompletionSource<IHtmlContent>(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
 
-            // The returned value is ignored, we only do this so that
-            // the compiler doesn't complain about the returned task
-            // not being awaited
-            _ = _memoryCache.Set(key, tcs.Task, options);
+        //    // The returned value is ignored, we only do this so that
+        //    // the compiler doesn't complain about the returned task
+        //    // not being awaited
+        //    _ = _memoryCache.Set(key, tcs.Task, options);
 
-            IHtmlContent content;
-            try
-            {
-                // The entry is set instead of assigning a value to the
-                // task so that the expiration options are not impacted
-                // by the time it took to compute it.
+        //    IHtmlContent content;
+        //    try
+        //    {
+        //        // The entry is set instead of assigning a value to the
+        //        // task so that the expiration options are not impacted
+        //        // by the time it took to compute it.
 
-                // Use the CreateEntry to ensure a cache scope is created that will copy expiration tokens from
-                // cache entries created from the GetChildContentAsync call to the current entry.
-                var entry = _memoryCache.CreateEntry(key);
+        //        // Use the CreateEntry to ensure a cache scope is created that will copy expiration tokens from
+        //        // cache entries created from the GetChildContentAsync call to the current entry.
+        //        var entry = _memoryCache.CreateEntry(key);
 
-                // The result is processed inside an entry
-                // such that the tokens are inherited.
+        //        // The result is processed inside an entry
+        //        // such that the tokens are inherited.
 
-                var result = ProcessContentAsync(viewName, model, viewData);
-                content = await result;
-               
-                entry.SetOptions(options);
+        //        var result = ProcessContentAsync(viewName, model, viewData);
+        //        content = await result;
 
-                entry.Value = result;
+        //        entry.SetOptions(options);
 
-                // An entry gets committed to the cache when disposed gets called. We only want to do this when
-                // the content has been correctly generated (didn't throw an exception). For that reason the entry
-                // can't be put inside a using block.
-                entry.Dispose();
+        //        entry.Value = result;
 
-                // Set the result on the TCS once we've committed the entry to the cache since commiting to the cache
-                // may throw.
-                tcs.SetResult(content);
-                return content;
-            }
-            catch (Exception ex)
-            {
-                // Remove the worker task from the cache in case it can't complete.
-                tokenSource.Cancel();
+        //        // An entry gets committed to the cache when disposed gets called. We only want to do this when
+        //        // the content has been correctly generated (didn't throw an exception). For that reason the entry
+        //        // can't be put inside a using block.
+        //        entry.Dispose();
 
-                // Fail the TCS so other awaiters see the exception.
-                tcs.TrySetException(ex);
-                throw;
-            }
-            finally
-            {
-                // The tokenSource needs to be disposed as the MemoryCache
-                // will register a callback on the Token.
-                tokenSource.Dispose();
-            }
-        }
+        //        // Set the result on the TCS once we've committed the entry to the cache since commiting to the cache
+        //        // may throw.
+        //        tcs.SetResult(content);
+        //        return content;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Remove the worker task from the cache in case it can't complete.
+        //        tokenSource.Cancel();
 
-        internal MemoryCacheEntryOptions GetMemoryCacheEntryOptions()
-        {         
-            var options = new MemoryCacheEntryOptions();
-            options.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));         
-            return options;
-        }
+        //        // Fail the TCS so other awaiters see the exception.
+        //        tcs.TrySetException(ex);
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // The tokenSource needs to be disposed as the MemoryCache
+        //        // will register a callback on the Token.
+        //        tokenSource.Dispose();
+        //    }
+        //}
 
-        private async Task<IHtmlContent> ProcessContentAsync(
-            string viewName,
-            object model,
-            ViewDataDictionary viewData)
-        {
-          
-            var builder = new HtmlContentBuilder();
-            var result = FindView(viewName);
-            var viewBuffer = new ViewBuffer(_viewBufferScope, result.ViewName, ViewBuffer.PartialViewPageSize);
-            using (var writer = new ViewBufferTextWriter(viewBuffer, Encoding.UTF8))
-            {
-                await RenderPartialViewAsync(writer, model, viewData, result.View);
-            }
-                     
-            using (var writer = new CharBufferTextWriter())
-            {
-                viewBuffer.WriteTo(writer, HtmlEncoder.Default);
-                return new CharBufferHtmlContent(writer.Buffer);
-            }
-            
-        }
+        //internal MemoryCacheEntryOptions GetMemoryCacheEntryOptions()
+        //{         
+        //    var options = new MemoryCacheEntryOptions();
+        //    options.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));         
+        //    return options;
+        //}
 
-        private class CharBufferTextWriter : TextWriter
-        {
-            public CharBufferTextWriter()
-            {
-                Buffer = new PagedCharBuffer(CharArrayBufferSource.Instance);
-            }
+        //private async Task<IHtmlContent> ProcessContentAsync(
+        //    string viewName,
+        //    object model,
+        //    ViewDataDictionary viewData)
+        //{
 
-            public override Encoding Encoding => Null.Encoding;
+        //    var builder = new HtmlContentBuilder();
+        //    var result = FindView(viewName);
+        //    var viewBuffer = new ViewBuffer(_viewBufferScope, result.ViewName, ViewBuffer.PartialViewPageSize);
+        //    using (var writer = new ViewBufferTextWriter(viewBuffer, Encoding.UTF8))
+        //    {
+        //        await RenderPartialViewAsync(writer, model, viewData, result.View);
+        //    }
 
-            public PagedCharBuffer Buffer { get; }
+        //    using (var writer = new CharBufferTextWriter())
+        //    {
+        //        viewBuffer.WriteTo(writer, HtmlEncoder.Default);
+        //        return new CharBufferHtmlContent(writer.Buffer);
+        //    }
 
-            public override void Write(char value)
-            {
-                Buffer.Append(value);
-            }
+        //}
 
-            public override void Write(char[] buffer, int index, int count)
-            {
-                Buffer.Append(buffer, index, count);
-            }
+        //private class CharBufferTextWriter : TextWriter
+        //{
+        //    public CharBufferTextWriter()
+        //    {
+        //        Buffer = new PagedCharBuffer(CharArrayBufferSource.Instance);
+        //    }
 
-            public override void Write(string value)
-            {
-                Buffer.Append(value);
-            }
-        }
+        //    public override Encoding Encoding => Null.Encoding;
 
-        private class CharBufferHtmlContent : IHtmlContent
-        {
-            private readonly PagedCharBuffer _buffer;
+        //    public PagedCharBuffer Buffer { get; }
 
-            public CharBufferHtmlContent(PagedCharBuffer buffer)
-            {
-                _buffer = buffer;
-            }
+        //    public override void Write(char value)
+        //    {
+        //        Buffer.Append(value);
+        //    }
 
-            public PagedCharBuffer Buffer => _buffer;
+        //    public override void Write(char[] buffer, int index, int count)
+        //    {
+        //        Buffer.Append(buffer, index, count);
+        //    }
 
-            public void WriteTo(TextWriter writer, HtmlEncoder encoder)
-            {
-                var length = Buffer.Length;
-                if (length == 0)
-                {
-                    return;
-                }
+        //    public override void Write(string value)
+        //    {
+        //        Buffer.Append(value);
+        //    }
+        //}
 
-                for (var i = 0; i < Buffer.Pages.Count; i++)
-                {
-                    var page = Buffer.Pages[i];
-                    var pageLength = Math.Min(length, page.Length);
-                    writer.Write(page, index: 0, count: pageLength);
-                    length -= pageLength;
-                }
+        //private class CharBufferHtmlContent : IHtmlContent
+        //{
+        //    private readonly PagedCharBuffer _buffer;
 
-            }
-        }
+        //    public CharBufferHtmlContent(PagedCharBuffer buffer)
+        //    {
+        //        _buffer = buffer;
+        //    }
+
+        //    public PagedCharBuffer Buffer => _buffer;
+
+        //    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+        //    {
+        //        var length = Buffer.Length;
+        //        if (length == 0)
+        //        {
+        //            return;
+        //        }
+
+        //        for (var i = 0; i < Buffer.Pages.Count; i++)
+        //        {
+        //            var page = Buffer.Pages[i];
+        //            var pageLength = Math.Min(length, page.Length);
+        //            writer.Write(page, index: 0, count: pageLength);
+        //            length -= pageLength;
+        //        }
+
+        //    }
+        //}
 
     }
 
