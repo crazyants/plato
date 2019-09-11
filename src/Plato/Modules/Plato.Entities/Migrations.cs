@@ -20,15 +20,64 @@ namespace Plato.Entities
                 new PreparedMigration()
                 {
                     ModuleId = ModuleId,
-                    Version = "1.0.1",
-                    Statements = v_1_0_1()
+                    Version = "1.0.4",
+                    Statements = v_1_0_4()
                 }
             };
 
         }
         
-        private ICollection<string> v_1_0_1()
+        private ICollection<string> v_1_0_4()
         {
+
+            // Our columns to drop
+            ////var columnsToDrop = new SchemaTable()
+            ////{
+            ////    Name = "Entities",
+            ////    Columns = new List<SchemaColumn>()
+            ////    {
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyViews",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyReplies",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyAnswers",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////         new SchemaColumn()
+            ////        {
+            ////            Name = "DailyReactions",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyFollows",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyReports",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyStars",
+            ////            DbType = DbType.Int32
+            ////        },
+            ////        new SchemaColumn()
+            ////        {
+            ////            Name = "DailyRatings",
+            ////            DbType = DbType.Int32
+            ////        }
+            ////    }
+            ////};
 
             // Updated entities table
             var entities = new SchemaTable()
@@ -265,7 +314,8 @@ namespace Plato.Entities
                     }
                 }
             };
-            
+
+
             var output = new List<string>();
 
             using (var builder = _schemaBuilder)
@@ -275,7 +325,7 @@ namespace Plato.Entities
                     .Configure(options =>
                     {
                         options.ModuleName = ModuleId;
-                        options.Version = "1.0.1";
+                        options.Version = "1.0.4";
                         options.DropProceduresBeforeCreate = true;
                     });
 
@@ -292,7 +342,67 @@ namespace Plato.Entities
                     "IsDeleted"
                     }
                 });
-                               
+
+
+
+                ////// Drop daily columns
+                ////builder.TableBuilder.DropTableColumns(columnsToDrop);
+
+                ////// Recreate default stored procedures
+                ////builder.ProcedureBuilder
+                ////    .CreateDefaultProcedures(entities)
+
+                ////// Overwrite our SelectEntityById created via CreateDefaultProcedures
+                ////// above to also return all EntityData within a second result set
+                ////.CreateProcedure(
+                ////    new SchemaProcedure(
+                ////            $"SelectEntityById",
+                ////            @"SELECT e.*, f.ModuleId, 0 AS Rank, 0 AS MaxRank,
+                ////                    c.UserName AS CreatedUserName,                              
+                ////                    c.DisplayName AS CreatedDisplayName,                                  
+                ////                    c.Alias AS CreatedAlias,
+                ////                    c.PhotoUrl AS CreatedPhotoUrl,
+                ////                    c.PhotoColor AS CreatedPhotoColor,
+                ////                    c.SignatureHtml AS CreatedSignatureHtml,
+                ////                    c.IsVerified AS CreatedIsVerified,
+                ////                    c.IsStaff AS CreatedIsStaff,
+                ////                    c.IsSpam AS CreatedIsSpam,
+                ////                    c.IsBanned AS CreatedIsBanned,
+                ////                    m.UserName AS ModifiedUserName,                                 
+                ////                    m.DisplayName AS ModifiedDisplayName,                                
+                ////                    m.Alias AS ModifiedAlias,
+                ////                    m.PhotoUrl AS ModifiedPhotoUrl,
+                ////                    m.PhotoColor AS ModifiedPhotoColor,
+                ////                    m.SignatureHtml AS ModifiedSignatureHtml,
+                ////                    m.IsVerified AS ModifiedIsVerified,
+                ////                    m.IsStaff AS ModifiedIsStaff,
+                ////                    m.IsSpam AS ModifiedIsSpam,
+                ////                    m.IsBanned AS ModifiedIsBanned,
+                ////                    l.UserName AS LastReplyUserName,                                
+                ////                    l.DisplayName AS LastReplyDisplayName,                                  
+                ////                    l.Alias AS LastReplyAlias,
+                ////                    l.PhotoUrl AS LastReplyPhotoUrl,
+                ////                    l.PhotoColor AS LastReplyPhotoColor,
+                ////                    l.SignatureHtml AS LastReplySignatureHtml,
+                ////                    l.IsVerified AS LastReplyIsVerified,
+                ////                    l.IsStaff AS LastReplyIsStaff,
+                ////                    l.IsSpam AS LastReplyIsSpam,
+                ////                    l.IsBanned AS LastReplyIsBanned
+                ////                FROM {prefix}_Entities e WITH (nolock) 
+                ////                    LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
+                ////                    LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
+                ////                    LEFT OUTER JOIN {prefix}_Users l ON e.LastReplyUserId = l.Id
+                ////                    INNER JOIN {prefix}_ShellFeatures f ON e.FeatureId = f.Id
+                ////                WHERE (
+                ////                   e.Id = @Id
+                ////                );
+                ////                SELECT * FROM {prefix}_EntityData WITH (nolock) 
+                ////                WHERE (
+                ////                   EntityId = @Id
+                ////                );")
+                ////        .ForTable(entities)
+                ////        .WithParameter(entities.PrimaryKeyColumn))
+
                 // Add builder results to output
                 output.AddRange(builder.Statements);
                 

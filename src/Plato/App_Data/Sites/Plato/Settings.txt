@@ -1,6 +1,6 @@
 Name: Default
 State: Running
 DatabaseProvider: SqlClient
-ConnectionString: server=13.70.199.8,57500;uid=InstantASPSql2017;pwd=38dDcxTdX#3D2CCvsEr#5Sd2S;database=plato1
+ConnectionString: server=localhost;trusted_connection=true;database=plato15
 TablePrefix: plato_
 Location: Plato
