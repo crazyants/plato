@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.ActionFilters;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.Localizers;
@@ -35,13 +38,17 @@ namespace Plato.Internal.Layout.Extensions
 
             // Layout updater
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
+
+            // Cache for view engine results
+            services.AddSingleton<ISingletonCache<ViewEngineResult>, SingletonCache<ViewEngineResult>>();
+            services.AddSingleton<ISingletonCache<HtmlContentBuilder>, SingletonCache<HtmlContentBuilder>>();
             
-            // Generic views
-            // These need to be scoped and cannot be singletons
-            services.AddScoped<IViewFactory, ViewFactory>();            
+            // Views - these need to be scoped
+            services.AddScoped<IViewFactory, ViewFactory>(); 
+            services.AddScoped<IPartialInvoker, PartialInvoker>();
             services.AddScoped<IViewInvoker, ViewInvoker>();
             services.AddScoped<IViewHelperFactory, ViewDisplayHelperFactory>();
-
+            
             // Add page title builder
             services.AddScoped<IPageTitleBuilder, PageTitleBuilder>();
             

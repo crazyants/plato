@@ -18,14 +18,18 @@ namespace Plato.Internal.Layout.Views
                 
         private readonly IViewComponentHelper _viewComponentHelper;
         private readonly ILogger<ViewInvoker> _logger;
+        private readonly IPartialInvoker _partialInvoker;
+
         private readonly IHtmlHelper _htmlHelper;
 
         public ViewInvoker(            
             IViewComponentHelper viewComponentHelper,
             ILogger<ViewInvoker> logger,
-            IHtmlHelper htmlHelper)
+            IHtmlHelper htmlHelper,
+            IPartialInvoker partialInvoker)
         {            
             _viewComponentHelper = viewComponentHelper;
+            _partialInvoker = partialInvoker;
             _htmlHelper = htmlHelper;
             _logger = logger;
         }
@@ -77,30 +81,35 @@ namespace Plato.Internal.Layout.Views
 
         async Task<IHtmlContent> InvokePartialAsync(string viewName, object model)
         {
-            if (!(_htmlHelper is HtmlHelper helper))
-            {
-                throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
-            }
-            helper.Contextualize(this.ViewContext);
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Attempting to invoke partial view \"{viewName}\".");
-            }
 
-            try
-            {
-                return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
-            }
-            catch (Exception e)
-            {
-                if (_logger.IsEnabled(LogLevel.Error))
-                {
-                    _logger.LogError(e,
-                        $"An exception occurred whilst invoking the partial view with name \"{viewName}\". {e.Message}");
-                }
-                throw;
-            }
+            _partialInvoker.Contextualize(this.ViewContext);
+            return await _partialInvoker.InvokeAsync(viewName, model, ViewContext.ViewData);
+
+            //if (!(_htmlHelper is HtmlHelper helper))
+            //{
+            //    throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
+            //}
+            //helper.Contextualize(this.ViewContext);
+
+            //if (_logger.IsEnabled(LogLevel.Information))
+            //{
+            //    _logger.LogInformation($"Attempting to invoke partial view \"{viewName}\".");
+            //}
+
+            //try
+            //{
+            //    return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
+            //}
+            //catch (Exception e)
+            //{
+            //    if (_logger.IsEnabled(LogLevel.Error))
+            //    {
+            //        _logger.LogError(e,
+            //            $"An exception occurred whilst invoking the partial view with name \"{viewName}\". {e.Message}");
+            //    }
+            //    throw;
+            //}
             
         }
 
