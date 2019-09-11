@@ -27,7 +27,6 @@ namespace Plato.Internal.Cache.Abstractions
                     {
                         sb
                             .Append(vary.ToString());
-                            //.Append(vary.GetHashCode());
                     }
                 }
             }
