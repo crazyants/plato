@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
@@ -223,25 +224,73 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddViews()
                 .AddCacheTagHelper()
                 .AddRazorViewEngine();
-
-            // Override default view engine implementation
-            services.AddScoped<IRazorViewEngine, PlatoViewEngine>();
             
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
-
-            // view adapters
+            
+            // View adapters
             services.AddPlatoViewAdapters();
+
+            // Razor
+            services.AddPlatoRazor();
 
             // Add module mvc
             services.AddPlatoModuleMvc();
-                   
+
+            // Add module application parts
+            services.AddPlatoModuleParts(builder.PartManager);
+            
             // Add json formatter
             builder.AddJsonFormatters();
 
             return services;
 
         }
+
+        private static IServiceCollection AddPlatoModuleParts(this IServiceCollection services, ApplicationPartManager partManager)
+        {
+
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
+
+            // add modules as application parts
+            //var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
+            var modules = moduleManager.LoadModulesAsync().Result;
+            foreach (var module in modules)
+            {
+                // add modules as application parts
+                foreach (var assembly in module.Assemblies)
+                {
+                    partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                }
+            }
+
+            //var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
+            //foreach (PortableExecutableReference reference in assemblies
+            //    .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
+            //    .Select(x => MetadataReference.CreateFromFile(x.Location))
+            //    .ToList())
+            //411
+            //        +
+            //    var md = reference.GetMetadata();
+            //    var typeOf = reference.GetMetadata().GetType();
+            //    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(reference.FilePath);
+            //    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != assembly))
+            //    {
+            //        partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            //    }
+            //    //partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            //}
+
+            //var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;
+            //if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcTagHelpersAssembly))
+            //{
+            //    partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersAssembly));
+            //}
+
+            return services;
+
+        }
+
 
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
@@ -257,10 +306,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
                 }
 
-                // View location expander for theme
-                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
-
-                // Ensure loaded modules are aware of current context
+                // Prioritize current area over module expanders
+                // Important should be added after ModuleViewLocationExpander
+                options.ViewLocationExpanders.Add(new AreaViewLocationExpander());
+                
+                //Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
                 var moduleReferences = assemblies
                     .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
@@ -281,19 +331,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 }
 
             });
-
-            // add modules as application parts
-            var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
-            var modules = moduleManager.LoadModulesAsync().Result;
-            foreach (var module in modules)
-            {
-                // add modules as application parts
-                foreach (var assembly in module.Assemblies)
-                {
-                    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
-                }
-            }
-
+                       
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
             services.TryAddEnumerable(ServiceDescriptor
@@ -409,6 +447,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
+
             var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;
             if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcTagHelpersAssembly))
             {
@@ -432,6 +471,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                    
         }
 
+   
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {
             app.Map("/allservices", builder => builder.Run(async context =>

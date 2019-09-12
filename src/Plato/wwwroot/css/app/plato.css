@@ -80,7 +80,6 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .page-loader-hidden {
     opacity: 0;
     visibility: hidden;
-
 }
 
 .plato-loader {

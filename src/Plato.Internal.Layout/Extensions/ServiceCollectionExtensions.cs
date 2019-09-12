@@ -30,6 +30,16 @@ namespace Plato.Internal.Layout.Extensions
             return services;
 
         }
+        public static IServiceCollection AddPlatoRazor(
+            this IServiceCollection services)
+        {
+
+            // Override default view engine implementation
+            services.AddSingleton<IRazorViewEngine, PlatoViewEngine>();
+
+            return services;
+
+        }
 
         public static IServiceCollection AddPlatoViewFeature(
             this IServiceCollection services)
@@ -37,12 +47,6 @@ namespace Plato.Internal.Layout.Extensions
 
             // Layout updater
             services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
-
-            // Cache for view engine results
-            //services.AddSingleton<ISingletonCache<ViewEngineResult>, SingletonCache<ViewEngineResult>>();
-            //services.AddSingleton<ISingletonCache<HtmlContentBuilder>, SingletonCache<HtmlContentBuilder>>();
-                        
-            services.AddScoped<IRazorViewEngine, PlatoViewEngine>();
 
             // Views - these need to be scoped
             services.AddScoped<IViewFactory, ViewFactory>(); 

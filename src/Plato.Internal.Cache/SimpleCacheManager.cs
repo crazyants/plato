@@ -36,10 +36,7 @@ namespace Plato.Internal.Cache
 
         public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
         {
-
-            //var key = token.ToString();
-            //return (TItem)await factory(_memoryCache.CreateEntry(key));
-
+                    
             var key = token.ToString();
 
             // Item does not exist in cache

@@ -6566,8 +6566,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,

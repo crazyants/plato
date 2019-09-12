@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -33,6 +34,9 @@ namespace Plato.Internal.Layout.Razor
 
         protected IMemoryCache ViewLookupCache { get; }
 
+        public static string GetNormalizedRouteValue(ActionContext context, string key)
+                 => NormalizedRouteValue.GetNormalizedRouteValue(context, key);
+        
         private readonly DiagnosticListener _diagnosticListener;
         private readonly IRazorPageFactoryProvider _pageFactory;   
         private readonly IRazorPageActivator _pageActivator;
@@ -42,9 +46,9 @@ namespace Plato.Internal.Layout.Razor
         public PlatoViewEngine(
             IRazorPageFactoryProvider pageFactory,
             IOptions<RazorViewEngineOptions> optionsAccessor,
-             DiagnosticListener diagnosticListener,          
-            HtmlEncoder htmlEncoder,
-            IRazorPageActivator pageActivator)
+            DiagnosticListener diagnosticListener,            
+            IRazorPageActivator pageActivator,
+            HtmlEncoder htmlEncoder)
         {
             _diagnosticListener = diagnosticListener;
             _options = optionsAccessor.Value;            
@@ -52,11 +56,11 @@ namespace Plato.Internal.Layout.Razor
             _pageFactory = pageFactory;
             _htmlEncoder = htmlEncoder;       
             ViewLookupCache = new MemoryCache(new MemoryCacheOptions());
-
         }
 
         public RazorPageResult FindPage(ActionContext context, string pageName)
         {
+
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -91,10 +95,7 @@ namespace Plato.Internal.Layout.Razor
             var cacheResult = LocatePageFromViewLocations(context, viewName, isMainPage);
             return CreateViewEngineResult(cacheResult, viewName);
         }
-
-        public static string GetNormalizedRouteValue(ActionContext context, string key)
-            => NormalizedRouteValue.GetNormalizedRouteValue(context, key);
-
+             
         private ViewLocationCacheResult LocatePageFromViewLocations(
          ActionContext actionContext,
          string pageName,
@@ -124,11 +125,11 @@ namespace Plato.Internal.Layout.Razor
                 expanderValues = new Dictionary<string, string>(StringComparer.Ordinal);
                 expanderContext.Values = expanderValues;
 
-                // Perf: Avoid allocations
-                for (var i = 0; i < _options.ViewLocationExpanders.Count; i++)
-                {
-                    _options.ViewLocationExpanders[i].PopulateValues(expanderContext);
-                }
+                ////// Perf: Avoid allocations
+                ////for (var i = 0; i < _options.ViewLocationExpanders.Count; i++)
+                ////{
+                ////    _options.ViewLocationExpanders[i].PopulateValues(expanderContext);
+                ////}
             }
 
             var cacheKey = new ViewLocationCacheKey(
@@ -150,6 +151,7 @@ namespace Plato.Internal.Layout.Razor
 
         private ViewEngineResult CreateViewEngineResult(ViewLocationCacheResult result, string viewName)
         {
+
             if (!result.Success)
             {
                 return ViewEngineResult.NotFound(viewName, result.SearchedLocations);
@@ -172,19 +174,21 @@ namespace Plato.Internal.Layout.Razor
           ViewLocationExpanderContext expanderContext,
           ViewLocationCacheKey cacheKey)
         {
-
+                    
             var viewLocations = GetViewLocationFormats(expanderContext);
-
             for (var i = 0; i < _options.ViewLocationExpanders.Count; i++)
             {
-                viewLocations = _options.ViewLocationExpanders[i].ExpandViewLocations(expanderContext, viewLocations);
+                viewLocations = _options.ViewLocationExpanders[i]
+                    .ExpandViewLocations(expanderContext, viewLocations);
             }
-
+            
             ViewLocationCacheResult cacheResult = null;
             var searchedLocations = new List<string>();
             var expirationTokens = new HashSet<IChangeToken>();
+
             foreach (var location in viewLocations)
             {
+
                 var path = string.Format(
                     CultureInfo.InvariantCulture,
                     location,
