@@ -1,14 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewAdapters;
 
 namespace Plato.Markdown.ViewAdapters
 {
     public class EditorViewAdapterProvider : BaseAdapterProvider
     {
-
-        public override Task<IViewAdapterResult> ConfigureAsync()
+            
+        public EditorViewAdapterProvider()
         {
-            return Adapt("Editor", v =>
+            ViewName = "Editor";
+        }
+
+        public override Task<IViewAdapterResult> ConfigureAsync(string viewName)
+        {
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return Task.FromResult(default(IViewAdapterResult));
+            }
+            
+            return Adapt(ViewName, v =>
             {
                 v.AdaptView("Markdown");
             });

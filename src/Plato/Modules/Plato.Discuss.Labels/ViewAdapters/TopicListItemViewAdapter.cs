@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,11 +47,17 @@ namespace Plato.Discuss.Labels.ViewAdapters
             _httpContextAccessor = httpContextAccessor;
             _actionContextAccessor = actionContextAccessor;
             _authorizationService = authorizationService;
+            ViewName = "TopicListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
-            
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
+
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature == null)
@@ -75,10 +82,11 @@ namespace Plato.Discuss.Labels.ViewAdapters
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
-            return await Adapt("TopicListItem", v =>
+            return await Adapt(viewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Topic>>(model  =>
                 {
+                    
                     if (model.Entity == null)
                     {
                         // Return an anonymous type as we are adapting a view component

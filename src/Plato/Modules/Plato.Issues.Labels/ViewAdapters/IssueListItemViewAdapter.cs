@@ -12,13 +12,15 @@ using Plato.Internal.Layout.ViewAdapters;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Label = Plato.Issues.Labels.Models.Label;
+using System;
 
 namespace Plato.Issues.Labels.ViewAdapters
 {
 
     public class IssueListItemViewAdapter : BaseAdapterProvider
     {
-        
+           
+
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IEntityService<Issue> _entityService;
@@ -37,11 +39,17 @@ namespace Plato.Issues.Labels.ViewAdapters
             _entityService = entityService;
             _featureFacade = featureFacade;
             _labelStore = labelStore;
+            ViewName = "IssueListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
-            
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
+
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues");
             if (feature == null)
@@ -66,7 +74,7 @@ namespace Plato.Issues.Labels.ViewAdapters
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
-            return await Adapt("IssueListItem", v =>
+            return await Adapt(ViewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Issue>>(model  =>
                 {

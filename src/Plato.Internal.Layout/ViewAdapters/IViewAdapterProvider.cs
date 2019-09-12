@@ -6,9 +6,9 @@ namespace Plato.Internal.Layout.ViewAdapters
     public interface IViewAdapterProvider
     {
         
-        string ViewName { get; }
+        string ViewName { get; set; }
 
-        Task<IViewAdapterResult> ConfigureAsync();
+        Task<IViewAdapterResult> ConfigureAsync(string viewName);
     }
     
 }

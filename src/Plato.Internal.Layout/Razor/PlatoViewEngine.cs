@@ -92,14 +92,26 @@ namespace Plato.Internal.Layout.Razor
 
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isMainPage)
         {
+
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (string.IsNullOrEmpty(viewName))
+            {
+                throw new ArgumentNullException(nameof(viewName));
+            }
+
             var cacheResult = LocatePageFromViewLocations(context, viewName, isMainPage);
             return CreateViewEngineResult(cacheResult, viewName);
+
         }
              
         private ViewLocationCacheResult LocatePageFromViewLocations(
-         ActionContext actionContext,
-         string pageName,
-         bool isMainPage)
+             ActionContext actionContext,
+             string pageName,
+             bool isMainPage)
         {
 
             var controllerName = GetNormalizedRouteValue(actionContext, ControllerKey);
@@ -170,33 +182,66 @@ namespace Plato.Internal.Layout.Razor
             return ViewEngineResult.Found(viewName, view);
         }
 
+        private IEnumerable<string> _viewLocations;
+
+        ConcurrentDictionary<string, IEnumerable<string>> _viewLocations1 =
+            new ConcurrentDictionary<string, IEnumerable<string>>();
+
         private ViewLocationCacheResult OnCacheMiss(
           ViewLocationExpanderContext expanderContext,
           ViewLocationCacheKey cacheKey)
         {
-                    
-            var viewLocations = GetViewLocationFormats(expanderContext);
-            for (var i = 0; i < _options.ViewLocationExpanders.Count; i++)
+
+            var sb = new StringBuilder();
+            sb.Append(expanderContext.ViewName)
+                .Append(expanderContext.ControllerName)
+                .Append(expanderContext.AreaName);
+
+            var key = sb.ToString();
+
+            if (!_viewLocations1.ContainsKey(key))
             {
-                viewLocations = _options.ViewLocationExpanders[i]
-                    .ExpandViewLocations(expanderContext, viewLocations);
+
+                var viewLocations = GetViewLocationFormats(expanderContext);
+                for (var i = 0; i < _options.ViewLocationExpanders.Count; i++)
+                {
+                    viewLocations = _options.ViewLocationExpanders[i]
+                        .ExpandViewLocations(expanderContext, viewLocations);
+                }
+
+                var resolvedLocations = new List<string>();
+                foreach (var location in viewLocations)
+                {
+                    var path = string.Format(
+                          CultureInfo.InvariantCulture,
+                          location,
+                          expanderContext.ViewName,
+                          expanderContext.ControllerName,
+                          expanderContext.AreaName);
+
+                    path = ViewEnginePath.ResolvePath(path);
+                    resolvedLocations.Add(path);
+                }
+
+                _viewLocations1[key] = resolvedLocations;
+
             }
-            
+
             ViewLocationCacheResult cacheResult = null;
             var searchedLocations = new List<string>();
             var expirationTokens = new HashSet<IChangeToken>();
 
-            foreach (var location in viewLocations)
+            foreach (var path in _viewLocations1[key])
             {
 
-                var path = string.Format(
-                    CultureInfo.InvariantCulture,
-                    location,
-                    expanderContext.ViewName,
-                    expanderContext.ControllerName,
-                    expanderContext.AreaName);
+                //var path = string.Format(
+                //    CultureInfo.InvariantCulture,
+                //    location,
+                //    expanderContext.ViewName,
+                //    expanderContext.ControllerName,
+                //    expanderContext.AreaName);
 
-                path = ViewEnginePath.ResolvePath(path);
+                //path = ViewEnginePath.ResolvePath(path);
 
                 cacheResult = CreateCacheResult(expirationTokens, path, expanderContext.IsMainPage);
                 if (cacheResult != null)
@@ -222,6 +267,9 @@ namespace Plato.Internal.Layout.Razor
 
             return ViewLookupCache.Set(cacheKey, cacheResult, cacheEntryOptions);
         }
+
+        private ConcurrentDictionary<string, RazorPageFactoryResult> pageFactoryResults =
+             new ConcurrentDictionary<string, RazorPageFactoryResult>();
 
         // Internal for unit testing
         internal ViewLocationCacheResult CreateCacheResult(
@@ -370,8 +418,7 @@ namespace Plato.Internal.Layout.Razor
                 return new RazorPageResult(pagePath, cacheResult.SearchedLocations);
             }
         }
-            
-
+        
         public ViewEngineResult GetView(string executingFilePath, string viewPath, bool isMainPage)
         {
 
@@ -421,6 +468,20 @@ namespace Plato.Internal.Layout.Razor
             return cacheResult;
         }
 
+        static bool IsApplicationRelativePath(string name)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(name));
+            return name[0] == '~' || name[0] == '/';
+        }
+
+        static bool IsRelativePath(string name)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(name));
+
+            // Though ./ViewName looks like a relative path, framework searches for that view using view locations.
+            return name.EndsWith(ViewExtension, StringComparison.OrdinalIgnoreCase);
+        }
+        
         internal static class RazorFileHierarchy
         {
             private const string ViewStartFileName = "_ViewStart.cshtml";
@@ -454,19 +515,6 @@ namespace Plato.Internal.Layout.Razor
                     yield return itemPath;
                 }
             }
-        }
-        private static bool IsApplicationRelativePath(string name)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(name));
-            return name[0] == '~' || name[0] == '/';
-        }
-
-        private static bool IsRelativePath(string name)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(name));
-
-            // Though ./ViewName looks like a relative path, framework searches for that view using view locations.
-            return name.EndsWith(ViewExtension, StringComparison.OrdinalIgnoreCase);
         }
 
     }

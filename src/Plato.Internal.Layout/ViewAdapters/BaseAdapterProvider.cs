@@ -6,9 +6,9 @@ namespace Plato.Internal.Layout.ViewAdapters
     public abstract class BaseAdapterProvider : IViewAdapterProvider
     {
         
-        public string ViewName { get; private set; }
+        public string ViewName { get; set; }
 
-        public abstract Task<IViewAdapterResult> ConfigureAsync();
+        public abstract Task<IViewAdapterResult> ConfigureAsync(string viewName);
 
         public Task<IViewAdapterResult> Adapt(string viewName,
             Action<IViewAdapterBuilder> configure)
@@ -16,7 +16,7 @@ namespace Plato.Internal.Layout.ViewAdapters
 
             // Which view is our adapter modifying
             // Not important mainly used for logging purposes
-            ViewName = viewName;
+            //ViewName = viewName;
 
             // Apply adapter builder & return compiled results
             var builder = new ViewAdapterBuilder(viewName);

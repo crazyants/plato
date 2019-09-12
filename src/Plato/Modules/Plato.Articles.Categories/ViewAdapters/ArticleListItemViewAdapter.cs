@@ -6,6 +6,7 @@ using Plato.Articles.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
+using System;
 
 namespace Plato.Articles.Categories.ViewAdapters
 {
@@ -13,6 +14,7 @@ namespace Plato.Articles.Categories.ViewAdapters
     public class ArticleListItemViewAdapter : BaseAdapterProvider
     {
 
+   
         private readonly ICategoryStore<Category> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
@@ -22,10 +24,16 @@ namespace Plato.Articles.Categories.ViewAdapters
         {
             _channelStore = channelStore;
             _featureFacade = featureFacade;
+            ViewName = "ArticleListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
 
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles.Categories");
@@ -47,7 +55,7 @@ namespace Plato.Articles.Categories.ViewAdapters
             // Instead we update the model for the article item view component
             // here via our view adapter to include the category information
             // This way the category data is only ever populated if the categories feature is enabled
-            return await Adapt("ArticleListItem", v =>
+            return await Adapt(ViewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Article>>(model =>
                 {

@@ -23,7 +23,7 @@ namespace Plato.Users.Middleware
             
             // Hydrate HttpContext.Features with our user
             await HydrateHttpContextFeatureAsync(context);
-            
+
             // Return next delegate
             await _next.Invoke(context);
             
@@ -48,7 +48,7 @@ namespace Plato.Users.Middleware
             }
 
             // Attempt tto get user from data store
-            var user = await contextFacade.GetAuthenticatedUserAsync();
+            var user = await contextFacade.GetAuthenticatedUserAsync(context.User.Identity);
 
             // User not found
             if (user == null)

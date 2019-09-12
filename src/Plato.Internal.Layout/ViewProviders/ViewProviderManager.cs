@@ -2,14 +2,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Internal.Layout.ViewProviders
 {
-    
+
     public class ViewProviderManager<TModel> : IViewProviderManager<TModel> where TModel : class
     {
 
@@ -145,8 +143,11 @@ namespace Plato.Internal.Layout.ViewProviders
                     throw;
                 }
             }
+
             return model;
+
         }
-        
+
     }
+
 }

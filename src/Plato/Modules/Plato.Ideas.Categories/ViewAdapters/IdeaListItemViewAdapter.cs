@@ -6,13 +6,14 @@ using Plato.Ideas.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
+using System;
 
 namespace Plato.Ideas.Categories.ViewAdapters
 {
 
     public class IdeaListItemViewAdapter : BaseAdapterProvider
     {
-
+            
         private readonly ICategoryStore<Category> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
@@ -22,11 +23,17 @@ namespace Plato.Ideas.Categories.ViewAdapters
         {
             _channelStore = channelStore;
             _featureFacade = featureFacade;
+            ViewName = "IdeaListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
+            
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
             if (feature == null)
@@ -47,7 +54,7 @@ namespace Plato.Ideas.Categories.ViewAdapters
             // Instead we update the model for the topic item view component
             // here via our view adapter to include the channel information
             // This way the channel data is only ever populated if the channels feature is enabled
-            return await Adapt("IdeaListItem", v =>
+            return await Adapt(ViewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Idea>>(model =>
                 {

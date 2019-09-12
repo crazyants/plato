@@ -6521,8 +6521,7 @@ $(function (win, doc, $) {
                     isNaN(breakPoint)) {
                     breakPoint = $(win).height() / 3;
                 }
-
-                console.log(breakPoint);
+                                
                 $(win).scrollSpy({
                     onScroll: function(spy) {
                         if (spy.scrollTop > breakPoint) {

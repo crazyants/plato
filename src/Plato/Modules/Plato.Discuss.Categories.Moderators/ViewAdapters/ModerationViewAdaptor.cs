@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace Plato.Discuss.Categories.Moderators.ViewAdapters
     public class ModerationViewAdapterProvider : BaseAdapterProvider
     {
 
+
         private readonly ICategoryStore<Category> _channelStore;
 
         private IHtmlLocalizer T { get; }
@@ -24,15 +26,21 @@ namespace Plato.Discuss.Categories.Moderators.ViewAdapters
         {
             _channelStore = channelStore;
             T = htmlLocalizer;
+            ViewName = "ModeratorListItem";
         }
 
-        public override Task<IViewAdapterResult> ConfigureAsync()
+        public override Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return Task.FromResult(default(IViewAdapterResult));
+            }
 
             // Plato.Discuss.Categories.Moderators does not have a dependency on Plato.Discuss.Channels
             // Instead we update the moderator view here via our view adaptor
             // This way the channel name is only ever populated if the channels feature is enabled
-            return Adapt("ModeratorListItem",  v =>
+            return Adapt(ViewName,  v =>
             {
                 v.AdaptModel<Moderator>(model =>
                 {

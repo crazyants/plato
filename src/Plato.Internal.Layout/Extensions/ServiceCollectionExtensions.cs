@@ -15,6 +15,8 @@ using Plato.Internal.Layout.Titles;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Layout.Razor;
 using Microsoft.AspNetCore.Mvc.Razor;
+using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Layout.Extensions
 {
@@ -36,6 +38,13 @@ namespace Plato.Internal.Layout.Extensions
 
             // Override default view engine implementation
             services.AddSingleton<IRazorViewEngine, PlatoViewEngine>();
+
+            // A singleton cache to store compiled view descriptors
+            services.AddSingleton<ISingletonCache<CompiledViewDescriptor>, SingletonCache<CompiledViewDescriptor>>();
+     
+            // In the default scenario the following services are singleton by virtue of being initialized as part of
+            // creating the singleton RazorViewEngine instance.
+            services.AddTransient<IRazorPageFactoryProvider, PlatoRazorPageFactoryProvider>();
 
             return services;
 

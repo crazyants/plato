@@ -10,13 +10,14 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
+using System;
 
 namespace Plato.Issues.Tags.ViewAdapters
 {
 
     public class IdeaListItemViewAdapter : BaseAdapterProvider
     {
-        
+      
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IEntityService<Issue> _entityService;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -29,10 +30,16 @@ namespace Plato.Issues.Tags.ViewAdapters
             _entityService = entityService;
             _entityTagStore = entityTagStore;
             _actionContextAccessor = actionContextAccessor;
+            ViewName = "IssueListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
+
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
             
             // Build a dictionary we can use below within our AdaptModel
             // method to add the correct tags for each displayed entity
@@ -42,7 +49,7 @@ namespace Plato.Issues.Tags.ViewAdapters
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the tag data for the entity
             // This way the tag data is only ever populated if the tags feature is enabled
-            return await Adapt("IssueListItem", v =>
+            return await Adapt(ViewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Issue>>(model  =>
                 {

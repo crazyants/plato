@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Plato.Articles.Labels.ViewAdapters
 
     public class ArticleListItemViewAdapter : BaseAdapterProvider
     {
-        
+           
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IEntityService<Article> _entityService;
@@ -37,11 +38,17 @@ namespace Plato.Articles.Labels.ViewAdapters
             _entityService = entityService;
             _featureFacade = featureFacade;
             _labelStore = labelStore;
+            ViewName = "ArticleListItem";
         }
 
-        public override async Task<IViewAdapterResult> ConfigureAsync()
+        public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
             
+            if (!viewName.Equals(ViewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return default(IViewAdapterResult);
+            }
+
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
             if (feature == null)
@@ -66,7 +73,7 @@ namespace Plato.Articles.Labels.ViewAdapters
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
-            return await Adapt("ArticleListItem", v =>
+            return await Adapt(ViewName, v =>
             {
                 v.AdaptModel<EntityListItemViewModel<Article>>(model  =>
                 {

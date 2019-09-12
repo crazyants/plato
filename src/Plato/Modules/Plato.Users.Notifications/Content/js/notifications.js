@@ -331,12 +331,11 @@ $(function (win, doc, $) {
                             methods.poll($caller);
                         },
                         interval * 1000);
-                }
-     
+                }     
 
             },
             poll: function($caller) {
-
+              
                 if (app === null) {
                     throw new Error("$.Plato Required");
                 }

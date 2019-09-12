@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Html;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Layout.ViewAdapters
 {
-    
+
     public class ViewAdapterBuilder : IViewAdapterBuilder
     {
         public string ViewName { get; }

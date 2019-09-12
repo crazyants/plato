@@ -19,7 +19,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -30,16 +29,16 @@ namespace Plato.Users.Controllers
 
         #region "Constructor"
 
-        private readonly IUserEmails _userEmails;
-        private readonly IPlatoUserManager<User> _platoUserManager;
-        private readonly UserManager<User> _userManager;
+        private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
+        private readonly IViewProviderManager<UserLogin> _loginViewProvider;        
+        private readonly IPlatoUserManager<User> _platoUserManager;        
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IViewProviderManager<UserLogin> _loginViewProvider;
-        private readonly IViewProviderManager<UserRegistration> _registerViewProvider;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserEmails _userEmails;
         private readonly IAlerter _alerter;
  
         public IHtmlLocalizer T { get; }
@@ -88,35 +87,7 @@ namespace Plato.Users.Controllers
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-
-            //var roleNames = new List<string>(2)
-            //{
-            //    DefaultRoles.Administrator,
-            //    DefaultRoles.Staff
-            //};
-
-            //var users = await _platoUserStore.QueryAsync()
-            //    .Select<UserQueryParams>(q =>
-            //    {
-            //        q.RoleName.IsIn(roleNames.ToArray());
-            //    })
-            //    .ToList();
-            //if (users?.Data != null)
-            //{
-          
-            //    var sb = new StringBuilder();
-            //    foreach (var user in users.Data)
-            //    {
-            //        sb.Append(user.DisplayName + String.Join(",", user.RoleNames));
-            //    }
-
-            //    ViewData["users"] = sb.ToString();
-            //}
-
-            //await CreateSampleUsers();
-
-            // ----------------------------------------------------------------
-
+                        
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -284,21 +255,9 @@ namespace Plato.Users.Controllers
 
             // Add return Url to viewData
             ViewData["ReturnUrl"] = returnUrl;
-
-            var rnd = new Random();
-            var email = "email@EmAil" + rnd.Next(0, 10000) + rnd.Next(0, 10000) + ".com";
-
-            // TODO remove
-            var model = new UserRegistration()
-            {
-                UserName = email,
-                Email = email,
-                Password = "H4s#32ffw1" + rnd.Next(0, 10000),
-                ConfirmPassword = "H4s#32ffw1" + rnd.Next(0, 10000)
-            };
-            
+                        
             // Return view
-            return View((LayoutViewModel) await _registerViewProvider.ProvideIndexAsync(model, this));
+            return View((LayoutViewModel) await _registerViewProvider.ProvideIndexAsync(new UserRegistration(), this));
 
         }
 
@@ -792,6 +751,7 @@ namespace Plato.Users.Controllers
 
         #region "Private Methods"
 
+        // TODO: To be removed
         async Task CreateSampleUsers()
         {
 
@@ -946,8 +906,6 @@ namespace Plato.Users.Controllers
             }
         }
         
-     
-      
         #endregion
 
     }
