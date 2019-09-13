@@ -138,20 +138,29 @@ namespace Plato.Internal.Modules
 
             foreach (var descriptor in _moduleDescriptors)
             {
- 
+
+                if (descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    var test = "test";
+                }
+
                 // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 
                 // get assembly with name matching descriptor Id (i.e. the modules primary assembly)
                 var moduleAssembly = assemblies.FirstOrDefault(a =>
                     Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
-                
+             
+                // get assembly with name matching descriptor Id + Views (i.e. the modules pre-compiled views assembly)
+                var viewsAssembly = assemblies.FirstOrDefault(a =>
+                    Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id + ".Views");
+
                 // The assembly may have already been loaded by another module
                 // For example if a module references the modules assembly we are trying to load
                 // LoadModuleAsync will only ever load the assembly once
                 // In this case add already loaded assemblies for the module
                 if (assemblies.Count == 0)
-                {
+                {                    
                     assemblies = _loadedAssemblies
                         .Where(m => m.Key == descriptor.Id)
                         .Select(a => a.Value)
@@ -176,6 +185,7 @@ namespace Plato.Internal.Modules
                 {
                     Descriptor = descriptor,
                     Assembly = moduleAssembly,
+                    ViewsAssembly = viewsAssembly,
                     Assemblies = assemblies
                 });
 

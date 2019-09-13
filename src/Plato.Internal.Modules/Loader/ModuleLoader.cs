@@ -75,7 +75,7 @@ namespace Plato.Internal.Modules.Loader
             // no bin folder within module
             if (!_fileSystem.DirectoryExists(path))
                 return localList;
-
+            
             var folder = _fileSystem.GetDirectoryInfo(path);
             foreach (var file in folder.GetFiles())
             {

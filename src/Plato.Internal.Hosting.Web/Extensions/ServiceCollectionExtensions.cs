@@ -226,7 +226,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddViews()
                 .AddCacheTagHelper()
                 .AddRazorViewEngine();
-            
+
+            // Add module application parts
+            services.AddPlatoModuleParts(builder.PartManager);
+
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
             
@@ -234,14 +237,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
             services.AddPlatoViewAdapters();
 
             // Razor
-            services.AddPlatoRazor();
+            //services.AddPlatoRazor();
 
             // Add module mvc
             services.AddPlatoModuleMvc();
 
-            // Add module application parts
-            services.AddPlatoModuleParts(builder.PartManager);
-            
+        
             // Add json formatter
             builder.AddJsonFormatters();
 
@@ -259,11 +260,63 @@ namespace Plato.Internal.Hosting.Web.Extensions
             var modules = moduleManager.LoadModulesAsync().Result;
             foreach (var module in modules)
             {
-                // add modules as application parts
-                foreach (var assembly in module.Assemblies)
+
+                if (module.Descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase ))
                 {
-                    partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                    var test = "test";
                 }
+
+                //if (module.Assembly != null)
+                //{
+                //    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
+                //    {
+                //        partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
+                //    }
+                //}
+
+                //if (module.ViewsAssembly != null)
+                //{
+                //    if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
+                //    {
+                //        // Adding this application part allows us to use compiled razor views from this plugin                        
+                //        partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
+                //    }
+                //}
+
+                if (module.ViewsAssembly != null)
+                {
+                    if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
+                    {
+                        // Adding this application part allows us to use compiled razor views from this plugin                        
+                        partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
+                    }
+                } else
+                {
+                    // add all found assemblies 
+                    foreach (var assembly in module.Assemblies)
+                    {
+
+                        // Ensure application parts are only added once
+                        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != assembly))
+                        {
+                            partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                        }
+                    }
+                }
+
+                //if (module.Descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase))
+                //{
+                //    if (module.ViewsAssembly != null)
+                //    {
+                //        if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
+                //        {
+                //            // Adding this application part allows us to use compiled razor views from this plugin                        
+                //            partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
+                //        }
+                //    }
+                //    continue;
+                //}
+            
             }
 
             //var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
