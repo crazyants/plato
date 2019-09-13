@@ -7,6 +7,7 @@ using Plato.Internal.Hosting.Web.Extensions;
 using System;
 using System.IO;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Plato
 {
@@ -30,9 +31,9 @@ namespace Plato
         // Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(Configuration);
+            services.AddSingleton(Configuration);            
             services.AddPlato();
-            
+
             return services.BuildServiceProvider();
         }
 

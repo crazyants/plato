@@ -59,6 +59,7 @@ using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
 using Plato.Internal.Layout.Razor;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -74,7 +75,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-
+            
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoDataProtection();
@@ -220,6 +221,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Razor & Views
             var builder = services
                 .AddMvcCore()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
                 .AddCacheTagHelper()
@@ -299,6 +301,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
+
+                // Perf to disable file watcher
+                //options.AllowRecompilingViewsOnFileChange = false;
 
                 // Optionally load matching views from any module
                 foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
