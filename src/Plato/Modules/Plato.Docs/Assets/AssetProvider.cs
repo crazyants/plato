@@ -33,7 +33,7 @@ namespace Plato.Docs.Assets
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    new Asset()
+                  new Asset()
                     {
                         Url = "/plato.docs/content/css/docs.css",
                         Type = AssetType.IncludeCss,
@@ -50,7 +50,7 @@ namespace Plato.Docs.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                 new Asset()
                     {
                         Url = "/plato.docs/content/css/docs.css",
                         Type = AssetType.IncludeCss,
@@ -62,7 +62,6 @@ namespace Plato.Docs.Assets
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

@@ -72,39 +72,117 @@ namespace Plato.Internal.Assets.Abstractions
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    /* Css */
+                       /* Css */
+
                     new Asset()
                     {
-                        Url = "~/css/app.css",
+                        Url = "/css/vendors/bootstrap.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
-                    /* JavaScript */
                     new Asset()
                     {
-                        Url = "~/js/app.js",
+                        Url = "/css/vendors/font-awesome.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/css/app/plato.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+              
+                    /* JavaScript */
+
+                    new Asset()
+                    {
+                        Url = "/js/vendors/jquery.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
+                    new Asset()
+                    {
+                        Url = "/js/vendors/bootstrap.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/vendors/bootstrap-notify.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/app/plato.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/app/plato-ui.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    }
                 }),
 
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    /* Css */
+                     /* Css */
+
                     new Asset()
                     {
-                        Url = "~/css/app.min.css",
+                        Url = "/css/vendors/bootstrap.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
-                    /* JavaScript */
                     new Asset()
                     {
-                        Url = "~/js/app.min.js",
+                        Url = "/css/vendors/font-awesome.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/css/app/plato.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+              
+                    /* JavaScript */
+
+                    new Asset()
+                    {
+                        Url = "/js/vendors/jquery.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
+                    new Asset()
+                    {
+                        Url = "/js/vendors/bootstrap.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/vendors/bootstrap-notify.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/app/plato.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/app/plato-ui.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    }
                 })
 
             };

@@ -55,7 +55,7 @@ namespace Plato.Core.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url = $"/{path}/theme.min.css",
+                        Url = $"/{path}/theme.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
                         Order = int.MaxValue
@@ -68,7 +68,7 @@ namespace Plato.Core.Assets
                     /* Css */
                     new Asset()
                     {
-                        Url = $"/{path}/theme.min.css",
+                        Url = $"/{path}/theme.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
                         Order = int.MaxValue

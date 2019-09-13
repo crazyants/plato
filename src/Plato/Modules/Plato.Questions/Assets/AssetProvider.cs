@@ -33,15 +33,15 @@ namespace Plato.Questions.Assets
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
-                        Url = "/plato.questions/content/css/questions.min.css",
+                        Url = "/plato.questions/content/css/questions.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.questions/content/js/questions.min.js",
+                        Url = "/plato.questions/content/js/questions.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -50,19 +50,18 @@ namespace Plato.Questions.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
-                        Url = "/plato.questions/content/css/questions.min.css",
+                        Url = "/plato.questions/content/css/questions.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.questions/content/js/questions.min.js",
+                        Url = "/plato.questions/content/js/questions.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

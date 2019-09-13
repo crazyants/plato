@@ -35,13 +35,13 @@ namespace Plato.Labels.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.labels/content/css/labels.min.css",
+                        Url = "/plato.labels/content/css/labels.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.labels/content/js/labels.min.js",
+                        Url = "/plato.labels/content/js/labels.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -50,19 +50,18 @@ namespace Plato.Labels.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
-                        Url = "/plato.labels/content/css/labels.min.css",
+                        Url = "/plato.labels/content/css/labels.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.labels/content/js/labels.min.js",
+                        Url = "/plato.labels/content/js/labels.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

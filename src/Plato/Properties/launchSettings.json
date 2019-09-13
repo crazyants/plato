@@ -17,16 +17,14 @@
     },
     "Development": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:50439",
+      "launchBrowser": true,  
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Production": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:50439",
+      "launchBrowser": true,      
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

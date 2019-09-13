@@ -33,15 +33,15 @@ namespace Plato.Categories.Assets
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
-                        Url = "/plato.categories/content/css/categories.min.css",
+                        Url = "/plato.categories/content/css/categories.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.categories/content/js/categories.min.js",
+                        Url = "/plato.categories/content/js/categories.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -50,19 +50,18 @@ namespace Plato.Categories.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                new Asset()
                     {
-                        Url = "/plato.categories/content/css/categories.min.css",
+                        Url = "/plato.categories/content/css/categories.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.categories/content/js/categories.min.js",
+                        Url = "/plato.categories/content/js/categories.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

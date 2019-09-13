@@ -33,7 +33,7 @@ namespace Plato.Discuss.Assets
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
                         Url = "/plato.discuss/content/css/discuss.css",
                         Type = AssetType.IncludeCss,
@@ -62,7 +62,6 @@ namespace Plato.Discuss.Assets
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

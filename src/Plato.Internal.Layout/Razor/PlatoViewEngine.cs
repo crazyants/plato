@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Internal;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +6,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 
 namespace Plato.Internal.Layout.Razor
 {
@@ -30,7 +30,7 @@ namespace Plato.Internal.Layout.Razor
         private const string ControllerKey = "controller";
         private const string PageKey = "page";
 
-        private static readonly TimeSpan _cacheExpirationDuration = TimeSpan.FromHours(24);
+        private static readonly TimeSpan _cacheExpirationDuration = TimeSpan.FromHours(48);
 
         protected IMemoryCache ViewLookupCache { get; }
 
@@ -89,7 +89,6 @@ namespace Plato.Internal.Layout.Razor
             }
         }
             
-
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isMainPage)
         {
 
@@ -233,16 +232,6 @@ namespace Plato.Internal.Layout.Razor
 
             foreach (var path in _viewLocations1[key])
             {
-
-                //var path = string.Format(
-                //    CultureInfo.InvariantCulture,
-                //    location,
-                //    expanderContext.ViewName,
-                //    expanderContext.ControllerName,
-                //    expanderContext.AreaName);
-
-                //path = ViewEnginePath.ResolvePath(path);
-
                 cacheResult = CreateCacheResult(expirationTokens, path, expanderContext.IsMainPage);
                 if (cacheResult != null)
                 {
@@ -260,10 +249,10 @@ namespace Plato.Internal.Layout.Razor
 
             var cacheEntryOptions = new MemoryCacheEntryOptions();
             cacheEntryOptions.SetSlidingExpiration(_cacheExpirationDuration);
-            foreach (var expirationToken in expirationTokens)
-            {
-                cacheEntryOptions.AddExpirationToken(expirationToken);
-            }
+            //foreach (var expirationToken in expirationTokens)
+            //{
+            //    cacheEntryOptions.AddExpirationToken(expirationToken);
+            //}
 
             return ViewLookupCache.Set(cacheKey, cacheResult, cacheEntryOptions);
         }

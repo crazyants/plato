@@ -33,15 +33,15 @@ namespace Plato.Entities.Ratings.Assets
                 // Staging
                 new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
-                    new Asset()
+                      new Asset()
                     {
-                        Url = "/plato.entities.ratings/content/css/ratings.min.css",
+                        Url = "/plato.entities.ratings/content/css/ratings.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.entities.ratings/content/js/ratings.min.js",
+                        Url = "/plato.entities.ratings/content/js/ratings.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -50,19 +50,18 @@ namespace Plato.Entities.Ratings.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                  new Asset()
                     {
-                        Url = "/plato.entities.ratings/content/css/ratings.min.css",
+                        Url = "/plato.entities.ratings/content/css/ratings.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.entities.ratings/content/js/ratings.min.js",
+                        Url = "/plato.entities.ratings/content/js/ratings.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

@@ -35,13 +35,13 @@ namespace Plato.Ideas.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.ideas/content/css/ideas.min.css",
+                        Url = "/plato.ideas/content/css/ideas.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.ideas/content/js/ideas.min.js",
+                        Url = "/plato.ideas/content/js/ideas.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -50,19 +50,18 @@ namespace Plato.Ideas.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
-                        Url = "/plato.ideas/content/css/ideas.min.css",
+                        Url = "/plato.ideas/content/css/ideas.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
                     new Asset()
                     {
-                        Url = "/plato.ideas/content/js/ideas.min.js",
+                        Url = "/plato.ideas/content/js/ideas.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };

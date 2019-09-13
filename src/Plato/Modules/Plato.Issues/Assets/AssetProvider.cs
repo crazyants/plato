@@ -50,7 +50,7 @@ namespace Plato.Issues.Assets
                 // Production
                 new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
-                    new Asset()
+                   new Asset()
                     {
                         Url = "/plato.issues/content/css/issues.css",
                         Type = AssetType.IncludeCss,
@@ -62,7 +62,6 @@ namespace Plato.Issues.Assets
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
-                    
                 })
 
             };
