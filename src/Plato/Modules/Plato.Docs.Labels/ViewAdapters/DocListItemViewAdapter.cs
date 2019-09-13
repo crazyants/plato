@@ -41,6 +41,8 @@ namespace Plato.Docs.Labels.ViewAdapters
             ViewName = "DocListItem";
         }
 
+        private IDictionary<int, IList<Label>> _lookUp;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
@@ -49,26 +51,36 @@ namespace Plato.Docs.Labels.ViewAdapters
                 return default(IViewAdapterResult);
             }
 
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
-            if (feature == null)
+            if (_lookUp == null)
             {
-                // Feature not found
-                return default(IViewAdapterResult);
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
+                if (feature == null)
+                {
+                    // Feature not found
+                    return default(IViewAdapterResult);
+                }
+
+                // Get all labels for feature
+                var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+                if (labels == null)
+                {
+                    // No labels available to adapt the view 
+                    return default(IViewAdapterResult);
+                }
+
+                // Build a dictionary we can use below within our AdaptModel
+                // method to add the correct labels for each displayed entity
+                _lookUp = await BuildLookUpTable(labels.ToList());
+                
             }
 
-            // Get all labels for feature
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-            if (labels == null)
+            if (_lookUp == null)
             {
                 // No labels available to adapt the view 
                 return default(IViewAdapterResult);
             }
-
-            // Build a dictionary we can use below within our AdaptModel
-            // method to add the correct labels for each displayed entity
-            var entityLabelsDictionary = await BuildLookUpTable(labels.ToList());
-
+            
             // Plato.Docs does not have a dependency on Plato.Docs.Labels
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the label data for the entity
@@ -87,7 +99,7 @@ namespace Plato.Docs.Labels.ViewAdapters
                     }
 
                     // No need to modify if we don't have a lookup table
-                    if (entityLabelsDictionary == null)
+                    if (_lookUp == null)
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -97,7 +109,7 @@ namespace Plato.Docs.Labels.ViewAdapters
                     }
 
                     // No need to modify the model if no labels have been found
-                    if (!entityLabelsDictionary.ContainsKey(model.Entity.Id))
+                    if (!_lookUp.ContainsKey(model.Entity.Id))
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -107,7 +119,7 @@ namespace Plato.Docs.Labels.ViewAdapters
                     }
 
                     // Get labels for entity
-                    var entityLabels = entityLabelsDictionary[model.Entity.Id];
+                    var entityLabels = _lookUp[model.Entity.Id];
 
                     // Add labels to the model from our dictionary
                     var modelLabels = new List<Label>();

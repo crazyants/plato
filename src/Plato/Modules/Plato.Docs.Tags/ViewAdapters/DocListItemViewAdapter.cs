@@ -33,6 +33,8 @@ namespace Plato.Docs.Tags.ViewAdapters
             ViewName = "DocListItem";
         }
 
+        IDictionary<int, IList<EntityTag>> _lookUpTable;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
             
@@ -41,10 +43,18 @@ namespace Plato.Docs.Tags.ViewAdapters
                 return default(IViewAdapterResult);
             }
 
-            // Build a dictionary we can use below within our AdaptModel
-            // method to add the correct tags for each displayed entity
-            var entityTagsDictionary = await BuildLookUpTable();
-            
+            if (_lookUpTable == null)
+            {
+                // Build a dictionary we can use below within our AdaptModel
+                // method to add the correct tags for each displayed entity
+                _lookUpTable = await BuildLookUpTable();
+            }
+      
+            if (_lookUpTable == null)
+            {
+                return default(IViewAdapterResult);
+            }
+
             // Plato.Discuss does not have a dependency on Plato.Discuss.Tags
             // Instead we update the model for the entity list item view component
             // here via our view adapter to include the tag data for the entity
@@ -63,7 +73,7 @@ namespace Plato.Docs.Tags.ViewAdapters
                     }
 
                     // No need to modify if we don't have a lookup table
-                    if (entityTagsDictionary == null)
+                    if (_lookUpTable == null)
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -73,7 +83,7 @@ namespace Plato.Docs.Tags.ViewAdapters
                     }
 
                     // No need to modify the model if no labels have been found
-                    if (!entityTagsDictionary.ContainsKey(model.Entity.Id))
+                    if (!_lookUpTable.ContainsKey(model.Entity.Id))
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -84,9 +94,9 @@ namespace Plato.Docs.Tags.ViewAdapters
 
                     // Add tags to the model from our dictionary
                     var entityTags = new List<EntityTag>();
-                    if (entityTagsDictionary.ContainsKey(model.Entity.Id))
+                    if (_lookUpTable.ContainsKey(model.Entity.Id))
                     {
-                        foreach (var tag in entityTagsDictionary[model.Entity.Id])
+                        foreach (var tag in _lookUpTable[model.Entity.Id])
                         {
                             entityTags.Add(tag);
                         }

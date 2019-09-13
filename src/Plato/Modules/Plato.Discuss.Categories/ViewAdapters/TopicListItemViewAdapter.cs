@@ -7,6 +7,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
+using System.Collections.Generic;
 
 namespace Plato.Discuss.Categories.ViewAdapters
 {
@@ -14,7 +15,6 @@ namespace Plato.Discuss.Categories.ViewAdapters
     public class TopicListItemViewAdapter : BaseAdapterProvider
     {
              
-
         private readonly ICategoryStore<Category> _channelStore;
         private readonly IFeatureFacade _featureFacade;
 
@@ -27,6 +27,8 @@ namespace Plato.Discuss.Categories.ViewAdapters
             ViewName = "TopicListItem";
         }
 
+        IEnumerable<Category> _categories;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
@@ -35,17 +37,21 @@ namespace Plato.Discuss.Categories.ViewAdapters
                 return default(IViewAdapterResult);
             }
 
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
-            if (feature == null)
+            if (_categories == null)
             {
-                // Feature not found
-                return default(IViewAdapterResult);
-            }
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Categories");
+                if (feature == null)
+                {
+                    // Feature not found
+                    return default(IViewAdapterResult);
+                }
 
-            // Get all categories for feature
-            var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            if (categories == null)
+                // Get all categories for feature
+                _categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
+            }
+            
+            if (_categories == null)
             {
                 // No categories available to adapt the view 
                 return default(IViewAdapterResult);
@@ -80,7 +86,7 @@ namespace Plato.Discuss.Categories.ViewAdapters
                     }
 
                     // Get our category
-                    var category = categories.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
+                    var category = _categories.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
                     if (category != null)
                     {
                         model.Category = category;

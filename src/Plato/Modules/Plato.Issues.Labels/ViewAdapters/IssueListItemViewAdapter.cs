@@ -42,6 +42,8 @@ namespace Plato.Issues.Labels.ViewAdapters
             ViewName = "IssueListItem";
         }
 
+        IDictionary<int, IList<Label>> _lookUpTable;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
@@ -50,25 +52,34 @@ namespace Plato.Issues.Labels.ViewAdapters
                 return default(IViewAdapterResult);
             }
 
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues");
-            if (feature == null)
+            if (_lookUpTable == null)
             {
-                // Feature not found
-                return default(IViewAdapterResult);
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues");
+                if (feature == null)
+                {
+                    // Feature not found
+                    return default(IViewAdapterResult);
+                }
+
+                // Get all labels for feature
+                var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+                if (labels == null)
+                {
+                    // No labels available to adapt the view 
+                    return default(IViewAdapterResult);
+                }
+
+                // Build a dictionary we can use below within our AdaptModel
+                // method to add the correct labels for each displayed entity
+                _lookUpTable = await BuildLookUpTable(labels.ToList());
+
             }
 
-            // Get all labels for feature
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-            if (labels == null)
+            if (_lookUpTable == null)
             {
-                // No labels available to adapt the view 
                 return default(IViewAdapterResult);
             }
-
-            // Build a dictionary we can use below within our AdaptModel
-            // method to add the correct labels for each displayed entity
-            var entityLabelsDictionary = await BuildLookUpTable(labels.ToList());
 
             // Plato.Issues does not have a dependency on Plato.Issues.Labels
             // Instead we update the model for the entity list item view component
@@ -88,7 +99,7 @@ namespace Plato.Issues.Labels.ViewAdapters
                     }
 
                     // No need to modify if we don't have a lookup table
-                    if (entityLabelsDictionary == null)
+                    if (_lookUpTable == null)
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -98,7 +109,7 @@ namespace Plato.Issues.Labels.ViewAdapters
                     }
 
                     // No need to modify the model if no labels have been found
-                    if (!entityLabelsDictionary.ContainsKey(model.Entity.Id))
+                    if (!_lookUpTable.ContainsKey(model.Entity.Id))
                     {
                         // Return an anonymous type as we are adapting a view component
                         return new
@@ -108,7 +119,7 @@ namespace Plato.Issues.Labels.ViewAdapters
                     }
 
                     // Get labels for entity
-                    var entityLabels = entityLabelsDictionary[model.Entity.Id];
+                    var entityLabels = _lookUpTable[model.Entity.Id];
 
                     // Add labels to the model from our dictionary
                     var modelLabels = new List<Label>();

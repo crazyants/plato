@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Ideas.Categories.Models;
@@ -6,7 +8,6 @@ using Plato.Ideas.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
-using System;
 
 namespace Plato.Ideas.Categories.ViewAdapters
 {
@@ -26,6 +27,8 @@ namespace Plato.Ideas.Categories.ViewAdapters
             ViewName = "IdeaListItem";
         }
 
+        IEnumerable<Category> _channels;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
@@ -34,17 +37,22 @@ namespace Plato.Ideas.Categories.ViewAdapters
                 return default(IViewAdapterResult);
             }
             
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
-            if (feature == null)
+            if (_channels == null)
             {
-                // Feature not found
-                return default(IViewAdapterResult);
-            }
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas.Categories");
+                if (feature == null)
+                {
+                    // Feature not found
+                    return default(IViewAdapterResult);
+                }
 
-            // Get all categories for feature
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            if (channels == null)
+                // Get all categories for feature
+                _channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
+
+            }
+            
+            if (_channels == null)
             {
                 // No categories available to adapt the view 
                 return default(IViewAdapterResult);
@@ -79,7 +87,7 @@ namespace Plato.Ideas.Categories.ViewAdapters
                     }
 
                     // Get our channel
-                    var channel = channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
+                    var channel = _channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
                     if (channel != null)
                     {
                         model.Category = channel;

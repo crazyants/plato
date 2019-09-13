@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Issues.Categories.Models;
@@ -6,7 +8,6 @@ using Plato.Issues.Models;
 using Plato.Entities.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdapters;
-using System;
 
 namespace Plato.Issues.Categories.ViewAdapters
 {
@@ -26,6 +27,8 @@ namespace Plato.Issues.Categories.ViewAdapters
             ViewName = "IssueListItem"; 
         }
 
+        IEnumerable<Category> _categories;
+
         public override async Task<IViewAdapterResult> ConfigureAsync(string viewName)
         {
 
@@ -34,22 +37,27 @@ namespace Plato.Issues.Categories.ViewAdapters
                 return default(IViewAdapterResult);
             }
 
-            // Get feature
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues.Categories");
-            if (feature == null)
+            if (_categories == null)
             {
-                // Feature not found
-                return default(IViewAdapterResult);
+                // Get feature
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Issues.Categories");
+                if (feature == null)
+                {
+                    // Feature not found
+                    return default(IViewAdapterResult);
+                }
+
+                // Get all categories for feature
+                _categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
+             
             }
 
-            // Get all categories for feature
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            if (channels == null)
+            if (_categories == null)
             {
                 // No categories available to adapt the view 
                 return default(IViewAdapterResult);
             }
-            
+
             // Plato.Issues does not have a dependency on Plato.Issues.Categories
             // Instead we update the model for the topic item view component
             // here via our view adapter to include the channel information
@@ -79,7 +87,7 @@ namespace Plato.Issues.Categories.ViewAdapters
                     }
 
                     // Get our channel
-                    var channel = channels.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
+                    var channel = _categories.FirstOrDefault(c => c.Id == model.Entity.CategoryId);
                     if (channel != null)
                     {
                         model.Category = channel;

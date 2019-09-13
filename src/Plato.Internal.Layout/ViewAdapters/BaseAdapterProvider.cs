@@ -14,10 +14,6 @@ namespace Plato.Internal.Layout.ViewAdapters
             Action<IViewAdapterBuilder> configure)
         {
 
-            // Which view is our adapter modifying
-            // Not important mainly used for logging purposes
-            //ViewName = viewName;
-
             // Apply adapter builder & return compiled results
             var builder = new ViewAdapterBuilder(viewName);
             configure(builder);
