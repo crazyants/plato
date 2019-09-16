@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.Extensions.FileProviders;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
-namespace Plato.Internal.Layout.LocationExpanders
+namespace Plato.Internal.Layout.LocationExpander
 {
-
-    public class ComponentViewLocationExpanderProvider : IViewLocationExpanderProvider
+    public class ComponentViewLocationExpander : IViewLocationExpanderProvider
     {
+
         private static IList<IModuleEntry> _modulesWithComponentViews;
 
         private IModuleManager _moduleManager;
 
         public int Priority => 5;
 
-        public ComponentViewLocationExpanderProvider(
+        public ComponentViewLocationExpander(
             IRazorViewEngineFileProviderAccessor fileProviderAccessor,
             IModuleManager moduleManager)
         {
@@ -28,19 +29,29 @@ namespace Plato.Internal.Layout.LocationExpanders
 
             if (_modulesWithComponentViews == null)
             {
+
                 foreach (var module in moduleManager.LoadModulesAsync().Result)
                 {
                     var moduleComponentsViewFilePaths = fileProviderAccessor.FileProvider.GetViewFilePaths(
-                              module.Descriptor.Location + "/Views/Shared/Components", new[] { RazorViewEngine.ViewExtension },
-                              viewsFolder: null, inViewsFolder: true, inDepth: true);
+                              module.Descriptor.Id + "/Views/Shared/Components",
+                              new[] {
+                                  RazorViewEngine.ViewExtension
+                              },
+                              viewsFolder: null,
+                              inViewsFolder: true,
+                              inDepth: true);
 
                     if (moduleComponentsViewFilePaths.Any())
                     {
+                        if (_modulesWithComponentViews == null)
+                        {
+                            _modulesWithComponentViews = new List<IModuleEntry>();
+                        }
                         _modulesWithComponentViews.Add(module);
                     }
                 }
             }
-         
+
 
         }
 
@@ -63,7 +74,7 @@ namespace Plato.Internal.Layout.LocationExpanders
             {
 
                 var moduleComponentViewLocations = new List<string>();
-                               
+
                 //if (!_memoryCache.TryGetValue(CacheKey, out IEnumerable<string> moduleComponentViewLocations))
                 //{
                 //var enabledIds = _extensionManager.GetFeatures().Where(f => _shellDescriptor
@@ -72,97 +83,31 @@ namespace Plato.Internal.Layout.LocationExpanders
                 //var enabledExtensions = _extensionManager.GetExtensions()
                 //    .Where(e => enabledIds.Contains(e.Id)).ToArray();
 
-                var sharedViewsPath = "/Views/Shared/{0}" + RazorViewEngine.ViewExtension;
+                if (_modulesWithComponentViews != null)
+                {
 
+                    var sharedViewsPath = "/Views/Shared/{0}" + RazorViewEngine.ViewExtension;
                     moduleComponentViewLocations = _modulesWithComponentViews
                         //.Where(m => enabledExtensions.Any(e => e.Id == m.Id))
-                        .Select(m => '/' + m.Descriptor.Location + sharedViewsPath)
+                        .Select(m => '/' + m.Descriptor.Id + sharedViewsPath)
                         .ToList();
 
                     //_memoryCache.Set(CacheKey, moduleComponentViewLocations);
-                //}
+                    //}
 
-                result.AddRange(moduleComponentViewLocations);
-            }
-
-            result.AddRange(viewLocations);
-
-            return result;
-        }
-
-
-    }
-
-    public class AreaViewLocationExpander : IViewLocationExpanderProvider
-    {
-
-        public int Priority => 6;
-        
-        public void PopulateValues(ViewLocationExpanderContext context)
-        {
-        }
-
-        public virtual IEnumerable<string> ExpandViewLocations(
-            ViewLocationExpanderContext context,
-            IEnumerable<string> viewLocations)
-        {
-
-            var result = new List<string>
-            {
-                // Ensure we first look for views in our current area
-                // Moved to PlatoViewEngine for performance reasons                                                       
-                $"~/Modules/{{2}}/Views/{{1}}/{{0}}{RazorViewEngine.ViewExtension}",
-                $"~/Modules/{{2}}/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}"           
-            };
-
-            result.AddRange(viewLocations);
-            return result;
-        }
-
-    }
-
-    public class ModuleViewLocationExpander : IViewLocationExpanderProvider
-    {
-        private readonly IModuleManager _moduleManager;
-
-        public ModuleViewLocationExpander(IModuleManager moduleManager)
-        {
-            _moduleManager = moduleManager;
-        }
-
-        public int Priority =>  5;
-
-        public void PopulateValues(ViewLocationExpanderContext context)
-        {   
-        }
-
-        public virtual IEnumerable<string> ExpandViewLocations(
-            ViewLocationExpanderContext context,
-            IEnumerable<string> viewLocations)
-        {
-
-            var result = new List<string>();            
-            foreach (var module in _moduleManager.LoadModulesAsync().Result)
-            {
-
-                result.Add($"~/Modules/{module.Descriptor.Id}/Views/{{1}}/{{0}}{RazorViewEngine.ViewExtension}");
-                result.Add($"~/Modules/{module.Descriptor.Id}/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}");
-
-                //var result = new List<string>
-                //{
-                //    // Else allows us to load views from other modules                
-                //    ,
-                    
-                //};
+                    result.AddRange(moduleComponentViewLocations);
+                }
 
             }
 
             result.AddRange(viewLocations);
+
             return result;
         }
 
+
     }
-         
+
     public static class FileProviderExtensions
     {
         public static IEnumerable<string> GetViewFilePaths(this IFileProvider fileProvider,
@@ -213,6 +158,5 @@ namespace Plato.Internal.Layout.LocationExpanders
             }
         }
     }
-
 
 }

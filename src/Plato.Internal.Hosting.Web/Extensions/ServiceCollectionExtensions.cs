@@ -65,7 +65,7 @@ using Microsoft.AspNetCore.Razor.Hosting;
 using Plato.Internal.Layout.ViewFeatures;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Plato.Internal.Layout.LocationExpanders;
+using Plato.Internal.Layout.LocationExpander;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -237,7 +237,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             AddDefaultFrameworkParts(builder.PartManager);
 
             // Add module application parts
-            services.AddPlatoModularApplicationParts(builder.PartManager);
+            services.AddPlatoModularAppParts(builder.PartManager);
 
             // View adapters
             services.AddPlatoViewAdapters();
@@ -262,43 +262,44 @@ namespace Plato.Internal.Hosting.Web.Extensions
         //    manager.FeatureProviders.Add(new ModuleViewFeatureProvider(services));
         //}
 
-        private static IServiceCollection AddPlatoModularApplicationParts(this IServiceCollection services, ApplicationPartManager partManager)
+        private static IServiceCollection AddPlatoModularAppParts(this IServiceCollection services, ApplicationPartManager partManager)
         {
 
-            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();         
+            //var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();         
 
-            foreach (var module in moduleManager.LoadModulesAsync().Result)
-            {
+            //foreach (var module in moduleManager.LoadModulesAsync().Result)
+            //{
 
-                if (module.ViewsAssembly != null)
-                {
-                    if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
-                    {
-                        partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
-                    }
-                }
-                else
-                {
-                    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
-                    {
-                        partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
-                    }
+            //    if (module.ViewsAssembly != null)
+            //    {
+            //        if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
+            //        {
+            //            partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
+            //        {
+            //            partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
+            //        }
 
-                    var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(module.Assembly, throwOnError: false);
-                    foreach (var relatedAssembly in relatedAssemblies)
-                    {
-                        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != relatedAssembly))
-                        {
-                            partManager.ApplicationParts.Add(new AssemblyPart(relatedAssembly));
-                        }
-                    }
-                }
+            //        var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(module.Assembly, throwOnError: false);
+            //        foreach (var relatedAssembly in relatedAssemblies)
+            //        {
+            //            if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != relatedAssembly))
+            //            {
+            //                partManager.ApplicationParts.Add(new AssemblyPart(relatedAssembly));
+            //            }
+            //        }
+            //    }
 
-            }
+            //}
 
+            var serviceProvider = services.BuildServiceProvider();
 
-
-            partManager.FeatureProviders.Add(new ModuleViewFeatureProvider(services.BuildServiceProvider()));
+            partManager.ApplicationParts.Insert(0, new ModularFeatureApplicationPart(serviceProvider));
+            partManager.FeatureProviders.Add(new ModuleViewFeatureProvider(serviceProvider));
 
             return services;
 
@@ -307,38 +308,28 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
-
-
-            // Location expanders
-            //services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpanderProvider>();
-            services.AddScoped<IViewLocationExpanderProvider, ModuleViewLocationExpander>();
+            
+            // Location expander
+            services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpander>();
+            services.AddScoped<IViewLocationExpanderProvider, ModularViewLocationExpander>();
             services.AddScoped<IViewLocationExpanderProvider, AreaViewLocationExpander>();
                         
-
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
+            // Configure Razor options
             services.Configure<RazorViewEngineOptions>(options =>
             {
-
-                // Perf to disable file watcher
-                //options.AllowRecompilingViewsOnFileChange = false;
-
-                //// Optionally load matching views from any module
-                //foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
-                //{                
-                //    // Add view location expanders so we can search within views folder
-                //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
-                //}
-
+                
+                // Add composite view location expander
                 options.ViewLocationExpanders.Add(new CompositeViewLocationExpander());
 
+                //if (_hostingEnvironment.IsDevelopment())
+                //{
+                //    // While in development, razor files are 1st served from their module project locations.
+                //    options.FileProviders.Insert(0, new ModuleProjectRazorFileProvider(_applicationContext));
+                //}
 
-                // Prioritize current area over module expanders
-                // Important should be added after ModuleViewLocationExpander
-                //options.ViewLocationExpanders.Add(new AreaViewLocationExpander());
-                //options.ViewLocationExpanders.Add(new ComponentViewLocationExpanderProvider());
 
-                
 
                 //Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;

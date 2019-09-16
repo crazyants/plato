@@ -42,7 +42,7 @@ namespace Plato.Internal.Modules
         public async Task<IDictionary<Type, IModuleEntry>> GetModuleDependenciesAsync(IEnumerable<IModuleEntry> modules)
         {
 
-            await BuildTypedProvider();
+            await BuildTypedProviderAsync();
 
             var entries = new Dictionary<Type, IModuleEntry>();
             if (modules != null)
@@ -69,7 +69,7 @@ namespace Plato.Internal.Modules
         public async Task<Type> GetTypeCandidateAsync(string typeName, Type baseType)
         {
 
-            await BuildTypedProvider();
+            await BuildTypedProviderAsync();
 
             foreach (var candidate in _modules
                 .Where(p => baseType.IsAssignableFrom(p.Key))
@@ -86,7 +86,7 @@ namespace Plato.Internal.Modules
 
         }
 
-        async Task BuildTypedProvider()
+        async Task BuildTypedProviderAsync()
         {
             var moduleEntries = await _moduleManager.LoadModulesAsync();
             foreach (var moduleEntry in moduleEntries)
@@ -113,5 +113,10 @@ namespace Plato.Internal.Modules
             _modules.TryAdd(type, module);
         }
 
+        public async Task<IEnumerable<TypeInfo>> GetTypesAsync()
+        {
+            await BuildTypedProviderAsync();
+            return _modules.Select(m => m.Key.GetTypeInfo());
+        }
     }
 }

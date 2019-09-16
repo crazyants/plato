@@ -63,9 +63,11 @@ namespace Plato.Internal.Layout.ViewFeatures
                     if (module.ViewsAssembly != null)
                     {
 
-                        var applicationPart = new ApplicationPart[] {
-                                    new CompiledRazorAssemblyPart(module.ViewsAssembly) };
-
+                        var applicationPart = new ApplicationPart[]
+                        {
+                                    new CompiledRazorAssemblyPart(module.ViewsAssembly)
+                        };
+                   
                         foreach (var provider in mvcFeatureProviders)
                         {
                             provider.PopulateFeature(applicationPart, moduleFeature);
@@ -76,29 +78,31 @@ namespace Plato.Internal.Layout.ViewFeatures
                         // Note: For the app's module this folder is "Areas/{env.ApplicationName}".
                         foreach (var descriptor in moduleFeature.ViewDescriptors)
                         {
-                            descriptor.RelativePath = '/' + module.Descriptor.Location + descriptor.RelativePath;
+                            descriptor.RelativePath = "~/Modules/" + module.Descriptor.Id + descriptor.RelativePath;
                             feature.ViewDescriptors.Add(descriptor);
                         }
 
-                        //// For the app's module we still allow to explicitly specify view paths relative to the app content root.
-                        //// So for the application's module we re-apply the feature providers without updating the relative paths.
-                        //// Note: This is only needed in prod mode if app's views are precompiled and views files no longer exist.
+                        // For the app's module we still allow to explicitly specify view paths relative to the app content root.
+                        // So for the application's module we re-apply the feature providers without updating the relative paths.
+                        // Note: This is only needed in prod mode if app's views are precompiled and views files no longer exist.
                         //if (module.Name == _hostingEnvironment.ApplicationName)
                         //{
-                        //    foreach (var provider in mvcFeatureProviders)
-                        //    {
-                        //        provider.PopulateFeature(applicationPart, moduleFeature);
-                        //    }
+                            //foreach (var provider in mvcFeatureProviders)
+                            //{
+                            //    provider.PopulateFeature(applicationPart, moduleFeature);
+                            //}
 
-                        //    foreach (var descriptor in moduleFeature.ViewDescriptors)
-                        //    {
-                        //        feature.ViewDescriptors.Add(descriptor);
-                        //    }
+                            //foreach (var descriptor in moduleFeature.ViewDescriptors)
+                            //{
+                            //    feature.ViewDescriptors.Add(descriptor);
+                            //}
                         //}
 
                         moduleFeature.ViewDescriptors.Clear();
 
                     }
+
+
 
                 }
 
