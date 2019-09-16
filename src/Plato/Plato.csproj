@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> 
-    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
-    <UseRazorBuildServer>true</UseRazorBuildServer>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>     
     <EnvironmentName>Production</EnvironmentName>
     <RazorCompileOnBuild>true</RazorCompileOnBuild>
   </PropertyGroup>

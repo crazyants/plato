@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Loader;
 using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -60,6 +61,11 @@ using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
 using Plato.Internal.Layout.Razor;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Razor.Hosting;
+using Plato.Internal.Layout.ViewFeatures;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -75,14 +81,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-            
+
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoDataProtection();
             services.AddPlatoAuthorization();
             services.AddPlatoAuthentication();
             services.AddPlatoMvc();
-          
+
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -107,10 +113,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddPlatoContextAccessor();
                 internalServices.AddPlatoRouting();
-                
+
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-               
+
 
                 internalServices.AddPlatoOptions();
                 internalServices.AddPlatoLocalization();
@@ -227,12 +233,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .AddCacheTagHelper()
                 .AddRazorViewEngine();
 
-            // Add module application parts
-            services.AddPlatoModuleParts(builder.PartManager);
-
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
-            
+
+            // Add module application parts
+            services.AddPlatoModularApplicationParts(builder.PartManager);
+
             // View adapters
             services.AddPlatoViewAdapters();
 
@@ -242,7 +248,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Add module mvc
             services.AddPlatoModuleMvc();
 
-        
             // Add json formatter
             builder.AddJsonFormatters();
 
@@ -250,105 +255,61 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        private static IServiceCollection AddPlatoModuleParts(this IServiceCollection services, ApplicationPartManager partManager)
+
+        //private void AddModularFrameworkParts(IServiceProvider services, ApplicationPartManager manager)
+        //{
+        //    manager.ApplicationParts.Insert(0, new ModuleFeatureApplicationPart());
+        //    manager.FeatureProviders.Add(new ModuleViewFeatureProvider(services));
+        //}
+
+        private static IServiceCollection AddPlatoModularApplicationParts(this IServiceCollection services, ApplicationPartManager partManager)
         {
 
-            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();         
 
-            // add modules as application parts
-            //var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
-            var modules = moduleManager.LoadModulesAsync().Result;
-            foreach (var module in modules)
+            foreach (var module in moduleManager.LoadModulesAsync().Result)
             {
-
-                if (module.Descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase ))
-                {
-                    var test = "test";
-                }
-
-                //if (module.Assembly != null)
-                //{
-                //    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
-                //    {
-                //        partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
-                //    }
-                //}
-
-                //if (module.ViewsAssembly != null)
-                //{
-                //    if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
-                //    {
-                //        // Adding this application part allows us to use compiled razor views from this plugin                        
-                //        partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
-                //    }
-                //}
 
                 if (module.ViewsAssembly != null)
                 {
                     if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
                     {
-                        // Adding this application part allows us to use compiled razor views from this plugin                        
                         partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
                     }
-                } else
+                }
+                else
                 {
-                    // add all found assemblies 
-                    foreach (var assembly in module.Assemblies)
+                    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
                     {
+                        partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
+                    }
 
-                        // Ensure application parts are only added once
-                        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != assembly))
+                    var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(module.Assembly, throwOnError: false);
+                    foreach (var relatedAssembly in relatedAssemblies)
+                    {
+                        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != relatedAssembly))
                         {
-                            partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                            partManager.ApplicationParts.Add(new AssemblyPart(relatedAssembly));
                         }
                     }
                 }
 
-                //if (module.Descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase))
-                //{
-                //    if (module.ViewsAssembly != null)
-                //    {
-                //        if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
-                //        {
-                //            // Adding this application part allows us to use compiled razor views from this plugin                        
-                //            partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
-                //        }
-                //    }
-                //    continue;
-                //}
-            
             }
 
-            //var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
-            //foreach (PortableExecutableReference reference in assemblies
-            //    .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
-            //    .Select(x => MetadataReference.CreateFromFile(x.Location))
-            //    .ToList())
-            //411
-            //        +
-            //    var md = reference.GetMetadata();
-            //    var typeOf = reference.GetMetadata().GetType();
-            //    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(reference.FilePath);
-            //    if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != assembly))
-            //    {
-            //        partManager.ApplicationParts.Add(new AssemblyPart(assembly));
-            //    }
-            //    //partManager.ApplicationParts.Add(new AssemblyPart(assembly));
-            //}
 
-            //var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;
-            //if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcTagHelpersAssembly))
-            //{
-            //    partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersAssembly));
-            //}
+
+            partManager.FeatureProviders.Add(new ModuleViewFeatureProvider(services.BuildServiceProvider()));
 
             return services;
 
         }
-
+          
 
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
+
+
+            services.AddScoped<IViewLocationExpander, ComponentViewLocationExpanderProvider>();
 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
@@ -361,13 +322,34 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // Optionally load matching views from any module
                 foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
                 {
+
+                    // Add view location expanders so we can search within views folder
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
+
+                    //// Add an embedded file provider for views assembly
+                    //if (moduleEntry.Assembly != null)
+                    //{
+                    //    options.FileProviders.Add(new EmbeddedFileProvider(moduleEntry.Assembly, moduleEntry.Assembly.FullName));
+                    //}
+
+                    //// Add an embedded file provider for views assembly
+                    //if (moduleEntry.ViewsAssembly != null)
+                    //{
+                    //    options.FileProviders.Add(new EmbeddedFileProvider(moduleEntry.ViewsAssembly, moduleEntry.ViewsAssembly.FullName));
+                    //}
+
+
+                    //options.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(moduleEntry.Assembly.Location));
+
                 }
 
                 // Prioritize current area over module expanders
                 // Important should be added after ModuleViewLocationExpander
                 options.ViewLocationExpanders.Add(new AreaViewLocationExpander());
+                //options.ViewLocationExpanders.Add(new ComponentViewLocationExpanderProvider());
+
                 
+
                 //Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
                 var moduleReferences = assemblies
@@ -379,18 +361,19 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // https://github.com/aspnet/Razor/issues/834
                 foreach (var moduleReference in moduleReferences)
                 {
-                    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences is marked obsolete in 2.2.1
-                    // Apps using these APIs to add assembly references to the 
-                    // compilation context for runtime compilation should instead
-                    // use ApplicationPartManager.AddApplicationPart to add application
-                    // parts for each assembly reference, or switch to a built-time compilation model(see Create reusable UI using the Razor Class Library project).
-                    // https://github.com/aspnet/Announcements/issues/312
+                    //    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences is marked obsolete in 2.2.1
+                    //    // Apps using these APIs to add assembly references to the 
+                    //    // compilation context for runtime compilation should instead
+                    //    // use ApplicationPartManager.AddApplicationPart to add application
+                    //    // parts for each assembly reference, or switch to a built-time compilation model(see Create reusable UI using the Razor Class Library project).
+                    //    // https://github.com/aspnet/Announcements/issues/312
                     options.AdditionalCompilationReferences.Add(moduleReference);
                 }
 
             });
-                       
+
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
+            // This ensures views on disk (not pre-compiled) can be resolved correctly
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
             services.TryAddEnumerable(ServiceDescriptor
                 .Transient<IApplicationModelProvider, ModuleApplicationModelProvider>());
@@ -398,6 +381,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services;
 
         }
+
+        private static MetadataReference GetMetadataReference(Type type) =>
+            MetadataReference.CreateFromFile(type.GetTypeInfo().Assembly.Location);
+
+        private static MetadataReference GetMetadataReference(string assemblyName) =>
+            MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location);
 
         public static IServiceCollection AddPlatoOptions(this IServiceCollection services)
         {
@@ -431,7 +420,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             ILoggerFactory logger)
         {
 
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -480,8 +469,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Allow static files within /sites
             app.UseSiteStaticFiles(env);
 
-            // Add custom features
-            app.AddThemingApplicationParts();
+            // Add any IApplicationFeatureProvider 
+            app.UseModularApplicationFeatureProvider();
 
             // Create services container for each shell
             app.UseMiddleware<PlatoContainerMiddleware>();
@@ -492,16 +481,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return app;
 
         }
-
-        public static void AddThemingApplicationParts(
+        
+        public static void UseModularApplicationFeatureProvider(
             this IApplicationBuilder app)
         {
             // adds ThemingViewsFeatureProvider application part
-            var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            var themingViewsFeatureProvider =
-                app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
-            applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
+            var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+            var viewFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
+            partManager.FeatureProviders.Add(viewFeatureProvider);
         }
+
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
@@ -517,19 +506,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersInternalAssembly));
             }
-         
+
             var mvcRazorAssembly = typeof(UrlResolutionTagHelper).Assembly;
             if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != mvcRazorAssembly))
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
 
-
-
-                   
         }
 
-   
+
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {
             app.Map("/allservices", builder => builder.Run(async context =>
@@ -551,6 +537,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 sb.Append("</tbody></table>");
                 await context.Response.WriteAsync(sb.ToString());
             }));
+
         }
 
     }

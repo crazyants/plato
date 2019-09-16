@@ -138,12 +138,7 @@ namespace Plato.Internal.Modules
 
             foreach (var descriptor in _moduleDescriptors)
             {
-
-                if (descriptor.Id.Equals("plato.users.social", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    var test = "test";
-                }
-
+                           
                 // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 

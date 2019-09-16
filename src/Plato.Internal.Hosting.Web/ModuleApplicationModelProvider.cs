@@ -14,7 +14,19 @@ namespace Plato.Internal.Hosting.Web
             _typedModuleProvider = typedModuleProvider;
         }
 
-        public int Order => 1000;
+        // Ensure DefaultApplicationModelProvider executes first
+        // https://github.com/aspnet/AspNetCore/blob/master/src/Mvc/Mvc.Core/src/ApplicationModels/DefaultApplicationModelProvider.cs
+        public int Order => 995;
+
+        public void OnProvidersExecuting(ApplicationModelProviderContext context)
+        {
+
+            foreach (var controllerType in context.ControllerTypes)
+            {
+                var test = "test";
+            }
+
+        }
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
@@ -30,15 +42,14 @@ namespace Plato.Internal.Hosting.Web
                     .GetResult();
                 if (module != null)
                 {
-                    controller.RouteValues.Add("area", module.Descriptor.Id);
+                    if (!controller.RouteValues.ContainsKey("area"))
+                    {
+                        controller.RouteValues.Add("area", module.Descriptor.Id);
+                    }                    
                 }
             }
         }
-
-        public void OnProvidersExecuting(ApplicationModelProviderContext context)
-        {
-        }
-
+        
     }
 
 }

@@ -448,7 +448,7 @@ namespace Plato.Internal.Features
                 minimumShellDescriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
             }
          
-            // Create a new shell context with features and all dependencies we need to enable / disable feature
+            // Create a new shell context with features and all dependencies we need to enable / disable
             using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, minimumShellDescriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())

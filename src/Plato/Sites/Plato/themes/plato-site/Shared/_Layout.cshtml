@@ -34,8 +34,7 @@
         <scripts section="Body" />
     </cache>
 
-    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(30)">
-        <!-- Site Nav  -->
+    <cache vary-by-user="true" expires-after="@TimeSpan.FromMinutes(30)">     
         @await DisplayAsync(new View("SiteHeader", new
         {
             sticky = false
