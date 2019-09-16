@@ -41,7 +41,6 @@ using Plato.Internal.Features.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Hosting.Web.Routing;
 using Plato.Internal.Layout.Extensions;
-using Plato.Internal.Modules.Expanders;
 using Plato.Internal.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
 using Plato.Internal.Messaging.Extensions;
@@ -66,6 +65,7 @@ using Microsoft.AspNetCore.Razor.Hosting;
 using Plato.Internal.Layout.ViewFeatures;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Plato.Internal.Layout.LocationExpanders;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -309,7 +309,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
 
 
-            services.AddScoped<IViewLocationExpander, ComponentViewLocationExpanderProvider>();
+            // Location expanders
+            //services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpanderProvider>();
+            services.AddScoped<IViewLocationExpanderProvider, ModuleViewLocationExpander>();
+            services.AddScoped<IViewLocationExpanderProvider, AreaViewLocationExpander>();
+                        
 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
@@ -319,33 +323,19 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // Perf to disable file watcher
                 //options.AllowRecompilingViewsOnFileChange = false;
 
-                // Optionally load matching views from any module
-                foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
-                {
+                //// Optionally load matching views from any module
+                //foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
+                //{                
+                //    // Add view location expanders so we can search within views folder
+                //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
+                //}
 
-                    // Add view location expanders so we can search within views folder
-                    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
+                options.ViewLocationExpanders.Add(new CompositeViewLocationExpander());
 
-                    //// Add an embedded file provider for views assembly
-                    //if (moduleEntry.Assembly != null)
-                    //{
-                    //    options.FileProviders.Add(new EmbeddedFileProvider(moduleEntry.Assembly, moduleEntry.Assembly.FullName));
-                    //}
-
-                    //// Add an embedded file provider for views assembly
-                    //if (moduleEntry.ViewsAssembly != null)
-                    //{
-                    //    options.FileProviders.Add(new EmbeddedFileProvider(moduleEntry.ViewsAssembly, moduleEntry.ViewsAssembly.FullName));
-                    //}
-
-
-                    //options.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(moduleEntry.Assembly.Location));
-
-                }
 
                 // Prioritize current area over module expanders
                 // Important should be added after ModuleViewLocationExpander
-                options.ViewLocationExpanders.Add(new AreaViewLocationExpander());
+                //options.ViewLocationExpanders.Add(new AreaViewLocationExpander());
                 //options.ViewLocationExpanders.Add(new ComponentViewLocationExpanderProvider());
 
                 

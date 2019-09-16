@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Shell.Abstractions;
-using Plato.Internal.Stores.Abstractions.Shell;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plato.Internal.Layout.ViewFeatures
 {
+
     public class ModuleViewFeatureProvider : IApplicationFeatureProvider<ViewsFeature>
     {
 
