@@ -272,7 +272,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
             
             // Location expander
-            services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpander>();
+            //services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpander>();
             services.AddScoped<IViewLocationExpanderProvider, ModularViewLocationExpander>();
             services.AddScoped<IViewLocationExpanderProvider, AreaViewLocationExpander>();
                         
@@ -287,14 +287,18 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // Add composite view location expander
                 options.ViewLocationExpanders.Add(new CompositeViewLocationExpander());
 
+                // To let the application behave as a module, its razor files are requested under the virtual
+                // "Areas" folder, but they are still served from the file system by this custom provider.
+                options.FileProviders.Insert(0, new ApplicationViewFileProvider(services.BuildServiceProvider()));
+
+
+
                 //if (_hostingEnvironment.IsDevelopment())
                 //{
                 //    // While in development, razor files are 1st served from their module project locations.
                 //    options.FileProviders.Insert(0, new ModuleProjectRazorFileProvider(_applicationContext));
                 //}
-
-
-
+                               
                 //Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
                 var moduleReferences = assemblies
@@ -366,7 +370,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
             
             env.ContentRootFileProvider = new CompositeFileProvider(
-                new ModuleEmbeddedFileProvider(env, app.ApplicationServices),
+                new ModuleEmbeddedFileProvider(app.ApplicationServices),
                 env.ContentRootFileProvider);
             
             if (env.IsDevelopment())
@@ -403,13 +407,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
             app.UseAuthentication();
 
             // Load static files
-            app.UseStaticFiles();
+            app.UserPlatoStaticFiles();
 
             // Monitor changes to locale directories
             app.UsePlatoLocalization();
 
             // Allow static files within /modules
-            app.UseModuleStaticFiles(env);
+            //app.UseModuleStaticFiles(env);
 
             // Allow static files within /themes
             app.UseThemeStaticFiles(env);
@@ -429,9 +433,37 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return app;
 
         }
-        
-        public static void UseModularApplicationFeatureProvider(
-            this IApplicationBuilder app)
+
+        private static void UserPlatoStaticFiles(this IApplicationBuilder app)
+        {
+
+            var env = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+          
+            IFileProvider fileProvider;
+            if (env.IsDevelopment())
+            {
+                var fileProviders = new List<IFileProvider>();                
+                fileProviders.Add(new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices));                
+                fileProvider = new CompositeFileProvider(fileProviders);
+            }
+            else
+            {
+
+                fileProvider = new CompositeFileProvider(
+                        new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices),
+                        env.ContentRootFileProvider
+                    );
+            }
+
+            var options = app.ApplicationServices.GetRequiredService<IOptions<StaticFileOptions>>().Value;
+            options.RequestPath = "";
+            options.FileProvider = fileProvider;
+
+            app.UseStaticFiles(options);
+
+        }
+
+        public static void UseModularApplicationFeatureProvider(this IApplicationBuilder app)
         {
             // adds ThemingViewsFeatureProvider application part
             var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();

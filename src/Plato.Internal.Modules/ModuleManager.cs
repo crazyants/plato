@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Models;
+using System.Runtime.Loader;
+using Plato.Internal.FileSystem.Abstractions;
 
 namespace Plato.Internal.Modules
 {
@@ -17,8 +19,10 @@ namespace Plato.Internal.Modules
 
         #region "Private Variables"
 
-        readonly IModuleLocator _moduleLocator;
-        readonly IModuleLoader _moduleLoader;       
+        private readonly IModuleLocator _moduleLocator;
+        private readonly IModuleLoader _moduleLoader;
+        private readonly IPlatoFileSystem _fileSystem;
+
         IEnumerable<IModuleDescriptor> _moduleDescriptors;
 
         static List<IModuleEntry> _moduleEntries;
@@ -42,11 +46,13 @@ namespace Plato.Internal.Modules
         public ModuleManager(
             IHostingEnvironment hostingEnvironment,
             IOptions<ModuleOptions> moduleOptions,
+            IPlatoFileSystem fileSystem,
             IModuleLocator moduleLocator,
             IModuleLoader moduleLoader)
         {
             _moduleLocator = moduleLocator;
             _moduleLoader = moduleLoader;
+            _fileSystem = fileSystem;
             _contentRootPath = hostingEnvironment.ContentRootPath;
             _virtualPathToModules = moduleOptions.Value.VirtualPathToModulesFolder;
         }
@@ -139,6 +145,11 @@ namespace Plato.Internal.Modules
             foreach (var descriptor in _moduleDescriptors)
             {
                            
+                if (descriptor.Id.IndexOf("Plato.Core", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    var test = "test";
+                }
+
                 // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 
@@ -171,7 +182,16 @@ namespace Plato.Internal.Modules
                 {
                     moduleAssembly = Assembly.Load(new AssemblyName(descriptor.Id));
                 }
-                
+
+                if (viewsAssembly == null)
+                {
+                    if (moduleAssembly != null)
+                    {
+                        var path = moduleAssembly.Location.Replace(".dll", ".Views.dll");
+                        viewsAssembly = LoadFromAssemblyPath(path);
+                    }                 
+                }
+
                 // Attempt to get modules assembly again from any previously added dependenvies
                 if (moduleAssembly == null)
                 {
@@ -209,7 +229,29 @@ namespace Plato.Internal.Modules
             }
 
         }
-        
+
+        private Assembly LoadFromAssemblyPath(string assemblyPath)
+        {
+
+            Assembly assembly = null;
+            var file = _fileSystem.GetFileInfo(assemblyPath);
+            if (file.Exists)
+            {
+                try
+                {
+                    assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+                }
+                catch
+                {
+                    // Silently handle 
+                }
+
+            }
+
+            return assembly;
+
+        }
+
         #endregion
 
     }

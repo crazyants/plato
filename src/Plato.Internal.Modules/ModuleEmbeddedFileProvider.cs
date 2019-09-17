@@ -1,39 +1,41 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Embedded;
-using Microsoft.Extensions.FileProviders.Physical;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.FileProviders;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Plato.Internal.Modules
 {
     public class ModuleEmbeddedFileProvider : IFileProvider
     {
+
+    
+        private readonly IRazorViewEngineFileProviderAccessor _fileProviderAccessor;
         private readonly IOptions<ModuleOptions> _moduleOptions;
         private readonly IModuleManager _moduleManager;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
-        string _baseNamespace = "Plato";
-        string _root;
-
-        public ModuleEmbeddedFileProvider(IHostingEnvironment eng, IServiceProvider services)
-        {
-            _moduleOptions = services.GetRequiredService<IOptions<ModuleOptions>>();
-            _moduleManager = services.GetRequiredService<IModuleManager>();                             
-            _root = eng.ContentRootPath;
-        }
-        
         private IList<IModuleEntry> _modules;
+        private string _baseNamespace = "Plato";
+        private string _root;
 
+        public ModuleEmbeddedFileProvider(IServiceProvider services)
+        {
+            var env = services.GetRequiredService<IHostingEnvironment>();
+            _moduleOptions = services.GetRequiredService<IOptions<ModuleOptions>>();
+            _moduleManager = services.GetRequiredService<IModuleManager>();
+            _fileProviderAccessor = services.GetRequiredService<IRazorViewEngineFileProviderAccessor>();
+            _root = env.ContentRootPath;
+        }
+          
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
             if (subpath == null)
@@ -48,7 +50,12 @@ namespace Plato.Internal.Modules
                     .GetResult()
                     .ToList();
             }
-                       
+
+            if (subpath.IndexOf("Plato.Core", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                var test = "test";
+            }
+
             var folder = NormalizePath(subpath);
 
             var entries = new List<IFileInfo>();
@@ -62,7 +69,7 @@ namespace Plato.Internal.Modules
                 // Add the virtual folder "Areas" containing all modules.
                 entries.Add(new EmbeddedDirectoryInfo(modulesFolder));
             }
-            // Under "Areas".
+            // Under "Modules".
             else if (folder == modulesFolder)
             {
                 // Add virtual folders for all modules by using their assembly names (module ids).
@@ -79,10 +86,14 @@ namespace Plato.Internal.Modules
 
                 // Resolve the module id and get all its asset paths.
                 var name = index == -1 ? path : path.Substring(0, index);
-                var paths = new List<string>()
+
+                var ph = _root + _moduleOptions.Value.VirtualPathToModulesFolder + "\\" + name;
+                var paths = new List<string>();             
+                foreach (var file  in _fileProviderAccessor.FileProvider.GetDirectoryContents(path))
                 {
-                    folder + name + "/Views"
-                };
+                    paths.Add(path + name + file.Name);
+                    paths.Add(folder + file.Name);
+                }
 
                 // Resolve all files and folders directly under this given folder.
                 NormalizedPaths.ResolveFolderContents(folder, paths, out var files, out var folders);

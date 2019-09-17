@@ -33,7 +33,7 @@ namespace Plato.Internal.Layout.LocationExpander
                 foreach (var module in moduleManager.LoadModulesAsync().Result)
                 {
                     var moduleComponentsViewFilePaths = fileProviderAccessor.FileProvider.GetViewFilePaths(
-                              module.Descriptor.Id + "/Views/Shared/Components",
+                              "Modules/" + module.Descriptor.Id + "/Views/Shared/Components",
                               new[] {
                                   RazorViewEngine.ViewExtension
                               },

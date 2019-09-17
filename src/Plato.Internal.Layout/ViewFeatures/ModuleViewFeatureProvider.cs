@@ -50,13 +50,16 @@ namespace Plato.Internal.Layout.ViewFeatures
             // Module compiled views are not served while in dev.
             if (!_hostingEnvironment.IsDevelopment())
             {
+
                 // Retrieve mvc views feature providers but not this one.
                 var mvcFeatureProviders = _applicationPartManager.FeatureProviders
                     .OfType<IApplicationFeatureProvider<ViewsFeature>>()
                     .Where(p => p.GetType() != typeof(ModuleViewFeatureProvider));
 
                 var moduleFeature = new ViewsFeature();
-                foreach (var module in _moduleManager.LoadModulesAsync().Result)
+                var assemblies = _moduleManager.LoadModulesAsync().Result;
+
+                foreach (var module in assemblies)
                 {
                     // Does the module have a precompiled views asdembly?
                     if (module.ViewsAssembly != null)
@@ -77,7 +80,7 @@ namespace Plato.Internal.Layout.ViewFeatures
                         // Note: For the app's module this folder is "Areas/{env.ApplicationName}".
                         foreach (var descriptor in moduleFeature.ViewDescriptors)
                         {
-                            descriptor.RelativePath = "~/Modules/" + module.Descriptor.Id + descriptor.RelativePath;
+                            descriptor.RelativePath = "/Modules/" + module.Descriptor.Id + descriptor.RelativePath;
                             feature.ViewDescriptors.Add(descriptor);
                         }
 

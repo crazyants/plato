@@ -20,11 +20,7 @@ namespace Plato.Internal.Modules.Loader
 
         /// <inheritdoc />
         public async Task<List<Assembly>> LoadModuleAsync(IModuleDescriptor descriptor)
-        {
-            if (descriptor.Id.Equals("Plato.Core", StringComparison.OrdinalIgnoreCase))
-            {
-                var test = "test";
-            }
+        {          
             return await LoadAssembliesInFolder(descriptor.VirtualPathToBin.Replace("/","\\"), new List<Assembly>());
         }
 
