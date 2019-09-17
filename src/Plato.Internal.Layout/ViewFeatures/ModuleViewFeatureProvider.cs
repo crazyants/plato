@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Layout.ViewFeatures
@@ -12,14 +13,15 @@ namespace Plato.Internal.Layout.ViewFeatures
 
     public class ModuleViewFeatureProvider : IApplicationFeatureProvider<ViewsFeature>
     {
-
-        private readonly IHostingEnvironment _hostingEnvironment;      
-        private readonly IModuleManager _moduleManager;
-
+           
         private ApplicationPartManager _applicationPartManager;
         private IEnumerable<IApplicationFeatureProvider<ViewsFeature>> _featureProviders;
 
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IModuleManager _moduleManager;
         private readonly IServiceProvider _services;
+
+        private string _moduleRoot = "/Modules/";
 
         public ModuleViewFeatureProvider(IServiceProvider services)
         {
@@ -80,7 +82,7 @@ namespace Plato.Internal.Layout.ViewFeatures
                         // Note: For the app's module this folder is "Areas/{env.ApplicationName}".
                         foreach (var descriptor in moduleFeature.ViewDescriptors)
                         {
-                            descriptor.RelativePath = "/Modules/" + module.Descriptor.Id + descriptor.RelativePath;
+                            descriptor.RelativePath = _moduleRoot + module.Descriptor.Id + descriptor.RelativePath;
                             feature.ViewDescriptors.Add(descriptor);
                         }
 
