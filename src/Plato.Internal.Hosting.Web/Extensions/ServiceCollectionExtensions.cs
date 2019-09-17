@@ -66,6 +66,7 @@ using Plato.Internal.Layout.ViewFeatures;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Plato.Internal.Layout.LocationExpander;
+using Plato.Internal.Modules;
 
 namespace Plato.Internal.Hosting.Web.Extensions
 
@@ -254,48 +255,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services;
 
         }
-
-
-        //private void AddModularFrameworkParts(IServiceProvider services, ApplicationPartManager manager)
-        //{
-        //    manager.ApplicationParts.Insert(0, new ModuleFeatureApplicationPart());
-        //    manager.FeatureProviders.Add(new ModuleViewFeatureProvider(services));
-        //}
-
+        
         private static IServiceCollection AddPlatoModularAppParts(this IServiceCollection services, ApplicationPartManager partManager)
         {
-
-            //var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();         
-
-            //foreach (var module in moduleManager.LoadModulesAsync().Result)
-            //{
-
-            //    if (module.ViewsAssembly != null)
-            //    {
-            //        if (partManager.ApplicationParts.OfType<CompiledRazorAssemblyPart>().All(p => p.Assembly != module.ViewsAssembly))
-            //        {
-            //            partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(module.ViewsAssembly));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != module.Assembly))
-            //        {
-            //            partManager.ApplicationParts.Add(new AssemblyPart(module.Assembly));
-            //        }
-
-            //        var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(module.Assembly, throwOnError: false);
-            //        foreach (var relatedAssembly in relatedAssemblies)
-            //        {
-            //            if (partManager.ApplicationParts.OfType<AssemblyPart>().All(p => p.Assembly != relatedAssembly))
-            //            {
-            //                partManager.ApplicationParts.Add(new AssemblyPart(relatedAssembly));
-            //            }
-            //        }
-            //    }
-
-            //}
-
             var serviceProvider = services.BuildServiceProvider();
 
             partManager.ApplicationParts.Insert(0, new ModularFeatureApplicationPart(serviceProvider));
@@ -319,7 +281,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Configure Razor options
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                
+
+                options.AllowRecompilingViewsOnFileChange = false;
+
                 // Add composite view location expander
                 options.ViewLocationExpanders.Add(new CompositeViewLocationExpander());
 
@@ -400,8 +364,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
             IHostingEnvironment env,
             ILoggerFactory logger)
         {
-
-
+            
+            env.ContentRootFileProvider = new CompositeFileProvider(
+                new ModuleEmbeddedFileProvider(env, app.ApplicationServices),
+                env.ContentRootFileProvider);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

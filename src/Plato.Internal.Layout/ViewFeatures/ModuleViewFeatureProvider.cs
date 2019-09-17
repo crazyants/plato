@@ -56,7 +56,6 @@ namespace Plato.Internal.Layout.ViewFeatures
                     .Where(p => p.GetType() != typeof(ModuleViewFeatureProvider));
 
                 var moduleFeature = new ViewsFeature();
-
                 foreach (var module in _moduleManager.LoadModulesAsync().Result)
                 {
                     // Does the module have a precompiled views asdembly?
@@ -65,7 +64,7 @@ namespace Plato.Internal.Layout.ViewFeatures
 
                         var applicationPart = new ApplicationPart[]
                         {
-                                    new CompiledRazorAssemblyPart(module.ViewsAssembly)
+                            new CompiledRazorAssemblyPart(module.ViewsAssembly)
                         };
                    
                         foreach (var provider in mvcFeatureProviders)
@@ -82,30 +81,18 @@ namespace Plato.Internal.Layout.ViewFeatures
                             feature.ViewDescriptors.Add(descriptor);
                         }
 
-                        // For the app's module we still allow to explicitly specify view paths relative to the app content root.
-                        // So for the application's module we re-apply the feature providers without updating the relative paths.
-                        // Note: This is only needed in prod mode if app's views are precompiled and views files no longer exist.
-                        //if (module.Name == _hostingEnvironment.ApplicationName)
-                        //{
-                            //foreach (var provider in mvcFeatureProviders)
-                            //{
-                            //    provider.PopulateFeature(applicationPart, moduleFeature);
-                            //}
-
-                            //foreach (var descriptor in moduleFeature.ViewDescriptors)
-                            //{
-                            //    feature.ViewDescriptors.Add(descriptor);
-                            //}
-                        //}
-
                         moduleFeature.ViewDescriptors.Clear();
 
                     }
 
-
-
                 }
 
+            }
+
+            // Apply views feature providers registered at the tenant level.
+            foreach (var provider in _featureProviders)
+            {
+                provider.PopulateFeature(parts, feature);
             }
 
         }

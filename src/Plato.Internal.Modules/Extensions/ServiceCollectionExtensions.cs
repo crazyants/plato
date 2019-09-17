@@ -45,27 +45,27 @@ namespace Plato.Internal.Modules.Extensions
 
                 if (Directory.Exists(contentPath))
                 {
+
                     app.UseStaticFiles(new StaticFileOptions
                     {
                         RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
 
-                    //if (moduleEntry.ViewsAssembly != null)
-                    //{
-                    //    app.UseStaticFiles(new StaticFileOptions
-                    //    {
-                    //        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                    //        FileProvider = new EmbeddedFileProvider(moduleEntry.ViewsAssembly)
-                    //    });
-                    //} else
-                    //{
-                    //    app.UseStaticFiles(new StaticFileOptions
-                    //    {
-                    //        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                    //        FileProvider = new EmbeddedFileProvider(moduleEntry.Assembly)
-                    //    });
-                    //}
+                    app.UseStaticFiles(new StaticFileOptions
+                    {
+                        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+                        FileProvider = new EmbeddedFileProvider(moduleEntry.Assembly)
+                    });
+                    
+                    if (moduleEntry.ViewsAssembly != null)
+                    {
+                        app.UseStaticFiles(new StaticFileOptions
+                        {
+                            RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+                            FileProvider = new EmbeddedFileProvider(moduleEntry.ViewsAssembly)
+                        });
+                    }
                  
                 }
 

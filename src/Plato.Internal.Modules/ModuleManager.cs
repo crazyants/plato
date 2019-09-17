@@ -162,6 +162,16 @@ namespace Plato.Internal.Modules
                         .ToList();
                 }
 
+                // If the module assembly is not found by LoadModuleAsync
+                // It could be the module is precompiled and as such added
+                // to the application assemblies via DependencyContext
+                // within the ModularFeatureApplicationPart provider
+                // LoadModuleAsync
+                if (moduleAssembly == null)
+                {
+                    moduleAssembly = Assembly.Load(new AssemblyName(descriptor.Id));
+                }
+                
                 // Attempt to get modules assembly again from any previously added dependenvies
                 if (moduleAssembly == null)
                 {
