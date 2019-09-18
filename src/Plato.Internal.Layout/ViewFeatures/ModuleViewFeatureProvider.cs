@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Layout.ViewFeatures
@@ -21,14 +20,14 @@ namespace Plato.Internal.Layout.ViewFeatures
         private readonly IModuleManager _moduleManager;
         private readonly IServiceProvider _services;
 
+        // TODO: Refactor to obtain from IOptions
         private string _moduleRoot = "/Modules/";
 
         public ModuleViewFeatureProvider(IServiceProvider services)
-        {
-            _services = services;
+        {            
             _hostingEnvironment = services.GetRequiredService<IHostingEnvironment>();            
-            _moduleManager = services.GetRequiredService<IModuleManager>();            
-
+            _moduleManager = services.GetRequiredService<IModuleManager>();
+            _services = services;
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ViewsFeature feature)

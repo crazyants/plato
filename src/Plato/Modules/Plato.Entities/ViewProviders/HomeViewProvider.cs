@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Core.Models;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation.Abstractions;
 
@@ -59,17 +57,17 @@ namespace Plato.Entities.ViewProviders
 
         public override Task<IViewProviderResult> BuildDisplayAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildUpdateAsync(HomeIndex viewModel, IViewProviderContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult)); ;
         }
 
     }

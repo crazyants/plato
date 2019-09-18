@@ -6,14 +6,16 @@ using System.Collections;
 namespace Plato.Internal.Data.Abstractions
 {
 
+    /// <summary>
+    /// A custom DbDataReader implmentation to caches ordinal indexes for column names.
+    /// </summary>
     public class CachedDbDataReader : DbDataReader
     {
 
         // TODO: Do we need to use a ConcurrentDictionary here?
         private readonly IDictionary<string, int> _ordinalMappings =
             new Dictionary<string, int>();
-
-  
+          
         DbDataReader _proxy;
 
         public CachedDbDataReader(DbDataReader proxy)

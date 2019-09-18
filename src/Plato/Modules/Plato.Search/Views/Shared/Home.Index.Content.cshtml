@@ -34,6 +34,12 @@ else
                 </div>
             </form>
 
+            @if (searchOptions.SearchType != SearchTypes.Tsql)
+            {
+                <div class="mt-3">
+                    <span class="text-muted">@T["Need help searching? See our"]</span> <a href="#" data-toggle="modal" data-target="#searchHelp">@T["search help"]</a>
+                </div>
+            }
 
         </card-body>
     </card>

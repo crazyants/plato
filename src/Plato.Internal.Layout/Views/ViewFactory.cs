@@ -10,18 +10,10 @@ namespace Plato.Internal.Layout.Views
         //private readonly IViewTableManager _viewTableManager;
         private readonly IViewInvoker _viewInvoker;
 
-        public ViewFactory(
-            //IViewTableManager viewTableManager,
-            IViewInvoker viewInvoker)
-        {
-            //_viewTableManager = viewTableManager;
+        public ViewFactory(IViewInvoker viewInvoker)
+        {           
             _viewInvoker = viewInvoker;
         }
-
-        //public ViewDescriptor Create(IView view)
-        //{
-        //    return _viewTableManager.TryAdd(view);
-        //}
 
         public async Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext)
         {

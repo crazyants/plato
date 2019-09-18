@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Plato.Internal.Layout.Views
+﻿namespace Plato.Internal.Layout.Views
 {
     public class ViewPosition
     {

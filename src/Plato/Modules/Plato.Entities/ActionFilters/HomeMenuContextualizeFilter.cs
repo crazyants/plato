@@ -18,16 +18,13 @@ namespace Plato.Entities.ActionFilters
     public class HomeMenuContextualizeFilter : IModularActionFilter
     {
         
-        private readonly IFeatureEntityCountService _featureEntityCountService;
-        private readonly IAggregatedEntityRepository _aggregatedEntityRepository;
+        private readonly IFeatureEntityCountService _featureEntityCountService;        
         private readonly IAuthorizationService _authorizationService;
 
-        public HomeMenuContextualizeFilter(
-            IAggregatedEntityRepository aggregatedEntityRepository, 
+        public HomeMenuContextualizeFilter(            
             IFeatureEntityCountService featureEntityCountService,
             IAuthorizationService authorizationService)
-        {
-            _aggregatedEntityRepository = aggregatedEntityRepository;
+        {            
             _featureEntityCountService = featureEntityCountService;
             _authorizationService = authorizationService;
         }

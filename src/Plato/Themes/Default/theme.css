@@ -405,22 +405,6 @@ a.label:hover, .label.active {
 .overflow-auto::-webkit-scrollbar-thumb:vertical:hover {  background-color: rgba(0, 0, 0, 0.4); }
 
 /* ------------------- */
-/* Markdown Editor */
-/* ------------------- */
-
-.md-textarea::-webkit-scrollbar-thumb:vertical:hover {
-    background-color: #007bff;
-}
-
-.md-editor .btn-toolbar > .btn-group > .btn:hover,
-.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:hover,
-.md-editor .btn-toolbar > .btn-group > .dropdown.show > .btn {
-    background: #007bff;
-    color: white;
-}
-
-
-/* ------------------- */
 /* Resizable Area */
 /* ------------------- */
 
@@ -549,7 +533,6 @@ a.label:hover, .label.active {
     color: #dc3545;
 }
 
-
 /* ------------------------- */
 /* Markdown Editor */
 /* ------------------------- */
@@ -570,6 +553,12 @@ a.label:hover, .label.active {
 /* Buttons */
 .md-editor .btn-toolbar > .btn-group > .btn,
 .md-editor .btn-toolbar > .btn-group > .dropdown > .btn { background: white; border: 1px solid #ddd; }
+.md-editor .btn-toolbar > .btn-group > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn:hover,
+.md-editor .btn-toolbar > .btn-group > .dropdown.show > .btn {
+    background: #007bff;
+    color: white;
+}
 
 /* Focus */
 .md-editor.active {
@@ -579,7 +568,8 @@ a.label:hover, .label.active {
 
 /* Style textarea and preview */
 .md-editor .md-textarea,
-.md-editor .md-preview {
-    background-color: white;
+.md-editor .md-preview { background-color: white; }
+.md-editor .md-textarea::-webkit-scrollbar-thumb:vertical:hover,
+.md-editor .md-preview::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #007bff;
 }
-

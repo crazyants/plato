@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 
 namespace Plato.Internal.Layout.Views
@@ -17,16 +16,15 @@ namespace Plato.Internal.Layout.Views
         public ViewContext ViewContext { get; set; }
                 
         private readonly IViewComponentHelper _viewComponentHelper;
-        private readonly ILogger<ViewInvoker> _logger;
         private readonly IPartialInvoker _partialInvoker;
-
+        private readonly ILogger<ViewInvoker> _logger;        
         private readonly IHtmlHelper _htmlHelper;
 
         public ViewInvoker(            
             IViewComponentHelper viewComponentHelper,
+            IPartialInvoker partialInvoker,
             ILogger<ViewInvoker> logger,
-            IHtmlHelper htmlHelper,
-            IPartialInvoker partialInvoker)
+            IHtmlHelper htmlHelper)
         {            
             _viewComponentHelper = viewComponentHelper;
             _partialInvoker = partialInvoker;
@@ -44,6 +42,16 @@ namespace Plato.Internal.Layout.Views
         public async Task<IHtmlContent> InvokeAsync(IView view)
         {
 
+            if (view == null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+
+            if (string.IsNullOrEmpty(view.ViewName))
+            {
+                throw new ArgumentNullException(nameof(view.ViewName));
+            }
+
             // ** Hot code path ** - please modify carefully
 
             if (this.ViewContext == null)
@@ -56,8 +64,7 @@ namespace Plato.Internal.Layout.Views
             // It's the embedded views responsibility to perform model binding
             // Embedded views can leverage the current context within the Build method
             if (view.EmbeddedView != null)
-            {
-                
+            {                
                 return await view.EmbeddedView
                     .Contextualize(this.ViewContext)
                     .Build();
@@ -81,36 +88,8 @@ namespace Plato.Internal.Layout.Views
 
         async Task<IHtmlContent> InvokePartialAsync(string viewName, object model)
         {
-
-
             _partialInvoker.Contextualize(this.ViewContext);
             return await _partialInvoker.InvokeAsync(viewName, model, ViewContext.ViewData);
-
-            //if (!(_htmlHelper is HtmlHelper helper))
-            //{
-            //    throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
-            //}
-            //helper.Contextualize(this.ViewContext);
-
-            //if (_logger.IsEnabled(LogLevel.Information))
-            //{
-            //    _logger.LogInformation($"Attempting to invoke partial view \"{viewName}\".");
-            //}
-
-            //try
-            //{
-            //    return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
-            //}
-            //catch (Exception e)
-            //{
-            //    if (_logger.IsEnabled(LogLevel.Error))
-            //    {
-            //        _logger.LogError(e,
-            //            $"An exception occurred whilst invoking the partial view with name \"{viewName}\". {e.Message}");
-            //    }
-            //    throw;
-            //}
-            
         }
 
         async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object arguments)

@@ -8,7 +8,7 @@ namespace Plato.Internal.Layout.EmbeddedViews
     {
 
         IEmbeddedView Contextualize(ViewContext context);
-        
+
         Task<IHtmlContent> Build();
 
     }

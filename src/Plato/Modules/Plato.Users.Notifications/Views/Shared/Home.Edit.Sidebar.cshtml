@@ -1,0 +1,27 @@
+﻿@model User
+
+<div class="nav-v d-block">
+    <div class="d-block navbar-expand-lg navbar-light">
+
+        <card class="card card-body-flush">
+            <card-title>
+                <a href="#" class="btn float-right navbar-toggler" data-toggle="collapse" data-target="#profile-collapse" aria-controls="profile-collapse" aria-expanded="false" aria-label="Toggle navigation" role="button">
+                    <i class="fal fa-bars"></i>
+                </a>
+                <h6 class="card-title">@T["Your Account"]</h6>
+            </card-title>
+            <card-body>
+        
+                <div class="navbar-collapse collapse" id="profile-collapse" role="navigation">
+                    <navigation name="edit-profile"
+                                collaspsable="true"
+                                class="list-group list-group-flush  flex-fill"
+                                li-css-class="d-block w-100"
+                                link-css-class="list-group-item list-group-item-action" />
+                </div>
+        
+            </card-body>
+        </card>
+        
+    </div>
+</div>

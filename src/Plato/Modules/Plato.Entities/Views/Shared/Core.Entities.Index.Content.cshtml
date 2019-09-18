@@ -1,50 +1,50 @@
 ﻿@model CoreIndexViewModel
 
-    <cache vary-by-user="true" expires-after="@TimeSpan.FromSeconds(60)">
-        <div class="row">
-            <div class="col-lg-6">
+<cache vary-by-user="true" expires-after="@TimeSpan.FromSeconds(60)">
+    <div class="row">
+        <div class="col-lg-6">
 
-                <card class="card card-body-flush">
-                    <card-title>
-                        <div class="float-left">
-                            <h6 class="card-title d-inline-block">
-                                @T["Latest"]
-                            </h6>
-                        </div>
-                    </card-title>
-                    <card-body>
-                        <ul class="list-group list-group-flush list-group-hover">
-                            @await DisplayAsync(new View("GetEntityList", new
-                            {
-                                options = @Model.Latest.Options,
-                                pager = @Model.Latest.Pager
-                            }))
-                        </ul>
-                    </card-body>
-                </card>
+            <card class="card card-body-flush">
+                <card-title>
+                    <div class="float-left">
+                        <h6 class="card-title d-inline-block">
+                            @T["Latest"]
+                        </h6>
+                    </div>
+                </card-title>
+                <card-body>
+                    <ul class="list-group list-group-flush list-group-hover">
+                        @await DisplayAsync(new View("GetEntityList", new
+                        {
+                            options = @Model.Latest.Options,
+                            pager = @Model.Latest.Pager
+                        }))
+                    </ul>
+                </card-body>
+            </card>
 
-            </div>
-            <div class="col-lg-6">
-
-                <card class="card card-body-flush">
-                    <card-title>
-                        <div class="float-left">
-                            <h6 class="card-title d-inline-block">
-                                @T["Popular"]
-                            </h6>
-                        </div>
-                    </card-title>
-                    <card-body>
-                        <ul class="list-group list-group-flush list-group-hover">
-                            @await DisplayAsync(new View("GetEntityList", new
-                            {
-                                options = @Model.Popular.Options,
-                                pager = @Model.Popular.Pager
-                            }))
-                        </ul>
-                    </card-body>
-                </card>
-
-            </div>
         </div>
-    </cache>
+        <div class="col-lg-6">
+
+            <card class="card card-body-flush">
+                <card-title>
+                    <div class="float-left">
+                        <h6 class="card-title d-inline-block">
+                            @T["Popular"]
+                        </h6>
+                    </div>
+                </card-title>
+                <card-body>
+                    <ul class="list-group list-group-flush list-group-hover">
+                        @await DisplayAsync(new View("GetEntityList", new
+                        {
+                            options = @Model.Popular.Options,
+                            pager = @Model.Popular.Pager
+                        }))
+                    </ul>
+                </card-body>
+            </card>
+
+        </div>
+    </div>
+</cache>
