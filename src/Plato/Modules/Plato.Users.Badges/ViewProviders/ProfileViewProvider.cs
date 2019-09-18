@@ -44,8 +44,7 @@ namespace Plato.Users.Badges.ViewProviders
             };
 
             return Views(
-                View<ProfileDisplayViewModel>("Profile.Display.Content", model => viewModel).Zone("content").Order(0)
-                //View<ProfileDisplayViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
+                View<ProfileDisplayViewModel>("Profile.Display.Content", model => viewModel).Zone("content").Order(0)                
             );
 
         }
