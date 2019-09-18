@@ -1,28 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Internal.Hosting</AssemblyName>
-    <PackageId>Plato.Hosting</PackageId>
-    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <RootNamespace>Plato.Internal.Hosting</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-    <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
-  </ItemGroup>
-
+ 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
     <ProjectReference Include="..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

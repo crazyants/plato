@@ -1,22 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Internal.Data</AssemblyName>
-    <PackageId>Plato.Data</PackageId>
-    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <RootNamespace>Plato.Internal.Data</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Schemas\**" />
-    <EmbeddedResource Remove="Schemas\**" />
-    <None Remove="Schemas\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Data.Abstractions\Plato.Internal.Data.Abstractions.csproj" />

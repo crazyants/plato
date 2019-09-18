@@ -1,17 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Plato.Internal.Drawing.Abstractions</RootNamespace>
-    <AssemblyName>Plato.Internal.Drawing.Abstractions</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Captcha\" />
   </ItemGroup>
 
 </Project>

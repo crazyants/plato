@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Internal.Theming.Abstractions</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,8 +9,8 @@
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-  <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+  </ItemGroup>
   
 </Project>

@@ -1,8 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Features.Abstractions\Plato.Internal.Features.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
@@ -12,12 +20,5 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Plato.Internal.Features.Abstractions\Plato.Internal.Features.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
-  </ItemGroup>
+  
 </Project>

@@ -38,9 +38,9 @@ namespace Plato.Users.Notifications.Controllers
         public HomeController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IViewProviderManager<EditNotificationsViewModel> editProfileViewProvider,
-            INotificationTypeManager notificationTypeManager,
+            IViewProviderManager<EditNotificationsViewModel> editProfileViewProvider,            
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
+            INotificationTypeManager notificationTypeManager,
             UserManager<User> userManager, 
             IContextFacade contextFacade)
         {
@@ -93,6 +93,7 @@ namespace Plato.Users.Notifications.Controllers
             // We have previously saved settings
             if (userNotificationSettings.NotificationTypes != null)
             {
+
                 // Add all user specified notification types
                 enabledNotificationTypes.AddRange(userNotificationSettings.NotificationTypes);
 
@@ -108,6 +109,7 @@ namespace Plato.Users.Notifications.Controllers
                         enabledNotificationTypes.Add(userNotification);
                     }
                 }
+
             }
             else
             {

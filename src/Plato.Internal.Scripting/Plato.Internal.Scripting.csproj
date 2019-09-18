@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,8 +7,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj" />
   </ItemGroup>
-  
-
-
-  
+    
 </Project>

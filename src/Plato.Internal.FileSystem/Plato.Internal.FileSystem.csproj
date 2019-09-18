@@ -1,25 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Internal.FileSystem</AssemblyName>
-    <PackageId>Plato.FileSystem</PackageId>
-    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
   </ItemGroup>
-
+  
 </Project>

@@ -1,9 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Plato.Internal.Badges.Abstractions</RootNamespace>
-    <AssemblyName>Plato.Internal.Badges.Abstractions</AssemblyName>
   </PropertyGroup>
 
     <ItemGroup>

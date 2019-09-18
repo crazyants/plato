@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Schemas.Extensions
@@ -10,10 +9,7 @@ namespace Plato.Internal.Data.Schemas.Extensions
         public static IServiceCollection AddDataSchemas(
             this IServiceCollection services)
         {
-
-            //services.AddTransient<ISchemaLoader, SchemaLoader>();
-            //services.AddTransient<ISchemaProvider, SchemaProvider>();
-            //services.AddTransient<ISchemaBuilder, SchemaBuilder>();
+                        
             services.AddTransient<ISchemaManager, SchemaManager>();
             services.AddTransient<ISchemaBuilder, SchemaBuilder>();
 

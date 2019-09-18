@@ -11,7 +11,6 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
-using Plato.Notifications.Services;
 using Plato.Users.Notifications.ViewModels;
 
 namespace Plato.Users.Notifications.ViewProviders
@@ -20,24 +19,24 @@ namespace Plato.Users.Notifications.ViewProviders
     public class EditProfileViewProvider : BaseViewProvider<EditNotificationsViewModel>
     {
 
-        private readonly UserManager<User> _userManager;
-        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationTypeManager _notificationTypeManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly UserManager<User> _userManager;
 
         public EditProfileViewProvider(
-            UserManager<User> userManager, 
-            IPlatoUserStore<User> platoUserStore,
-            INotificationTypeManager notificationTypeManager, 
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
+            INotificationTypeManager notificationTypeManager,
             IHttpContextAccessor httpContextAccessor,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IPlatoUserStore<User> platoUserStore,
+            UserManager<User> userManager)
         {
-            _userManager = userManager;
-            _platoUserStore = platoUserStore;
+            _userNotificationTypeDefaults = userNotificationTypeDefaults;
             _notificationTypeManager = notificationTypeManager;
             _httpContextAccessor = httpContextAccessor;
-            _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _platoUserStore = platoUserStore;
+            _userManager = userManager;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(EditNotificationsViewModel model,
