@@ -12,28 +12,35 @@ using Microsoft.Extensions.Primitives;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.FileProviders;
+using Plato.Internal.Modules.Models;
 
 namespace Plato.Internal.Modules
 {
     public class ModuleEmbeddedFileProvider : IFileProvider
     {
-
-    
+            
         private readonly IRazorViewEngineFileProviderAccessor _fileProviderAccessor;
         private readonly IOptions<ModuleOptions> _moduleOptions;
         private readonly IModuleManager _moduleManager;
 
         private IList<IModuleEntry> _modules;
-        private string _baseNamespace = "Plato";
+        private string _baseNamespace = "Plato";        
+        private string _modulesFolder;
+        private string _modulesRoot;
         private string _root;
 
         public ModuleEmbeddedFileProvider(IServiceProvider services)
         {
+
             var env = services.GetRequiredService<IHostingEnvironment>();
             _moduleOptions = services.GetRequiredService<IOptions<ModuleOptions>>();
             _moduleManager = services.GetRequiredService<IModuleManager>();
             _fileProviderAccessor = services.GetRequiredService<IRazorViewEngineFileProviderAccessor>();
+            
+            _modulesFolder = _moduleOptions.Value.VirtualPathToModulesFolder;
+            _modulesRoot = _moduleOptions.Value.VirtualPathToModulesFolder + "/";
             _root = env.ContentRootPath;
+
         }
           
         public IDirectoryContents GetDirectoryContents(string subpath)
@@ -50,44 +57,35 @@ namespace Plato.Internal.Modules
                     .GetResult()
                     .ToList();
             }
-
-            if (subpath.IndexOf("Plato.Core", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                var test = "test";
-            }
-
+         
             var folder = NormalizePath(subpath);
-
             var entries = new List<IFileInfo>();
-
-            var modulesFolder = _moduleOptions.Value.VirtualPathToModulesFolder;
-            var modulesRoot =  _moduleOptions.Value.VirtualPathToModulesFolder + "/";
-
+            
             // Under the root.
             if (folder == "")
             {
                 // Add the virtual folder "Areas" containing all modules.
-                entries.Add(new EmbeddedDirectoryInfo(modulesFolder));
+                entries.Add(new EmbeddedDirectoryInfo(_modulesFolder));
             }
             // Under "Modules".
-            else if (folder == modulesFolder)
+            else if (folder == _modulesFolder)
             {
                 // Add virtual folders for all modules by using their assembly names (module ids).
                 entries.AddRange(
                     _modules.Select(m => new EmbeddedDirectoryInfo(m.Descriptor.Id)));
             }
             // Under "Modules/{ModuleId}" or "Modules/{ModuleId}/**".
-            else if (folder.StartsWith(modulesRoot, StringComparison.Ordinal))
+            else if (folder.StartsWith(_modulesRoot, StringComparison.Ordinal))
             {
 
                 // Skip "Modules/" from the folder path.
-                var path = folder.Substring(modulesRoot.Length);
+                var path = folder.Substring(_modulesRoot.Length);
                 var index = path.IndexOf('/');
 
                 // Resolve the module id and get all its asset paths.
                 var name = index == -1 ? path : path.Substring(0, index);
 
-                var ph = _root + _moduleOptions.Value.VirtualPathToModulesFolder + "\\" + name;
+                var ph = _root + _modulesFolder + "\\" + name;
                 var paths = new List<string>();             
                 foreach (var file  in _fileProviderAccessor.FileProvider.GetDirectoryContents(path))
                 {
@@ -192,9 +190,6 @@ namespace Plato.Internal.Modules
             return fileInfo;
         }
 
-
-
     }
-
 
 }

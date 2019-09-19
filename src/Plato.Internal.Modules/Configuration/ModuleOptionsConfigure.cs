@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Modules.Models;
 
-namespace Plato.Internal.Modules
+namespace Plato.Internal.Modules.Configuration
 {
     public class ModuleOptionsConfigure : IConfigureOptions<ModuleOptions>    
     {

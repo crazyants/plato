@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Assets.Abstractions
 {
-    
+
     public class Asset
     {
 
@@ -22,15 +21,15 @@ namespace Plato.Internal.Assets.Abstractions
 
         public IDictionary<string, string> Attributes { get; set; }
 
-        public RouteConstraints Constraints { get; set; }
+        public AssetConstraints Constraints { get; set; }
 
     }
     
-    public class RouteConstraints : List<RouteConstraint>
+    public class AssetConstraints : List<AssetConstraint>
     {   
     }
 
-    public class RouteConstraint : Dictionary<string, string>
+    public class AssetConstraint : Dictionary<string, string>
     {
     }
 

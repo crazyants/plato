@@ -10,11 +10,12 @@ using Microsoft.Extensions.FileProviders.Physical;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Plato.Internal.Models.Modules;
+using Plato.Internal.Modules.Models;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules
 {
-    public class ApplicationViewFileProvider : IFileProvider
+    public class ModuleViewFileProvider : IFileProvider
     {
 
         private readonly IOptions<ModuleOptions> _moduleOptions;
@@ -25,12 +26,12 @@ namespace Plato.Internal.Modules
         private string _moduleRoot;
         private string _root;
 
-        public ApplicationViewFileProvider(IServiceProvider services)
+        public ModuleViewFileProvider(IServiceProvider services)
         {
             var env = services.GetRequiredService<IHostingEnvironment>();
             _moduleOptions = services.GetRequiredService<IOptions<ModuleOptions>>();
             _moduleManager = services.GetRequiredService<IModuleManager>();
-            _root = env.ContentRootPath;
+            _root = env.ContentRootPath + "\\";
             _moduleRoot = _moduleOptions.Value.VirtualPathToModulesFolder + "/";
         }
 
@@ -70,7 +71,7 @@ namespace Plato.Internal.Modules
                     var folderSubPath = folder.Substring(_moduleRoot.Length);
 
                     // And serve the contents from the physical application root folder.
-                    return new PhysicalDirectoryContents(_root + folderSubPath);
+                    return new PhysicalDirectoryContents(_root + folder.Replace("/", "\\"));
                 }
             }
 

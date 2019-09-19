@@ -7,6 +7,8 @@ using Microsoft.Extensions.FileProviders;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Loader;
 using Plato.Internal.Modules.Locator;
+using Plato.Internal.Modules.Configuration;
+using Plato.Internal.Modules.Models;
 
 namespace Plato.Internal.Modules.Extensions
 {
@@ -27,51 +29,51 @@ namespace Plato.Internal.Modules.Extensions
         }
 
 
-        public static void UseModuleStaticFiles(
-            this IApplicationBuilder app, IHostingEnvironment env)
-        {
+        //public static void UseModuleStaticFiles(
+        //    this IApplicationBuilder app, IHostingEnvironment env)
+        //{
 
-            var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
-            var modules = moduleManager.LoadModulesAsync().Result;
-            foreach (var moduleEntry in modules)
-            {
+        //    var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
+        //    var modules = moduleManager.LoadModulesAsync().Result;
+        //    foreach (var moduleEntry in modules)
+        //    {
 
-                // serve static files within module folders
-                var contentPath = Path.Combine(
-                    env.ContentRootPath,
-                    moduleEntry.Descriptor.Location,
-                    moduleEntry.Descriptor.Id,
-                    "Content");
+        //        // serve static files within module folders
+        //        var contentPath = Path.Combine(
+        //            env.ContentRootPath,
+        //            moduleEntry.Descriptor.Location,
+        //            moduleEntry.Descriptor.Id,
+        //            "Content");
 
-                if (Directory.Exists(contentPath))
-                {
+        //        if (Directory.Exists(contentPath))
+        //        {
 
-                    app.UseStaticFiles(new StaticFileOptions
-                    {
-                        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                        FileProvider = new PhysicalFileProvider(contentPath)
-                    });
+        //            app.UseStaticFiles(new StaticFileOptions
+        //            {
+        //                RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+        //                FileProvider = new PhysicalFileProvider(contentPath)
+        //            });
 
-                    app.UseStaticFiles(new StaticFileOptions
-                    {
-                        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                        FileProvider = new EmbeddedFileProvider(moduleEntry.Assembly)
-                    });
+        //            app.UseStaticFiles(new StaticFileOptions
+        //            {
+        //                RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+        //                FileProvider = new EmbeddedFileProvider(moduleEntry.Assembly)
+        //            });
                     
-                    if (moduleEntry.ViewsAssembly != null)
-                    {
-                        app.UseStaticFiles(new StaticFileOptions
-                        {
-                            RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                            FileProvider = new EmbeddedFileProvider(moduleEntry.ViewsAssembly)
-                        });
-                    }
+        //            if (moduleEntry.ViewsAssembly != null)
+        //            {
+        //                app.UseStaticFiles(new StaticFileOptions
+        //                {
+        //                    RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+        //                    FileProvider = new EmbeddedFileProvider(moduleEntry.ViewsAssembly)
+        //                });
+        //            }
                  
-                }
+        //        }
 
-            }
+        //    }
 
-        }
+        //}
 
     }
 }

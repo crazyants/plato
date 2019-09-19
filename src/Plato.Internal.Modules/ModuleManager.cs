@@ -144,23 +144,14 @@ namespace Plato.Internal.Modules
 
             foreach (var descriptor in _moduleDescriptors)
             {
-                           
-                if (descriptor.Id.IndexOf("Plato.Core", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    var test = "test";
-                }
-
+                         
                 // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 
                 // get assembly with name matching descriptor Id (i.e. the modules primary assembly)
                 var moduleAssembly = assemblies.FirstOrDefault(a =>
                     Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
-             
-                // get assembly with name matching descriptor Id + Views (i.e. the modules pre-compiled views assembly)
-                var viewsAssembly = assemblies.FirstOrDefault(a =>
-                    Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id + ".Views");
-
+                           
                 // The assembly may have already been loaded by another module
                 // For example if a module references the modules assembly we are trying to load
                 // LoadModuleAsync will only ever load the assembly once
@@ -182,16 +173,7 @@ namespace Plato.Internal.Modules
                 {
                     moduleAssembly = Assembly.Load(new AssemblyName(descriptor.Id));
                 }
-
-                if (viewsAssembly == null)
-                {
-                    if (moduleAssembly != null)
-                    {
-                        var path = moduleAssembly.Location.Replace(".dll", ".Views.dll");
-                        viewsAssembly = LoadFromAssemblyPath(path);
-                    }                 
-                }
-
+                
                 // Attempt to get modules assembly again from any previously added dependenvies
                 if (moduleAssembly == null)
                 {
@@ -210,7 +192,6 @@ namespace Plato.Internal.Modules
                 {
                     Descriptor = descriptor,
                     Assembly = moduleAssembly,
-                    ViewsAssembly = viewsAssembly,
                     Assemblies = assemblies
                 });
 

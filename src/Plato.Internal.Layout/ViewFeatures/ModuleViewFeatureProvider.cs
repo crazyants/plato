@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
@@ -58,35 +60,48 @@ namespace Plato.Internal.Layout.ViewFeatures
                     .Where(p => p.GetType() != typeof(ModuleViewFeatureProvider));
 
                 var moduleFeature = new ViewsFeature();
-                var assemblies = _moduleManager.LoadModulesAsync().Result;
+                var modules = _moduleManager.LoadModulesAsync().Result;
 
-                foreach (var module in assemblies)
+                foreach (var module in modules)
                 {
-                    // Does the module have a precompiled views asdembly?
-                    if (module.ViewsAssembly != null)
+
+                    var precompiledAssemblyPath = Path.Combine(Path.GetDirectoryName(module.Assembly.Location),
+                      module.Assembly.GetName().Name + ".Views.dll");
+
+                    if (File.Exists(precompiledAssemblyPath))
                     {
+                        try
+                        {
 
-                        var applicationPart = new ApplicationPart[]
-                        {
-                            new CompiledRazorAssemblyPart(module.ViewsAssembly)
-                        };
-                   
-                        foreach (var provider in mvcFeatureProviders)
-                        {
-                            provider.PopulateFeature(applicationPart, moduleFeature);
+                            var assembly = Assembly.LoadFile(precompiledAssemblyPath);
+
+                            var applicationPart = new ApplicationPart[]
+                           {
+                                    new CompiledRazorAssemblyPart(assembly)
+                           };
+
+                            foreach (var provider in mvcFeatureProviders)
+                            {
+                                provider.PopulateFeature(applicationPart, moduleFeature);
+                            }
+
+                            // Razor views are precompiled in the context of their modules, but at runtime
+                            // their paths need to be relative to the application root.                        
+                            foreach (var descriptor in moduleFeature.ViewDescriptors)
+                            {
+                                descriptor.RelativePath = _moduleRoot + module.Descriptor.Id + descriptor.RelativePath;
+                                feature.ViewDescriptors.Add(descriptor);
+                            }
+
+                            moduleFeature.ViewDescriptors.Clear();
+
                         }
-
-                        // Razor views are precompiled in the context of their modules, but at runtime
-                        // their paths need to be relative to the virtual "Areas/{ModuleId}" folders.
-                        // Note: For the app's module this folder is "Areas/{env.ApplicationName}".
-                        foreach (var descriptor in moduleFeature.ViewDescriptors)
+                        catch (FileLoadException)
                         {
-                            descriptor.RelativePath = _moduleRoot + module.Descriptor.Id + descriptor.RelativePath;
-                            feature.ViewDescriptors.Add(descriptor);
+                            // Don't throw if assembly cannot be loaded.
+                            // This can happen if the file is not a managed assembly.
                         }
-
-                        moduleFeature.ViewDescriptors.Clear();
-
+                        
                     }
 
                 }

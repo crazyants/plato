@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Loader;
 using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,7 +28,6 @@ using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Extensions;
-using Plato.Internal.Hosting.Web.Expanders;
 using Plato.Internal.Hosting.Web.Middleware;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
@@ -58,13 +56,10 @@ using Plato.Internal.Search.Extensions;
 using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
-using Plato.Internal.Layout.Razor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Razor.Hosting;
 using Plato.Internal.Layout.ViewFeatures;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Plato.Internal.Layout.LocationExpander;
 using Plato.Internal.Modules;
 
@@ -228,7 +223,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Razor & Views
             var builder = services
                 .AddMvcCore()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
                 .AddCacheTagHelper()
@@ -237,7 +232,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
 
-            // Add module application parts
+            // Add modular application parts
             services.AddPlatoModularAppParts(builder.PartManager);
 
             // View adapters
@@ -259,20 +254,15 @@ namespace Plato.Internal.Hosting.Web.Extensions
         private static IServiceCollection AddPlatoModularAppParts(this IServiceCollection services, ApplicationPartManager partManager)
         {
             var serviceProvider = services.BuildServiceProvider();
-
             partManager.ApplicationParts.Insert(0, new ModularFeatureApplicationPart(serviceProvider));
             partManager.FeatureProviders.Add(new ModuleViewFeatureProvider(serviceProvider));
-
             return services;
-
         }
           
-
         public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
             
-            // Location expander
-            //services.AddScoped<IViewLocationExpanderProvider, ComponentViewLocationExpander>();
+            // Location expander            
             services.AddScoped<IViewLocationExpanderProvider, ModularViewLocationExpander>();
             services.AddScoped<IViewLocationExpanderProvider, AreaViewLocationExpander>();
                         
@@ -289,16 +279,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
                 // To let the application behave as a module, its razor files are requested under the virtual
                 // "Areas" folder, but they are still served from the file system by this custom provider.
-                options.FileProviders.Insert(0, new ApplicationViewFileProvider(services.BuildServiceProvider()));
-
-
-
-                //if (_hostingEnvironment.IsDevelopment())
-                //{
-                //    // While in development, razor files are 1st served from their module project locations.
-                //    options.FileProviders.Insert(0, new ModuleProjectRazorFileProvider(_applicationContext));
-                //}
-                               
+                options.FileProviders.Insert(0, new ModuleViewFileProvider(services.BuildServiceProvider()));
+                
                 //Ensure loaded modules are aware of current context
                 var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
                 var moduleReferences = assemblies
@@ -411,15 +393,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // Monitor changes to locale directories
             app.UsePlatoLocalization();
-
-            // Allow static files within /modules
-            //app.UseModuleStaticFiles(env);
-
+            
             // Allow static files within /themes
-            app.UseThemeStaticFiles(env);
+            //app.UseThemeStaticFiles(env);
 
             // Allow static files within /sites
-            app.UseSiteStaticFiles(env);
+            //app.UseSiteStaticFiles(env);
 
             // Add any IApplicationFeatureProvider 
             app.UseModularApplicationFeatureProvider();
@@ -442,17 +421,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
             IFileProvider fileProvider;
             if (env.IsDevelopment())
             {
-                var fileProviders = new List<IFileProvider>();                
-                fileProviders.Add(new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices));                
-                fileProvider = new CompositeFileProvider(fileProviders);
+                fileProvider = new CompositeFileProvider(
+                    new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices));
             }
             else
             {
-
                 fileProvider = new CompositeFileProvider(
                         new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices),
-                        env.ContentRootFileProvider
-                    );
+                        env.ContentRootFileProvider);
             }
 
             var options = app.ApplicationServices.GetRequiredService<IOptions<StaticFileOptions>>().Value;
@@ -494,8 +470,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             }
 
         }
-
-
+        
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {
             app.Map("/allservices", builder => builder.Run(async context =>

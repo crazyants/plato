@@ -17,9 +17,7 @@ namespace Plato.Internal.Modules.Models
         public IEnumerable<Assembly> Assemblies { get; set; }
 
         public Assembly Assembly { get; set; }
-
-        public Assembly ViewsAssembly { get; set; }
-        
+            
         public IEnumerable<Type> ExportedTypes { get; set; }
 
     }

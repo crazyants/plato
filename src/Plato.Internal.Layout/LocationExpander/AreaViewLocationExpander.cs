@@ -19,9 +19,7 @@ namespace Plato.Internal.Layout.LocationExpander
         {
 
             var result = new List<string>
-            {
-                // Ensure we first look for views in our current area
-                // Moved to PlatoViewEngine for performance reasons                                                       
+            {                
                 $"~/Modules/{{2}}/Views/{{1}}/{{0}}{RazorViewEngine.ViewExtension}",
                 $"~/Modules/{{2}}/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}"
             };

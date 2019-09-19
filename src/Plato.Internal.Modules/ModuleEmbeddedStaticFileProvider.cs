@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Modules.Models;
 
 namespace Plato.Internal.Modules
 {

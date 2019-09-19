@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -123,12 +122,17 @@ namespace Plato.Internal.Layout.TagHelpers
             assets = FilterContraints(assets);
 
             // Return ordered list
-            return assets.OrderBy(p => p.Order).ToList();            
+            return assets?.OrderBy(p => p.Order).ToList();            
 
         }
         
         public IEnumerable<Asset> FilterContraints(IEnumerable<Asset> assets)
         {
+
+            if (assets == null)
+            {
+                return null;
+            }
 
             // Get current area, controller & action
 
@@ -154,11 +158,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
             // Our output
             var output = new List<Asset>();
-            if (assets == null)
-            {
-                return output;
-            }
-
+         
             // Test all asset constraints
             foreach (var asset in assets)
             {

@@ -36,15 +36,15 @@
   <!-- 
       Ensure 
       \Modules\Bin\**
-      \Modules\Content\**
-      \Modules\Views\**
+      \Modules\Content\**      
       \Themes\** 
       \Sites\** 
       Are all published for all publishing profiles
   -->
 
   <ItemGroup>
-    <_moduleFiles Include="$(MSBuildProjectDirectory)/Modules/**/Bin/**;$(MSBuildProjectDirectory)/Modules/**/Views/**;$(MSBuildProjectDirectory)/Modules/**/Content/**" />
+    
+    <_moduleFiles Include="$(MSBuildProjectDirectory)/Modules/**/Bin/**;$(MSBuildProjectDirectory)/Modules/**/Content/**" />
     <_themeFiles Include="$(MSBuildProjectDirectory)/Themes/**/*" />
     <_siteFiles Include="$(MSBuildProjectDirectory)/Sites/**/*" />
 
@@ -61,7 +61,6 @@
     </DotNetPublishFiles>
 
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
