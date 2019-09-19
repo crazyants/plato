@@ -7,7 +7,7 @@ namespace Plato.Internal.Data.Abstractions
 {
 
     /// <summary>
-    /// A custom DbDataReader implmentation to caches ordinal indexes for column names.
+    /// A custom DbDataReader implmentation to cache ordinal column indexes for column names.
     /// </summary>
     public class CachedDbDataReader : DbDataReader
     {

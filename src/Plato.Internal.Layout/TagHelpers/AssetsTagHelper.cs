@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Assets.Abstractions;
 
@@ -15,8 +19,15 @@ namespace Plato.Internal.Layout.TagHelpers
     public class AssetsTagHelper : TagHelper
     {
 
+        const string AreaKey = "area";
+        const string ControllerKey = "controller";
+        const string ActionKey = "action";
+
         [HtmlAttributeName("section")]
         public AssetSection Section { get; set; }
+
+        [ViewContext] // inform razor to inject
+        public ViewContext ViewContext { get; set; }
 
         #region "Constrcutor"
 
@@ -103,16 +114,117 @@ namespace Plato.Internal.Layout.TagHelpers
             var environments = await GetMergedEnvironmentsAsync();
 
             // Filter by environment
-            var matchingEnvironments = environments.FirstOrDefault(g => g.TargetEnvironment == TargetEnvironment.All || g.TargetEnvironment == GetDeploymentMode());
+            var matchingEnvironment = environments.FirstOrDefault(g => g.TargetEnvironment == TargetEnvironment.All || g.TargetEnvironment == GetDeploymentMode());
 
-            // filter by section and return ordered assets
-            return @matchingEnvironments?.Resources
-                .Where(r => r.Section == Section)
-                .OrderBy(p => p.Order)
-                .ToList();
+            // Filter by section
+            var assets = matchingEnvironment?.Resources.Where(r => r.Section == Section);
+
+            // Filter by route consttaints
+            assets = FilterContraints(assets);
+
+            // Return ordered list
+            return assets.OrderBy(p => p.Order).ToList();            
 
         }
+        
+        public IEnumerable<Asset> FilterContraints(IEnumerable<Asset> assets)
+        {
 
+            // Get current area, controller & action
+
+            var routeValues = ViewContext.RouteData.Values;
+
+            var area = string.Empty;
+            if (routeValues.ContainsKey(AreaKey))
+            {
+                area = routeValues[AreaKey].ToString();
+            }
+
+            var controller = string.Empty;
+            if (routeValues.ContainsKey(ControllerKey))
+            {
+                controller = routeValues[ControllerKey].ToString();
+            }
+
+            var action = string.Empty;
+            if (routeValues.ContainsKey(ActionKey))
+            {
+                action = routeValues[ActionKey].ToString();
+            }
+
+            // Our output
+            var output = new List<Asset>();
+            if (assets == null)
+            {
+                return output;
+            }
+
+            // Test all asset constraints
+            foreach (var asset in assets)
+            {
+
+                // No constaints to test, add the asset and move along
+                if (asset.Constraints == null)
+                {
+                    output.Add(asset);
+                    continue;
+                }
+
+                // Test constraints, adding only assets matching 
+                // any of the supplied route constraints
+                var match = false;
+                foreach (var contraint in asset.Constraints)
+                {
+
+                    // Test area, controller & action
+                    if (contraint.ContainsKey(AreaKey) &&
+                        contraint.ContainsKey(ControllerKey) &&
+                        contraint.ContainsKey(ActionKey))
+                    {
+                        match =
+                            contraint[AreaKey].Equals(area, StringComparison.OrdinalIgnoreCase) &&
+                            contraint[ControllerKey].Equals(controller, StringComparison.OrdinalIgnoreCase) &&
+                            contraint[ActionKey].Equals(action, StringComparison.OrdinalIgnoreCase);
+                        break;
+                    }
+
+                    // Test area & controller
+                    if (contraint.ContainsKey(AreaKey) &&
+                        contraint.ContainsKey(ControllerKey))
+                    {
+                        match =
+                            contraint[AreaKey].Equals(area, StringComparison.OrdinalIgnoreCase) &&
+                            contraint[ControllerKey].Equals(controller, StringComparison.OrdinalIgnoreCase);
+                        if (match)
+                        {
+                            break;
+                        }
+                    }
+
+                    // Test area
+                    if (contraint.ContainsKey(AreaKey))
+                    {
+                        match = contraint[AreaKey].Equals(area, StringComparison.OrdinalIgnoreCase);
+                        if (match)
+                        {
+                            break;
+                        }
+                    }
+                    
+                }
+
+                // Add the asset to the output if any of the constraints matched
+                if (match)
+                {
+                    output.Add(asset);
+                }
+
+            }
+
+            return output;
+
+        }
+        
         async Task<IEnumerable<AssetEnvironment>> GetMergedEnvironmentsAsync()
         {
             

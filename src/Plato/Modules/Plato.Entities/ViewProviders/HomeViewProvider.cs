@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Core.Models;
 using Plato.Entities.Models;
 using Plato.Entities.ViewModels;
@@ -71,7 +70,5 @@ namespace Plato.Entities.ViewProviders
         }
 
     }
-
-
 
 }

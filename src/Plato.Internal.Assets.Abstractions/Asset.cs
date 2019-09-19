@@ -22,8 +22,18 @@ namespace Plato.Internal.Assets.Abstractions
 
         public IDictionary<string, string> Attributes { get; set; }
 
+        public RouteConstraints Constraints { get; set; }
+
     }
     
+    public class RouteConstraints : List<RouteConstraint>
+    {   
+    }
+
+    public class RouteConstraint : Dictionary<string, string>
+    {
+    }
+
     public enum AssetSection
     {
         Meta,

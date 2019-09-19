@@ -20,25 +20,53 @@ namespace Plato.Reports.Assets
                     {
                         Url = "/plato.reports/content/css/vendors/chart.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/css/reports.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/reports.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     }
                 }),
 
@@ -49,25 +77,53 @@ namespace Plato.Reports.Assets
                     {
                         Url = "/plato.reports/content/css/vendors/chart.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/css/reports.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/reports.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     }
                 }),
 
@@ -78,25 +134,53 @@ namespace Plato.Reports.Assets
                     {
                         Url = "/plato.reports/content/css/vendors/chart.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/css/reports.css",
                         Type = AssetType.IncludeCss,
-                        Section = AssetSection.Header
+                        Section = AssetSection.Header,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/vendors/chart.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     },
                     new Asset()
                     {
                         Url = "/plato.reports/content/js/reports.js",
                         Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
+                        Section = AssetSection.Footer,
+                        Constraints = new RouteConstraints()
+                        {
+                            new RouteConstraint()
+                            {
+                                ["area"] = "Plato.Admin"
+                            }
+                        }
                     }
                 })
 
