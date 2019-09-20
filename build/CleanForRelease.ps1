@@ -19,13 +19,13 @@ if($FilesToRemove -ne $null)
 	} 
 }
 
-# Recursively deletes all 'obj', '.git', '.vs' (or any other specified) folders inside current folder
+# Recursively deletes all 'debug', 'obj', '.git', '.vs' (or any other specified) folders inside current folder
 
 # recursively get all folders matching given includes, except ignored folders
-$FoldersToRemove = Get-ChildItem .\ -include obj,.git,.vs -Recurse   | where {$_ -notmatch '_tools' -and $_ -notmatch '_build'} | foreach {$_.fullname}
+$FoldersToRemove = Get-ChildItem .\ -include debug,obj,.git,.vs -Recurse   | where {$_ -notmatch '_tools' -and $_ -notmatch '_build'} | foreach {$_.fullname}
 
 # recursively get all folders matching given includes
-$AllFolders = Get-ChildItem .\ -include obj,.git,.vs -Recurse | foreach {$_.fullname}
+$AllFolders = Get-ChildItem .\ -include debug,obj,.git,.vs -Recurse | foreach {$_.fullname}
 
 # subtract arrays to calculate ignored ones
 $IgnoredFolders = $AllFolders | where {$FoldersToRemove -notcontains $_} 
