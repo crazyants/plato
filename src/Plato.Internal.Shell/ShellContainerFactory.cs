@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Data.Abstractions;
@@ -13,24 +12,19 @@ using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Internal.Shell
 {
+
     public class ShellContainerFactory : IShellContainerFactory
     {
-
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
-        private readonly ILoggerFactory _loggerFactory;
+                
         private readonly IServiceCollection _applicationServices;
-     
+        private readonly IServiceProvider _serviceProvider;
+
         public ShellContainerFactory(
-            IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory,
-            ILogger<ShellContainerFactory> logger,
+            IServiceProvider serviceProvider,    
             IServiceCollection applicationServices)
         {
             _applicationServices = applicationServices;
-            _serviceProvider = serviceProvider;
-            _loggerFactory = loggerFactory;
-            _logger = logger;
+            _serviceProvider = serviceProvider;        
         }
 
         public IServiceProvider CreateContainer(IShellSettings settings, ShellBlueprint blueprint)

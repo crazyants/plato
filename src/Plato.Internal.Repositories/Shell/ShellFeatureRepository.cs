@@ -203,7 +203,7 @@ namespace Plato.Internal.Repositories.Shell
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateShellFeature",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("ModuleId", DbType.String, 255, moduleId),

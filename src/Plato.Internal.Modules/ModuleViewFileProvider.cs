@@ -30,22 +30,14 @@ namespace Plato.Internal.Modules
         {
             var env = services.GetRequiredService<IHostingEnvironment>();
             _moduleOptions = services.GetRequiredService<IOptions<ModuleOptions>>();
-            _moduleManager = services.GetRequiredService<IModuleManager>();
-            _root = env.ContentRootPath + "\\";
+            _moduleManager = services.GetRequiredService<IModuleManager>();            
             _moduleRoot = _moduleOptions.Value.VirtualPathToModulesFolder + "/";
+            _root = env.ContentRootPath + "\\";
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
-            // 'GetDirectoryContents()' is used to discover shapes templates and build fixed binding tables.
-            // So the embedded file provider can always provide the structure under modules "Views" folders.
-            // But application's module shapes are not embedded, so we need to serve the application "Views".
-
-            // The razor view engine also uses 'GetDirectoryContents()' to find razor pages (not mvc views).
-            // So here, we also need to serve the directory contents under the application "Pages" folder.
-
-            // Note: This provider is also used in production where application views may not be precompiled.
-
+          
             if (subpath == null)
             {
                 return NotFoundDirectoryContents.Singleton;
@@ -53,14 +45,7 @@ namespace Plato.Internal.Modules
 
             var folder = NormalizePath(subpath);
 
-            //// Under "Areas/{ApplicationName}".
-            //if (folder == Application.ModulePath)
-            //{
-            //    // Serve the contents from the file system.
-            //    return new PhysicalDirectoryContents(Application.Path);
-            //}
-
-                // Under "Areas/{ApplicationName}/**".
+                // Under "Modules/**".
              if (folder.StartsWith(_moduleRoot, StringComparison.Ordinal))
             {
                 // Check for a "Pages" or a "Views" segment.
@@ -87,7 +72,7 @@ namespace Plato.Internal.Modules
 
             var path = NormalizePath(subpath);
 
-            // "Areas/{ApplicationName}/**/*.*".
+            // "Modules/**/*.*".
             if (path.StartsWith(_moduleRoot, StringComparison.Ordinal))
             {
                 // Resolve the subpath relative to the application's module.

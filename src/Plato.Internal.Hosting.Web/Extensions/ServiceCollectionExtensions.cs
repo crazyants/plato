@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers.Internal;
@@ -28,8 +22,6 @@ using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Extensions;
-using Plato.Internal.Hosting.Web.Middleware;
-using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
 using Plato.Internal.Repositories.Extensions;
 using Plato.Internal.Shell.Extensions;
@@ -57,37 +49,26 @@ using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 using Plato.Internal.Layout.ViewFeatures;
-using System.Collections.Generic;
 using Plato.Internal.Layout.LocationExpander;
 using Plato.Internal.Modules;
+using Plato.Internal.Modules.Abstractions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Plato.Internal.Hosting.Web.Extensions
-
 {
+
     public static class ServiceCollectionExtensions
     {
-
-        private static IServiceCollection _services;
-
-        // ----------------------
-        // services
-        // ----------------------
-
+        
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-
             services.AddPlatoHost();
             services.ConfigureShell("Sites");
             services.AddPlatoDataProtection();
             services.AddPlatoAuthorization();
             services.AddPlatoAuthentication();
             services.AddPlatoMvc();
-
-            // allows us to display all registered services in development mode
-            _services = services;
-
             return services;
         }
 
@@ -112,8 +93,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-
-
+                
                 internalServices.AddPlatoOptions();
                 internalServices.AddPlatoLocalization();
                 internalServices.AddPlatoCaching();
@@ -143,9 +123,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddHPlatoTennetHost(
-            this IServiceCollection services,
-            Action<IServiceCollection> configure)
+        public static IServiceCollection AddHPlatoTennetHost(this IServiceCollection services, Action<IServiceCollection> configure)
         {
 
             // Add host
@@ -266,8 +244,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             services.AddScoped<IViewLocationExpanderProvider, ModularViewLocationExpander>();
             services.AddScoped<IViewLocationExpanderProvider, AreaViewLocationExpander>();
                         
-            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
-
             // Configure Razor options
             services.Configure<RazorViewEngineOptions>(options =>
             {
@@ -280,31 +256,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 // To let the application behave as a module, its razor files are requested under the virtual
                 // "Areas" folder, but they are still served from the file system by this custom provider.
                 options.FileProviders.Insert(0, new ModuleViewFileProvider(services.BuildServiceProvider()));
-                
-                //Ensure loaded modules are aware of current context
-                var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
-                var moduleReferences = assemblies
-                    .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
-                    .Select(x => MetadataReference.CreateFromFile(x.Location))
-                    .ToList();
 
-                // https://github.com/aspnet/Mvc/issues/4497
-                // https://github.com/aspnet/Razor/issues/834
-                foreach (var moduleReference in moduleReferences)
-                {
-                    //    // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences is marked obsolete in 2.2.1
-                    //    // Apps using these APIs to add assembly references to the 
-                    //    // compilation context for runtime compilation should instead
-                    //    // use ApplicationPartManager.AddApplicationPart to add application
-                    //    // parts for each assembly reference, or switch to a built-time compilation model(see Create reusable UI using the Razor Class Library project).
-                    //    // https://github.com/aspnet/Announcements/issues/312
-                    options.AdditionalCompilationReferences.Add(moduleReference);
-                }
+                // Add compilation references for development mode
+                // TODO: To be removed
+                AddAdditionalCompilationReferences(services, options);
 
             });
 
-            // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
-            // This ensures views on disk (not pre-compiled) can be resolved correctly
+            // implement our own conventions to automatically add [areas] route attributes
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
             services.TryAddEnumerable(ServiceDescriptor
                 .Transient<IApplicationModelProvider, ModuleApplicationModelProvider>());
@@ -313,11 +272,38 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        private static MetadataReference GetMetadataReference(Type type) =>
-            MetadataReference.CreateFromFile(type.GetTypeInfo().Assembly.Location);
+        public static void AddAdditionalCompilationReferences(this IServiceCollection services, RazorViewEngineOptions options)
+        {
 
-        private static MetadataReference GetMetadataReference(string assemblyName) =>
-            MetadataReference.CreateFromFile(Assembly.Load(assemblyName).Location);
+            // We don't need this for production as views are pre-compiled
+            var hostingEnvironment = services.BuildServiceProvider().GetService<IHostingEnvironment>();            
+            if (!hostingEnvironment.IsDevelopment())
+            {
+                return;
+            }
+
+            //Ensure loaded modules are aware of current context
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();            
+            var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
+            var moduleReferences = assemblies
+                .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
+                .Select(x => MetadataReference.CreateFromFile(x.Location))
+                .ToList();
+                 
+            foreach (var moduleReference in moduleReferences)
+            {
+                // TODO: Need to resolve for .NET 3.0 - AdditionalCompilationReferences is marked obsolete in 2.2.1
+                // Apps using these APIs to add assembly references to the 
+                // compilation context for runtime compilation should instead
+                // use ApplicationPartManager.AddApplicationPart to add application
+                // parts for each assembly reference, or switch to a built-time compilation model(see Create reusable UI using the Razor Class Library project).
+                // https://github.com/aspnet/Announcements/issues/312
+                // https://github.com/aspnet/Mvc/issues/4497
+                // https://github.com/aspnet/Razor/issues/834
+                options.AdditionalCompilationReferences.Add(moduleReference);
+            }
+
+        }
 
         public static IServiceCollection AddPlatoOptions(this IServiceCollection services)
         {
@@ -341,113 +327,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services;
         }
 
-        // ----------------------
-        // app
-        // ----------------------
-
-        public static IApplicationBuilder UsePlato(
-            this IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory logger)
-        {
-            
-            env.ContentRootFileProvider = new CompositeFileProvider(
-                new ModuleEmbeddedFileProvider(app.ApplicationServices),
-                env.ContentRootFileProvider);
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-                ListAllRegisteredServices(app);
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
-
-            // Add custom error handling for specific status codes
-            // UseStatusCodePages should be called before any request
-            // handling middleware in the pipeline (for example,
-            // Static File middleware and MVC middleware).
-            app.UseStatusCodePages(context =>
-            {
-                switch (context.HttpContext.Response.StatusCode)
-                {
-                    case 401:
-                        context.HttpContext.Response.Redirect("/denied");
-                        break;
-                    case 404:
-                        context.HttpContext.Response.Redirect("/moved");
-                        break;
-                }
-
-                return Task.CompletedTask;
-            });
-
-            // Add authentication middleware
-            app.UseAuthentication();
-
-            // Load static files
-            app.UserPlatoStaticFiles();
-
-            // Monitor changes to locale directories
-            app.UsePlatoLocalization();
-            
-            // Allow static files within /themes
-            //app.UseThemeStaticFiles(env);
-
-            // Allow static files within /sites
-            //app.UseSiteStaticFiles(env);
-
-            // Add any IApplicationFeatureProvider 
-            app.UseModularApplicationFeatureProvider();
-
-            // Create services container for each shell
-            app.UseMiddleware<PlatoContainerMiddleware>();
-
-            // Create unique pipeline for each shell
-            app.UseMiddleware<PlatoRouterMiddleware>();
-
-            return app;
-
-        }
-
-        private static void UserPlatoStaticFiles(this IApplicationBuilder app)
-        {
-
-            var env = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
-          
-            IFileProvider fileProvider;
-            if (env.IsDevelopment())
-            {
-                fileProvider = new CompositeFileProvider(
-                    new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices));
-            }
-            else
-            {
-                fileProvider = new CompositeFileProvider(
-                        new ModuleEmbeddedStaticFileProvider(env, app.ApplicationServices),
-                        env.ContentRootFileProvider);
-            }
-
-            var options = app.ApplicationServices.GetRequiredService<IOptions<StaticFileOptions>>().Value;
-            options.RequestPath = "";
-            options.FileProvider = fileProvider;
-
-            app.UseStaticFiles(options);
-
-        }
-
-        public static void UseModularApplicationFeatureProvider(this IApplicationBuilder app)
-        {
-            // adds ThemingViewsFeatureProvider application part
-            var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            var viewFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
-            partManager.FeatureProviders.Add(viewFeatureProvider);
-        }
-
-
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
 
@@ -468,30 +347,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
-
-        }
-        
-        private static void ListAllRegisteredServices(IApplicationBuilder app)
-        {
-            app.Map("/allservices", builder => builder.Run(async context =>
-            {
-                var sb = new StringBuilder();
-                sb.Append("<h1>All Services</h1>");
-                sb.Append("<table><thead>");
-                sb.Append("<tr><th>Type</th><th>Lifetime</th><th>Instance</th></tr>");
-                sb.Append("</thead><tbody>");
-                foreach (var svc in _services)
-                {
-                    sb.Append("<tr>");
-                    sb.Append($"<td>{svc.ServiceType.FullName}</td>");
-                    sb.Append($"<td>{svc.Lifetime}</td>");
-                    sb.Append($"<td>{svc.ImplementationType?.FullName}</td>");
-                    sb.Append("</tr>");
-                }
-
-                sb.Append("</tbody></table>");
-                await context.Response.WriteAsync(sb.ToString());
-            }));
 
         }
 

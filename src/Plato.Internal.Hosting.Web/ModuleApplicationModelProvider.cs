@@ -20,12 +20,6 @@ namespace Plato.Internal.Hosting.Web
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {
-
-            foreach (var controllerType in context.ControllerTypes)
-            {
-                var test = "test";
-            }
-
         }
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
@@ -35,8 +29,6 @@ namespace Plato.Internal.Hosting.Web
             foreach (var controller in context.Result.Controllers)
             {
                 var controllerType = controller.ControllerType.AsType();
-
-                // TODO: Can we remove GetAwaiter here?
                 var module = _typedModuleProvider.GetModuleForDependency(controllerType)
                     .GetAwaiter()
                     .GetResult();

@@ -13,6 +13,7 @@ namespace Plato.Internal.Repositories.Users
 
     public class UserRolesRepository : IUserRolesRepository<UserRole>
     {
+
         #region "Constructor"
 
         private readonly IDbContext _dbContext;
@@ -96,7 +97,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return userRole;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -129,7 +130,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return userRoles;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId)
                     });
@@ -194,7 +195,7 @@ namespace Plato.Internal.Repositories.Users
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
                     "DeleteUserRolesByUserId",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId)
                     });
@@ -211,7 +212,7 @@ namespace Plato.Internal.Repositories.Users
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserRoleByUserIdAndRoleId",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId),
                         new DbParam("RoleId", DbType.Int32, roleId)

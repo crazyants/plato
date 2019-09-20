@@ -35,46 +35,6 @@ namespace Plato.Internal.Theming.Extensions
 
         }
 
-        public static void UseThemeStaticFiles(
-            this IApplicationBuilder app, 
-            IHostingEnvironment env)
-        {
-
-            // Add default themes
-            var options = app.ApplicationServices.GetRequiredService<IOptions<ThemeOptions>>();
-            if (options != null)
-            {
-                var contentPath = Path.Combine(
-                    env.ContentRootPath,
-                    options.Value.VirtualPathToThemesFolder);
-
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    RequestPath = "/" + options.Value.VirtualPathToThemesFolder,
-                    FileProvider = new PhysicalFileProvider(contentPath)
-                });
-            }
-
-        }
-
-        public static void UseSiteStaticFiles(
-            this IApplicationBuilder app,
-            IHostingEnvironment env)
-        {
-
-            // Add sites folder
-            var sitesFolder = app.ApplicationServices.GetRequiredService<ISitesFolder>();
-            if (sitesFolder != null)
-            {
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    RequestPath = "/sites",
-                    FileProvider = new PhysicalFileProvider(sitesFolder.RootPath)
-                });
-            }
-
-
-        }
     }
 
 }

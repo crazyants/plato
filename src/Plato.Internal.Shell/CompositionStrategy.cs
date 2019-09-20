@@ -21,9 +21,9 @@ namespace Plato.Internal.Shell
             ILogger<CompositionStrategy> logger,
             ITypedModuleProvider typedModuleProvider)
         {
-            _moduleManager = moduleManager;
-            _logger = logger;
             _typedModuleProvider = typedModuleProvider;
+            _moduleManager = moduleManager;
+            _logger = logger;            
         }
 
         public async Task<ShellBlueprint> ComposeAsync(IShellSettings settings, IShellDescriptor descriptor)
@@ -78,6 +78,6 @@ namespace Plato.Internal.Shell
             return type.IsClass && !type.IsAbstract && type.IsPublic;
         }
 
-
     }
+
 }

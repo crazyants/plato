@@ -14,8 +14,10 @@ using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules.Loader
 {
+
     public class ModuleLoader : IModuleLoader
     {
+
         #region "Implementation"
 
         /// <inheritdoc />
@@ -58,7 +60,6 @@ namespace Plato.Internal.Modules.Loader
             {
                 _loadedAssemblies.TryAdd(name, null);
             }
-                
 
         }
 

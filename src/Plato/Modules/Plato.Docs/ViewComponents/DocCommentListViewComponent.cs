@@ -14,22 +14,19 @@ namespace Plato.Docs.ViewComponents
 
     public class DocCommentListViewComponent : ViewComponent
     {
-
-        private readonly IEntityStore<Doc> _entityStore;
-        private readonly IEntityReplyStore<DocComment> _entityReplyStore;
+                        
         private readonly IAuthorizationService _authorizationService;
         private readonly IEntityReplyService<DocComment> _replyService;
+        private readonly IEntityStore<Doc> _entityStore;
 
         public DocCommentListViewComponent(
-            IEntityReplyStore<DocComment> entityReplyStore,
-            IEntityStore<Doc> entityStore,
             IEntityReplyService<DocComment> replyService, 
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IEntityStore<Doc> entityStore)
         {
-            _entityReplyStore = entityReplyStore;
-            _entityStore = entityStore;
-            _replyService = replyService;
             _authorizationService = authorizationService;
+            _replyService = replyService;
+            _entityStore = entityStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(

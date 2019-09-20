@@ -113,7 +113,9 @@ namespace Plato.Internal.Reputations
             }
 
             return 0;
+
         }
+
     }
 
 }

@@ -65,7 +65,7 @@ namespace Plato.Internal.Repositories.Badges
                         }
 
                         return userBadge;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -131,7 +131,7 @@ namespace Plato.Internal.Repositories.Badges
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserBadgeById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -157,7 +157,7 @@ namespace Plato.Internal.Repositories.Badges
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserBadge",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("BadgeName", DbType.String, 255, badgeName),

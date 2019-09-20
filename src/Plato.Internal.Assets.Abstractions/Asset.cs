@@ -21,12 +21,10 @@ namespace Plato.Internal.Assets.Abstractions
 
         public IDictionary<string, string> Attributes { get; set; }
 
-        public AssetConstraints Constraints { get; set; }
-         
-     
+        public AssetConstraints Constraints { get; set; }             
 
     }
-    
+
     public class AssetConstraints
     {
 

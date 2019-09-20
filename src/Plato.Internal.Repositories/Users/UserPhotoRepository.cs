@@ -21,10 +21,10 @@ namespace Plato.Internal.Repositories.Users
             _dbContext = dbContext;
             _logger = logger;
         }
-       
+
 
         #region "Implementation"
-     
+
         public Task<IPagedResults<UserPhoto>> SelectAsync(IDbDataParameter[] dbParams)
         {
             // TODO

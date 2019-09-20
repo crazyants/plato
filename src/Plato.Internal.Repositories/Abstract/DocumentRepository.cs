@@ -74,7 +74,7 @@ namespace Plato.Internal.Repositories.Abstract
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteDocumentEntryById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -113,7 +113,7 @@ namespace Plato.Internal.Repositories.Abstract
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDocumentEntry",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("Type", DbType.String, 500, type),
@@ -156,7 +156,7 @@ namespace Plato.Internal.Repositories.Abstract
 
                         return entry;
 
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -192,7 +192,7 @@ namespace Plato.Internal.Repositories.Abstract
 
                             return entry;
 
-                        }, new[]
+                        }, new IDbDataParameter[]
                         {
                             new DbParam("Type", DbType.String, 500, type)
                         });

@@ -16,8 +16,8 @@ namespace Plato.Internal.Shell
 
         #region "Private Variables"
 
-        private readonly IAppDataFolder _appDataFolder;    
         private readonly IOptions<ShellOptions> _optionsAccessor;
+        private readonly IAppDataFolder _appDataFolder;        
         private readonly ILogger _logger;
 
         private const string SettingsFileNameFormat = "Settings.{0}";
@@ -31,8 +31,8 @@ namespace Plato.Internal.Shell
             IOptions<ShellOptions> optionsAccessor,
             ILogger<ShellSettingsManager> logger)
         {
-            _appDataFolder = appDataFolder;        
             _optionsAccessor = optionsAccessor;
+            _appDataFolder = appDataFolder;
             _logger = logger;
         }
 

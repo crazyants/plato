@@ -53,7 +53,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return userData;
-                    }, new []
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                     });
@@ -84,7 +84,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return data;
-                    }, new []
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("Key", DbType.String, 255, key),
                         new DbParam("UserId", DbType.Int32, userId),
@@ -119,7 +119,7 @@ namespace Plato.Internal.Repositories.Users
                         }
 
                         return data;
-                    }, new[]
+                    }, new IDbDataParameter[]
                     {
                         new DbParam("UserId", DbType.Int32, userId)
                     });
@@ -159,7 +159,7 @@ namespace Plato.Internal.Repositories.Users
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserDatumById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -243,7 +243,7 @@ namespace Plato.Internal.Repositories.Users
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserDatum",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("UserId", DbType.Int32, userId),
@@ -263,4 +263,5 @@ namespace Plato.Internal.Repositories.Users
         #endregion
 
     }
+
 }

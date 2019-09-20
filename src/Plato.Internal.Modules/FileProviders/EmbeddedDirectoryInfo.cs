@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.FileProviders;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text;
+using Microsoft.Extensions.FileProviders;
 
 namespace Plato.Internal.Modules.FileProviders
 {

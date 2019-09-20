@@ -104,7 +104,6 @@ namespace Plato.Internal.Shell
                 return _shellsByHostAndPrefix;
             }
         }
-        
 
         private string GetHostAndPrefix(string host, string appRelativePath)
         {
@@ -126,5 +125,7 @@ namespace Plato.Internal.Shell
         {
             return shellSettings.RequestedUrlHost + "/" + shellSettings.RequestedUrlPrefix;
         }
+
     }
+
 }

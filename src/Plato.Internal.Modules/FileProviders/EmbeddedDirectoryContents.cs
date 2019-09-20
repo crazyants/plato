@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.FileProviders;
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.FileProviders;
 
 namespace Plato.Internal.Modules.FileProviders
 {
+
     public class EmbeddedDirectoryContents : IDirectoryContents
     {
         private readonly IList<IFileInfo> _entries;

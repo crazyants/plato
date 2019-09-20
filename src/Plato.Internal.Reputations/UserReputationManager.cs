@@ -18,13 +18,13 @@ namespace Plato.Internal.Reputations
         private readonly IBroker _broker;
 
         public UserReputationManager(
-            IUserReputationsStore<UserReputation> userReputationStore, 
-            IBroker broker, 
-            IContextFacade contextFacade)
+            IUserReputationsStore<UserReputation> userReputationStore,             
+            IContextFacade contextFacade,
+            IBroker broker)
         {
-            _userReputationStore = userReputationStore;
-            _broker = broker;
+            _userReputationStore = userReputationStore;            
             _contextFacade = contextFacade;
+            _broker = broker;
         }
 
         public async Task<ICommandResult<UserReputation>> CreateAsync(UserReputation model)

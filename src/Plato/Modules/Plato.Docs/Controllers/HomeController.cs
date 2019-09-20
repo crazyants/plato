@@ -409,7 +409,6 @@ namespace Plato.Docs.Controllers
             HttpContext.Items[typeof(EntityViewModel<Doc, DocComment>)] = viewModel;
             HttpContext.Items[typeof(Doc)] = entity;
             
-
             // If we have a pager.page querystring value return paged view
             if (int.TryParse(HttpContext.Request.Query["pager.page"], out var page))
             {

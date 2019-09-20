@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Localization.Abstractions;
 
@@ -96,4 +95,5 @@ namespace Plato.Internal.Localization
         #endregion
 
     }
+
 }

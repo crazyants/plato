@@ -4,14 +4,12 @@ namespace Plato.Internal.Hosting
 {
     public class WebHostEnvironment : HostEnvironment
     {
-        public WebHostEnvironment(
-        IHostingEnvironment hostingEnvironment) : 
-            base(hostingEnvironment)
+        public WebHostEnvironment(IHostingEnvironment hostingEnvironment) 
+            : base(hostingEnvironment)
         {
-            //T = null; // NullLocalizer.Instance;
+
         }
 
-       // public Localizer T { get; set; }
-
     }
+
 }

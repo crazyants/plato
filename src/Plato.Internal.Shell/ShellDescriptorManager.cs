@@ -40,5 +40,7 @@ namespace Plato.Internal.Shell
         {
             return Task.FromResult(default(bool));
         }
+
     }
+
 }

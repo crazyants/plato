@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Security
 {
-    
+
     public class PermissionsManager<TPermission> : IPermissionsManager<TPermission> where TPermission : class, IPermission
     {
 
@@ -23,15 +22,15 @@ namespace Plato.Internal.Security
             IEnumerable<IPermissionsProvider<TPermission>> providers,
             ILogger<PermissionsManager<TPermission>> logger,
             ITypedModuleProvider typedModuleProvider)
-        {
-            _providers = providers;
+        {            
             _typedModuleProvider = typedModuleProvider;
+            _providers = providers;
             _logger = logger;
         }
-        
+
         public IEnumerable<TPermission> GetPermissions()
         {
-            
+
             // Ensure we only load permissions once
             if (_permissions == null)
             {

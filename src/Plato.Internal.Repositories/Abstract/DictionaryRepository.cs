@@ -47,7 +47,7 @@ namespace Plato.Internal.Repositories.Abstract
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteDictionaryEntryById",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id)
                     });
@@ -154,7 +154,7 @@ namespace Plato.Internal.Repositories.Abstract
                             }
 
                             return entry;
-                        }, new[]
+                        }, new IDbDataParameter[]
                         {
                             new DbParam("Key", DbType.Int32, key)
                         });
@@ -177,7 +177,6 @@ namespace Plato.Internal.Repositories.Abstract
             // TODO
             throw new NotImplementedException();
         }
-
 
         #endregion
 
@@ -208,7 +207,7 @@ namespace Plato.Internal.Repositories.Abstract
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateDictionaryEntry",
-                    new[]
+                    new IDbDataParameter[]
                     {
                         new DbParam("Id", DbType.Int32, id),
                         new DbParam("Key", DbType.String, 255, key),
@@ -220,10 +219,11 @@ namespace Plato.Internal.Repositories.Abstract
                         new DbParam("UniqueId", DbType.Int32, ParameterDirection.Output)
                     });
             }
-            
+
         }
         
         #endregion
 
     }
+
 }

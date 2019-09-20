@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Models.Badges;
@@ -10,6 +9,7 @@ using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Badges
 {
+
     public class BadgesManager<TBadge> : IBadgesManager<TBadge> where TBadge : class, IBadge
     {
 
@@ -22,11 +22,10 @@ namespace Plato.Internal.Badges
         public BadgesManager(
             IEnumerable<IBadgesProvider<TBadge>> providers,
             ILogger<BadgesManager<TBadge>> logger,
-            ITypedModuleProvider typedModuleProvider,
-            IAuthorizationService authorizationService)
+            ITypedModuleProvider typedModuleProvider)
         {
-            _providers = providers;
             _typedModuleProvider = typedModuleProvider;
+            _providers = providers;            
             _logger = logger;
         }
 
@@ -84,7 +83,8 @@ namespace Plato.Internal.Badges
             }
 
             return output;
-
         }
+
     }
+
 }
