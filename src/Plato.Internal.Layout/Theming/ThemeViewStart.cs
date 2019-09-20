@@ -27,7 +27,7 @@ namespace Plato.Internal.Layout.Theming
                 path = themeOptions.Value.VirtualPathToThemesFolder + "/default";
             }
             
-            var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+            var controllerName = ViewContext.RouteData.Values["controller"].ToString();
             switch (controllerName)
             {
                 case "Admin":
@@ -37,7 +37,7 @@ namespace Plato.Internal.Layout.Theming
                     Layout = $"~/{path}/Shared/_Layout.cshtml";
                     break;
             }
-
+                      
             return Task.CompletedTask;
 
         }

@@ -23,10 +23,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Header,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -36,10 +33,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Header,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -49,10 +43,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -62,10 +53,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     }
                 }),
@@ -80,10 +68,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Header,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -93,10 +78,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Header,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -106,10 +88,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -119,10 +98,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     }
                 }),
@@ -135,12 +111,9 @@ namespace Plato.Reports.Assets
                         Url = "/plato.reports/content/css/vendors/chart.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header,
-                        Constraints = new AssetConstraints()
+                       Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -150,10 +123,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Header,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -163,10 +133,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     },
                     new Asset()
@@ -176,10 +143,7 @@ namespace Plato.Reports.Assets
                         Section = AssetSection.Footer,
                         Constraints = new AssetConstraints()
                         {
-                            new AssetConstraint()
-                            {
-                                ["area"] = "Plato.Admin"
-                            }
+                            Layout = "_AdminLayout"
                         }
                     }
                 })

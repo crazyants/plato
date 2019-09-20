@@ -117,16 +117,67 @@ namespace Plato.Internal.Layout.TagHelpers
 
             // Filter by section
             var assets = matchingEnvironment?.Resources.Where(r => r.Section == Section);
-
+          
+            // Filter by layout consttaints
+            assets = FilterLayoutContraints(assets);
+            
             // Filter by route consttaints
-            assets = FilterContraints(assets);
+            assets = FilterRouteContraints(assets);
 
             // Return ordered list
             return assets?.OrderBy(p => p.Order).ToList();            
 
         }
-        
-        public IEnumerable<Asset> FilterContraints(IEnumerable<Asset> assets)
+
+        public IEnumerable<Asset> FilterLayoutContraints(IEnumerable<Asset> assets)
+        {
+
+            if (assets == null)
+            {
+                return null;
+            }
+
+            var parts = ViewContext.ExecutingFilePath.Split('/');
+            var layout = string.Empty;
+            if (parts.Length > 0)
+            {
+                layout = parts[parts.Length - 1].ToString();
+            }
+            
+            // Our output
+            var output = new List<Asset>();
+            foreach (var asset in assets)
+            {
+
+                // No constaints to test, add the asset and move along
+                if (asset.Constraints == null)
+                {
+                    output.Add(asset);
+                    continue;
+                }
+
+                // No layout constaint or layout to test, add the asset and move along
+                if (string.IsNullOrEmpty(asset.Constraints.Layout) ||
+                    string.IsNullOrEmpty(layout))
+                {
+                    output.Add(asset);
+                    continue;
+                }
+
+                // Test layout constraint, adding only matching assets
+                if (layout.StartsWith(asset.Constraints.Layout, StringComparison.OrdinalIgnoreCase) ||
+                    layout.Equals(asset.Constraints.Layout, StringComparison.OrdinalIgnoreCase))
+                {
+                    output.Add(asset);
+                }
+                
+            }
+
+            return output;
+
+        }
+     
+        public IEnumerable<Asset> FilterRouteContraints(IEnumerable<Asset> assets)
         {
 
             if (assets == null)
@@ -170,12 +221,20 @@ namespace Plato.Internal.Layout.TagHelpers
                     continue;
                 }
 
+                // No route constaints to test, add the asset and move along
+                if (asset.Constraints.Routes == null)
+                {
+                    output.Add(asset);
+                    continue;
+                }
+
+                var match = false;
+
                 // Test constraints, adding only assets matching 
                 // any of the supplied route constraints
-                var match = false;
-                foreach (var contraint in asset.Constraints)
+                foreach (var contraint in asset.Constraints.Routes)
                 {
-
+                    
                     // Test area, controller & action
                     if (contraint.ContainsKey(AreaKey) &&
                         contraint.ContainsKey(ControllerKey) &&

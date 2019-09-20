@@ -23,11 +23,43 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             _scriptManager = scriptManager;
-            
-            // Register JavasScript and CSSS with asset manager
+
+            // Register JavasScript and CSS with asset manager
             assetManager.SetAssets(new List<AssetEnvironment>
             {
                 new AssetEnvironment(TargetEnvironment.Development,
+                    new List<Asset>()
+                    {
+                        new Asset()
+                        {
+                            Url = "/css/vendors/bootstrap-datepicker.css",
+                            Type = AssetType.IncludeCss,
+                            Section = AssetSection.Header
+                        },
+                        new Asset()
+                        {
+                            Url = "/js/vendors/bootstrap-datepicker.js",
+                            Type = AssetType.IncludeJavaScript,
+                            Section = AssetSection.Footer
+                        }
+                    }),
+                  new AssetEnvironment(TargetEnvironment.Staging,
+                    new List<Asset>()
+                    {
+                        new Asset()
+                        {
+                            Url = "/css/vendors/bootstrap-datepicker.css",
+                            Type = AssetType.IncludeCss,
+                            Section = AssetSection.Header
+                        },
+                        new Asset()
+                        {
+                            Url = "/js/vendors/bootstrap-datepicker.js",
+                            Type = AssetType.IncludeJavaScript,
+                            Section = AssetSection.Footer
+                        }
+                    }),
+                    new AssetEnvironment(TargetEnvironment.Production,
                     new List<Asset>()
                     {
                         new Asset()
