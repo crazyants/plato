@@ -4490,10 +4490,13 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
                 var selector = $caller.data(dataKey).selector;
-                $caller.find(selector).each(function() {
-                    if ($(this).attr("href")) {
-                        $(this).attr("data-auto-target", "true");
-                        $(this).attr("target", "_blank");
+                $caller.find(selector).each(function () {
+                    var href = $(this).attr("href");
+                    if (href) {
+                        if (methods._isExternal(href)) {
+                            $(this).attr("data-auto-target", "true");
+                            $(this).attr("target", "_blank");
+                        }                      
                     }
                 });
             },
@@ -4504,6 +4507,31 @@ $(function (win, doc, $) {
                         $(this).removeAttr("target");
                     }
                 });
+            },
+            _isExternal: function (url) {
+
+                if (url === null || url === "") {
+                    return false;
+                }
+
+                url = url.toLowerCase();
+
+                // Does the url contain "http://" or "https://"
+                if (url.indexOf("http://") >= 0 ||
+                    url.indexOf("https://") >= 0) {
+                    var host = win.location.hostname;
+                    if (host) {
+                        // If the target url does not contain the current host name
+                        // We'll treat this url as an external url
+                        // This is not perfect but catches most cases
+                        if (url.indexOf(host.toLowerCase()) === -1) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+                
             }
         };
 

@@ -15,10 +15,10 @@ namespace Plato.Docs.ViewComponents
 
     public class DocViewComponent : ViewComponent
     {
-
+             
+        private readonly IAuthorizationService _authorizationService;
         private readonly IEntityService<Doc> _entityService;
         private readonly IEntityStore<Doc> _entityStore;
-        private readonly IAuthorizationService _authorizationService;
 
         public DocViewComponent(
             IEntityStore<Doc> entityStore,
@@ -45,6 +45,11 @@ namespace Plato.Docs.ViewComponents
         async Task<EntityViewModel<Doc, DocComment>> GetViewModel(
             EntityOptions options)
         {
+
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
 
             if (options.Id <= 0)
             {
@@ -89,7 +94,8 @@ namespace Plato.Docs.ViewComponents
 
                     q.FeatureId.Equals(entity.FeatureId);
                     q.ParentId.Equals(entity.ParentId);
-                    
+                    q.CategoryId.Equals(entity.CategoryId);
+
                     // Hide private?
                     if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                         Permissions.ViewPrivateDocs))
@@ -120,17 +126,45 @@ namespace Plato.Docs.ViewComponents
 
 
                 })
-                .GetResultsAsync();
+                .GetResultsAsync(new EntityIndexOptions()
+                {
+                    Sort = SortBy.SortOrder,
+                    Order = OrderBy.Asc
+                });
 
             // Get the previous and next entities via the sort order
             if (entities != null)
             {
-                entity.PreviousDoc = entities.Data?
-                    .OrderByDescending(e => e.SortOrder)
-                    .FirstOrDefault(e => e.SortOrder < entity.SortOrder); ;
-                entity.NextDoc = entities.Data?
-                    .OrderBy(e => e.SortOrder)
-                    .FirstOrDefault(e => e.SortOrder > entity.SortOrder);
+
+                if (entities.Data == null)
+                {
+                    return;
+                }
+
+                // Similar to entities.Data?
+                //              .OrderByDescending(e => e.SortOrder)
+                //              .FirstOrDefault(e => e.SortOrder < entity.SortOrder); ;
+                // But avoiding LINQ for performance reasons
+                for (var i = entities.Data.Count - 1; i >= 0; i--)
+                {                  
+                    if (entities.Data[i].SortOrder < entity.SortOrder)
+                    {
+                        entity.PreviousDoc = entities.Data[i];
+                        break;
+                    }
+                }
+
+                // Similar to FirstOrDefault(e => e.SortOrder > entity.SortOrder)
+                // But avoiding LINQ for performance reasons
+                foreach (var e in entities.Data)
+                {
+                    if (e.SortOrder > entity.SortOrder)
+                    {
+                        entity.NextDoc = e;
+                        break;
+                    }
+                }
+
             }
 
         }
