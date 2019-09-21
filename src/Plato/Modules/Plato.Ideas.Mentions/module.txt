@@ -1,0 +1,19 @@
+Name: Plato Ideas Mentions
+Description: Adds @mention support & @mention notifications for Plato.Ideas.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Ideas
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.ideas.mentions/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Ideas",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Mentions",
+		Version: "1.0.0"
+	}
+]
