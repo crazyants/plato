@@ -81,11 +81,11 @@ namespace Plato.Users.ViewComponents
                 Text = "Rank",
                 Value = SortBy.Rank
             },
-            new SortColumn()
-            {
-                Text = "Time Spent",
-                Value =  SortBy.Minutes
-            },
+            //new SortColumn()
+            //{
+            //    Text = "Time Spent",
+            //    Value =  SortBy.Minutes
+            //},
             new SortColumn()
             {
                 Text = "Visits",

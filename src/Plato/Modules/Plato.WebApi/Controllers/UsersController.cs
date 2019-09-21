@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -19,7 +20,7 @@ namespace Plato.WebApi.Controllers
         
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
-   
+
         public UsersController(
             IPlatoUserStore<User> platoUserStore,
             IUrlHelperFactory urlHelperFactory,
@@ -115,10 +116,16 @@ namespace Plato.WebApi.Controllers
                 .Take(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {
+                                        
+                    q.HideSpam.True();
+                    q.HideUnconfirmed.True();
+                    q.HideBanned.True();
+
                     if (!String.IsNullOrEmpty(username))
                     {
                         q.Keywords.StartsWith(username);
                     }
+
                 })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();
