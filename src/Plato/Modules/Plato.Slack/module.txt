@@ -1,5 +1,5 @@
 Name: Plato Slack
-Description: Adds settings & services to for Slack integrations.
+Description: Adds core settings & services to support Slack notifications.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Integrations

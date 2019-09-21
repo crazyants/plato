@@ -17,7 +17,16 @@
                             <span class="text-muted">@T["Your Slack incoming web hook URL."]</span>
                             <a href="https://api.slack.com/apps/AMWA1G012/incoming-webhooks?success=1" target="_blank">@T["Get your Webhook URL"]</a>
                         </label>
-                        <input placeholder="@T["your Slack web hook url..."]" asp-for="WebHookUrl" class="form-control" autofocus />
+                        
+                        <div class="search-input-group">
+                            <input placeholder="@T["your Slack web hook url..."]" 
+                                   asp-for="WebHookUrl"
+                                   data-provide="password"
+                                   class="form-control" autofocus />
+                            <button type="button" class="btn btn-secondary" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                <i class="fal fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </fieldset>
            

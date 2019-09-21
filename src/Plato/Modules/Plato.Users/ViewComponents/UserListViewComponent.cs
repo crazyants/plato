@@ -23,12 +23,14 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "-" // represents menu divider
+                Text = "-",  // represents menu divider
+                Permission = Permissions.ViewUnconfirmedUsers
             },
             new Filter()
             {
                 Text = "Confirmed",
-                Value = FilterBy.Confirmed
+                Value = FilterBy.Confirmed,
+                Permission = Permissions.ViewUnconfirmedUsers
             },
             new Filter()
             {

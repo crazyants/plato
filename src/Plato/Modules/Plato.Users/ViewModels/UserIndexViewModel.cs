@@ -89,9 +89,9 @@ namespace Plato.Users.ViewModels
         Verified = 4,
         Staff = 5,
         Spam = 6,
-        Banned = 7      
+        Banned = 7
     }
-    
+
     public enum SortBy
     {
         Id,
