@@ -330,7 +330,7 @@ namespace Plato.Articles.StopForumSpam.Controllers
             // Configure spam client
             _spamClient.Configure(async o => { o.ApiKey = await GetStopForumSpamApiKeyAsync(); });
         }
-        
+
         async Task<string> GetStopForumSpamApiKeyAsync()
         {
             // Get spam settings
