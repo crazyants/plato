@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.ViewModels
 {
@@ -76,6 +77,8 @@ namespace Plato.Users.ViewModels
 
         public FilterBy Value { get; set; }
 
+        public IPermission Permission { get; set; }
+
     }
 
     public enum FilterBy
@@ -86,8 +89,7 @@ namespace Plato.Users.ViewModels
         Verified = 4,
         Staff = 5,
         Spam = 6,
-        Banned = 7,
-        Locked = 8
+        Banned = 7      
     }
     
     public enum SortBy

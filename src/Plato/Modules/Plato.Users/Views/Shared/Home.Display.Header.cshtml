@@ -1,25 +1,27 @@
 ﻿@model User
 
-<h4 class="d-inline-block">@Model.DisplayName</h4>
-
+<h4 class="d-inline-block align-middle">@Model.DisplayName</h4>
 @if (Model.IsVerified)
 {
-    <i title="@T["Verified Member"]" class="is-verified d-inline-block" data-provide="tooltip"></i>
+    <i title="@T["Verified Member"]" class="is-verified align-top d-inline-block" data-provide="tooltip"></i>
 }
-
 @if (Model.IsStaff)
 {
-    <i title="@T["Staff Member"]" class="is-staff d-inline-block" data-provide="tooltip"></i>
+    <i title="@T["Staff Member"]" class="is-staff align-top d-inline-block" data-provide="tooltip"></i>
 }
-
 @if (Model.IsSpam)
 {
-    <i title="@T["Flagged As SPAM"]" class="is-spam d-inline-block" data-provide="tooltip"></i>
+    <i title="@T["Flagged As SPAM"]" class="is-spam align-top d-inline-block" data-provide="tooltip"></i>
 }
-
 @if (Model.IsBanned)
 {
-    <i title="@T["Banned"]" class="is-banned d-inline-block" data-provide="tooltip"></i>
+    <i title="@T["Banned"]" class="is-banned align-top d-inline-block" data-provide="tooltip"></i>
+}
+@if  (!Model.EmailConfirmed)
+{
+    <span class="badge badge-danger" data-toggle="tooltip" title="@T["This account is unconfirmed and only visible to you as you have permission to view unconfirmed accounts."]">
+        @T["Unconfirmed"]
+    </span>
 }
 
 <div class="text-muted">

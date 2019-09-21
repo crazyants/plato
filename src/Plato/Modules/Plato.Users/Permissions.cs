@@ -9,6 +9,15 @@ namespace Plato.Users
         public static readonly Permission ViewUsers =
             new Permission("ViewUsers", "Can view users");
 
+        public static readonly Permission ViewUnconfirmedUsers =
+            new Permission("ViewUnconfirmedUsers", "Can view unconfirmed users");
+
+        public static readonly Permission ViewSpamUsers =
+            new Permission("ViewSpamUsers", "Can view users flagged as SPAM");
+
+        public static readonly Permission ViewBannedUsers =
+            new Permission("ViewBannedUsers", "Can view banned users");
+
         public static readonly Permission ViewProfiles =
             new Permission("ViewProfiles", "Can view user profiles");
 
@@ -44,6 +53,9 @@ namespace Plato.Users
             return new[]
             {
                 ViewUsers,
+                ViewUnconfirmedUsers,
+                ViewSpamUsers,
+                ViewBannedUsers,                
                 ViewProfiles,
                 ManageUsers,
                 AddUsers,
@@ -67,6 +79,9 @@ namespace Plato.Users
                     Permissions = new[]
                     {
                         ViewUsers,
+                        ViewUnconfirmedUsers,
+                        ViewSpamUsers,
+                        ViewBannedUsers,                        
                         ViewProfiles,
                         ManageUsers,
                         AddUsers,
@@ -102,7 +117,10 @@ namespace Plato.Users
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ViewUsers,
+                        ViewUsers,                        
+                        ViewUnconfirmedUsers,
+                        ViewSpamUsers,
+                        ViewBannedUsers,                        
                         ViewProfiles
                     }
                 }

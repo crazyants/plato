@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation.Abstractions;
+using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
@@ -31,7 +33,8 @@ namespace Plato.Users.ViewComponents
             new Filter()
             {
                 Text = "Unconfirmed",
-                Value = FilterBy.Unconfirmed
+                Value = FilterBy.Unconfirmed,
+                Permission = Permissions.ViewUnconfirmedUsers
             },
             new Filter()
             {
@@ -49,26 +52,15 @@ namespace Plato.Users.ViewComponents
             },
             new Filter()
             {
-                Text = "-" // represents menu divider
-            },
-            new Filter()
-            {
                 Text = "Spam",
-                Value = FilterBy.Spam
+                Value = FilterBy.Spam,
+                Permission = Permissions.ViewSpamUsers
             },
             new Filter()
             {
                 Text = "Banned",
-                Value = FilterBy.Banned
-            },
-            new Filter()
-            {
-                Text = "-" // represents menu divider
-            },
-            new Filter()
-            {
-                Text = "Locked",
-                Value = FilterBy.Locked
+                Value = FilterBy.Banned,
+                Permission = Permissions.ViewBannedUsers
             }
         };
         
@@ -124,11 +116,15 @@ namespace Plato.Users.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-      
+
+        private readonly IAuthorizationService _authorizationService;
         private readonly IUserService<User> _userService;
 
-        public UserListViewComponent(IUserService<User> userService)
+        public UserListViewComponent(
+            IAuthorizationService authorizationService,
+            IUserService<User> userService)
         {
+            _authorizationService = authorizationService;
             _userService = userService;
         }
 
@@ -147,20 +143,35 @@ namespace Plato.Users.ViewComponents
             
             return View(await GetIndexViewModel(options, pager));
         }
-        
+
         private async Task<UserIndexViewModel> GetIndexViewModel(UserIndexOptions options, PagerOptions pager)
         {
 
             var results = await _userService
-                .ConfigureQuery(q =>
+                .ConfigureQuery(async q =>
                 {
-                    // We are not within edit mode
-                    // Hide spam and banned users
-                    if (!options.EnableEdit)
+
+                    // Hide unconfirmed?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewUnconfirmedUsers))
+                    {
+                        q.HideUnconfirmed.True();
+                    }
+
+                    // Hide SPAM?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewSpamUsers))
                     {
                         q.HideSpam.True();
+                    }
+
+                    // Hide Banned?
+                    if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                        Permissions.ViewBannedUsers))
+                    {
                         q.HideBanned.True();
                     }
+
                 })
                 .GetResultsAsync(options, pager);
 

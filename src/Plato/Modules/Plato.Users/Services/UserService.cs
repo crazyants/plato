@@ -69,9 +69,6 @@ namespace Plato.Users.Services
                         case FilterBy.Banned:
                             q.ShowBanned.True();
                             break;
-                        case FilterBy.Locked:
-                            q.ShowLocked.True();
-                            break;
                     }
 
                     if (!string.IsNullOrEmpty(options.Search))

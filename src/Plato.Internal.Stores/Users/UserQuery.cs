@@ -76,6 +76,8 @@ namespace Plato.Internal.Stores.Users
         private WhereBool _hideBanned;
         private WhereBool _showConfirmed;
         private WhereBool _hideConfirmed;
+        private WhereBool _showUnconfirmed;
+        private WhereBool _hideUnconfirmed;
         private WhereBool _showLocked;
         private WhereBool _hideLocked;
         private WhereEnum<UserType> _userType;
@@ -115,7 +117,6 @@ namespace Plato.Internal.Stores.Users
             get => _showSpam ?? (_showSpam = new WhereBool());
             set => _showSpam = value;
         }
-
 
         public WhereBool HideStaff
         {
@@ -163,6 +164,18 @@ namespace Plato.Internal.Stores.Users
         {
             get => _showConfirmed ?? (_showConfirmed = new WhereBool());
             set => _showConfirmed = value;
+        }
+
+        public WhereBool HideUnconfirmed
+        {
+            get => _hideUnconfirmed ?? (_hideUnconfirmed = new WhereBool());
+            set => _hideUnconfirmed = value;
+        }
+
+        public WhereBool ShowUnconfirmed
+        {
+            get => _showUnconfirmed ?? (_showUnconfirmed = new WhereBool());
+            set => _showUnconfirmed = value;
         }
 
 
@@ -266,11 +279,16 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.Id.ToSqlString("Id"));
             }
 
+            // -----------------
+            // Keywords 
+            // -----------------
+
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
                 sb
+                    .Append("(")
                     .Append(_query.Params.Keywords.ToSqlString("UserName", "Keywords"))
                     .Append(" OR ")
                     .Append(_query.Params.Keywords.ToSqlString("DisplayName", "Keywords"))
@@ -279,7 +297,8 @@ namespace Plato.Internal.Stores.Users
                     .Append(" OR ")
                     .Append(_query.Params.Keywords.ToSqlString("FirstName", "Keywords"))
                     .Append(" OR ")
-                    .Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
+                    .Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"))
+                    .Append(")");
             }
 
             // -----------------
@@ -298,7 +317,7 @@ namespace Plato.Internal.Stores.Users
                     .Append(_query.Params.RoleName.ToSqlString("r.[Name]", "RoleName"))
                     .Append("))");
             }
-            
+
             // -----------------
             // UserType 
             // -----------------
@@ -411,6 +430,22 @@ namespace Plato.Internal.Stores.Users
                 sb.Append("EmailConfirmed = 1");
             }
 
+            // hide = true, show = false
+            if (_query.Params.HideUnconfirmed.Value && !_query.Params.ShowUnconfirmed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideConfirmed.Operator);
+                sb.Append("EmailConfirmed = 1");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowUnconfirmed.Value && !_query.Params.HideUnconfirmed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowConfirmed.Operator);
+                sb.Append("EmailConfirmed = 0");
+            }
+            
             // -----------------
             // LockoutEnabled 
             // -----------------
@@ -430,10 +465,9 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(_query.Params.ShowLocked.Operator);
                 sb.Append("LockoutEnabled = 1");
             }
-
-
-
+                       
             return sb.ToString();
+
         }
 
         string BuildOrderBy()

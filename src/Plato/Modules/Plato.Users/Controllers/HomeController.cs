@@ -189,6 +189,36 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
+            // Ensure we have permission to view unconfirmed accounts
+            if (!user.EmailConfirmed)
+            {
+                if (!await _authorizationService.AuthorizeAsync(User,
+                    Permissions.ViewUnconfirmedUsers))
+                {
+                    return Unauthorized();
+                }
+            }
+
+            // Ensure we have permission to view users flagged as SPAM
+            if (user.IsSpam)
+            {
+                if (!await _authorizationService.AuthorizeAsync(User,
+                    Permissions.ViewSpamUsers))
+                {
+                    return Unauthorized();
+                }
+            }
+            
+            // Ensure we have permission to view banned users
+            if (user.IsBanned)
+            {
+                if (!await _authorizationService.AuthorizeAsync(User,
+                    Permissions.ViewBannedUsers))
+                {
+                    return Unauthorized();
+                }
+            }
+
             // Build page title
             _pageTitleBuilder.AddSegment(S[user.DisplayName], int.MaxValue);
 

@@ -137,11 +137,11 @@ namespace Plato.Discuss.ViewComponents
         private readonly IEntityService<Topic> _entityService;
      
         public TopicListViewComponent(
-            IEntityService<Topic> entityService,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IEntityService<Topic> entityService)
         {
-            _entityService = entityService;
             _authorizationService = authorizationService;
+            _entityService = entityService;            
         }
 
         public async Task<IViewComponentResult> InvokeAsync(

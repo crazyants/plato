@@ -20,19 +20,40 @@
                                 ["opts.order"] = Model.Options.Order,
                                 ["opts.filter"] = option.Value
                             };
-                            if (option.Text == "-")
+                            @if (option.Permission != null)
                             {
-                                <div class="dropdown-divider"></div>
+                                <authorize asp-permission="@option.Permission.Name">
+                                    <authorize-success>
+                                        @if (option.Text == "-")
+                                        {
+                                            <div class="dropdown-divider"></div>
+                                        }
+                                        else
+                                        {
+                                            var iconCss = option.Value == Model.Options.Filter ? "fal fa-fw fa-check" : "fal fa-fw";
+                                            <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                                                <i class="@iconCss"></i>
+                                                @T[option.Text]
+                                            </a>
+                                        }
+                                    </authorize-success>
+                                </authorize>
                             }
                             else
                             {
-                                var iconCss = option.Value == Model.Options.Filter ? "fal fa-fw fa-check" : "fal fa-fw";
-                                <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
-                                    <i class="@iconCss"></i>
-                                    @T[option.Text]
-                                </a>
+                                @if (option.Text == "-")
+                                {
+                                    <div class="dropdown-divider"></div>
+                                }
+                                else
+                                {
+                                    var iconCss = option.Value == Model.Options.Filter ? "fal fa-fw fa-check" : "fal fa-fw";
+                                    <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                                        <i class="@iconCss"></i>
+                                        @T[option.Text]
+                                    </a>
+                                }
                             }
-
                         }
                     </div>
                 </div>

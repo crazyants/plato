@@ -1,1 +1,11 @@
 ﻿@model User
+@{ 
+    var permission = Plato.Users.Permissions.EditUsers;
+}
+<authorize asp-permission="@permission.Name">
+    <authorize-success>
+        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">
+            <i class="fal fa-pencil"></i> @T["Edit User"]
+        </a>
+    </authorize-success>
+</authorize>
