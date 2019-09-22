@@ -42,7 +42,7 @@ namespace Plato.Https.Configuration
                         : StatusCodes.Status302Found,
                     sslPort);
             }
-            
+
         }
 
 

@@ -1,20 +1,77 @@
-# Introduction
 
-Welcome to the official repository for Plato. Plato is free, open source user community & customer support software built upon .NET core.
+![logo.png](https://plato.instantasp.co.uk/plato.site/content/images/logo-text.png)
 
-Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your end users or customers
+Welcome to the repository for Plato. Plato is free, open source user community & customer support software built upon .NET core.
+
+Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your end users or customers.
+
+Plato can be used to...
+
+- Collaborate with your users through fully featured public or private discussions
+- Easily publish beautiful product or technical documentation to help your users
+- Provide an online knowledge base of helpful support resources
+- Support products through public or private Q&A features
+- Shape products through public or private product ideation & voting
+- Improve products through public or private issue tracking & voting
 
 Plato is written in C# using .NET Core 2.2, MVC6 & Bootstrap 4.
 
-## Web Site
+## Plato In Action
+
+You can see below the main modules offered with Plato. You can custom fit Plato to suite your requirements with [hundreds of extra modules](https://plato.instantasp.co.uk/modules).
+
+### Discuss
+
+Plato.Discuss adds a fully featured user community to Plato.
+
+![discuss.png](https://plato.instantasp.co.uk/plato.site/content/images/discuss.png)
+
+### Docs
+
+Plato.Docs adds beautiful product documentation all written in Markdown to Plato.
+
+![docs.png](https://plato.instantasp.co.uk/plato.site/content/images/docs.png)
+
+### Articles
+
+Plato.Articles adds a searchable online knowledgebase to Plato.
+
+![articles.png](https://plato.instantasp.co.uk/plato.site/content/images/articles.png)
+
+### Questions
+
+Plato.Questions adds public or private Q&A to Plato.
+
+![questions.png](https://plato.instantasp.co.uk/plato.site/content/images/questions.png)
+
+### Ideas
+
+Plato.Ideas adds public or private ideation to Plato.
+
+![ideas.png](https://plato.instantasp.co.uk/plato.site/content/images/ideas.png)
+
+### Issues
+
+Plato.Issues added public or private issues tracking to Plato.
+
+![issues.png](https://plato.instantasp.co.uk/plato.site/content/images/issues.png)
+
+## Plato Web Site
 
 To learn more about Plato please visit the projedts official web site https://plato.instantasp.co.uk/
 
-## Documentation
+## Plato Documentation
 
 Our documentation is probably the best place to get started with Plato.
 
 https://plato.instantasp.co.uk/docs/
+
+## Plato Community
+
+Please discuss Plato, post your questions, suggest ideas or report issues via our own Plato installation at...
+
+https://plato.instantasp.co.uk/support/
+
 
 # Navigating the Code
 
@@ -40,7 +97,7 @@ https://github.com/InstantASP/plato/tree/master/src/Plato
 
 ### Stable Branch ( master )
 
-- Plato 1.0.0 Preview 1 (Download)
+- Plato 1.0.0 Final (Download)
 
 ### Experimental Branches
 
@@ -48,6 +105,10 @@ Only the master branch is suitible for production. All other branches are develo
 
 # License
 
-Plato is free, open source software licensed under the GNU General Public License.
+Plato is free, open source software licensed under the GNU General Public License. Before using Plato please review the [Plato license](https://plato.instantasp.co.uk/docs/d/46/licensing).
+
+# 
+
+Created with ❤️ ☕ 🍕by [InstantASP](https://www.instantasp.co.uk/).
 
 &copy; All content is copyright of InstantASP Limited.
