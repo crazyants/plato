@@ -3,7 +3,7 @@
 
 Welcome to the official repository for Plato.
 
-Plato is free, open source user community & customer support software built upon .NET core. Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your end users or customers.
+Plato is free, open source user community & customer support software built upon .NET core. Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your users or customers.
 
 Plato can be used to...
 
@@ -105,10 +105,13 @@ Only the master branch is suitible for production. All other branches are develo
 
 # License
 
-Plato is free, open source software licensed under the GNU General Public License. Before using Plato please review the [Plato license](https://plato.instantasp.co.uk/docs/d/46/licensing).
+Plato is free, open source software licensed under the GNU General Public License. 
 
-# 
+Before using Plato please review the [Plato license](https://plato.instantasp.co.uk/docs/d/46/licensing) and ensure your happy with the terms and conditions defined by the GPL.
 
-Created with ❤️ ☕ 🍕by [InstantASP](https://www.instantasp.co.uk/).
+---
+
+Created with ❤️ ☕ 🍕 by [InstantASP](https://www.instantasp.co.uk/) - [Who said sit down :)](https://www.youtube.com/watch?v=U9t-slLl30E)
+
 
 &copy; All content is copyright of InstantASP Limited.
