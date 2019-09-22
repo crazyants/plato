@@ -1,9 +1,9 @@
 
 ![logo.png](https://plato.instantasp.co.uk/plato.site/content/images/logo-text.png)
 
-Welcome to the repository for Plato. Plato is free, open source user community & customer support software built upon .NET core.
+Welcome to the official repository for Plato.
 
-Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your end users or customers.
+Plato is free, open source user community & customer support software built upon .NET core. Plato offers a complete stack of fully integrated tools to help you offer a simple, branded support experience for your end users or customers.
 
 Plato can be used to...
 
