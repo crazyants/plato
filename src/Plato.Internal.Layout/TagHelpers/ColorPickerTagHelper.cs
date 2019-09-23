@@ -25,7 +25,7 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             _scriptManager = scriptManager;
-            
+
             // Register JavasScript and CSSS with asset manager
             assetManager.SetAssets(new List<AssetEnvironment>
             {
@@ -44,18 +44,50 @@ namespace Plato.Internal.Layout.TagHelpers
                             Type = AssetType.IncludeJavaScript,
                             Section = AssetSection.Footer
                         }
-                    })
+                    }),
+                    new AssetEnvironment(TargetEnvironment.Staging,
+                        new List<Asset>()
+                        {
+                        new Asset()
+                        {
+                            Url = "/css/vendors/bootstrap-colorpicker.css",
+                            Type = AssetType.IncludeCss,
+                            Section = AssetSection.Header
+                        },
+                        new Asset()
+                        {
+                            Url = "/js/vendors/bootstrap-colorpicker.js",
+                            Type = AssetType.IncludeJavaScript,
+                            Section = AssetSection.Footer
+                        }
+                        }),
+                    new AssetEnvironment(TargetEnvironment.Production,
+                        new List<Asset>()
+                        {
+                            new Asset()
+                            {
+                                Url = "/css/vendors/bootstrap-colorpicker.css",
+                                Type = AssetType.IncludeCss,
+                                Section = AssetSection.Header
+                            },
+                            new Asset()
+                            {
+                                Url = "/js/vendors/bootstrap-colorpicker.js",
+                                Type = AssetType.IncludeJavaScript,
+                                Section = AssetSection.Footer
+                            }
+                        })
             });
 
         }
-        
+
         #region "Implementation"
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
             var script = "$('[data-provide=\"color-picker\"]').colorpicker( { format: \"hex\", align: \"left\" });";
-            
+
             _scriptManager.RegisterScriptBlock(
                 new ScriptBlock(new HtmlString(script)),
                 ScriptSection.Footer);
