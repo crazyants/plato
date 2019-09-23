@@ -72,7 +72,6 @@ Please discuss Plato, post your questions, suggest ideas or report issues via ou
 
 https://plato.instantasp.co.uk/support/
 
-
 # Navigating the Code
 
 ### Core
@@ -97,7 +96,7 @@ https://github.com/InstantASP/plato/tree/master/src/Plato
 
 ### Stable Branch ( master )
 
-- Plato 1.0.0 Final (Download)
+- Plato 1.0.0 Final ([Download](https://github.com/InstantASP/plato/releases))
 
 ### Experimental Branches
 
@@ -106,6 +105,25 @@ Only the master branch is suitible for production. All other branches are develo
 # License
 
 Plato is free, open source software licensed under the GNU General Public License. 
+
+```
+Plato - Better, Faster Support... Free
+Copyright (C) 2019, InstantASP Limited
+
+Plato is free software: you can redistribute it and/or modify
+it under the version 3 terms of the GNU General Public License 
+as published by the Free Software Foundation.
+
+Plato is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Plato.  If not, see https://www.gnu.org/licenses/ or 
+https://www.gnu.org/licenses/gpl-3.0.txt.
+```
+
 
 Before using Plato please review the [Plato license](https://plato.instantasp.co.uk/docs/d/46/licensing) and ensure your happy with the terms and conditions defined by the GPL.
 
