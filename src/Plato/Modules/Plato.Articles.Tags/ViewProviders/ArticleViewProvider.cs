@@ -337,7 +337,7 @@ namespace Plato.Articles.Tags.ViewProviders
 
             // Get feature for tag
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Articles");
-      
+
             // Create tag
             var result = await _tagManager.CreateAsync(new Tag()
             {

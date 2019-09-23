@@ -17,6 +17,7 @@ using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
 using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Notifications.Extensions;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Ideas.Tags.Tasks
 {
@@ -29,25 +30,25 @@ namespace Plato.Ideas.Tags.Tasks
                 DECLARE @badgeName nvarchar(255) = '{name}';
                 DECLARE @threshold int = {threshold};                  
                 DECLARE @userId int;
-                DECLARE @reactions int;
+                DECLARE @tags int;
                 DECLARE @myTable TABLE
                 (
                     Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
                     UserId int NOT NULL
                 );
                 DECLARE MSGCURSOR CURSOR FOR SELECT et.CreatedUserId, COUNT(et.Id) AS Tags 
-                FROM {prefix}_EntityTags et
-                WHERE NOT EXISTS (
-                   SELECT Id FROM {prefix}_UserBadges ub 
-                   WHERE ub.UserId = et.CreatedUserId AND ub.BadgeName = @badgeName
-                 )
+                FROM {prefix}_EntityTags et INNER JOIN {prefix}_Tags t ON et.TagId = t.Id
+                WHERE et.CreatedUserId NOT IN (
+                   SELECT ub.UserId FROM {prefix}_UserBadges ub 
+                   WHERE ub.BadgeName = @badgeName
+                ) AND t.FeatureId = {featureId}
                 GROUP BY et.CreatedUserId
                 ORDER BY Tags DESC
 
-                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;                    
+                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @tags;                    
                 WHILE @@FETCH_STATUS = 0
                 BEGIN
-                    IF (@reactions >= @threshold)
+                    IF (@tags >= @threshold)
                     BEGIN
                         DECLARE @identity int;
                         EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
@@ -56,12 +57,12 @@ namespace Plato.Ideas.Tags.Tasks
                             INSERT INTO @myTable (UserId) VALUES (@userId);                     
                         END
                     END;
-                    FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;	                    
+                    FETCH NEXT FROM MSGCURSOR INTO @userId, @tags;	                    
                 END;
                 CLOSE MSGCURSOR;
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
-        
+
         public int IntervalInSeconds => 240;
 
         public IEnumerable<Badge> Badges => new[]
@@ -72,32 +73,36 @@ namespace Plato.Ideas.Tags.Tasks
             TagBadges.Gold
         };
         
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
-        private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly IFeatureFacade _featureFacade;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
 
         public TagBadgesAwarder(
-            ICacheManager cacheManager,
-            IDbHelper dbHelper,
-            IPlatoUserStore<User> userStore,
+            IUserNotificationTypeDefaults userNotificationTypeDefaults,
             INotificationManager<Badge> notificaitonManager,
             IUserReputationAwarder userReputationAwarder,
-            IUserNotificationTypeDefaults userNotificationTypeDefaults)
+            IPlatoUserStore<User> userStore,
+            IFeatureFacade featureFacade,
+            ICacheManager cacheManager,
+            IDbHelper dbHelper)
         {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
-            _notificationManager = notificaitonManager;
-            _userReputationAwarder = userReputationAwarder;
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _userReputationAwarder = userReputationAwarder;
+            _notificationManager = notificaitonManager;
+            _featureFacade = featureFacade;
+            _cacheManager = cacheManager;
+            _userStore = userStore;
+            _dbHelper = dbHelper;
         }
 
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-            
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Ideas");
             var bot = await _userStore.GetPlatoBotAsync();
             foreach (var badge in this.Badges)
             {
@@ -106,7 +111,8 @@ namespace Plato.Ideas.Tags.Tasks
                 var replacements = new Dictionary<string, string>()
                 {
                     ["{name}"] = badge.Name,
-                    ["{threshold}"] = badge.Threshold.ToString()
+                    ["{threshold}"] = badge.Threshold.ToString(),
+                    ["{featureId}"] = feature?.Id.ToString() ?? "0"
                 };
 
                 var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>

@@ -72,7 +72,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" title="{Delete}" data-toggle="tooltip" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
+                        '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar mt-1 mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right p-2 notification-dismiss" title="{Delete}" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6 style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">{title}</h6>{message}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         html = html.replace(/\{Delete}/g, deleteText);
@@ -301,7 +301,7 @@ $(function (win, doc, $) {
             count: 0,
             prevCount: -1,
             onPollComplete: null,
-            pollInterval: 0 // the seconds to wait between polls for new notifications. Set to 0 to disable polling.
+            pollInterval: 120 // the seconds to wait between polls for new notifications. Set to 0 to disable polling.
         };
 
         var methods = {
