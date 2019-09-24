@@ -14,7 +14,7 @@ namespace Plato.Docs.Reactions.Badges
                 "fal fa-smile",
                 BadgeLevel.Bronze,
                 1);
-        
+
         public static readonly Badge Bronze =
             new Badge("DocsReactionBadgesBronze",
                 "New Doc Reactor",
@@ -30,7 +30,7 @@ namespace Plato.Docs.Reactions.Badges
                 "Added {threshold} doc reactions",
                 "fal fa-smile-wink",
                 BadgeLevel.Silver,
-                25, 
+                25,
                 10);
 
         public static readonly Badge Gold =
@@ -38,9 +38,9 @@ namespace Plato.Docs.Reactions.Badges
                 "Chain Doc Reactor",
                 "Added {threshold} doc reactions",
                 "fal fa-grin-hearts", BadgeLevel.Gold,
-                50, 
+                50,
                 25);
-        
+
         public IEnumerable<Badge> GetBadges()
         {
             return new[]

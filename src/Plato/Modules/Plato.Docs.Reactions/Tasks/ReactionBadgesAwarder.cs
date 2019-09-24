@@ -41,7 +41,7 @@ namespace Plato.Docs.Reactions.Tasks
                 WHERE er.FeatureId = {featureId} AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
-                 )
+                )
                 GROUP BY er.CreatedUserId
                 ORDER BY Reactions DESC
 
@@ -63,7 +63,6 @@ namespace Plato.Docs.Reactions.Tasks
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
 
-
         public int IntervalInSeconds => 240;
 
         public IEnumerable<Badge> Badges => new[]
@@ -73,7 +72,6 @@ namespace Plato.Docs.Reactions.Tasks
             ReactionBadges.Silver,
             ReactionBadges.Gold
         };
-
 
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
@@ -91,10 +89,10 @@ namespace Plato.Docs.Reactions.Tasks
             IFeatureFacade featureFacade,
             ICacheManager cacheManager,
             IDbHelper dbHelper)
-        {
-            _notificationManager = notificationManager;
-            _userReputationAwarder = userReputationAwarder;
+        {   
             _userNotificationTypeDefaults = userNotificationTypeDefaults;
+            _userReputationAwarder = userReputationAwarder;
+            _notificationManager = notificationManager;
             _featureFacade = featureFacade;
             _cacheManager = cacheManager;
             _userStore = userStore;
@@ -104,8 +102,14 @@ namespace Plato.Docs.Reactions.Tasks
         public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
 
-            // Get feature to filter reactions
+            // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Docs");
+
+            // Ensure we found the feature
+            if (feature == null)
+            {
+                return;
+            }
 
             // Get bot for notifications
             var bot = await _userStore.GetPlatoBotAsync();
@@ -194,9 +198,9 @@ namespace Plato.Docs.Reactions.Tasks
                 }
 
             }
-            
+
         }
 
     }
-    
+
 }

@@ -12,6 +12,7 @@ namespace Plato.Internal.Tasks
     {
 
         private IList<ISafeTimer> _timers = null;
+
         private readonly ILogger<SafeTimerFactory> _logger;
         private readonly IServiceProvider _serviceProvider;
 

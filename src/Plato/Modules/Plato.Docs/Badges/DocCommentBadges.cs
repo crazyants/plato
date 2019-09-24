@@ -33,11 +33,11 @@ namespace Plato.Docs.Badges
                 BadgeLevel.Silver,
                 50,
                 10);
-        
+
         public static readonly Badge Gold =
             new Badge("DocCommentBadgesGold",
                 "Doc Advocate",
-                "Helped improve many docs",
+                "Helped improve our docs",
                 "far fa-chess-king",
                 BadgeLevel.Gold,
                 100,
@@ -54,7 +54,7 @@ namespace Plato.Docs.Badges
             };
 
         }
-        
+
     }
 
 }

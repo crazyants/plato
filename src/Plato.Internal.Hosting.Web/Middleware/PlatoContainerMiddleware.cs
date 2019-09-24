@@ -13,21 +13,21 @@ namespace Plato.Internal.Hosting.Web.Middleware
     public class PlatoContainerMiddleware
     {
 
+        private readonly IRunningShellTable _runningShellTable;
         private readonly RequestDelegate _next;
         private readonly IPlatoHost _platoHost;
-        private readonly IRunningShellTable _runningShellTable;
         private readonly ILogger _logger;
 
         public PlatoContainerMiddleware(
-            RequestDelegate next,
-            IPlatoHost platoHost,
-            IRunningShellTable runningShellTable,
-            ILogger<PlatoContainerMiddleware> logger)
+            ILogger<PlatoContainerMiddleware> logger,
+            IRunningShellTable runningShellTable,            
+             RequestDelegate next,
+            IPlatoHost platoHost)
         {
-            _next = next;
-            _platoHost = platoHost;
             _runningShellTable = runningShellTable;
+            _platoHost = platoHost;
             _logger = logger;
+            _next = next;
         }
 
         public async Task Invoke(HttpContext httpContext)

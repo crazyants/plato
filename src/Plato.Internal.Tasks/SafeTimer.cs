@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
 {
-    
+
     public class SafeTimer : SafeTimerBase, ISafeTimer
     {
        
@@ -18,9 +16,9 @@ namespace Plato.Internal.Tasks
         public SafeTimerOptions Options { get; set; } = new SafeTimerOptions();
 
         public event TimerEventHandler Elapsed;
-        
+
         private readonly ILogger _logger;
-        
+
         public SafeTimer(IServiceProvider serviceProvider)
         {
             _logger = serviceProvider.GetRequiredService<ILogger<SafeTimerFactory>>();
@@ -130,9 +128,6 @@ namespace Plato.Internal.Tasks
                             $"Executing delegate within timer for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
                     
-
-
-
                     Elapsed(this, state != null
                         ? new SafeTimerEventArgs(state as IServiceProvider)
                         : new SafeTimerEventArgs());
@@ -148,7 +143,10 @@ namespace Plato.Internal.Tasks
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"An error corrected invoking a timer callback.");
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(e, $"An error corrected invoking a timer callback.");
+                }
             }
             finally
             {
@@ -169,7 +167,7 @@ namespace Plato.Internal.Tasks
                             Monitor.Pulse(_timer);
                             Interlocked.Exchange(ref _inTimerCallback, 0);
                         }
-                       
+
                     }
 
                 }

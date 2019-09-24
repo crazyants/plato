@@ -115,7 +115,7 @@ namespace Plato.Articles.Tags.Tasks
                     ["{featureId}"] = feature?.Id.ToString() ?? "0"
                 };
 
-                var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
+            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
                 {
                     var users = new List<int>();
                     while (await reader.ReadAsync())

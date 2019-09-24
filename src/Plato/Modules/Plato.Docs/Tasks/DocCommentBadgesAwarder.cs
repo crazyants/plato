@@ -72,7 +72,7 @@ namespace Plato.Docs.Tasks
             DocCommentBadges.Silver,
             DocCommentBadges.Gold
         };
-        
+
         private readonly IUserNotificationTypeDefaults _userNotificationTypeDefaults;
         private readonly INotificationManager<Badge> _notificationManager;
         private readonly IUserReputationAwarder _userReputationAwarder;
@@ -186,9 +186,9 @@ namespace Plato.Docs.Tasks
 
                         }
 
-                    }
+                        _cacheManager.CancelTokens(typeof(UserBadgeStore));
 
-                    _cacheManager.CancelTokens(typeof(UserBadgeStore));
+                    }
 
                 }
 
