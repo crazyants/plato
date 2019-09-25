@@ -40,7 +40,7 @@ namespace Plato.Docs.Tasks
                 WHERE e.FeatureId = {featureId} AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
-                 )
+                )
                 GROUP BY er.CreatedUserId
                 ORDER BY Total DESC
 
@@ -61,7 +61,6 @@ namespace Plato.Docs.Tasks
                 CLOSE MSGCURSOR;
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
-
 
         public int IntervalInSeconds => 240;
 

@@ -417,12 +417,12 @@
 
                 var editorHeaderLeft = $('<div/>',
                     {
-                        'class': 'd-inline-block'
+                        'class': 'md-header-left'
                     });
 
                 var editorHeaderRight = $('<div/>',
                     {
-                        'class': 'float-right'
+                        'class': 'md-header-right'
                     });
 
                 var editorTabs = $("<ul/>",
@@ -434,7 +434,7 @@
 
                 var editorButtons = $('<div/>',
                     {
-                        'class': 'btn-toolbar text-right'
+                        'class': 'btn-toolbar'
                     });
 
                 var writeLink = $("<a/>",
@@ -644,7 +644,7 @@
                     // Set editor to block the original container
                     container.replaceWith(editor);
                 }
-
+                              
                 var createFooter = false,
                     footer = '';
                 // Create the footer if savable
@@ -656,13 +656,7 @@
                     handler.push(saveHandler);
                     callback.push(options.onSave);
 
-                    editorFooter.append('<button type="button" class="btn btn-success" data-provider="' +
-                        ns +
-                        '" data-handler="' +
-                        saveHandler +
-                        '"><i class="fal fa-plus"></i> ' +
-                        this.__localize('Save') +
-                        '</button>');
+                    editorFooter.append('<button type="submit" class="btn btn-primary">' + this.__localize('Save') + '</button>');
 
                 }
 
@@ -1582,7 +1576,7 @@
         /* Editor Properties */
         autofocus: false,
         hideable: false,
-        savable: false,
+        savable: true,
         width: 'inherit',
         height: 'inherit',
         resize: null,

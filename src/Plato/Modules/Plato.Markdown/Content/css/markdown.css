@@ -11,22 +11,37 @@
     outline: 0;
 }
 
-/* floated row to allow us to float tabs left and buttons right */
+/* Main toolbar with tabs and buttons */
 
 .md-header-row {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto !important;
     border-width: 0;
     border-bottom-width: 1px;
-    border-style: solid;
+    border-style: solid;   
 }
 
-.md-header-row .nav { 
-    padding: .50rem .50rem 0 .50rem;
-    margin-bottom: -1px;
-}
-
-.md-header-row .btn-toolbar {
+.md-header-row .md-header-left { 
+    display:flex;   
+    align-self:flex-end;    
+    flex: 1 1 auto!important;
     padding: .30rem .50rem 0 .50rem;
+}
+
+.md-header-row .md-header-left .nav-tabs {    
+    flex-wrap: nowrap !important;
+    margin-bottom:-1px;
+}
+
+.md-header-row .md-header-right {
+    display:flex;
+    padding: .30rem .50rem;
+}
+
+.md-header-row .md-header-right .btn-toolbar {
+    align-self:flex-end;
+    align-content:end;
 }
 
 /* Buttons */
@@ -52,10 +67,15 @@
     border-bottom-right-radius: 3px;
 }
 
-/* Disable some borders */
+/* Disable borders */
 
-.md-editor > .md-footer,
-.md-editor > .md-dropzone > .dz-message  { border-width: 0; border-top-width: 4px; border-style: dashed; }
+.md-editor > .md-footer { padding: 14px; text-align:right; }
+
+.md-editor > .md-dropzone > .dz-message {
+    border-width: 0;
+    border-top-width: 4px;
+    border-style: dashed;
+}
 
 /* Style textarea and preview */
 .md-editor .md-textarea,
@@ -103,9 +123,20 @@
     box-shadow: none !important;
 }
 
-.md-editor.md-fullscreen-mode .md-footer,
 .md-editor.md-fullscreen-mode .dz-message {
     display: none;
+}
+
+.md-editor .md-footer {
+    display: none;
+}
+
+.md-editor.md-fullscreen-mode .md-footer {
+    display:inline-block;
+    position: fixed;
+    z-index:10;
+    bottom:0;
+    right:0;    
 }
 
 .md-editor.md-fullscreen-mode .tab-content,

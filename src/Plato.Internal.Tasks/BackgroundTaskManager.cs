@@ -55,7 +55,7 @@ namespace Plato.Internal.Tasks
                         if (_logger.IsEnabled(LogLevel.Error))
                         {
                             _logger.LogError(e,
-                            $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'");
+                                $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'");
                         }
                     }
                 }, new SafeTimerOptions()
