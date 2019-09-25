@@ -32,19 +32,15 @@
         <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
     </div>
 </div>
-<div class="list-body">
-    
-    <div class="row">
-        <div class="col-12">
-            
+<div class="list-body">    
+    <div class="row no-gutters">
+        <div class="col-12">            
             @if (Model.Entity.LastReplyDate != null)
             {
                 <div class="float-right">
                     <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss"><date utc="@Model.Entity.LastReplyDate"></date></a>
                 </div>
             }
-
-
             <a asp-route-area="Plato.Ideas" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold" title="@Model.Entity.Title">@Model.Entity.Title.TrimToAround(75)</a>
             @if (Model.Entity.IsPinned)
             {
@@ -71,9 +67,8 @@
             }
         </div>
     </div>
-    <div class="row">
+    <div class="row no-gutters">
         <div class="col-12">
-
             @if (details?.LatestUsers != null)
             {
                 <div class="avatar-group float-right">
@@ -86,7 +81,6 @@
                     }
                 </div>
             }
-
             @if (Model.Entity.CreatedUserId > 0)
             {
 
@@ -124,7 +118,6 @@
             {
                 <span class="badge badge-danger" data-toggle="tooltip" title="@T["This idea has been deleted and is only visible as you have permission to view deleted ideas"]">@T["Deleted"]</span>
             }
-
         </div>
     </div>
 </div>

@@ -38,18 +38,15 @@
         <h6>@Model.Entity.SummedRating.ToPrettyInt()</h6> @T["rating"]
     </div>
 </div>
-<div class="list-body">
-    
-    <div class="row">
+<div class="list-body">    
+    <div class="row no-gutters">
         <div class="col-12">
-
             @if (Model.Entity.LastReplyDate != null)
             {
                 <div class="float-right">
                     <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Reply" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" asp-route-opts.replyId="@Model.Entity.LastReplyId" class="@Model.Entity.LastReplyBy?.Css.StaffCss"><date utc="@Model.Entity.LastReplyDate"></date></a>
                 </div>
             }
-
             <a asp-route-area="Plato.Questions" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.Id" asp-route-opts.alias="@Model.Entity.Alias" class="font-weight-bold" title="@Model.Entity.Title">@Model.Entity.Title.TrimToAround(75)</a>
             @if (Model.Entity.IsPinned)
             {
@@ -74,12 +71,10 @@
                     }
                 </span>
             }
-
         </div>
     </div>
-    <div class="row">
+    <div class="row no-gutters">
         <div class="col-12">
-
         @if (details?.LatestUsers != null)
         {
             <div class="avatar-group float-right">
@@ -92,7 +87,6 @@
                 }
             </div>
         }
-
         @if (Model.Entity.CreatedUserId > 0)
         {
             <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-opts.id="@Model.Entity.CreatedUserId" asp-route-opts.alias="@Model.Entity.CreatedBy.Alias" class="@Model.Entity.CreatedBy?.Css.StaffCss">@Model.Entity.CreatedBy.DisplayName</a>
@@ -130,5 +124,4 @@
         }
         </div>
     </div>
-
 </div>
