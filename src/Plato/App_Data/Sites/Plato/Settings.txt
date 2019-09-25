@@ -1,6 +1,0 @@
-Name: Default
-State: Running
-DatabaseProvider: SqlClient
-ConnectionString: server=localhost;trusted_connection=true;database=plato15;
-TablePrefix: plato_
-Location: Plato
