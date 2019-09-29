@@ -26,7 +26,7 @@ namespace Plato.Discuss.History.Controllers
 
     public class HomeController : Controller
     {
-        
+
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
         private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IEntityReplyManager<Reply> _entityReplyManager;
@@ -47,7 +47,7 @@ namespace Plato.Discuss.History.Controllers
             IHtmlLocalizer localizer,
             IAlerter alerter, IEntityReplyStore<Reply> entityReplyStore,
             IEntityHistoryManager<EntityHistory> entityHistoryManager,
-            IEntityHistoryStore<EntityHistory> entityHistoryStore,            
+            IEntityHistoryStore<EntityHistory> entityHistoryStore,
             IEntityReplyManager<Reply> entityReplyManager,
             IEntityManager<Topic> entityManager,
             IAuthorizationService authorizationService,
@@ -117,7 +117,7 @@ namespace Plato.Discuss.History.Controllers
             var latestHistory = await _entityHistoryStore.QueryAsync()
                .Take(1)
                .Select<EntityHistoryQueryParams>(q =>
-               {                   
+               {
                    q.EntityId.Equals(history.EntityId);
                    q.EntityReplyId.Equals(history.EntityReplyId);
                })
@@ -195,7 +195,7 @@ namespace Plato.Discuss.History.Controllers
             {
                 return Unauthorized();
             }
-            
+
             // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -204,7 +204,6 @@ namespace Plato.Discuss.History.Controllers
             {
                 return Unauthorized();
             }
-
 
             ICommandResultBase result;
             if (reply != null)
@@ -235,8 +234,9 @@ namespace Plato.Discuss.History.Controllers
 
                 // Update entity to history point
                 result = await _entityManager.UpdateAsync(entity);
+
             }
-          
+
             // Add result
             if (result.Succeeded)
             {
@@ -323,7 +323,21 @@ namespace Plato.Discuss.History.Controllers
             // Add result
             if (result.Succeeded)
             {
-                _alerter.Success(T["Version Deleted Successfully!"]);
+
+                // Update edit details for entity or reply based on latest history point
+                var entityResult = await ApplyLatestHistoryPoint(entity, reply);
+                if (entityResult.Succeeded)
+                {
+                    _alerter.Success(T["Version Deleted Successfully!"]);
+                }
+                else
+                {
+                    foreach (var error in entityResult.Errors)
+                    {
+                        _alerter.Danger(T[error.Description]);
+                    }
+                }
+
             }
             else
             {
@@ -332,7 +346,7 @@ namespace Plato.Discuss.History.Controllers
                     _alerter.Danger(T[error.Description]);
                 }
             }
-            
+
             // Redirect
             return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
@@ -347,6 +361,112 @@ namespace Plato.Discuss.History.Controllers
         }
 
         // --------------------
+
+        async Task<ICommandResultBase> ApplyLatestHistoryPoint(Topic entity, Reply reply)
+        {
+
+            // Get newest / most recent history entry
+            var histories = await _entityHistoryStore.QueryAsync()
+               .Take(1)
+               .Select<EntityHistoryQueryParams>(q =>
+               {
+                   q.EntityId.Equals(entity.Id);
+                   q.EntityReplyId.Equals(reply?.Id ?? 0);
+               })
+               .OrderBy("Id", OrderBy.Desc)
+               .ToList();
+
+            // No history point, return success
+            if (histories == null)
+            {
+                return await ResetEditDetails(entity, reply);
+            }
+
+            // No history point, return success
+            if (histories.Data == null)
+            {
+                return await ResetEditDetails(entity, reply);
+            }
+
+            // No history point, return success
+            if (histories.Data.Count == 0)
+            {
+                return await ResetEditDetails(entity, reply);
+            }
+
+            var history = histories.Data[0];
+
+            // No history available reset edit details
+            if (history == null)
+            {
+                return await ResetEditDetails(entity, reply);
+            }
+
+            // Update edit details based on latest history point
+
+            var result = new CommandResultBase();
+
+            if (reply != null)
+            {
+
+                reply.EditedUserId = history.CreatedUserId;
+                reply.EditedDate = history.CreatedDate;
+
+                // Update reply to history point
+                var updateResult = await _entityReplyStore.UpdateAsync(reply);
+                if (updateResult != null)
+                {
+                    return result.Success();
+                }
+
+            }
+            else
+            {
+
+                entity.EditedUserId = history.CreatedUserId;
+                entity.EditedDate = history.CreatedDate;
+
+                // Update entity to history point
+                var updateResult = await _entityStore.UpdateAsync(entity);
+                if (updateResult != null)
+                {
+                    return result.Success();
+                }
+
+            }
+
+            return result.Success();
+
+        }
+
+        async Task<ICommandResultBase> ResetEditDetails(Topic entity, Reply reply)
+        {
+
+            var result = new CommandResultBase();
+            if (reply != null)
+            {
+                reply.EditedUserId = 0;
+                reply.EditedDate = null;
+                var updateResult = await _entityReplyStore.UpdateAsync(reply);
+                if (updateResult != null)
+                {
+                    return result.Success();
+                }
+            }
+            else
+            {
+                entity.EditedUserId = 0;
+                entity.EditedDate = null;
+                var updateResult = await _entityStore.UpdateAsync(entity);
+                if (updateResult != null)
+                {
+                    return result.Success();
+                }
+            }
+
+            return result.Success();
+
+        }
 
         string PrepareDifAsync(string before, string after)
         {
@@ -391,7 +511,7 @@ namespace Plato.Discuss.History.Controllers
                         sb.Append(line.Text);
                         break;
                 }
-                
+
             }
 
             return sb.ToString();

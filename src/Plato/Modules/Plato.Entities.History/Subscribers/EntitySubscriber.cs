@@ -99,10 +99,10 @@ namespace Plato.Entities.History.Subscribers
             return entity;
             
         }
-        
+
         async Task<TEntity> EntityUpdating(TEntity entity)
         {
-            
+
             // Get previous history points
             var previousHistories = await _entityHistoryStore.QueryAsync()
                 .Take(1)
@@ -143,10 +143,12 @@ namespace Plato.Entities.History.Subscribers
                 EntityId = existingEntity.Id,
                 Message = existingEntity.Message,
                 Html = existingEntity.Html,
-                CreatedUserId = existingEntity.CreatedUserId,
-                CreatedDate = existingEntity.CreatedDate
+                CreatedUserId = existingEntity.EditedUserId > 0
+                    ? existingEntity.EditedUserId
+                    : existingEntity.CreatedUserId,
+                CreatedDate = existingEntity.EditedDate ?? existingEntity.CreatedDate
             });
-            
+
             return entity;
 
         }
@@ -188,7 +190,9 @@ namespace Plato.Entities.History.Subscribers
                 EntityId = entity.Id,
                 Message = entity.Message,
                 Html = entity.Html,
-                CreatedUserId = entity.EditedUserId > 0 ? entity.EditedUserId : entity.ModifiedUserId,
+                CreatedUserId = entity.EditedUserId > 0 
+                    ? entity.EditedUserId 
+                    : entity.ModifiedUserId,
                 CreatedDate = entity.EditedDate ?? DateTimeOffset.UtcNow
             });
 
