@@ -7,6 +7,8 @@ namespace Plato.Discuss.History.ViewModels
 
         public EntityHistory History { get; set; }
 
+        public EntityHistory LatestHistory { get; set; }
+
         public string Html { get; set; }
 
     }

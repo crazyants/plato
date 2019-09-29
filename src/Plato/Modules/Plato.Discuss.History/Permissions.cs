@@ -11,12 +11,18 @@ namespace Plato.Discuss.History
 
         public static readonly Permission ViewReplyHistory =
             new Permission("ViewReplyHistory", "View reply edit history");
+        
+        public static readonly Permission RevertTopicHistory =
+            new Permission("RevertTopicHistory", "Revert topics to previous versions");
 
+        public static readonly Permission RevertReplyHistory =
+            new Permission("RevertReplyHistory", "Revert replies to previous versions");
+        
         public static readonly Permission DeleteTopicHistory =
-            new Permission("DeleteTopicHistory", "Delete topic edit history");
+            new Permission("DeleteTopicHistory", "Delete topic versions");
 
         public static readonly Permission DeleteReplyHistory =
-            new Permission("DeleteReplyHistory", "Delete reply edit history");
+            new Permission("DeleteReplyHistory", "Delete reply versions");
         
         public IEnumerable<Permission> GetPermissions()
         {
@@ -24,6 +30,8 @@ namespace Plato.Discuss.History
             {
                 ViewTopicHistory,
                 ViewReplyHistory,
+                RevertTopicHistory,
+                RevertReplyHistory,
                 DeleteTopicHistory,
                 DeleteReplyHistory
             };
@@ -40,6 +48,8 @@ namespace Plato.Discuss.History
                     {
                         ViewTopicHistory,
                         ViewReplyHistory,
+                        RevertTopicHistory,
+                        RevertReplyHistory,
                         DeleteTopicHistory,
                         DeleteReplyHistory
                     }
@@ -60,6 +70,8 @@ namespace Plato.Discuss.History
                     {
                         ViewTopicHistory,
                         ViewReplyHistory,
+                        RevertTopicHistory,
+                        RevertReplyHistory,
                         DeleteTopicHistory,
                         DeleteReplyHistory
                     }

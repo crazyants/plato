@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -16,17 +17,24 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Text.Abstractions.Diff;
 using Plato.Internal.Text.Abstractions.Diff.Models;
+using Plato.Internal.Security.Abstractions;
+using Plato.Entities.Services;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.History.Controllers
 {
+
     public class HomeController : Controller
     {
-
-        private readonly IInlineDiffBuilder _inlineDiffBuilder;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
+        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        private readonly IEntityReplyManager<Reply> _entityReplyManager;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
+        private readonly IInlineDiffBuilder _inlineDiffBuilder;
+        private readonly IEntityManager<Topic> _entityManager;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
 
@@ -37,20 +45,26 @@ namespace Plato.Discuss.History.Controllers
         public HomeController(
             IStringLocalizer stringLocalizer,
             IHtmlLocalizer localizer,
-            IEntityHistoryStore<EntityHistory> entityHistoryStore,
+            IAlerter alerter, IEntityReplyStore<Reply> entityReplyStore,
+            IEntityHistoryManager<EntityHistory> entityHistoryManager,
+            IEntityHistoryStore<EntityHistory> entityHistoryStore,            
+            IEntityReplyManager<Reply> entityReplyManager,
+            IEntityManager<Topic> entityManager,
+            IAuthorizationService authorizationService,
             IInlineDiffBuilder inlineDiffBuilder,
             IEntityStore<Topic> entityStore,
-            IAlerter alerter, IEntityReplyStore<Reply> entityReplyStore,
-            IContextFacade contextFacade,
-            IEntityHistoryManager<EntityHistory> entityHistoryManager)
+            IContextFacade contextFacade)
         {
+            _entityHistoryManager = entityHistoryManager;
+            _authorizationService = authorizationService;
+            _entityReplyManager = entityReplyManager;
             _entityHistoryStore = entityHistoryStore;
             _inlineDiffBuilder = inlineDiffBuilder;
-            _entityStore = entityStore;
-            _alerter = alerter;
             _entityReplyStore = entityReplyStore;
             _contextFacade = contextFacade;
-            _entityHistoryManager = entityHistoryManager;
+            _entityManager = entityManager;
+            _entityStore = entityStore;
+            _alerter = alerter;
 
             T = localizer;
             S = stringLocalizer;
@@ -58,24 +72,35 @@ namespace Plato.Discuss.History.Controllers
         }
 
         // --------------
-        // Version modal
+        // Index
         // --------------
 
         public async Task<IActionResult> Index(int id)
         {
 
+            // Get history point
             var history = await _entityHistoryStore.GetByIdAsync(id);
             if (history == null)
             {
                 return NotFound();
             }
 
+            // Get entity for history point
             var entity = await _entityStore.GetByIdAsync(history.EntityId);
             if (entity == null)
             {
                 return NotFound();
             }
-            
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                   entity.CategoryId, history.EntityReplyId > 0
+                    ? Permissions.ViewReplyHistory
+                    : Permissions.ViewTopicHistory))
+            {
+                return Unauthorized();
+            }
+
             // Get previous history 
             var previousHistory = await _entityHistoryStore.QueryAsync()
                 .Take(1)
@@ -87,18 +112,30 @@ namespace Plato.Discuss.History.Controllers
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
-            
+
+            // Get newest / most recent history entry
+            var latestHistory = await _entityHistoryStore.QueryAsync()
+               .Take(1)
+               .Select<EntityHistoryQueryParams>(q =>
+               {                   
+                   q.EntityId.Equals(history.EntityId);
+                   q.EntityReplyId.Equals(history.EntityReplyId);
+               })
+               .OrderBy("Id", OrderBy.Desc)
+               .ToList();
+
             // Compare previous to current
             var html = history.Html;
             if (previousHistory?.Data != null)
             {
                 html = PrepareDifAsync(previousHistory.Data[0].Html, history.Html);
             }
-        
+
             // Build model
             var viewModel = new HistoryIndexViewModel()
             {
                 History = history,
+                LatestHistory = latestHistory?.Data[0],
                 Html = html
             };
 
@@ -106,7 +143,128 @@ namespace Plato.Discuss.History.Controllers
         }
 
         // --------------
-        // Delete version
+        // Rollback
+        // --------------
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rollback(int id)
+        {
+
+            // Validate
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+
+            // Get history point
+            var history = await _entityHistoryStore.GetByIdAsync(id);
+
+            // Ensure we found the history point
+            if (history == null)
+            {
+                return NotFound();
+            }
+
+            // Get entity for history point
+            var entity = await _entityStore.GetByIdAsync(history.EntityId);
+
+            // Ensure we found the entity
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            // Get reply
+            Reply reply = null;
+            if (history.EntityReplyId > 0)
+            {
+                reply = await _entityReplyStore.GetByIdAsync(history.EntityReplyId);
+
+                // Ensure we found a reply if supplied
+                if (reply == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                   entity.CategoryId, reply != null
+                    ? Permissions.RevertReplyHistory
+                    : Permissions.RevertTopicHistory))
+            {
+                return Unauthorized();
+            }
+            
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // We always need to be logged in to edit entities
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
+            ICommandResultBase result;
+            if (reply != null)
+            {
+
+                // Only update edited information if the message changes
+                if (history.Message != reply.Message)
+                {
+                    reply.Message = history.Message;
+                    reply.EditedUserId = user?.Id ?? 0;
+                    reply.EditedDate = DateTimeOffset.UtcNow;
+                }
+
+                // Update reply to history point
+                result = await _entityReplyManager.UpdateAsync(reply);
+
+            }
+            else
+            {
+
+                // Only update edited information if the message changes
+                if (history.Message != entity.Message)
+                {
+                    entity.Message = history.Message;
+                    entity.EditedUserId = user?.Id ?? 0;
+                    entity.EditedDate = DateTimeOffset.UtcNow;
+                }
+
+                // Update entity to history point
+                result = await _entityManager.UpdateAsync(entity);
+            }
+          
+            // Add result
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Version Deleted Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            // Redirect
+            return Redirect(_contextFacade.GetRouteUrl(new RouteValueDictionary()
+            {
+                ["area"] = "Plato.Discuss",
+                ["controller"] = "Home",
+                ["action"] = "Reply",
+                ["opts.id"] = entity.Id,
+                ["opts.alias"] = entity.Alias,
+                ["opts.replyId"] = reply?.Id ?? 0
+            }));
+
+        }
+
+        // --------------
+        // Delete
         // --------------
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -149,7 +307,16 @@ namespace Plato.Discuss.History.Controllers
                     return NotFound();
                 }
             }
-            
+
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                   entity.CategoryId, reply != null
+                    ? Permissions.DeleteReplyHistory
+                    : Permissions.DeleteTopicHistory))
+            {
+                return Unauthorized();
+            }
+
             // Delete history point
             var result = await _entityHistoryManager.DeleteAsync(history);
 
@@ -178,6 +345,8 @@ namespace Plato.Discuss.History.Controllers
             }));
 
         }
+
+        // --------------------
 
         string PrepareDifAsync(string before, string after)
         {
