@@ -67,22 +67,22 @@ namespace Plato.Docs.Follow.Subscribers
             {
                 return follow;
             }
-            
-            // Ensure the topic we are following still exists
-            var existingTopic = await _entityStore.GetByIdAsync(follow.ThingId);
-            if (existingTopic == null)
+
+            // Ensure the entity we are following still exists
+            var existingEntity = await _entityStore.GetByIdAsync(follow.ThingId);
+            if (existingEntity == null)
             {
                 return follow;
             }
 
             // Update total follows
-            existingTopic.TotalFollows = existingTopic.TotalFollows + 1;
+            existingEntity.TotalFollows = existingEntity.TotalFollows + 1;
 
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(existingTopic);
-            if (updatedTopic != null)
+            var updatedEntity = await _entityStore.UpdateAsync(existingEntity);
+            if (updatedEntity != null)
             {
-                // Award reputation for following topic
+                // Award reputation for following the entity
                 await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId, "Followed a doc");
             }
             
@@ -98,31 +98,31 @@ namespace Plato.Docs.Follow.Subscribers
                 return null;
             }
 
-            // Is this a topic follow?
+            // Is this a entity follow?
             if (!follow.Name.Equals(FollowTypes.Doc.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
             }
 
-            // Ensure the topic we are following still exists
-            var existingTopic = await _entityStore.GetByIdAsync(follow.ThingId);
-            if (existingTopic == null)
+            // Ensure the entity we are following still exists
+            var existingEntity = await _entityStore.GetByIdAsync(follow.ThingId);
+            if (existingEntity == null)
             {
                 return follow;
             }
 
             // Update total follows
-            existingTopic.TotalFollows = existingTopic.TotalFollows - 1;
+            existingEntity.TotalFollows = existingEntity.TotalFollows - 1;
         
             // Ensure we don't go negative
-            if (existingTopic.TotalFollows < 0)
+            if (existingEntity.TotalFollows < 0)
             {
-                existingTopic.TotalFollows = 0;
+                existingEntity.TotalFollows = 0;
             }
             
             // Persist changes
-            var updatedTopic = await _entityStore.UpdateAsync(existingTopic);
-            if (updatedTopic != null)
+            var updatedEntity = await _entityStore.UpdateAsync(existingEntity);
+            if (updatedEntity != null)
             {
                 // Revoke reputation for following tag
                 await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId, "Unfollowed a doc");

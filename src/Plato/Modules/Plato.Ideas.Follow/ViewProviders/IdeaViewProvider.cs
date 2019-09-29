@@ -130,14 +130,14 @@ namespace Plato.Ideas.Follow.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Idea topic, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Idea idea, IViewProviderContext updater)
         {
 
             // Ensure entity exists before attempting to update
-            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            var entity = await _entityStore.GetByIdAsync(idea.Id);
             if (entity == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(idea, updater);
             }
 
             // Get the follow checkbox value
@@ -159,7 +159,7 @@ namespace Plato.Ideas.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return await BuildEditAsync(topic, updater);
+                return await BuildEditAsync(idea, updater);
             }
 
             // The follow type
@@ -196,7 +196,7 @@ namespace Plato.Ideas.Follow.ViewProviders
                 }
             }
 
-            return await BuildEditAsync(topic, updater);
+            return await BuildEditAsync(idea, updater);
 
         }
 

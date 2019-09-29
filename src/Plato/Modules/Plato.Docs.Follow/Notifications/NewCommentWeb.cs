@@ -3,13 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Follow.NotificationTypes;
 using Plato.Docs.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
@@ -57,11 +55,11 @@ namespace Plato.Docs.Follow.Notifications
             // Create result
             var result = new CommandResult<DocComment>();
 
-            // Get the topic for the reply
-            var topic = await _entityStore.GetByIdAsync(context.Model.EntityId);
-            if (topic == null)
+            // Get the entity for the reply
+            var entity = await _entityStore.GetByIdAsync(context.Model.EntityId);
+            if (entity == null)
             {
-                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{WebNotifications.NewDocComment.Name}'.");
+                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the follow notification '{WebNotifications.NewDocComment.Name}'.");
             }
 
             // Get base Uri
@@ -72,7 +70,7 @@ namespace Plato.Docs.Follow.Notifications
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = topic.Title,
+                Title = entity.Title,
                 Message = S["A comment has been posted within a doc your following"],
                 CreatedUserId = context.Model.CreatedUserId,
                 Url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
@@ -80,8 +78,8 @@ namespace Plato.Docs.Follow.Notifications
                     ["area"] = "Plato.Docs",
                     ["controller"] = "Home",
                     ["action"] = "Reply",
-                    ["opts.id"] = topic.Id,
-                    ["opts.alias"] = topic.Alias,
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
                     ["opts.replyId"] = context.Model.Id
                 })
             };
@@ -93,9 +91,9 @@ namespace Plato.Docs.Follow.Notifications
             }
 
             return result.Failed(userNotificationResult.Errors?.ToArray());
-            
+
         }
 
     }
-    
+
 }

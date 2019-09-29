@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Articles.Follow.NotificationTypes;
 using Plato.Articles.Models;
@@ -17,8 +16,6 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Security.Abstractions;
-using Plato.Internal.Tasks.Abstractions;
-
 
 namespace Plato.Articles.Follow.Notifications
 {
@@ -61,11 +58,11 @@ namespace Plato.Articles.Follow.Notifications
             // Create result
             var result = new CommandResult<Comment>();
             
-            // Get the topic for the reply
-            var topic = await _entityStore.GetByIdAsync(context.Model.EntityId);
-            if (topic == null)
+            // Get the entity for the reply
+            var entity = await _entityStore.GetByIdAsync(context.Model.EntityId);
+            if (entity == null)
             {
-                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the topic follow notification '{EmailNotifications.NewArticleComment.Name}'.");
+                return result.Failed($"No entity could be found with the Id of {context.Model.EntityId} when sending the follow notification '{EmailNotifications.NewArticleComment.Name}'.");
             }
 
             // Get email template
@@ -80,15 +77,15 @@ namespace Plato.Articles.Follow.Notifications
             if (email != null)
             {
 
-                // Build topic url
+                // Build entity url
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
                     ["area"] = "Plato.Articles",
                     ["controller"] = "Home",
                     ["action"] = "Reply",
-                    ["opts.id"] = topic.Id,
-                    ["opts.alias"] = topic.Alias,
+                    ["opts.id"] = entity.Id,
+                    ["opts.alias"] = entity.Alias,
                     ["opts.replyId"] = context.Model.Id
                 });
                 
@@ -97,7 +94,7 @@ namespace Plato.Articles.Follow.Notifications
                 message.Body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
-                    topic.Title,
+                    entity.Title,
                     baseUri + url);
                 message.IsBodyHtml = true;
                 message.To.Add(new MailAddress(context.Notification.To.Email));
@@ -118,5 +115,5 @@ namespace Plato.Articles.Follow.Notifications
         }
 
     }
-    
+
 }

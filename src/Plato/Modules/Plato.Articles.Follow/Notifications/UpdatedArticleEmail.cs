@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Articles.Follow.NotificationTypes;
 using Plato.Articles.Models;
-using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -68,7 +66,7 @@ namespace Plato.Articles.Follow.Notifications
             if (email != null)
             {
 
-                // Build topic url
+                // Build entity url
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
@@ -105,5 +103,5 @@ namespace Plato.Articles.Follow.Notifications
         }
 
     }
-    
+
 }

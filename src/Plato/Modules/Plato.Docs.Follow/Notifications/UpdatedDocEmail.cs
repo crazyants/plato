@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Docs.Follow.NotificationTypes;
 using Plato.Docs.Models;
@@ -67,7 +66,7 @@ namespace Plato.Docs.Follow.Notifications
             if (email != null)
             {
 
-                // Build topic url
+                // Build entity url
                 var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
                 var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
                 {
@@ -104,5 +103,5 @@ namespace Plato.Docs.Follow.Notifications
         }
 
     }
-    
+
 }
