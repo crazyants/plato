@@ -1,30 +1,20 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Articles.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Reactions.ViewModels;
-using Plato.Entities.Stores;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Articles.Reactions.Navigation
 {
     public class ArticleMenu : INavigationProvider
     {
-
-        private readonly IEntityStore<Article> _entityStore;
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
+            
         public IStringLocalizer T { get; set; }
 
-        public ArticleMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
-            IEntityStore<Article> entityStore)
+        public ArticleMenu(IStringLocalizer localizer)
         {
-            T = localizer;
-            _actionContextAccessor = actionContextAccessor;
-            _entityStore = entityStore;
+            T = localizer;      
         }
         
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -58,10 +48,10 @@ namespace Plato.Articles.Reactions.Navigation
                         model = new ReactionMenuViewModel()
                         {
                             ModuleId = "Plato.Articles.Reactions",
-                            Entity = entity
+                            Entity = entity,
+                            Permission = Permissions.ReactToArticles
                         }
                     })
-                    .Permission(Permissions.ReactToArticles)
                 );
 
         }

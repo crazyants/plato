@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Email.Stores;
@@ -15,11 +13,12 @@ using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Email.Tasks
 {
+
     public class EmailSender : IBackgroundTaskProvider
     {
 
         public int IntervalInSeconds { get; private set; }
-        
+
         private readonly IEmailStore<EmailMessage> _emailStore;
         private readonly ILogger<EmailSender> _logger;
         private readonly ICacheManager _cacheManager;

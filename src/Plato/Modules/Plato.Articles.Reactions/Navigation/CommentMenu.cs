@@ -10,17 +10,12 @@ namespace Plato.Articles.Reactions.Navigation
 {
     public class CommentMenu : INavigationProvider
     {
-
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
+              
         public IStringLocalizer T { get; set; }
 
-        public CommentMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public CommentMenu(IStringLocalizer localizer)
         {
             T = localizer;
-            _actionContextAccessor = actionContextAccessor;
         }
         
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -68,10 +63,10 @@ namespace Plato.Articles.Reactions.Navigation
                         {
                             ModuleId = "Plato.Articles.Reactions",
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToComments
                         }
                     })
-                    .Permission(Permissions.ReactToComments)
                 );
             
         }

@@ -10,7 +10,7 @@ namespace Plato.Internal.Tasks.Extensions
         public static IServiceCollection AddPlatoTasks(
             this IServiceCollection services)
         {
-            
+
             // Background tasks
             services.TryAddScoped<IBackgroundTaskManager, BackgroundTaskManager>();
             services.TryAddSingleton<ISafeTimerFactory, SafeTimerFactory>();

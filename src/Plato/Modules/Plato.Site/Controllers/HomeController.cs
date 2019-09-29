@@ -116,7 +116,6 @@ namespace Plato.Site.Controllers
 
         }
 
-
         // ---------------------
         // Privacy
         // ---------------------
@@ -128,8 +127,6 @@ namespace Plato.Site.Controllers
             return Task.FromResult((IActionResult)View());
 
         }
-
-
 
         // ---------------------
         // Contact
@@ -147,14 +144,27 @@ namespace Plato.Site.Controllers
         public async Task<IActionResult> Contact(ContactFormViewModel viewModel)
         {
 
+            var from = viewModel.Email;
             var body = !string.IsNullOrEmpty(viewModel.Message)
                 ? WebUtility.HtmlDecode(viewModel.Message)
                 : viewModel.Message;
 
+            if (string.IsNullOrEmpty(from))
+            {
+                ViewData.ModelState.AddModelError(string.Empty, "The \"from\" field is required!");
+                return await Contact(viewModel);
+            }
+
+            if (string.IsNullOrEmpty(body))
+            {
+                ViewData.ModelState.AddModelError(string.Empty, "The \"message\" field is required!");
+                return await Contact(viewModel);
+            }
+
             // Build message
             var message = new MailMessage
             {
-                From = new MailAddress(viewModel.Email),
+                From = new MailAddress(from.Trim()),
                 Subject = "Plato Feedback Form",
                 Body  = body,
                 IsBodyHtml = true,

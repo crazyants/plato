@@ -48,10 +48,10 @@ namespace Plato.Questions.Reactions.Navigation
                         model = new ReactionMenuViewModel()
                         {
                             ModuleId = "Plato.Questions.Reactions",
-                            Entity = entity
+                            Entity = entity,
+                            Permission = Permissions.ReactToQuestions
                         }
-                    })
-                    .Permission(Permissions.ReactToQuestions)
+                    })       
                 );
 
         }

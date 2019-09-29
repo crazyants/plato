@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Ideas.Models;
 using Plato.Entities.Extensions;
@@ -11,16 +10,11 @@ namespace Plato.Ideas.Reactions.Navigation
     public class IdeaCommentMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-
         public IStringLocalizer T { get; set; }
 
-        public IdeaCommentMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public IdeaCommentMenu(IStringLocalizer localizer)
         {
-            T = localizer;
-            _actionContextAccessor = actionContextAccessor;
+            T = localizer;            
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -67,10 +61,10 @@ namespace Plato.Ideas.Reactions.Navigation
                         {
                             ModuleId = "Plato.Ideas.Reactions",
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToIdeaComments
                         }
                     })
-                    .Permission(Permissions.ReactToIdeaComments)
                 );
 
         }

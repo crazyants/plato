@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Questions.Models;
 using Plato.Entities.Extensions;
@@ -11,16 +10,11 @@ namespace Plato.Questions.Reactions.Navigation
     public class AnswerMenu : INavigationProvider
     {
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-
         public IStringLocalizer T { get; set; }
 
-        public AnswerMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+        public AnswerMenu(IStringLocalizer localizer)
         {
-            T = localizer;
-            _actionContextAccessor = actionContextAccessor;
+            T = localizer;            
         }
 
         public void BuildNavigation(string name, INavigationBuilder builder)
@@ -45,7 +39,7 @@ namespace Plato.Questions.Reactions.Navigation
             {
                 return;
             }
-            
+
             // No need to show reactions if entity is hidden
             if (entity.IsHidden())
             {
@@ -67,10 +61,10 @@ namespace Plato.Questions.Reactions.Navigation
                         {
                             ModuleId = "Plato.Questions.Reactions",
                             Entity = entity,
-                            Reply = reply
+                            Reply = reply,
+                            Permission = Permissions.ReactToAnswers
                         }
                     })
-                    .Permission(Permissions.ReactToAnswers)
                 );
 
         }

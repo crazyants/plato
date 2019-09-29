@@ -1,10 +1,8 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Models;
 using Plato.Entities.Extensions;
 using Plato.Entities.Reactions.ViewModels;
-using Plato.Entities.Stores;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Reactions.Navigation
@@ -12,19 +10,10 @@ namespace Plato.Docs.Reactions.Navigation
     public class DocMenu : INavigationProvider
     {
 
-        private readonly IEntityStore<Doc> _entityStore;
-        private readonly IActionContextAccessor _actionContextAccessor;
-    
         public IStringLocalizer T { get; set; }
 
-        public DocMenu(
-            IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor,
-            IEntityStore<Doc> entityStore)
-        {
-            _actionContextAccessor = actionContextAccessor;
-            _entityStore = entityStore;
-
+        public DocMenu(IStringLocalizer localizer)
+        {            
             T = localizer;
         }
         
@@ -50,7 +39,7 @@ namespace Plato.Docs.Reactions.Navigation
             {
                 return;
             }
-            
+
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
@@ -59,10 +48,10 @@ namespace Plato.Docs.Reactions.Navigation
                         model = new ReactionMenuViewModel()
                         {
                             ModuleId = "Plato.Docs.Reactions",
-                            Entity = entity
+                            Entity = entity,
+                            Permission = Permissions.ReactToDocs
                         }
-                    })
-                    .Permission(Permissions.ReactToDocs)
+                    })                
                 );
 
         }
