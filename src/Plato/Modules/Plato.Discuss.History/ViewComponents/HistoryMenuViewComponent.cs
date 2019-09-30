@@ -13,12 +13,12 @@ namespace Plato.Discuss.History.ViewComponents
         {
         }
 
-        public Task<IViewComponentResult> InvokeAsync(Topic topic, Reply reply)
+        public Task<IViewComponentResult> InvokeAsync(Topic entity, Reply reply)
         {
     
             var viewModel = new HistoryMenuViewModel()
             {
-                Topic = topic,
+                Topic = entity,
                 Reply = reply,
             };
 

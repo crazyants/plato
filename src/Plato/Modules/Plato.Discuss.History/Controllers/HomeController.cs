@@ -20,6 +20,7 @@ using Plato.Internal.Text.Abstractions.Diff.Models;
 using Plato.Internal.Security.Abstractions;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.History.Controllers
 {
@@ -48,10 +49,10 @@ namespace Plato.Discuss.History.Controllers
             IAlerter alerter, IEntityReplyStore<Reply> entityReplyStore,
             IEntityHistoryManager<EntityHistory> entityHistoryManager,
             IEntityHistoryStore<EntityHistory> entityHistoryStore,
-            IEntityReplyManager<Reply> entityReplyManager,
-            IEntityManager<Topic> entityManager,
+            IEntityReplyManager<Reply> entityReplyManager,            
             IAuthorizationService authorizationService,
             IInlineDiffBuilder inlineDiffBuilder,
+            IEntityManager<Topic> entityManager,            
             IEntityStore<Topic> entityStore,
             IContextFacade contextFacade)
         {
@@ -95,8 +96,8 @@ namespace Plato.Discuss.History.Controllers
             // Ensure we have permission
             if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                    entity.CategoryId, history.EntityReplyId > 0
-                    ? Permissions.ViewReplyHistory
-                    : Permissions.ViewTopicHistory))
+                    ? Permissions.viewReplyHistory
+                    : Permissions.ViewEntityHistory))
             {
                 return Unauthorized();
             }
@@ -191,7 +192,7 @@ namespace Plato.Discuss.History.Controllers
             if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                    entity.CategoryId, reply != null
                     ? Permissions.RevertReplyHistory
-                    : Permissions.RevertTopicHistory))
+                    : Permissions.RevertEntityHistory))
             {
                 return Unauthorized();
             }
@@ -300,7 +301,6 @@ namespace Plato.Discuss.History.Controllers
             if (history.EntityReplyId > 0)
             {
                 reply = await _entityReplyStore.GetByIdAsync(history.EntityReplyId);
-
                 // Ensure we found a reply if supplied
                 if (reply == null)
                 {
@@ -312,7 +312,7 @@ namespace Plato.Discuss.History.Controllers
             if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
                    entity.CategoryId, reply != null
                     ? Permissions.DeleteReplyHistory
-                    : Permissions.DeleteTopicHistory))
+                    : Permissions.DeleteEntityHistory))
             {
                 return Unauthorized();
             }
@@ -365,6 +365,15 @@ namespace Plato.Discuss.History.Controllers
         async Task<ICommandResultBase> ApplyLatestHistoryPoint(Topic entity, Reply reply)
         {
 
+            // Get current user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // We need to be authenticated to make changes
+            if (user == null)
+            {
+                return await ResetEditDetails(entity, reply, user);
+            }
+
             // Get newest / most recent history entry
             var histories = await _entityHistoryStore.QueryAsync()
                .Take(1)
@@ -379,19 +388,19 @@ namespace Plato.Discuss.History.Controllers
             // No history point, return success
             if (histories == null)
             {
-                return await ResetEditDetails(entity, reply);
+                return await ResetEditDetails(entity, reply, user);
             }
 
             // No history point, return success
             if (histories.Data == null)
             {
-                return await ResetEditDetails(entity, reply);
+                return await ResetEditDetails(entity, reply, user);
             }
 
             // No history point, return success
             if (histories.Data.Count == 0)
             {
-                return await ResetEditDetails(entity, reply);
+                return await ResetEditDetails(entity, reply, user);
             }
 
             var history = histories.Data[0];
@@ -399,16 +408,18 @@ namespace Plato.Discuss.History.Controllers
             // No history available reset edit details
             if (history == null)
             {
-                return await ResetEditDetails(entity, reply);
+                return await ResetEditDetails(entity, reply, user);
             }
 
             // Update edit details based on latest history point
 
             var result = new CommandResultBase();
-
+            
             if (reply != null)
             {
 
+                reply.ModifiedUserId = user.Id;
+                reply.ModifiedDate = DateTimeOffset.UtcNow;
                 reply.EditedUserId = history.CreatedUserId;
                 reply.EditedDate = history.CreatedDate;
 
@@ -423,6 +434,8 @@ namespace Plato.Discuss.History.Controllers
             else
             {
 
+                entity.ModifiedUserId = user.Id;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
                 entity.EditedUserId = history.CreatedUserId;
                 entity.EditedDate = history.CreatedDate;
 
@@ -439,14 +452,25 @@ namespace Plato.Discuss.History.Controllers
 
         }
 
-        async Task<ICommandResultBase> ResetEditDetails(Topic entity, Reply reply)
+        async Task<ICommandResultBase> ResetEditDetails(Topic entity, Reply reply, IUser user)
         {
 
             var result = new CommandResultBase();
+            
+            // We need to be authenticated to make changes
+            if (user == null)
+            {
+                return result.Success();
+            }
+                        
             if (reply != null)
             {
+
+                reply.ModifiedUserId = user.Id;
+                reply.ModifiedDate = DateTimeOffset.UtcNow;
                 reply.EditedUserId = 0;
                 reply.EditedDate = null;
+
                 var updateResult = await _entityReplyStore.UpdateAsync(reply);
                 if (updateResult != null)
                 {
@@ -455,8 +479,12 @@ namespace Plato.Discuss.History.Controllers
             }
             else
             {
+
+                entity.ModifiedUserId = user.Id;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
                 entity.EditedUserId = 0;
                 entity.EditedDate = null;
+
                 var updateResult = await _entityStore.UpdateAsync(entity);
                 if (updateResult != null)
                 {

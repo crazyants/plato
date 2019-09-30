@@ -464,9 +464,6 @@ a.label:hover, .label.active {
     color: white;
 }
 
-.icon-wrapper-sm {
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-}
 /* ------------------- */
 /* Vote Toggle */
 /* ------------------- */

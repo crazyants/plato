@@ -6,19 +6,19 @@ namespace Plato.Discuss.History
     public class Permissions : IPermissionsProvider<Permission>
     {
 
-        public static readonly Permission ViewTopicHistory =
+        public static readonly Permission ViewEntityHistory =
             new Permission("ViewTopicHistory", "View topic edit history");
 
-        public static readonly Permission ViewReplyHistory =
+        public static readonly Permission viewReplyHistory =
             new Permission("ViewReplyHistory", "View reply edit history");
         
-        public static readonly Permission RevertTopicHistory =
+        public static readonly Permission RevertEntityHistory =
             new Permission("RevertTopicHistory", "Revert topics to previous versions");
 
         public static readonly Permission RevertReplyHistory =
             new Permission("RevertReplyHistory", "Revert replies to previous versions");
         
-        public static readonly Permission DeleteTopicHistory =
+        public static readonly Permission DeleteEntityHistory =
             new Permission("DeleteTopicHistory", "Delete topic versions");
 
         public static readonly Permission DeleteReplyHistory =
@@ -28,11 +28,11 @@ namespace Plato.Discuss.History
         {
             return new[]
             {
-                ViewTopicHistory,
-                ViewReplyHistory,
-                RevertTopicHistory,
+                ViewEntityHistory,
+                viewReplyHistory,
+                RevertEntityHistory,
                 RevertReplyHistory,
-                DeleteTopicHistory,
+                DeleteEntityHistory,
                 DeleteReplyHistory
             };
         }
@@ -46,21 +46,12 @@ namespace Plato.Discuss.History
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
-                        ViewTopicHistory,
-                        ViewReplyHistory,
-                        RevertTopicHistory,
+                        ViewEntityHistory,
+                        viewReplyHistory,
+                        RevertEntityHistory,
                         RevertReplyHistory,
-                        DeleteTopicHistory,
+                        DeleteEntityHistory,
                         DeleteReplyHistory
-                    }
-                },
-                new DefaultPermissions<Permission>
-                {
-                    RoleName = DefaultRoles.Member,
-                    Permissions = new[]
-                    {
-                        ViewTopicHistory,
-                        ViewReplyHistory
                     }
                 },
                 new DefaultPermissions<Permission>
@@ -68,21 +59,10 @@ namespace Plato.Discuss.History
                     RoleName = DefaultRoles.Staff,
                     Permissions = new[]
                     {
-                        ViewTopicHistory,
-                        ViewReplyHistory,
-                        RevertTopicHistory,
-                        RevertReplyHistory,
-                        DeleteTopicHistory,
-                        DeleteReplyHistory
-                    }
-                },
-                new DefaultPermissions<Permission>
-                {
-                    RoleName = DefaultRoles.Anonymous,
-                    Permissions = new[]
-                    {
-                        ViewTopicHistory,
-                        ViewReplyHistory
+                       ViewEntityHistory,
+                        viewReplyHistory,
+                        RevertEntityHistory,
+                        RevertReplyHistory
                     }
                 }
             };

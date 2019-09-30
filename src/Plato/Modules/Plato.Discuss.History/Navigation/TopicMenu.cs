@@ -25,20 +25,20 @@ namespace Plato.Discuss.History.Navigation
             }
 
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            if (topic == null)
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (entity == null)
             {
                 return;
             }
 
-            // Add HistoryMenu view to topic
+            // Add HistoryMenu view to entity
             builder
                 .Add(T["History"], int.MinValue, history => history
                     .View("HistoryMenu", new
                     {
-                        topic
+                        entity
                     })
-                    .Permission(Permissions.ViewTopicHistory)
+                    .Permission(Permissions.ViewEntityHistory)
                 );
 
         }

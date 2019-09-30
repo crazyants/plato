@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Entities.Models;
+﻿using Plato.Entities.Models;
 
 namespace Plato.Discuss.History.ViewModels
 {

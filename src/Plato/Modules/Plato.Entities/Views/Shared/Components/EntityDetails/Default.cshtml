@@ -23,13 +23,22 @@
      
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                @T["Posted"] <date utc="@Model.Entity.CreatedDate"/>
+                @T["Posted"] <date utc="@Model.Entity.CreatedDate" />
             </li>
             @if (Model.Entity.EditedDate != null)
             {
                 <li class="list-group-item">
-                    @T["Updated"] <date utc="@Model.Entity.EditedDate"/>
+                    @T["Edited"] <date utc="@Model.Entity.EditedDate" />
                 </li>
+            }
+            else
+            {
+                @if (Model.Entity.ModifiedDate != null)
+                {
+                    <li class="list-group-item">
+                        @T["Modified"] <date utc="@Model.Entity.ModifiedDate" />
+                    </li>
+                }
             }
             @if (Model.Entity.LastReplyDate != null)
             {
@@ -37,17 +46,18 @@
                     @T["Latest Reply"] <date utc="@Model.Entity.LastReplyDate"></date>
                 </li>
             }
+            <li class="list-group-item">
+                @Model.Entity.TotalViews.ToPrettyInt() @T[viewText], @Model.Entity.TotalReplies.ToPrettyInt() @repliesText
+            </li>
             @if (urls.AnchorUrls.Count > 0 || urls.ImageUrls.Count > 0)
             {
                 <li class="list-group-item">
-
                     @if (urls.AnchorUrls.Count > 0)
                     {
                         <span>@urls.AnchorUrls.Count.ToPrettyInt()</span>
                         @linkText
                         ;
                     }
-
                     @if (urls.ImageUrls.Count > 0)
                     {
 
@@ -55,12 +65,8 @@
                         @imageText
 
                     }
-
                 </li>
             }
-            <li class="list-group-item">
-                @Model.Entity.TotalViews.ToPrettyInt() @T[viewText], @Model.Entity.TotalReplies.ToPrettyInt() @repliesText
-            </li>
         </ul>
     </card-body>
 </card>

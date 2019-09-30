@@ -24,7 +24,7 @@ namespace Plato.Discuss.History.Navigation
             }
 
             // Get model from navigation builder
-            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            var entity = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
 
             // Add HistoryMenu view to reply
@@ -32,10 +32,10 @@ namespace Plato.Discuss.History.Navigation
                 .Add(T["History"], int.MinValue, history => history
                     .View("HistoryMenu", new
                     {
-                        topic,
+                        entity,
                         reply
                     })
-                    .Permission(Permissions.ViewReplyHistory)
+                    .Permission(Permissions.viewReplyHistory)
                 );
             
         }

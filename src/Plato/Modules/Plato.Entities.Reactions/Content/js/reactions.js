@@ -155,7 +155,7 @@ $(function (win, doc, $) {
                                         "class": "list-group-item list-group-item-action py-2 px-3 border-0",
                                         "data-toggle": "tooltip",
                                         "title": result.toolTip,
-                                        "data-reaction-name": result.description
+                                        "data-reaction-name": result.name
                                     }),
                                 $emoji = $("<span>",
                                     {
