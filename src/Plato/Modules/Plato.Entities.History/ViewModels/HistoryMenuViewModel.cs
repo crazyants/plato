@@ -1,14 +1,14 @@
 ﻿using Plato.Entities.Models;
 
-namespace Plato.Discuss.History.ViewModels
+namespace Plato.Entities.History.ViewModels
 {
     public class HistoryMenuViewModel
     {
 
-        public IEntity Topic { get; set; }
+        public IEntity Entity { get; set; }
 
         public IEntityReply Reply { get; set; }
 
-
     }
+
 }

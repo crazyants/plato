@@ -57,6 +57,13 @@ namespace Plato.Discuss.History
             );
 
             routes.MapAreaRoute(
+                name: "DiscussRollbackHistory",
+                areaName: "Plato.Discuss.History",
+                template: "discuss/history/rollback",
+                defaults: new { controller = "Home", action = "Rollback" }
+            );
+
+            routes.MapAreaRoute(
                 name: "DiscussDeleteHistory",
                 areaName: "Plato.Discuss.History",
                 template: "discuss/history/delete",

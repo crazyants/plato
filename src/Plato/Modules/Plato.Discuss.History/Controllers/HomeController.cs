@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.History.ViewModels;
+using Plato.Entities.History.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Entities.History.Models;
 using Plato.Entities.History.Services;
@@ -241,7 +241,7 @@ namespace Plato.Discuss.History.Controllers
             // Add result
             if (result.Succeeded)
             {
-                _alerter.Success(T["Version Deleted Successfully!"]);
+                _alerter.Success(T["Version Rolled Back Successfully!"]);
             }
             else
             {

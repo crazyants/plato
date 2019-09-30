@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.History.ViewModels;
-using Plato.Discuss.Models;
+using Plato.Entities.History.ViewModels;
+using Plato.Entities.Models;
 
-namespace Plato.Discuss.History.ViewComponents
+namespace Plato.Entities.History.ViewComponents
 {
   
     public class HistoryMenuViewComponent : ViewComponent
@@ -13,13 +13,13 @@ namespace Plato.Discuss.History.ViewComponents
         {
         }
 
-        public Task<IViewComponentResult> InvokeAsync(Topic entity, Reply reply)
+        public Task<IViewComponentResult> InvokeAsync(IEntity entity, IEntityReply reply)
         {
-    
+
             var viewModel = new HistoryMenuViewModel()
             {
-                Topic = entity,
-                Reply = reply,
+                Entity = entity,
+                Reply = reply
             };
 
             return Task.FromResult((IViewComponentResult) View(viewModel));

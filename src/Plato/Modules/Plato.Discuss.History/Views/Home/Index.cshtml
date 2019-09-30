@@ -3,11 +3,11 @@
     Layout = null;
     ViewData["Title"] = "History";
     var revertPermission = Model.History.EntityReplyId == 0
-        ? Plato.Discuss.History.Permissions.RevertEntityHistory
-        : Plato.Discuss.History.Permissions.RevertReplyHistory;
+        ? Permissions.RevertEntityHistory
+        : Permissions.RevertReplyHistory;
     var deletePermission = Model.History.EntityReplyId == 0
-        ? Plato.Discuss.History.Permissions.DeleteEntityHistory
-        : Plato.Discuss.History.Permissions.DeleteReplyHistory;
+        ? Permissions.DeleteEntityHistory
+        : Permissions.DeleteReplyHistory;
 }
 
 <div>

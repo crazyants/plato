@@ -1,6 +1,6 @@
 ﻿using Plato.Entities.History.Models;
 
-namespace Plato.Discuss.History.ViewModels
+namespace Plato.Entities.History.ViewModels
 {
     public class HistoryIndexViewModel
     {
