@@ -79,7 +79,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left list-left-sm"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body">{original}{text}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left list-left-sm"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body"><span class="float-right">{version}</span>{text}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -99,19 +99,7 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{version}/g, "");
                         }
-
-                        if (result.version) {
-                            if (result.version === "1.0") {
-                                html = html.replace(/\{original}/g, '<span class="float-right">' + app.T("Original") + '</span>');
-                            } else {
-                                html = html.replace(/\{original}/g, "");
-                            }
-                        } else {
-                            html = html.replace(/\{original}/g, "");
-                        }
-
-                        // createdBy
-
+                      
                         if (result.createdBy.id) {
                             html = html.replace(/\{createdBy.id}/g, result.createdBy.id);
                         } else {
@@ -135,8 +123,6 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{createdBy.avatar.url}/g, "");
                         }
-
-                        // date
 
                         if (result.date.value) {
                             html = html.replace(/\{date.value}/g, result.date.value);
@@ -297,7 +283,7 @@ $(function (win, doc, $) {
                 // $(selector).historyDropdown
                 return this.each(function() {
                     if (!$(this).data(dataIdKey)) {
-                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                        var id = dataKey + parseInt(Math.random() * 1000) + new Date().getTime();
                         $(this).data(dataIdKey, id);
                         $(this).data(dataKey, $.extend({}, defaults, options));
                     } else {
