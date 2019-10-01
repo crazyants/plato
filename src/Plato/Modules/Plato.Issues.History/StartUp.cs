@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Ideas.History.Navigation;
-using Plato.Ideas.Models;
+using Plato.Issues.History.Navigation;
+using Plato.Issues.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -11,9 +11,9 @@ using Plato.Entities.History.Subscribers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 using Plato.Internal.Security.Abstractions;
-using Plato.Ideas.History.Handlers;
+using Plato.Issues.History.Handlers;
 
-namespace Plato.Ideas.History
+namespace Plato.Issues.History
 {
     public class Startup : StartupBase
     {
@@ -31,12 +31,12 @@ namespace Plato.Ideas.History
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Register navigation provider
-            services.AddScoped<INavigationProvider, IdeaMenu>();
-            services.AddScoped<INavigationProvider, IdeaCommentMenu>();
+            services.AddScoped<INavigationProvider, IssueMenu>();
+            services.AddScoped<INavigationProvider, IssueCommentMenu>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Idea>>();
-            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<IdeaComment>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Issue>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Comment>>();
           
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
@@ -50,23 +50,23 @@ namespace Plato.Ideas.History
         {
 
             routes.MapAreaRoute(
-                name: "IdeaHistory",
-                areaName: "Plato.Ideas.History",
-                template: "ideas/history/{id:int?}",
+                name: "IssueHistory",
+                areaName: "Plato.Issues.History",
+                template: "issues/history/{id:int?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 
             routes.MapAreaRoute(
-                name: "IdeaRollbackHistory",
-                areaName: "Plato.Ideas.History",
-                template: "ideas/history/rollback",
+                name: "IssueRollbackHistory",
+                areaName: "Plato.Issues.History",
+                template: "issues/history/rollback",
                 defaults: new { controller = "Home", action = "Rollback" }
             );
 
             routes.MapAreaRoute(
-                name: "IdeaDeleteHistory",
-                areaName: "Plato.Ideas.History",
-                template: "ideas/history/delete",
+                name: "IssueDeleteHistory",
+                areaName: "Plato.Issues.History",
+                template: "issues/history/delete",
                 defaults: new { controller = "Home", action = "Delete" }
             );
 

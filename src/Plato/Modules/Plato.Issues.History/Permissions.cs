@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Security.Abstractions;
 
-namespace Plato.Ideas.History
+namespace Plato.Issues.History
 {
 
     public class Permissions : IPermissionsProvider<Permission>
     {
 
         public static readonly Permission ViewEntityHistory =
-            new Permission("ViewIdeaHistory", "View idea edit history");
+            new Permission("ViewIssueHistory", "View issue edit history");
 
         public static readonly Permission viewReplyHistory =
-            new Permission("ViewIdeaCommentHistory", "View idea comment edit history");
+            new Permission("ViewIssueCommentHistory", "View issue comment edit history");
         
         public static readonly Permission RevertEntityHistory =
-            new Permission("RevertIdeaHistory", "Revert ideas to previous versions");
+            new Permission("RevertIssueHistory", "Revert issues to previous versions");
 
         public static readonly Permission RevertReplyHistory =
-            new Permission("RevertIdeaCommentHistory", "Revert idea comments to previous versions");
+            new Permission("RevertIssueCommentHistory", "Revert issue comments to previous versions");
         
         public static readonly Permission DeleteEntityHistory =
-            new Permission("DeleteIdeaHistory", "Delete idea versions");
+            new Permission("DeleteIssueHistory", "Delete issue versions");
 
         public static readonly Permission DeleteReplyHistory =
-            new Permission("DeleteIdeaCommentHistory", "Delete idea comment versions");
+            new Permission("DeleteIssueCommentHistory", "Delete issue comment versions");
         
         public IEnumerable<Permission> GetPermissions()
         {

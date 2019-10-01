@@ -9,14 +9,14 @@ using Plato.Internal.Navigation.Abstractions;
 namespace Plato.Ideas.History.Navigation
 {
 
-    public class DocMenu : INavigationProvider
+    public class IdeaMenu : INavigationProvider
     {
 
         private readonly IContextFacade _contextFacade;
 
         public IStringLocalizer T { get; set; }
 
-        public DocMenu(
+        public IdeaMenu(
             IStringLocalizer localizer,
             IContextFacade contextFacade)
         {

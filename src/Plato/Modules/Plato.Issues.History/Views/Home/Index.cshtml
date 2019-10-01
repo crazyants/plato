@@ -1,0 +1,80 @@
+﻿@model HistoryIndexViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "History";
+    var revertPermission = Model.History.EntityReplyId == 0
+        ? Permissions.RevertEntityHistory
+        : Permissions.RevertReplyHistory;
+    var deletePermission = Model.History.EntityReplyId == 0
+        ? Permissions.DeleteEntityHistory
+        : Permissions.DeleteReplyHistory;
+}
+
+<div>
+    @if (!String.IsNullOrEmpty(Model.Html))
+    {
+        <div class="modal-header">
+            <h6 class="modal-title">
+                @if (Model.History.CreatedBy != null)
+                {
+                    <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm mr-1" url="@Model.History.CreatedBy.Avatar.Url"></avatar>
+                    @Model.History.CreatedBy.DisplayName
+                }
+                @T["edited"] <date utc="@Model.History.CreatedDate"></date>
+
+            </h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+        </div>
+        <div class="modal-body max-h-400 overflow-auto">
+            <div class="markdown-body">
+                @Html.Raw(Model.Html)
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="text-muted mr-auto">
+                @if (Model.History.Id == Model.LatestHistory?.Id)
+                {
+                    @T["Latest Version:"] @Model.History.Version
+                }
+                else
+                {
+                    @T["Viewing Version "] @Model.History.Version
+                    @if (Model.LatestHistory != null)
+                    {
+                        @T[", Latest Version "] @Model.LatestHistory.Version
+                    }
+                }
+            </div>
+            @if (Model.History.Id < Model.LatestHistory?.Id)
+            {
+                <authorize asp-permission="@revertPermission.Name">
+                    <authorize-success>
+                        <form class="form-inline" asp-controller="Home" asp-action="Rollback" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="@Model.History.Id" />
+                            <button type="submit" data-toggle="tooltip" title="@T["Rollback to"] @Model.History.Version" data-provide="confirm" data-confirm-message="@T["Are you sure you wish to rollback to this version?\n\nClick OK to confirm..."]" class="btn bg-transparent border-0 text-muted">
+                                <i class="fal fa-undo"></i>                                
+                            </button>
+                        </form>
+                    </authorize-success>
+                </authorize>
+            }
+            <authorize asp-permission="@deletePermission.Name">
+                <authorize-success>
+                    <form class="form-inline" asp-controller="Home" asp-action="Delete" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="@Model.History.Id" />
+                        <button type="submit" data-toggle="tooltip" title="@T["Delete"] @Model.History.Version" data-provide="confirm" class="btn bg-transparent border-0 text-muted">
+                            <i class="fal fa-trash"></i>                            
+                        </button>
+                    </form>
+                </authorize-success>
+            </authorize>
+            <button class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                @T["Close"]
+            </button>
+        </div>
+    }
+</div>
