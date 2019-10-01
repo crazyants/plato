@@ -54,7 +54,7 @@ $(function (win, doc, $) {
                 params = params.replace(/\{entityReplyId}/g, entityReplyId);
 
                 // No results text
-                var noResultsText = app.T("All history has been deleted");
+                var noResultsText = app.T("No history available");
 
                 // Invoke suggester
                 $caller.pagedList({

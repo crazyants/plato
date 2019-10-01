@@ -188,15 +188,6 @@ namespace Plato.Discuss.History.Controllers
                 }
             }
 
-            // Ensure we have permission
-            if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
-                   entity.CategoryId, reply != null
-                    ? Permissions.RevertReplyHistory
-                    : Permissions.RevertEntityHistory))
-            {
-                return Unauthorized();
-            }
-
             // Get current user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -206,6 +197,15 @@ namespace Plato.Discuss.History.Controllers
                 return Unauthorized();
             }
 
+            // Ensure we have permission
+            if (!await _authorizationService.AuthorizeAsync(HttpContext.User,
+                   entity.CategoryId, reply != null
+                    ? Permissions.RevertReplyHistory
+                    : Permissions.RevertEntityHistory))
+            {
+                return Unauthorized();
+            }
+            
             ICommandResultBase result;
             if (reply != null)
             {

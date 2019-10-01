@@ -771,13 +771,13 @@ namespace Plato.Articles.Controllers
                         .LocalNav()
                     );
             });
-           
+
             // Return view
             return View((LayoutViewModel) await _replyViewProvider.ProvideEditAsync(reply, this));
 
         }
 
-        //[HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditReply))]
+        [HttpPost, ValidateAntiForgeryToken, ActionName(nameof(EditReply))]
         public async Task<IActionResult> EditReplyPost(EditEntityReplyViewModel model)
         {
 

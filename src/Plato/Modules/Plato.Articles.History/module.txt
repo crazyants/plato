@@ -1,0 +1,19 @@
+Name: Plato Articles History
+Description: Adds version history & rollback support for articles & article comments.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Articles
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.articles.history/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Articles",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.History",
+		Version: "1.0.0"
+	}
+]
