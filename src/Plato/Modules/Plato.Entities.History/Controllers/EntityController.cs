@@ -28,11 +28,12 @@ namespace Plato.Entities.History.Controllers
         public EntityController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IContextFacade contextFacade,
-            IEntityHistoryStore<EntityHistory> entityHistoryStore)
+            IEntityHistoryStore<EntityHistory> entityHistoryStore,
+            IContextFacade contextFacade)
         {
-            _contextFacade = contextFacade;
+
             _entityHistoryStore = entityHistoryStore;
+            _contextFacade = contextFacade;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -41,8 +42,7 @@ namespace Plato.Entities.History.Controllers
 
         #region "Actions"
 
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
+        [HttpGet, ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(
             int page = 1,
             int size = 10,
@@ -73,15 +73,6 @@ namespace Plato.Entities.History.Controllers
                 foreach (var history in histories.Data)
                 {
 
-
-                    //var historyUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    //{
-                    //    ["area"] = "Plato.Discuss.History",
-                    //    ["controller"] = "Home",
-                    //    ["action"] = "Index",
-                    //    ["id"] = history.Id
-                    //});
-                    
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
                         ["area"] = "Plato.Users",
@@ -142,7 +133,6 @@ namespace Plato.Entities.History.Controllers
                 : base.NoResults();
 
         }
-
 
         #endregion
 
