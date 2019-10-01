@@ -9,7 +9,7 @@ namespace Plato.Docs.Reactions.Navigation
 {
     public class DocCommentMenu : INavigationProvider
     {
-        
+
         public IStringLocalizer T { get; set; }
 
         public DocCommentMenu(IStringLocalizer localizer)
@@ -20,7 +20,7 @@ namespace Plato.Docs.Reactions.Navigation
         public void BuildNavigation(string name, INavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "article-comment", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "doc-comment", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
