@@ -7,16 +7,16 @@ namespace Plato.Docs.Reactions
     {
 
         public static readonly Permission ReactToDocs =
-            new Permission("ReactToDocs", "React to articles");
+            new Permission("ReactToDocs", "React to docs");
 
         public static readonly Permission ReactToDocComments =
-            new Permission("ReactToDocComments", "React to article comments");
+            new Permission("ReactToDocComments", "React to doc comments");
 
         public static readonly Permission ViewDocReactions =
-            new Permission("ViewDocReactions", "View article reactions");
+            new Permission("ViewDocReactions", "View doc reactions");
 
         public static readonly Permission ViewDocCommentReactions =
-            new Permission("ViewDocCommentReactions", "View comment reactions");
+            new Permission("ViewDocCommentReactions", "View doc comment reactions");
 
         public IEnumerable<Permission> GetPermissions()
         {

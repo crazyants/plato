@@ -16,7 +16,7 @@
                      <span class="d-inline-block text-muted">@T["History"] </span>
                  </div>
                  <hr class="p-0 m-0" />
-                 <div class="max-h-250 overflow-auto" data-entity-id="@Model.Reply.EntityId" data-entity-reply-id="@Model.Reply?.Id" data-provide="history">
+                 <div class="max-h-250 overflow-auto" data-entity-id="@Model.Reply.EntityId" data-entity-reply-id="@Model.Reply?.Id" data-dialog-url="@Model.DialogUrl" data-provide="history">
                      <p class="my-4 text-center">
                          <i class="fal fa-spinner fa-spin"></i>
                      </p>
@@ -41,7 +41,7 @@ else
                      <span class="d-inline-block text-muted">@T["History"] </span>
                  </div>
                  <hr class="p-0 m-0"/>
-                 <div class="max-h-250 overflow-auto" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="history">
+                 <div class="max-h-250 overflow-auto" data-entity-id="@Model.Entity?.Id" data-entity-reply-id="@Model.Reply?.Id" data-dialog-url="@Model.DialogUrl" data-provide="history">
                      <p class="my-4 text-center">
                          <i class="fal fa-spinner fa-spin"></i>
                      </p>

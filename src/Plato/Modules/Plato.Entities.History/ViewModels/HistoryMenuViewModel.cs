@@ -9,6 +9,8 @@ namespace Plato.Entities.History.ViewModels
 
         public IEntityReply Reply { get; set; }
 
+        public string DialogUrl { get; set; }
+
     }
 
 }

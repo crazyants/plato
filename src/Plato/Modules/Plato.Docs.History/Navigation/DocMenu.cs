@@ -1,6 +1,9 @@
 ﻿using System;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Docs.Models;
+using Plato.Entities.History.ViewModels;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.History.Navigation
@@ -8,11 +11,16 @@ namespace Plato.Docs.History.Navigation
 
     public class DocMenu : INavigationProvider
     {
-        
+
+        private readonly IContextFacade _contextFacade;
+
         public IStringLocalizer T { get; set; }
 
-        public DocMenu(IStringLocalizer localizer)
+        public DocMenu(
+            IStringLocalizer localizer,
+            IContextFacade contextFacade)
         {
+            _contextFacade = contextFacade;
             T = localizer;
         }
         
@@ -36,7 +44,17 @@ namespace Plato.Docs.History.Navigation
                 .Add(T["History"], int.MinValue, history => history
                     .View("HistoryMenu", new
                     {
-                        entity
+                        model = new HistoryMenuViewModel()
+                        {
+                            Entity = entity,
+                            DialogUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                            {
+                                ["area"] = "Plato.Docs.History",
+                                ["controller"] = "Home",
+                                ["action"] = "Index",
+                                ["id"] = 0
+                            })
+                        }
                     })
                     .Permission(Permissions.ViewEntityHistory)
                 );

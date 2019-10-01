@@ -74,13 +74,13 @@ namespace Plato.Entities.History.Controllers
                 {
 
 
-                    var historyUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["area"] = "Plato.Discuss.History",
-                        ["controller"] = "Home",
-                        ["action"] = "Index",
-                        ["id"] = history.Id
-                    });
+                    //var historyUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    //{
+                    //    ["area"] = "Plato.Discuss.History",
+                    //    ["controller"] = "Home",
+                    //    ["action"] = "Index",
+                    //    ["id"] = history.Id
+                    //});
                     
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
@@ -103,8 +103,7 @@ namespace Plato.Entities.History.Controllers
                     results.Data.Add(new EntityHistoryApiResult()
                     {
                         Id = history.Id,
-                        Text = sb.ToString(),
-                        Url = historyUrl,
+                        Text = sb.ToString(),                   
                         Version = history.Version,
                         CreatedBy = new UserApiResult()
                         {

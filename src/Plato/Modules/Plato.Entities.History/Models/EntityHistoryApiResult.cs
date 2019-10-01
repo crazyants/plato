@@ -17,9 +17,6 @@ namespace Plato.Entities.History.Models
         [DataMember(Name = "version")]
         public string Version { get; set; }
         
-        [DataMember(Name = "url")]
-        public string Url { get; set; }
-
         [DataMember(Name = "createdBy")]
         public UserApiResult CreatedBy { get; set; }
 

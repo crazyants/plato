@@ -26,7 +26,8 @@ $(function (win, doc, $) {
 
         var defaults = {
             entityId: 0,
-            entityReplyId: 0
+            entityReplyId: 0,
+            dialogUrl: null
         };
 
         var methods = {
@@ -48,7 +49,13 @@ $(function (win, doc, $) {
 
                 var entityId = this.getEntityId($caller),
                     entityReplyId = this.getEntityReplyId($caller),
+                    dialogUrl = this.getDialogUrl($caller),
                     params = '?page={page}&size={pageSize}&entityId={entityId}&entityReplyId={entityReplyId}';
+
+                // We need a dialog url
+                if (dialogUrl === null) {
+                    throw new Error("The history menu requires a data-dialog-url attribute");
+                }
 
                 params = params.replace(/\{entityId}/g, entityId);
                 params = params.replace(/\{entityReplyId}/g, entityReplyId);
@@ -130,11 +137,9 @@ $(function (win, doc, $) {
                             html = html.replace(/\{date.value}/g, "");
                         }
 
-                        if (result.url) {
-                            html = html.replace(/\{url}/g, result.url);
-                        } else {
-                            html = html.replace(/\{url}/g, "#");
-                        }
+                        // Build url to version dialog
+                        html = html.replace(/\{url}/g, dialogUrl.replace("0", result.id));
+                      
                         return html;
 
                     },
@@ -142,18 +147,12 @@ $(function (win, doc, $) {
                         
                         e.preventDefault();
                         e.stopPropagation();
-                        
-                        // Ensure we have a historyId
-                        var historyId = parseInt($item.data("historyId"));
-                        if (historyId === 0 || isNaN(historyId)) {
-                            throw new Error("A history id is required!");
-                        }
-
+                                               
                         // Load the diff
                         $().dialog({
                                 id: "historyDialog",
                                 body: {
-                                    url: "/discuss/history/" + historyId
+                                    url: $item.attr("href")
                                 },
                                 css: {
                                     modal: "modal fade",
@@ -199,6 +198,11 @@ $(function (win, doc, $) {
 
                 }
                 return 0;
+            },
+            getDialogUrl: function ($caller) {
+                return typeof $caller.data("dialogUrl") !== "undefined" && $caller.data("dialogUrl") !== null
+                    ? $caller.data("dialogUrl")
+                    : $caller.data(dataKey).dialogUrl;                
             }
         };
 

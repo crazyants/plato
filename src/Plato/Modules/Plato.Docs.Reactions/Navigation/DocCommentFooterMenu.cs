@@ -6,6 +6,7 @@ using Plato.Internal.Navigation.Abstractions;
 
 namespace Plato.Docs.Reactions.Navigation
 {
+
     public class DocCommentFooterMenu : INavigationProvider
     {
 
