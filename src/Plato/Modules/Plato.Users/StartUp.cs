@@ -204,6 +204,13 @@ namespace Plato.Users
             );
 
             routes.MapAreaRoute(
+                name: "Logout",
+                areaName: "Plato.Users",
+                template: "logout",
+                defaults: new { controller = "Account", action = "Logoff" }
+            );
+
+            routes.MapAreaRoute(
                 name: "Register",
                 areaName: "Plato.Users",
                 template: "register",
