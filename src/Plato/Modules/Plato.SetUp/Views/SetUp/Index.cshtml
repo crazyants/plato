@@ -18,28 +18,14 @@
             </div>
         </div>
         <div class="card-body">
-
-    
-            <table class="model-state">
-                @foreach (var item in ViewContext.ViewData.ModelState)
-                {
-                    if (item.Value.Errors.Any())
-                    {
-                        <tr>
-                            <td><b>@item.Key</b></td>
-                        </tr>
-                        <tr>
-                            <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
-                        </tr>
-                    }
-                }
-            </table>
+            
+            <div asp-validation-summary="All"></div>
 
             <fieldset class="row" asp-validation-class-for="SiteName">
                 <div class="form-group col-md-12">
                     <h6>@T["Site Name"]</h6>
                     <label asp-for="SiteName">@T["What is the name of your site?"]</label>
-                    <input asp-for="SiteName" class="form-control" style="width: 100%;"/>
+                    <input asp-for="SiteName" class="form-control" style="width: 100%;" />
                     <span asp-validation-for="SiteName" class="text-danger"></span>
                 </div>
             </fieldset>
@@ -53,7 +39,7 @@
             }
             @if (Model.ConnectionStringPreset)
             {
-                <input asp-for="ConnectionString" type="hidden"/>
+                <input asp-for="ConnectionString" type="hidden" />
             }
             else
             {
@@ -61,7 +47,7 @@
                     <div class="form-group col-md-12">
                         <label asp-for="ConnectionString">@T["Connection string"]</label>
                         <div class="input-group mb-2 mb-sm-0">
-                            <input asp-for="ConnectionString" class="form-control" type="text" required/>
+                            <input asp-for="ConnectionString" class="form-control" type="text" required />
 
                         </div>
                         <span asp-validation-for="ConnectionString" class="text-danger"></span>
@@ -71,14 +57,14 @@
             }
             @if (Model.TablePrefixPreset)
             {
-                <input asp-for="TablePrefix" type="hidden"/>
+                <input asp-for="TablePrefix" type="hidden" />
             }
             else
             {
                 <fieldset class="row" asp-validation-class-for="TablePrefix">
                     <div class="form-group col-md-12">
                         <label asp-for="TablePrefix">@T["Table Prefix"]</label>
-                        <input asp-for="TablePrefix" class="form-control"/>
+                        <input asp-for="TablePrefix" class="form-control" />
                         <span asp-validation-for="TablePrefix" class="text-danger"></span>
                         <span class="text-muted form-text small">@T["You can specify a custom table prefix if you intend to reuse the same database for multiple sites."]</span>
                     </div>
@@ -94,7 +80,7 @@
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
                         <div class="form-group col-md-12">
                             <label asp-for="UserName">@T["Username"]</label>
-                            <input asp-for="UserName" class="form-control"/>
+                            <input asp-for="UserName" class="form-control" />
                             <span asp-validation-for="UserName" class="text-danger"></span>
                             <span class="text-muted form-text small">@T["You must specify an username for the default administrator account"]</span>
                         </div>
@@ -102,7 +88,7 @@
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
                         <div class="form-group col-md-12">
                             <label asp-for="Email">@T["Email Address"]</label>
-                            <input asp-for="Email" class="form-control"/>
+                            <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                             <span class="text-muted form-text small">@T["You must specify an email address for the default administrator account"]</span>
                         </div>
@@ -113,7 +99,7 @@
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
                         <div class="form-group col-md-12">
                             <label asp-for="Password">@T["Password"]</label>
-                            <input asp-for="Password" class="form-control"/>
+                            <input asp-for="Password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                             <span class="text-muted form-text small">@T["You must specify a password for the default administrator account"]</span>
                         </div>
@@ -122,14 +108,14 @@
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
                         <div class="form-group col-md-12">
                             <label asp-for="PasswordConfirmation">@T["Confirm Password"]</label>
-                            <input asp-for="PasswordConfirmation" class="form-control"/>
+                            <input asp-for="PasswordConfirmation" class="form-control" />
                             <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
                             <span class="text-muted form-text small">@T["Please retype your password to ensure you've entered this correctly."]</span>
                         </div>
                     </fieldset>
                 </div>
             </div>
-           
+
         </div>
         <div class="card-footer">
      
