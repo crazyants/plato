@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -9,7 +8,7 @@ namespace Plato.Internal.Security.Attributes
 {
 
     /// <summary>
-    /// A custom validation attribute to ensure user supplied passwords match configured IdentityOptions.
+    /// A custom view model validation attribute to ensure user passwords match configured ASP.NET identity options.
     /// </summary>
     public class IdentityPasswordOptionsValidator : ValidationAttribute
     {
