@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Features;
 using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Demo.Handlers
@@ -82,9 +81,6 @@ namespace Plato.Demo.Handlers
       
             try
             {
-                
-             
-                
             }
             catch (Exception e)
             {
@@ -100,8 +96,6 @@ namespace Plato.Demo.Handlers
    
             try
             {
-
-
             }
             catch (Exception e)
             {
@@ -117,8 +111,6 @@ namespace Plato.Demo.Handlers
        
             try
             {
-
-
             }
             catch (Exception e)
             {

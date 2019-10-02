@@ -6,7 +6,6 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Demo.Handlers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Demo
@@ -29,7 +28,6 @@ namespace Plato.Demo
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-
         }
 
         public override void Configure(
@@ -38,5 +36,7 @@ namespace Plato.Demo
             IServiceProvider serviceProvider)
         {
         }
+
     }
+
 }

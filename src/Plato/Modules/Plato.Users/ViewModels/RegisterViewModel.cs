@@ -20,5 +20,7 @@ namespace Plato.Users.ViewModels
         [Required, DataType(DataType.Password), Compare("Password")]
         [Display(Name = "password confirmation")]
         public string ConfirmPassword { get; set; }
+
     }
+
 }

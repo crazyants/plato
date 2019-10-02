@@ -79,10 +79,9 @@ namespace Plato.Internal.Security.Attributes
                 errors.Add(Describer.PasswordRequiresUniqueChars(options.RequiredUniqueChars));
             }
 
-            return
-                errors.Count == 0
-                    ? IdentityResult.Success
-                    : IdentityResult.Failed(errors.ToArray());
+            return errors.Count == 0
+                ? IdentityResult.Success
+                : IdentityResult.Failed(errors.ToArray());
 
         }
 
