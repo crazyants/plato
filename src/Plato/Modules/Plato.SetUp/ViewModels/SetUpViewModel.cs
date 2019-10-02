@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using Plato.Internal.Security.Attributes;
 
 namespace Plato.SetUp.ViewModels
 {
@@ -27,7 +26,7 @@ namespace Plato.SetUp.ViewModels
         [Required, EmailAddress, Display(Name = "email")]
         public string Email { get; set; }
 
-        [Required, StringLength(100, MinimumLength = 6)]
+        [Required, IdentityPasswordOptionsValidator, StringLength(100)]
         [DataType(DataType.Password), Display(Name = "password")]
         public string Password { get; set; }
 

@@ -1,15 +1,20 @@
 ﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer T
 @model Plato.SetUp.ViewModels.SetUpViewModel
+@{ 
+    var platoOpts = GetOptions<PlatoOptions>();
+}
 
 <form asp-controller="SetUp" asp-action="Index">
 
     <div class="mt-4">
-        <div class="plato-brand align-middle mr-2"></div> <h3 class="font-weight-light d-inline-block  align-middle">@T["Plato"]</h3>
+        <div class="plato-brand align-middle mr-2"></div> 
+        <h3 class="font-weight-light d-inline-block  align-middle">
+            @T["Plato Set Up"]           
+        </h3>
         <p class="text-muted">
-            @T["Welcome to the Plato web based set-up. Plato is free, open source user community & customer support software. To finish the set-up please complete the fields below. Take care to ensure your database connection string is correct and you remember your administrator username & password.."]
+            @T["Welcome to the Plato web based set-up. Plato is free, open source user community & customer support software. To finish the set-up please complete the fields below. Take care to ensure your database connection string is correct and you remember your administrator username & password. For your reference you are installing Plato version"] @platoOpts.Version @platoOpts.ReleaseType - @T["Enjoy :)"]
         </p>
     </div>
-
     <div class="card">
      
         <div class="card-header">
@@ -45,9 +50,20 @@
             {
                 <fieldset class="row" asp-validation-class-for="ConnectionString">
                     <div class="form-group col-md-12">
+
                         <label asp-for="ConnectionString">@T["Connection string"]</label>
                         <div class="input-group mb-2 mb-sm-0">
-                            <input asp-for="ConnectionString" class="form-control" type="text" required />
+                            <div class="search-input-group">
+                                <input asp-for="ConnectionString"
+                                       autocomplete="off"
+                                       data-provide="password"
+                                       class="form-control" type="text" required />
+
+                                <button type="button" class="btn btn-secondary" data-toggle="tooltip" title="@T["Toggle Visibility"]" role="button">
+                                    <i class="fal fa-eye"></i>
+                                </button>
+                            </div>
+
 
                         </div>
                         <span asp-validation-for="ConnectionString" class="text-danger"></span>
@@ -73,7 +89,7 @@
 
             <div class="form-group">
                 <h6>@T["Administrator Account"]</h6>
-                @T["The default administrator account can be used after the set up is complete to login and manage the site."]
+                @T["The default administrator account can be used after the set up is complete to login and manage Plato."]
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -82,7 +98,7 @@
                             <label asp-for="UserName">@T["Username"]</label>
                             <input asp-for="UserName" class="form-control" />
                             <span asp-validation-for="UserName" class="text-danger"></span>
-                            <span class="text-muted form-text small">@T["You must specify an username for the default administrator account"]</span>
+                            <span class="text-muted form-text small">@T["You must specify a username for the default administrator account. The username cannot contain the @ or , characters."]</span>
                         </div>
                     </fieldset>
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
@@ -101,16 +117,15 @@
                             <label asp-for="Password">@T["Password"]</label>
                             <input asp-for="Password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
-                            <span class="text-muted form-text small">@T["You must specify a password for the default administrator account"]</span>
+                            <span class="text-muted form-text small">@T["Must contain at least 1 lower case character, 1 upper case character, 1 special character, 1 digit and be a minimum of 6 characters long."]</span>
                         </div>
                     </fieldset>
-
                     <fieldset class="row" asp-validation-class-for="TablePrefix">
                         <div class="form-group col-md-12">
                             <label asp-for="PasswordConfirmation">@T["Confirm Password"]</label>
                             <input asp-for="PasswordConfirmation" class="form-control" />
                             <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
-                            <span class="text-muted form-text small">@T["Please retype your password to ensure you've entered this correctly."]</span>
+                            <span class="text-muted form-text small">@T["Please retype your admin password to ensure you've entered this correctly."]</span>
                         </div>
                     </fieldset>
                 </div>

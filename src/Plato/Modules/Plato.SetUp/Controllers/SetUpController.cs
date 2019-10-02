@@ -64,10 +64,7 @@ namespace Plato.SetUp.Controllers
             {
                 return View(model);
             }
-
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Index POST action on SetUp controller invoked!");
-            
+                     
             if (!string.IsNullOrEmpty(_shellSettings.ConnectionString))
             {
                 model.ConnectionStringPreset = true;
@@ -90,7 +87,7 @@ namespace Plato.SetUp.Controllers
                 AdminPassword = model.Password,
                 Errors = new Dictionary<string, string>()
             };
-            
+
             if (!model.TablePrefixPreset)
             {
                 setupContext.DatabaseTablePrefix = model.TablePrefix;
@@ -100,7 +97,7 @@ namespace Plato.SetUp.Controllers
             {
                 _logger.LogInformation($"Beginning call to SetUpAsync");
             }
-                
+
             var executionId = await _setUpService.SetUpAsync(setupContext);
 
             // Check if a component in the Setup failed
