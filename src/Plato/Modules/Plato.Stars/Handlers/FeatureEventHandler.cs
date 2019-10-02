@@ -282,7 +282,7 @@ namespace Plato.Stars.Handlers
                 Columns = new string[]
                 {
                     "Name",
-                    "ThingsId",
+                    "ThingId",
                     "CreatedUserId"
                 }
             });
