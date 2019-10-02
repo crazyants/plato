@@ -96,7 +96,7 @@ https://github.com/InstantASP/plato/tree/master/src/Plato
 
 ### Stable Branch ( master )
 
-- Plato 1.0.3 Final ([Download](https://github.com/InstantASP/plato/releases))
+For the latest stable releases please see our [releases page](https://github.com/InstantASP/plato/releases).
 
 ### Experimental Branches
 
