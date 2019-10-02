@@ -4,42 +4,25 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Plato Setup</title>
-    <environment names="Development">
-        <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
-        <link rel="stylesheet" href="~/css/app/plato.css" />
-        
-    </environment>
-    <environment names="Staging,Production">
-        
-    </environment>
+    <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
+    <link rel="stylesheet" href="~/css/app/plato.css" />        
     @await RenderSectionAsync("Header", required: false)
 </head>
 <body class="bg-light">
-<div class="container">
 
-    @RenderBody()
+    <div class="container">
+        @RenderBody()
+        <hr />
+        <footer>
+            @await RenderSectionAsync("Footer", required: false)
+        </footer>
+    </div>    
 
-    <hr />
-    <footer>
-        @await RenderSectionAsync("Footer", required: false)
-    </footer>
-</div>
-    
-<environment names="Development">
     <script src="~/js/vendors/jquery.js"></script>
     <script src="~/js/vendors/bootstrap.js"></script>
     <script src="~/js/app/plato.js" asp-append-version="true"></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-            asp-fallback-src="~/js/vendors/jquery.min.js"
-            asp-fallback-test="window.jQuery">
-    </script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
-</environment>
     
 </body>
 </html>
