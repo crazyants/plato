@@ -10,7 +10,7 @@ namespace Plato.Issues
         {
             return new[]
             {
-                new HomeRoute("Plato.Ideas", "Home", "Index")
+                new HomeRoute("Plato.Issues", "Home", "Index")
             };
         }
 
