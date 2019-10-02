@@ -76,7 +76,7 @@ https://plato.instantasp.co.uk/support/
 
 ### Core
 
-All projects within the Plato core are namespaced Plato.Internal.*. You can browse all Plato core projects here...
+All projects within the Plato core are namespaced Plato.Internal. You can browse all Plato core projects here...
 
 https://github.com/InstantASP/plato/tree/master/src
 
@@ -96,11 +96,19 @@ https://github.com/InstantASP/plato/tree/master/src/Plato
 
 ### Stable Branch ( master )
 
-- Plato 1.0.0 Final ([Download](https://github.com/InstantASP/plato/releases))
+- Plato 1.0.3 Final ([Download](https://github.com/InstantASP/plato/releases))
 
 ### Experimental Branches
 
 Only the master branch is suitible for production. All other branches are development branches and should never be used in production.
+
+# Contributions
+
+We welcome contributions and will always support and assist contributors. Before considering a contribution please see our [simple guidelines](https://github.com/InstantASP/plato/blob/master/CONTRIBUTOR.md). 
+
+# Security
+
+We strive to ensure Plato is as secure as possible. Plato is open source software and the code can be reviewed by anyone on the internet. We are confident in the quality of our code and have nothing to hide but should you discover any vulnerabilities, attacks or room for improvement please do let us know immediately via email to sales@instantasp.co.uk and we will assist as quickly as possible. 
 
 # License
 
