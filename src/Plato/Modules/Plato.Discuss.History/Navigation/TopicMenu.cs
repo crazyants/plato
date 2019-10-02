@@ -39,6 +39,12 @@ namespace Plato.Discuss.History.Navigation
                 return;
             }
 
+            // No edited information
+            if (entity.EditedDate == null)
+            {
+                return;
+            }
+
             // Add HistoryMenu view to entity
             builder
                 .Add(T["History"], int.MinValue, history => history

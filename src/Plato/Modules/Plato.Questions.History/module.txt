@@ -1,0 +1,19 @@
+Name: Plato Questions History
+Description: Adds version history & rollback support for questions & answers.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Questions
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Icon: /plato.questions.history/content/images/icon.png
+Dependencies: 
+[
+	{
+		Id: "Plato.Questions",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Entities.History",
+		Version: "1.0.0"
+	}
+]

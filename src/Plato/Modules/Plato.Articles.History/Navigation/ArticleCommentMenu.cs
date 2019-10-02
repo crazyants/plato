@@ -35,6 +35,17 @@ namespace Plato.Articles.History.Navigation
             var entity = builder.ActionContext.HttpContext.Items[typeof(Article)] as Article;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Comment)] as Comment;
 
+            if (reply == null)
+            {
+                return;
+            }
+
+            // No edited information
+            if (reply.EditedDate == null)
+            {
+                return;
+            }
+
             // Add HistoryMenu view to reply
             builder
                 .Add(T["History"], int.MinValue, history => history
