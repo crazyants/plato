@@ -11,8 +11,6 @@ using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
@@ -31,37 +29,32 @@ namespace Plato.Internal.Features
     public class ShellFeatureManager : IShellFeatureManager
     {
 
-        #region "Constructor"
-
         private readonly IPlatoHost _platoHost;
-        private readonly IShellDescriptorStore _shellDescriptorStore;
+        
         private readonly IShellDescriptorManager _shellDescriptorManager;
-        private readonly IRunningShellTable _runningShellTable;
+        private readonly IShellDescriptorStore _shellDescriptorStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<ShellFeatureManager> _logger;
         private readonly IShellContextFactory _shellContextFactory;
- 
-        public ShellFeatureManager(
-            IShellDescriptorStore shellDescriptorStore,
+        private readonly IRunningShellTable _runningShellTable;        
+        private readonly ILogger<ShellFeatureManager> _logger;
+         
+        public ShellFeatureManager(            
             IShellDescriptorManager shellDescriptorManager,
-            IRunningShellTable runningShellTable, 
+            IShellDescriptorStore shellDescriptorStore,
             IHttpContextAccessor httpContextAccessor,
             IShellContextFactory shellContextFactory,
+            IRunningShellTable runningShellTable,             
             ILogger<ShellFeatureManager> logger,
             IPlatoHost platoHost)
         {
-            _shellDescriptorStore = shellDescriptorStore;
             _shellDescriptorManager = shellDescriptorManager;
-            _runningShellTable = runningShellTable;
+            _shellDescriptorStore = shellDescriptorStore;
             _httpContextAccessor = httpContextAccessor;
             _shellContextFactory = shellContextFactory;
+            _runningShellTable = runningShellTable;
             _platoHost = platoHost;
             _logger = logger;
         }
-
-        #endregion
-
-        #region "Implementation"
 
         public async Task<IEnumerable<IFeatureEventContext>> EnableFeatureAsync(string featureId)
         {
@@ -104,7 +97,7 @@ namespace Plato.Internal.Features
             var featuresToInvoke = features.Distinct().ToList();
             
             // Raise installing events for features
-            var results = await InvokeFeatureEvents(featuresToInvoke,
+            var results = await InvokeFeatureEventsAsync(featuresToInvoke,
                 async (context, handler) =>
                 {
 
@@ -148,7 +141,7 @@ namespace Plato.Internal.Features
                     {
 
                         // Update descriptor within database
-                        var descriptor = await AddFeaturesAndSave(featureIds);
+                        var descriptor = await AddFeaturesAndSaveAsync(featureIds);
 
                         try
                         {
@@ -207,7 +200,7 @@ namespace Plato.Internal.Features
             if (!errors.Any())
             {
                 // Update descriptor within database
-                await AddFeaturesAndSave(featureIds);
+                await AddFeaturesAndSaveAsync(featureIds);
                 
             }
             
@@ -230,7 +223,7 @@ namespace Plato.Internal.Features
             var featuresToInvoke = features.Distinct().ToList();
             
             // Raise Uninstalling events
-            var results = await InvokeFeatureEvents(featuresToInvoke,
+            var results = await InvokeFeatureEventsAsync(featuresToInvoke,
                 async (context, handler) =>
                 {
 
@@ -280,7 +273,7 @@ namespace Plato.Internal.Features
                     {
 
                         // Update descriptor within database
-                        await RemoveFeaturesAndSave(featureIds);
+                        await RemoveFeaturesAndSaveAsync(featureIds);
 
                         try
                         {
@@ -344,7 +337,7 @@ namespace Plato.Internal.Features
             if (!errors.Any())
             {
                 // Update descriptor within database
-                var descriptor = await RemoveFeaturesAndSave(featureIds);
+                var descriptor = await RemoveFeaturesAndSaveAsync(featureIds);
 
             }
             
@@ -356,19 +349,17 @@ namespace Plato.Internal.Features
 
         }
 
-        #endregion
+        // -----------
 
-        #region "Private Methods"
-
-        async Task<IShellDescriptor> AddFeaturesAndSave(string[] featureIds)
+        async Task<IShellDescriptor> AddFeaturesAndSaveAsync(string[] featureIds)
         {
-            var descriptor = await GetOrUpdateDescriptor(featureIds);
+            var descriptor = await GetOrUpdateDescriptorAsync(featureIds);
             return await _shellDescriptorStore.SaveAsync(descriptor);
-
         }
 
-        async Task<IShellDescriptor> RemoveFeaturesAndSave(string[] featureIds)
+        async Task<IShellDescriptor> RemoveFeaturesAndSaveAsync(string[] featureIds)
         {
+
             // First get all existing enabled features
             var enabledFeatures = await _shellDescriptorManager.GetEnabledFeaturesAsync();
 
@@ -387,7 +378,7 @@ namespace Plato.Internal.Features
             
         }
 
-        async Task<IShellDescriptor> GetOrUpdateDescriptor(string[] featureIds)
+        async Task<IShellDescriptor> GetOrUpdateDescriptorAsync(string[] featureIds)
         {
 
             // Get existing descriptor or create a new one
@@ -403,7 +394,7 @@ namespace Plato.Internal.Features
             return descriptor;
         }
 
-        async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEvents(
+        async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEventsAsync(
             IList<IShellFeature> features,
             Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> handler,
             Func<IFeatureEventContext, ConcurrentDictionary<string, IFeatureEventContext>> noHandler)
@@ -524,19 +515,13 @@ namespace Plato.Internal.Features
 
         }
 
-        void DisposeShell(IShellSettings shellSettings)
-        {
-            _platoHost.DisposeShellContext(shellSettings);
-        }
-
         void RecycleShell()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
             _platoHost.RecycleShellContext(shellSettings);
-        }
+        }          
 
-        #endregion
-        
     }
+
 }

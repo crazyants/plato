@@ -16,8 +16,6 @@ namespace Plato.Internal.Features
     public class ShellDescriptorManager : IShellDescriptorManager
     {
 
-        #region "Private Variables"
-
         // Build described features
         private ConcurrentDictionary<string, IShellFeature> _features;
 
@@ -27,30 +25,19 @@ namespace Plato.Internal.Features
         private readonly ConcurrentDictionary<string, IEnumerable<IShellFeature>> _dependentFeatures
             = new ConcurrentDictionary<string, IEnumerable<IShellFeature>>();
 
-        #endregion
-
-        #region "Constructor"
-
-        private readonly IShellContextFactory _shellContextFactory;
-        private readonly IModuleManager _moduleManager;
-        private readonly IShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorStore _shellDescriptorStore;
+        private readonly IShellContextFactory _shellContextFactory;
+        private readonly IModuleManager _moduleManager;               
 
-        public ShellDescriptorManager(
-            IModuleManager moduleManager,
-            IShellDescriptor shellDescriptor, 
+        public ShellDescriptorManager(            
             IShellDescriptorStore shellDescriptorStore,
-            IShellContextFactory shellContextFactory)
-        {
-            _moduleManager = moduleManager;
-            _shellDescriptor = shellDescriptor;
+            IShellContextFactory shellContextFactory, 
+            IModuleManager moduleManager)
+        {     
             _shellDescriptorStore = shellDescriptorStore;
             _shellContextFactory = shellContextFactory;
+            _moduleManager = moduleManager;
         }
-
-        #endregion
-
-        #region "Implementation"
 
         public async Task<IShellDescriptor> GetEnabledDescriptorAsync()
         {
@@ -83,12 +70,12 @@ namespace Plato.Internal.Features
             await EnsureFeaturesLoadedAsync();
 
             // Update dependencies
-            await EnsureDependenciesAreEstablished();
+            await EnsureDependenciesAreEstablishedAsync();
             
             return _features.Values;
 
         }
-        
+
         public async Task<IShellFeature> GetFeatureAsync(string featureId)
         {
             var features = await GetFeaturesAsync();
@@ -102,7 +89,7 @@ namespace Plato.Internal.Features
                 .Where(f => featureIds.Any(v => v.Equals(f.ModuleId, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
         }
-        
+
         public async Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId)
         {
             // Load minimal features
@@ -149,11 +136,9 @@ namespace Plato.Internal.Features
             });
         }
 
-        #endregion
+        // --------------  
 
-        #region "Private Methods"
-
-        async Task EnsureDependenciesAreEstablished()
+        async Task EnsureDependenciesAreEstablishedAsync()
         {
             foreach (var feature in _features.Values)
             {
@@ -163,9 +148,10 @@ namespace Plato.Internal.Features
                 _features.TryUpdate(f.ModuleId, f, feature);
             }
         }
-        
+
         /* General Idea...
-             public static IEnumerable<T> Traverse<T>(T item, Func<T, IEnumerable<T>> childSelector)
+         
+            public static IEnumerable<T> Traverse<T>(T item, Func<T, IEnumerable<T>> childSelector)
             {
                 var stack = new Stack<T>();
                 stack.Push(item);
@@ -176,7 +162,9 @@ namespace Plato.Internal.Features
                     foreach (var child in childSelector(next))
                         stack.Push(child);
                 }
-            } */
+            } 
+
+        */
 
         IEnumerable<IShellFeature> QueryDependencies(
             IShellFeature feature,
@@ -204,7 +192,7 @@ namespace Plato.Internal.Features
                 .Select(f => f.Value);
 
         }
-        
+
         async Task EnsureFeaturesLoadedAsync()
         {
             
@@ -246,7 +234,7 @@ namespace Plato.Internal.Features
                 }
             }
         }
-        
+
         bool IsFeatureRequired(ShellFeature feature)
         {
             // Mark SetUp as required
@@ -259,7 +247,6 @@ namespace Plato.Internal.Features
             return minimalDescriptor.Modules.FirstOrDefault(m => m.ModuleId.Equals(feature.ModuleId, StringComparison.OrdinalIgnoreCase)) != null;
         }
 
-        #endregion
-
     }
+
 }
